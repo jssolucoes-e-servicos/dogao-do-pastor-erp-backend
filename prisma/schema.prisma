@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+  //output   = "../src/modules/prisma/client/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// Definindo a edição do evento
+model Edition {
+  id             String     @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  productionDate DateTime
+  dogPrice       Float      @default(19.99)
+  active         Boolean    @default(true)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  deletedAt      DateTime?
+  PreOrder       PreOrder[]
+
+  @@map("editions")
+}
+
+// Representa o cliente que está fazendo a pré-venda
+model Customer {
+  id           String            @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  email        String?           @unique
+  phone        String?
+  cpf          String?           @unique
+  knowsChurch  Boolean           @default(true)
+  allowsChurch Boolean           @default(true)
+  active       Boolean           @default(true)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  deletedAt    DateTime?
+  addresses    CustomerAddress[]
+  preOrders    PreOrder[]
+
+  @@map("customers")
+}
+
+model CustomerAddress {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  customer     Customer  @relation(fields: [customerId], references: [id])
+  customerId   String    @db.ObjectId
+  street       String
+  number       String
+  neighborhood String?
+  city         String
+  state        String
+  zipCode      String?
+  complement   String?
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  preOrders PreOrder[]
+
+  @@map("customers_addresses")
+}
+
+// O pedido de pré-venda
+model PreOrder {
+  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  customer        Customer        @relation(fields: [customerId], references: [id])
+  customerId      String          @db.ObjectId
+  edition         Edition         @relation(fields: [editionId], references: [id])
+  editionId       String          @db.ObjectId
+  quantity        Int
+  valueTotal      Float
+  paymentStatus   String // 'pending', 'paid', 'failed'
+  paymentProvider String // 'mercadopago'
+  paymentId       String? // ID da transação do Mercado Pago
+  paymentUrl      String? //url payment init
+  address         CustomerAddress @relation(fields: [addressId], references: [id])
+  addressId       String          @db.ObjectId
+  observations    String?
+  isPromo         Boolean // Indica se o pedido foi feito durante o período de promoção
+  active          Boolean         @default(true)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  deletedAt       DateTime?
+
+  items PreOrderItem[]
+
+  @@map("pre_orders")
+}
+
+// O item do pedido de pré-venda, que representa um único cachorro-quente
+model PreOrderItem {
+  id                 String    @id @default(auto()) @map("_id") @db.ObjectId
+  preOrder           PreOrder  @relation(fields: [preOrderId], references: [id])
+  preOrderId         String    @db.ObjectId
+  removedIngredients String[] // Lista de ingredientes removidos
+  active             Boolean   @default(true)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  deletedAt          DateTime?
+
+  @@map("pre_orders_items")
+}
