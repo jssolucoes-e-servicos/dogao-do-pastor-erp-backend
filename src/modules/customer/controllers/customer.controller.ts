@@ -1,6 +1,8 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { OnlyCPFRequestDTO } from 'src/modules/customer/dto/only-cpf-request.dto';
 import { CustomerService } from 'src/modules/customer/services/customer.service';
+import { CustomerCreateDTO } from '../dto/customer-create.dto';
+import { CustomerRetrieve } from '../dto/customer-retrieve';
 
 @Controller('customer')
 export class CustomerController {
@@ -10,7 +12,15 @@ export class CustomerController {
 
   @Post('find-by-cpf')
   async findByCpf(@Body() data: OnlyCPFRequestDTO) {
-    const customer = this.customerService.findByCpf(data);
+    const customer = await this.customerService.findByCpf(data);
+    return customer;
+  }
+
+  @Post('proccess-entry')
+  async processEntry(
+    @Body() data: CustomerCreateDTO,
+  ): Promise<CustomerRetrieve> {
+    const customer = await this.customerService.proccessCustomerEntry(data);
     return customer;
   }
 }
