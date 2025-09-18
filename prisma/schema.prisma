@@ -48,10 +48,10 @@ model CustomerAddress {
   customerId   String    @db.ObjectId
   street       String
   number       String
-  neighborhood String?
+  neighborhood String
   city         String
   state        String
-  zipCode      String?
+  zipCode      String
   complement   String?
   active       Boolean   @default(true)
   createdAt    DateTime  @default(now())
@@ -65,24 +65,25 @@ model CustomerAddress {
 
 // O pedido de pré-venda
 model PreOrder {
-  id              String          @id @default(auto()) @map("_id") @db.ObjectId
-  customer        Customer        @relation(fields: [customerId], references: [id])
-  customerId      String          @db.ObjectId
-  edition         Edition         @relation(fields: [editionId], references: [id])
-  editionId       String          @db.ObjectId
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  customer        Customer         @relation(fields: [customerId], references: [id])
+  customerId      String           @db.ObjectId
+  edition         Edition          @relation(fields: [editionId], references: [id])
+  editionId       String           @db.ObjectId
   quantity        Int
   valueTotal      Float
   paymentStatus   String // 'pending', 'paid', 'failed'
   paymentProvider String // 'mercadopago'
   paymentId       String? // ID da transação do Mercado Pago
   paymentUrl      String? //url payment init
-  address         CustomerAddress @relation(fields: [addressId], references: [id])
-  addressId       String          @db.ObjectId
+  address         CustomerAddress? @relation(fields: [addressId], references: [id])
+  addressId       String?          @db.ObjectId
   observations    String?
+  deliveryOption  String
   isPromo         Boolean // Indica se o pedido foi feito durante o período de promoção
-  active          Boolean         @default(true)
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  active          Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
   deletedAt       DateTime?
 
   items PreOrderItem[]
