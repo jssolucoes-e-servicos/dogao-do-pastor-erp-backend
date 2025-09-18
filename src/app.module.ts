@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { CustomerAddressModule } from './modules/customer-address/customer-address.module';
 import { CustomerModule } from './modules/customer/customer.module';
 import { MercadoPagoModule } from './modules/mercadopago/mercadopago.module';
 import { PreSaleModule } from './modules/pre-sale/pre-sale.module';
@@ -10,6 +11,7 @@ import { WebhooksModule } from './modules/webhooks/webhooks.module';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     CustomerModule,
+    CustomerAddressModule,
     PreSaleModule,
     WebhooksModule,
     MercadoPagoModule,
