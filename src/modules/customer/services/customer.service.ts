@@ -13,17 +13,27 @@ export class CustomerService {
 
   async proccessCustomerEntry(
     customerDTO: CustomerCreateDTO,
-  ): Promise<CustomerRetrieve> {
+  ): Promise<CustomerWithAddressRetriveDTO | null> {
     const existsCustomer = await this.prisma.customer.findUnique({
       where: { cpf: customerDTO.cpf },
     });
+    let customerId: string = '';
     if (!existsCustomer) {
       const customer = await this.create(customerDTO);
-      return customer;
+      customerId = customer.id;
     } else {
       const customer = await this.update(customerDTO);
-      return customer;
+      customerId = customer.id;
     }
+
+    const customerWithAddress = await this.prisma.customer.findUnique({
+      where: { id: customerId },
+      include: {
+        addresses: true,
+      },
+    });
+
+    return customerWithAddress;
   }
 
   async create(customerDTO: CustomerCreateDTO): Promise<CustomerRetrieve> {

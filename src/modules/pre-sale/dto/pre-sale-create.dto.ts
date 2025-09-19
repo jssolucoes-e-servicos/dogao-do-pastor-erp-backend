@@ -1,34 +1,19 @@
-import { StringValidator } from '@/common/validators';
-
+import { MongoIdValidator, StringValidator } from '@/common/validators';
 export class PreSaleCreateDTO {
-  customerData: CustomerDataDTO;
+  @MongoIdValidator({ fieldName: 'customerId', label: 'Id do Clinte' })
+  customerId: string;
+  @MongoIdValidator({
+    fieldName: 'deliveryAddressId',
+    label: 'ID do endereço (en caso de entrega)',
+    optional: true,
+  })
+  deliveryAddressId?: string | null;
+  @StringValidator({ fieldName: 'deliveryOption', label: 'Tipo de Pedido' })
+  deliveryOption: string;
+
   orderItems: PreOrderItemDTO[];
-  deliveryAddress: DeliveryAddressDTO;
-  @StringValidator({ fieldName: 'cpf', label: 'cpf', minLength: 11 })
-  cpf: string;
-}
-
-class CustomerDataDTO {
-  @StringValidator({ fieldName: 'name', label: 'Nome' })
-  name: string;
-
-  @StringValidator({ fieldName: 'email', label: 'Email' })
-  email: string;
-
-  @StringValidator({ fieldName: 'phone', label: 'Telefone' })
-  phone: string;
 }
 
 class PreOrderItemDTO {
   removedIngredients?: string[];
-}
-
-class DeliveryAddressDTO {
-  street: string;
-  number: string;
-  complement?: string;
-  neighborhood?: string;
-  city: string;
-  state: string;
-  zipCode: string;
 }

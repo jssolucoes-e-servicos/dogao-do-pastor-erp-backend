@@ -24,7 +24,7 @@ export class CustomerAddressService {
       const address = await this.create(addressDTO);
       return address;
     } else {
-      const address = await this.update(addressDTO);
+      const address = await this.update(addressDTO, existsAddress.id);
       return address;
     }
   }
@@ -50,18 +50,22 @@ export class CustomerAddressService {
 
   async update(
     addressDTO: CustomerAddressCreateDTO,
+    addresId: string,
   ): Promise<CustomerAddressRetrieve> {
-    const address = await this.prisma.customerAddress.update({
-      where: { cpf: addressDTO.cpf },
-      data: {
-        cpf: addressDTO.cpf,
-        name: addressDTO.name,
-        email: addressDTO.email,
-        phone: addressDTO.phone,
-        knowsChurch: addressDTO.knowsChurch,
-        allowsChurch: addressDTO.allowsChurch,
-      },
-    });
+    const address: CustomerAddressRetrieve =
+      await this.prisma.customerAddress.update({
+        where: { id: addresId },
+        data: {
+          customerId: addressDTO.customerId,
+          street: addressDTO.street,
+          number: addressDTO.number,
+          neighborhood: addressDTO.neighborhood,
+          city: addressDTO.city,
+          state: addressDTO.state,
+          zipCode: addressDTO.zipCode,
+          complement: addressDTO.complement,
+        },
+      });
     return address;
   }
 }

@@ -7,7 +7,7 @@ export class CustomerAddressRetrieve {
   city: string;
   state: string;
   zipCode: string;
-  complement?: string;
+  complement?: string | null | undefined;
   active: boolean;
   createdAt: Date | string;
   updatedAt: Date | string;

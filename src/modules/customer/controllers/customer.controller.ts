@@ -19,7 +19,7 @@ export class CustomerController {
   @Post('proccess-entry')
   async processEntry(
     @Body() data: CustomerCreateDTO,
-  ): Promise<CustomerRetrieve> {
+  ): Promise<CustomerRetrieve | null> {
     const customer = await this.customerService.proccessCustomerEntry(data);
     return customer;
   }

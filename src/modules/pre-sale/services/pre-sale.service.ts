@@ -13,10 +13,20 @@ export class PreSaleService {
   }
 
   async processOrder(body: PreSaleCreateDTO) {
-    const { customerData, orderItems, deliveryAddress, cpf } = body;
+    //console.log(body);
+    const { customerId, orderItems, deliveryAddressId, deliveryOption } = body;
     const editionActivedId: string = process.env.EDITION_ID!;
 
-    if (!customerData || !orderItems || !deliveryAddress || !cpf) {
+    if (!customerId || !orderItems || !deliveryOption) {
+      throw new HttpException(
+        'Dados do pedido incompletos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const requiredDeliveryAddressId =
+      deliveryOption === 'delivery' ? true : false;
+    if (requiredDeliveryAddressId === true && deliveryAddressId === null) {
       throw new HttpException(
         'Dados do pedido incompletos.',
         HttpStatus.BAD_REQUEST,
@@ -24,62 +34,30 @@ export class PreSaleService {
     }
 
     try {
-      let customer = await this.prisma.customer.findUnique({
-        where: { cpf },
+      const customer = await this.prisma.customer.findUnique({
+        where: { id: customerId },
       });
-
       if (!customer) {
-        customer = await this.prisma.customer.create({
-          data: {
-            cpf,
-            name: customerData.name,
-            email: customerData.email,
-            phone: customerData.phone,
-          },
-        });
-      } else {
-        await this.prisma.customer.update({
-          where: { cpf },
-          data: {
-            name: customerData.name,
-            email: customerData.email,
-            phone: customerData.phone,
-          },
-        });
-      }
-
-      const existingAddress = await this.prisma.customerAddress.findFirst({
-        where: {
-          customerId: customer.id,
-          street: deliveryAddress.street,
-          number: deliveryAddress.number,
-          city: deliveryAddress.city,
-          state: deliveryAddress.state,
-          zipCode: deliveryAddress.zipCode,
-        },
-      });
-
-      let address = existingAddress;
-      if (!address) {
-        address = await this.prisma.customerAddress.create({
-          data: { ...deliveryAddress, customerId: customer.id },
-        });
+        throw new HttpException('Cliente inválido.', HttpStatus.BAD_REQUEST);
       }
 
       const totalAmount = orderItems.length * 19.99;
 
+      const dataSend = {
+        customerId: customerId,
+        deliveryOption: deliveryOption,
+        addressId: deliveryOption === 'delivery' ? deliveryAddressId : null,
+        editionId: editionActivedId,
+        quantity: orderItems.length,
+        valueTotal: totalAmount,
+        paymentStatus: 'pending',
+        paymentProvider: 'mercadopago',
+        isPromo: true,
+      };
+
       const preOrder = await this.prisma.$transaction(async (tx) => {
         const newPreOrder = await tx.preOrder.create({
-          data: {
-            customerId: customer.id,
-            editionId: editionActivedId,
-            quantity: orderItems.length,
-            valueTotal: totalAmount,
-            paymentStatus: 'pending',
-            paymentProvider: 'mercadopago',
-            addressId: address.id,
-            isPromo: true,
-          },
+          data: dataSend,
         });
 
         const itemsToCreate = orderItems.map((item) => ({
@@ -87,36 +65,37 @@ export class PreSaleService {
           removedIngredients: item.removedIngredients,
         }));
 
-        const items = await tx.preOrderItem.createMany({
+        await tx.preOrderItem.createMany({
           data: itemsToCreate,
         });
-        console.log(items);
+
         return newPreOrder;
       });
 
       const preferenceBody = {
-        items: orderItems.map((item) => ({
-          id: '657', //item.id,
+        items: orderItems.map((item, index) => ({
+          id: (index + 1).toString(),
           title: 'Dogão Personalizado',
           unit_price: 19.99,
           quantity: 1,
         })),
         external_reference: preOrder.id,
         payer: {
-          name: customerData.name,
-          email: customerData.email,
+          name: customer.name,
+          email: customer.email,
         },
         back_urls: {
           success: 'http://localhost:3000/success',
           failure: 'http://localhost:3000/failure',
           pending: 'http://localhost:3000/pending',
         },
-        auto_return: 'approved',
-        notification_url: 'https://seu-backend-deploy.com/webhooks/mercadopago', // Você vai mudar esta URL depois do deploy
+        notification_url:
+          'https://dogao-do-pastor-erp-backend-production.up.railway.app/webhooks/mercadopago',
       };
 
       const paymentUrl =
         await this.mercadoPagoService.createPreference(preferenceBody);
+      console.log(paymentUrl);
       return { paymentUrl };
     } catch (error) {
       console.error('Erro ao processar pedido:', error);
