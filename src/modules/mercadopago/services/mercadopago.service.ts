@@ -1,9 +1,11 @@
+import { CreatePreferenceDto } from '@/common/interfaces/mp-types.interface';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { MercadoPagoConfig, Preference } from 'mercadopago';
+import { MercadoPagoConfig, Payment, Preference } from 'mercadopago';
 
 @Injectable()
 export class MercadoPagoService {
   private preferences: Preference;
+  private payments: Payment;
 
   constructor() {
     const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
@@ -16,9 +18,11 @@ export class MercadoPagoService {
       options: { timeout: 5000 },
     });
     this.preferences = new Preference(client);
+    // Inicialize a classe Payment aqui
+    this.payments = new Payment(client);
   }
 
-  async createPreference(body: any) {
+  async createPreference(body: CreatePreferenceDto) {
     try {
       const response = await this.preferences.create({ body });
       return response.init_point;
@@ -26,6 +30,19 @@ export class MercadoPagoService {
       console.error('Erro ao criar preferência do Mercado Pago:', error);
       throw new HttpException(
         'Falha ao criar preferência de pagamento.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async getPaymentDetails(paymentId: string) {
+    try {
+      const payment = await this.payments.get({ id: paymentId });
+      return payment;
+    } catch (error) {
+      console.error(`Erro ao obter detalhes do pagamento ${paymentId}:`, error);
+      throw new HttpException(
+        'Falha ao obter detalhes do pagamento.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { CreatePreferenceDto } from 'src/common/interfaces/mp-types.interface';
 import { MercadoPagoService } from 'src/modules/mercadopago/services/mercadopago.service';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { PreSaleCreateDTO } from '../dto/pre-sale-create.dto';
@@ -72,7 +73,7 @@ export class PreSaleService {
         return newPreOrder;
       });
 
-      const preferenceBody = {
+      const preferenceBody: CreatePreferenceDto = {
         items: orderItems.map((item, index) => ({
           id: (index + 1).toString(),
           title: 'Dogão Personalizado',
@@ -82,7 +83,8 @@ export class PreSaleService {
         external_reference: preOrder.id,
         payer: {
           name: customer.name,
-          email: customer.email,
+          // Corrigindo o erro de tipagem: garantimos que o email é sempre uma string.
+          email: customer.email || '',
         },
         back_urls: {
           success: 'http://localhost:3000/success',

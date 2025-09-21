@@ -1,35 +1,44 @@
 import { Injectable } from '@nestjs/common';
+import { MercadoPagoWebhookNotification } from 'src/common/interfaces/mp-types.interface';
+import { MercadoPagoService } from 'src/modules/mercadopago/services/mercadopago.service';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 
 @Injectable()
 export class WebhooksService {
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    private mercadoPagoService: MercadoPagoService,
+  ) {
+    /* void */
+  }
 
-  async handleMercadoPagoNotification(data: any) {
+  async handleMercadoPagoNotification(data: MercadoPagoWebhookNotification) {
     console.log('Notificação do Mercado Pago recebida:', data);
 
-    // A validação da assinatura do webhook deve ser implementada em produção
-
-    // A lógica do Mercado Pago varia, mas você geralmente faria uma chamada para a API
-    // para obter os detalhes completos do pagamento usando o ID da notificação.
-    const paymentId = data.data.id;
+    const paymentId = data.data?.id;
     const topic = data.type;
 
-    if (topic === 'payment') {
-      // Aqui, você usaria o SDK do Mercado Pago para obter o status real.
-      // Ex: const payment = await mercadopago.payment.get(paymentId);
-      // Por simplicidade, assumiremos que a notificação é de um pagamento aprovado.
-      const status = 'approved';
+    if (topic === 'payment' && paymentId) {
+      try {
+        const paymentDetails =
+          await this.mercadoPagoService.getPaymentDetails(paymentId);
 
-      if (status === 'approved') {
-        const externalReference = 'ID_DO_PEDIDO_DA_NOTIFICACAO'; // Exemplo
+        const externalReference = paymentDetails.external_reference;
+        const paymentStatus = paymentDetails.status;
 
+        // Atualize o status do pedido no seu banco de dados
         await this.prisma.preOrder.update({
           where: { id: externalReference },
-          data: { paymentStatus: 'paid' },
+          data: { paymentStatus: paymentStatus as string },
         });
 
-        console.log(`Pedido ${externalReference} atualizado para 'paid'.`);
+        console.log(
+          `Pedido ${externalReference} atualizado para o status '${paymentStatus}'.`,
+        );
+      } catch (error) {
+        console.error('Erro ao processar a notificação de pagamento:', error);
+        // Não lance um erro aqui, apenas logue, para que o Mercado Pago
+        // não tente reenviar a notificação repetidamente.
       }
     }
   }
