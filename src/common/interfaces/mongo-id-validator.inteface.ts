@@ -3,4 +3,5 @@ export interface IMongoIdValidator {
   label?: string;
   optional?: boolean;
   description?: string;
+  exemple?: string;
 }

@@ -1,9 +1,15 @@
-import { applyDecorators } from "@nestjs/common";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsMongoId, IsNotEmpty, IsOptional } from "class-validator";
-import { IMongoIdValidator } from "src/common/interfaces";
+import { applyDecorators } from '@nestjs/common';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsMongoId, IsNotEmpty, IsOptional } from 'class-validator';
+import { IMongoIdValidator } from 'src/common/interfaces';
 
-export function MongoIdValidator({ fieldName, label, optional = false, description }: IMongoIdValidator) {
+export function MongoIdValidator({
+  fieldName,
+  label,
+  optional = false,
+  description,
+  exemple = '',
+}: IMongoIdValidator) {
   if (label === undefined) label = fieldName;
 
   if (description === undefined) description = label;
@@ -30,6 +36,7 @@ export function MongoIdValidator({ fieldName, label, optional = false, descripti
     ApiProperty({
       name: fieldName,
       description: description,
+      example: exemple,
     }),
   );
 }

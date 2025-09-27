@@ -1,20 +1,71 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreatePreferenceDto } from 'src/common/interfaces/mp-types.interface';
-import { MercadoPagoService } from 'src/modules/mercadopago/services/mercadopago.service';
+//ENDEREÇO/NOME DO ARQUIVO: src/modules/pre-sale/services/pre-sale.service.ts
+import { DeliveryOptionEnum, PaymentStatusEnum } from '@/common/enums';
+import { CustomerRetrieve } from '@/modules/customer/dto/customer-retrieve';
+import { CustomerService } from '@/modules/customer/services/customer.service';
+import { Injectable } from '@nestjs/common';
+import { EDITION_ID } from 'src/common/constants/ids';
+import { PaymentService } from 'src/modules/payment/services/payment.service';
+import { PreSaleFirstCreateDTO } from 'src/modules/pre-sale/dto/pre-sale-first-create.dto';
+import { PreSaleInitRetrieveDTO } from 'src/modules/pre-sale/dto/pre-sale-init-retrieve.dto';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
-import { PreSaleCreateDTO } from '../dto/pre-sale-create.dto';
+import { PreSaleFullRetrieveDTO } from '../dto/pre-sale-full-retrieve.dto';
 
 @Injectable()
 export class PreSaleService {
   constructor(
-    private prisma: PrismaService,
-    private mercadoPagoService: MercadoPagoService,
+    private readonly prisma: PrismaService,
+    private readonly customerService: CustomerService,
+    private readonly paymentService: PaymentService,
   ) {
     /* void */
   }
 
-  async processOrder(body: PreSaleCreateDTO) {
-    //console.log(body);
+  async start(body: PreSaleFirstCreateDTO): Promise<{
+    presale: PreSaleInitRetrieveDTO;
+    customer: CustomerRetrieve | null;
+  }> {
+    const { cpf, sellerId } = body;
+    const customer = await this.customerService.findByCpf({ cpf: cpf });
+    const preSale = await this.prisma.preOrder.create({
+      data: {
+        customerId: customer ? customer.id : undefined,
+        editionId: EDITION_ID,
+        sellerId: sellerId,
+        quantity: 0,
+        valueTotal: 0,
+        customerAddressId: undefined,
+        paymentStatus: PaymentStatusEnum.PENDING,
+        paymentProvider: 'starting',
+        paymentId: null,
+        paymentUrl: null,
+        observations: cpf,
+        deliveryOption: DeliveryOptionEnum.PICKUP,
+        isPromo: true,
+      },
+    });
+    const result = {
+      presale: preSale,
+      customer: customer,
+    };
+    return result;
+  }
+
+  async findById(id: string): Promise<PreSaleFullRetrieveDTO | null> {
+    try {
+      const presale = await this.prisma.preOrder.findUnique({
+        where: { id },
+        include: { customer: true },
+      });
+
+      return presale;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error API');
+    }
+  }
+
+  /* async processOrder(body: PreSaleCreateDTO) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { customerId, orderItems, deliveryAddressId, deliveryOption } = body;
     const editionActivedId: string = process.env.EDITION_ID!;
 
@@ -73,32 +124,14 @@ export class PreSaleService {
         return newPreOrder;
       });
 
-      const preferenceBody: CreatePreferenceDto = {
-        items: orderItems.map((item, index) => ({
-          id: (index + 1).toString(),
-          title: 'Dogão Personalizado',
-          unit_price: 19.99,
-          quantity: 1,
-        })),
-        external_reference: preOrder.id,
-        payer: {
-          name: customer.name,
-          // Corrigindo o erro de tipagem: garantimos que o email é sempre uma string.
-          email: customer.email || '',
-        },
-        back_urls: {
-          success: 'http://localhost:3000/success',
-          failure: 'http://localhost:3000/failure',
-          pending: 'http://localhost:3000/pending',
-        },
-        notification_url:
-          'https://dogao-do-pastor-erp-backend-production.up.railway.app/webhooks/mercadopago',
+      // Aqui, o PreSaleService agora usa o PaymentService para criar o pagamento
+      // É importante notar que ele pode usar createPixPayment ou createCardPayment dependendo da lógica que você quiser implementar aqui
+      // Como não temos a lógica de escolha, manteremos apenas o `preOrder` e os dados para que o cliente possa chamar o endpoint de pagamento por conta própria.
+      return {
+        preOrderId: preOrder.id,
+        totalAmount: totalAmount,
+        customerEmail: customer.email,
       };
-
-      const paymentUrl =
-        await this.mercadoPagoService.createPreference(preferenceBody);
-      console.log(paymentUrl);
-      return { paymentUrl };
     } catch (error) {
       console.error('Erro ao processar pedido:', error);
       throw new HttpException(
@@ -106,5 +139,5 @@ export class PreSaleService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-  }
+  } */
 }

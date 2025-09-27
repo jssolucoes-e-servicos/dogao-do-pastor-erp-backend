@@ -8,19 +8,157 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum VoucherStats {
+  NEW
+  REGISTRED
+  USED
+  CANCELLED
+}
+
+enum OrderStats {
+  DIGITATION
+  PENDING_PAYMENT
+  PAYMENT
+  NEW
+  QUEUE
+  PRODUCTION
+  EXPEDITION
+  DELIVERING
+  DELIVERED
+  CANCELLED
+}
+
+enum DeliveryOption {
+  PICKUP
+  DELIVERY
+  DONATE
+}
+
 // Definindo a edição do evento
 model Edition {
-  id             String     @id @default(auto()) @map("_id") @db.ObjectId
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
   name           String
   productionDate DateTime
-  dogPrice       Float      @default(19.99)
-  active         Boolean    @default(true)
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
+  dogPrice       Float     @default(19.99)
+  active         Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
   deletedAt      DateTime?
-  PreOrder       PreOrder[]
+
+  vouchers  Voucher[]
+  tickets   Tickets[]
+  preOrders PreOrder[]
 
   @@map("editions")
+}
+
+model Cell {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  networkName String
+  leaderName  String
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  sellers     Seller[]
+
+  @@map("cells")
+}
+
+model Seller {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  cell      Cell      @relation(fields: [cellId], references: [id])
+  cellId    String    @db.ObjectId
+  name      String
+  phone     String
+  tag       String    @unique
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  tickets   Tickets[]
+  preOrders PreOrder[]
+
+  @@map("sellers")
+}
+
+model DeliveryPerson {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  phone     String?
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("delivery_persons")
+}
+
+model Order {
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  active     Boolean     @default(true)
+  deleted    Boolean     @default(false)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  deletedAt  DateTime?
+  vouchers   Voucher[]
+  orderItems OrderItem[]
+
+  @@map("orders")
+}
+
+model Voucher {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  edition     Edition      @relation(fields: [editionId], references: [id])
+  editionId   String       @db.ObjectId
+  cod         String
+  customer    Customer?    @relation(fields: [customerId], references: [id])
+  customerId  String?      @db.ObjectId
+  order       Order?       @relation(fields: [orderId], references: [id])
+  orderId     String?      @db.ObjectId
+  orderItem   OrderItem?   @relation(fields: [orderItemId], references: [id])
+  orderItemId String?      @db.ObjectId
+  used        Boolean      @default(false)
+  usedAt      DateTime?
+  stats       VoucherStats @default(NEW)
+  active      Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  deletedAt   DateTime?
+
+  @@map("vouchers")
+}
+
+model Tickets {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  editon    Edition   @relation(fields: [editionId], references: [id])
+  editionId String    @db.ObjectId
+  number    String
+  orderd    Boolean   @default(false)
+  seller    Seller    @relation(fields: [sellerId], references: [id])
+  sellerId  String    @db.ObjectId
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("tickets")
+}
+
+model OrderItem {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  order     Order     @relation(fields: [orderId], references: [id])
+  orderId   String    @db.ObjectId
+  active    Boolean   @default(true)
+  deleted   Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  vouchers  Voucher[]
+
+  @@map("orders_items")
 }
 
 // Representa o cliente que está fazendo a pré-venda
@@ -36,6 +174,7 @@ model Customer {
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt
   deletedAt    DateTime?
+  vouchers     Voucher[]
   addresses    CustomerAddress[]
   preOrders    PreOrder[]
 
@@ -65,28 +204,31 @@ model CustomerAddress {
 
 // O pedido de pré-venda
 model PreOrder {
-  id              String           @id @default(auto()) @map("_id") @db.ObjectId
-  customer        Customer         @relation(fields: [customerId], references: [id])
-  customerId      String           @db.ObjectId
-  edition         Edition          @relation(fields: [editionId], references: [id])
-  editionId       String           @db.ObjectId
-  quantity        Int
-  valueTotal      Float
-  paymentStatus   String // 'pending', 'paid', 'failed'
-  paymentProvider String // 'mercadopago'
-  paymentId       String? // ID da transação do Mercado Pago
-  paymentUrl      String? //url payment init
-  address         CustomerAddress? @relation(fields: [addressId], references: [id])
-  addressId       String?          @db.ObjectId
-  observations    String?
-  deliveryOption  String
-  isPromo         Boolean // Indica se o pedido foi feito durante o período de promoção
-  active          Boolean          @default(true)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  deletedAt       DateTime?
+  id                String           @id @default(auto()) @map("_id") @db.ObjectId
+  customer          Customer?        @relation(fields: [customerId], references: [id])
+  customerId        String?          @db.ObjectId
+  edition           Edition          @relation(fields: [editionId], references: [id])
+  editionId         String           @db.ObjectId
+  seller            Seller           @relation(fields: [sellerId], references: [id])
+  sellerId          String           @db.ObjectId
+  quantity          Int
+  valueTotal        Float
+  paymentStatus     String // 'pending', 'paid', 'failed'
+  paymentProvider   String // 'mercadopago'
+  paymentId         String? // ID da transação do Mercado Pago
+  paymentUrl        String? //url payment init
+  address           CustomerAddress? @relation(fields: [customerAddressId], references: [id])
+  customerAddressId String?          @db.ObjectId
+  observations      String?
+  deliveryOption    DeliveryOption   @default(PICKUP)
+  status            OrderStats       @default(DIGITATION)
+  isPromo           Boolean          @default(false)
+  active            Boolean          @default(true)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  deletedAt         DateTime?
 
-  items PreOrderItem[]
+  preOrderItems PreOrderItem[]
 
   @@map("pre_orders")
 }

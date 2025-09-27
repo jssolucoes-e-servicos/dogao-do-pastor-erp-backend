@@ -1,6 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { PreSaleService } from 'src/modules/pre-sale/services/pre-sale.service';
-import { PreSaleCreateDTO } from '../dto/pre-sale-create.dto';
+//ENDEREÇO/NOME DO ARQUIVO: src/modules/pre-sale/controllers/pre-sale.controller.ts
+import { CustomerRetrieve } from '@/modules/customer/dto/customer-retrieve';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { PreSaleFirstCreateDTO } from '../dto/pre-sale-first-create.dto';
+import { PreSaleFullRetrieveDTO } from '../dto/pre-sale-full-retrieve.dto';
+import { PreSaleInitRetrieveDTO } from '../dto/pre-sale-init-retrieve.dto';
+import { PreSaleService } from '../services/pre-sale.service';
 
 @Controller('pre-sale')
 export class PreSaleController {
@@ -8,8 +12,23 @@ export class PreSaleController {
     /* void */
   }
 
-  @Post()
-  async createPreSaleOrder(@Body() body: PreSaleCreateDTO) {
-    return this.preSaleService.processOrder(body);
+  @Post('start')
+  async start(@Body() body: PreSaleFirstCreateDTO): Promise<{
+    presale: PreSaleInitRetrieveDTO;
+    customer: CustomerRetrieve | null;
+  }> {
+    return await this.preSaleService.start(body);
   }
+
+  @Get(':id')
+  async findById(
+    @Param('id') id: string,
+  ): Promise<PreSaleFullRetrieveDTO | null> {
+    return await this.preSaleService.findById(id);
+  }
+
+  /*  @Post('checkout')
+  async checkout(@Body() body: PreSaleCreateDTO): Promise<IPaymentResponse> {
+    return await this.preSaleService.processOrder(body);
+  } */
 }

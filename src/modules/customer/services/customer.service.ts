@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { CustomerCreateDTO } from '../dto/customer-create.dto';
 import { CustomerRetrieve } from '../dto/customer-retrieve';
@@ -17,6 +17,8 @@ export class CustomerService {
     const existsCustomer = await this.prisma.customer.findUnique({
       where: { cpf: customerDTO.cpf },
     });
+    const presaleId: string | null | undefined = customerDTO.presaleId;
+    customerDTO.presaleId = undefined;
     let customerId: string = '';
     if (!existsCustomer) {
       const customer = await this.create(customerDTO);
@@ -32,6 +34,13 @@ export class CustomerService {
         addresses: true,
       },
     });
+
+    if (presaleId) {
+      await this.prisma.preOrder.update({
+        where: { id: presaleId },
+        data: { customerId: customerId },
+      });
+    }
 
     return customerWithAddress;
   }
@@ -74,10 +83,6 @@ export class CustomerService {
         addresses: true,
       },
     });
-
-    if (!customer) {
-      throw new NotFoundException('Cliente não encontrado.');
-    }
     return customer;
   }
 }

@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CustomerAddressModule } from './modules/customer-address/customer-address.module';
 import { CustomerModule } from './modules/customer/customer.module';
-import { MercadoPagoModule } from './modules/mercadopago/mercadopago.module';
+import { PaymentModule } from './modules/payment/payment.module';
 import { PreSaleModule } from './modules/pre-sale/pre-sale.module';
 import { PrismaService } from './modules/prisma/services/prisma.service';
-import { WebhooksModule } from './modules/webhooks/webhooks.module';
+import { SellerModule } from './modules/seller/seller.module';
 
 @Module({
   imports: [
@@ -13,8 +13,8 @@ import { WebhooksModule } from './modules/webhooks/webhooks.module';
     CustomerModule,
     CustomerAddressModule,
     PreSaleModule,
-    WebhooksModule,
-    MercadoPagoModule,
+    PaymentModule,
+    SellerModule,
   ],
   controllers: [],
   providers: [PrismaService],

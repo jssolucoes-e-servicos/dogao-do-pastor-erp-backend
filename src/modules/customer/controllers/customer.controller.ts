@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, NotFoundException, Post } from '@nestjs/common';
 import { OnlyCPFRequestDTO } from 'src/modules/customer/dto/only-cpf-request.dto';
 import { CustomerService } from 'src/modules/customer/services/customer.service';
 import { CustomerCreateDTO } from '../dto/customer-create.dto';
@@ -13,6 +13,9 @@ export class CustomerController {
   @Post('find-by-cpf')
   async findByCpf(@Body() data: OnlyCPFRequestDTO) {
     const customer = await this.customerService.findByCpf(data);
+    if (!customer) {
+      throw new NotFoundException('Cliente não encontrado.');
+    }
     return customer;
   }
 

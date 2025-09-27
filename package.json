@@ -33,6 +33,7 @@
     "@nestjs/throttler": "^6.4.0",
     "@prisma/client": "^6.16.1",
     "@sentry/node": "^10.11.0",
+    "axios": "^1.12.2",
     "bcrypt": "^6.0.0",
     "bull": "^4.16.5",
     "class-transformer": "^0.5.1",
@@ -45,6 +46,7 @@
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "sdk-node-apis-efi": "^1.2.25",
+    "stripe": "^18.5.0",
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {

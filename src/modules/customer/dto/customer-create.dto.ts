@@ -22,4 +22,11 @@ export class CustomerCreateDTO {
 
   @BooleanValidator({ fieldName: 'knowsChurch', label: 'Conhece a IVC?' })
   allowsChurch?: boolean;
+
+  @StringValidator({
+    fieldName: 'presaleId',
+    label: 'ID da Pre Venda',
+    optional: true,
+  })
+  presaleId?: string | null;
 }
