@@ -1,24 +1,76 @@
-// src/modules/payment/controllers/payment.controller.ts
-import { Body, Controller, Post } from '@nestjs/common';
-import type {
-  CardPaymentRequest,
-  PixPaymentRequest,
-} from 'src/modules/payment/dto/payment.dto';
-import { PaymentService } from 'src/modules/payment/services/payment.service';
+import {
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Logger,
+  Param,
+  Post,
+} from '@nestjs/common';
+import { MercadoPagoService } from '../services/mercadopago.service';
 
-@Controller('payment')
+@Controller('payments')
 export class PaymentController {
-  constructor(private readonly paymentService: PaymentService) {
-    /* void */
-  }
+  private readonly logger = new Logger(PaymentController.name);
 
+  constructor(private readonly mpService: MercadoPagoService) { }
+
+  /**
+   * Gera pagamento PIX para um preorder.
+   * Body: { preorderId: string }
+   */
   @Post('pix')
-  async createPixPayment(@Body() body: PixPaymentRequest) {
-    return this.paymentService.createPixPayment(body);
+  async payWithPix(@Body() body: { preorderId?: string }) {
+    if (!body?.preorderId) {
+      throw new HttpException(
+        'preorderId é obrigatório',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    this.logger.log(
+      `Solicitado pagamento PIX para preorder ${body.preorderId}`,
+    );
+    return this.mpService.processPixPayment(body.preorderId);
   }
 
-  @Post('card')
-  async createCardPayment(@Body() body: CardPaymentRequest) {
-    return this.paymentService.createCardPayment(body);
+  /**
+   * Processa pagamento com cartão (checkout transparente).
+   * Path: /payments/:preOrderId/card
+   * Body esperado:
+   * {
+   *   card: { token: string; installments?: number },
+   *   payer?: { name?: string; email?: string }  // payer info optional; service monta fallback
+   * }
+   */
+  @Post(':preOrderId/card')
+  async payWithCard(
+    @Param('preOrderId') preOrderId: string,
+    @Body()
+    body: {
+      card?: { token?: string; installments?: number };
+      payer?: { name?: string; email?: string };
+    },
+  ) {
+    if (!preOrderId) {
+      throw new HttpException(
+        'preOrderId é obrigatório',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!body?.card?.token) {
+      throw new HttpException(
+        'Token do cartão é obrigatório',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    this.logger.log(`Solicitado pagamento CARD para preorder ${preOrderId}`);
+    return this.mpService.processCardPayment(preOrderId, {
+      token: body.card.token,
+      installments: body.card.installments ?? 1,
+      payer: body.payer,
+    });
   }
 }

@@ -12,10 +12,10 @@ import { MercadoPagoService } from './services/mercadopago.service';
   imports: [ScheduleModule.forRoot()],
   controllers: [PaymentController, WebhookController],
   providers: [
-    PaymentService,
     MercadoPagoService,
     PaymentTaskService,
     PrismaService,
+    PaymentService
   ],
   exports: [PaymentService, MercadoPagoService],
 })

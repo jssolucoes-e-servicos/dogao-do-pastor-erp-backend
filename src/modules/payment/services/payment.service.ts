@@ -1,7 +1,6 @@
 //ENDEREÇO/NOME DO ARQUIVO: src/modules/payment/services/payment.service.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
-import { CardPaymentRequest, PixPaymentRequest } from '../dto/payment.dto';
 import { IMercadoPagoPaymentResponse } from '../interfaces/mercadopago.interface';
 import { MercadoPagoService } from './mercadopago.service';
 
@@ -16,70 +15,17 @@ export class PaymentService {
     /* void */
   }
 
-  async createPixPayment(
-    body: PixPaymentRequest,
-  ): Promise<IMercadoPagoPaymentResponse> {
-    try {
-      this.logger.log('Iniciando criação de pagamento Pix...');
-      const paymentData = {
-        transaction_amount: body.transactionAmount,
-        description: body.description,
-        payment_method_id: 'pix',
-        payer: {
-          email: body.payer.email,
-        },
-        external_reference: body.externalReference,
-        callback_url: body.callbackUrl,
-      };
-
-      const payment = await this.mercadoPagoService.createPayment(paymentData);
-      this.logger.log(`Pagamento Pix criado com sucesso. ID: ${payment.id}`);
-      return payment;
-    } catch (error) {
-      this.logger.error('Erro ao criar pagamento Pix:', error.stack);
-      throw error;
-    }
-  }
-
-  async createCardPayment(
-    body: CardPaymentRequest,
-  ): Promise<IMercadoPagoPaymentResponse> {
-    try {
-      this.logger.log('Iniciando criação de pagamento com cartão...');
-      const paymentData = {
-        token: body.token,
-        description: body.description,
-        installments: body.installments,
-        payment_method_id: body.paymentMethodId,
-        issuer_id: body.issuerId,
-        payer: {
-          email: body.payer.email,
-        },
-        transaction_amount: body.transactionAmount,
-        external_reference: body.externalReference,
-        callback_url: body.callbackUrl,
-      };
-
-      const payment = await this.mercadoPagoService.createPayment(paymentData);
-      this.logger.log(`Pagamento com cartão criado. ID: ${payment.id}`);
-      return payment;
-    } catch (error) {
-      this.logger.error('Erro ao criar pagamento com cartão:', error.stack);
-      throw error;
-    }
-  }
-
   async getPaymentStatus(
     paymentId: string,
-  ): Promise<IMercadoPagoPaymentResponse> {
+  ): Promise<IMercadoPagoPaymentResponse | null> {
     try {
       this.logger.log(`Buscando status do pagamento com ID: ${paymentId}`);
-      const paymentDetails =
-        await this.mercadoPagoService.getPayment(paymentId);
-      this.logger.log(
+      /*   const paymentDetails =
+        await this.mercadoPagoService.getPayment(paymentId); */
+      /*  this.logger.log(
         `Status do pagamento ${paymentId} é: ${paymentDetails.status}`,
-      );
-      return paymentDetails;
+      ); */
+      return null; //paymentDetails;
     } catch (error) {
       this.logger.error(
         `Erro ao buscar status do pagamento ${paymentId}:`,
