@@ -68,4 +68,16 @@ export class CustomerAddressService {
       });
     return address;
   }
+
+  async findByCustomer(customerId: string): Promise<CustomerAddressRetrieve[]> {
+    try {
+      const addresses = await this.prisma.customerAddress.findMany({
+        where: { customerId: customerId },
+      });
+      return addresses;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Erro no servidor');
+    }
+  }
 }

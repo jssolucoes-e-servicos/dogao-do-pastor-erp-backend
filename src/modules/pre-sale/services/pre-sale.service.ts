@@ -9,6 +9,7 @@ import { PreSaleFirstCreateDTO } from 'src/modules/pre-sale/dto/pre-sale-first-c
 import { PreSaleInitRetrieveDTO } from 'src/modules/pre-sale/dto/pre-sale-init-retrieve.dto';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { PreSaleFullRetrieveDTO } from '../dto/pre-sale-full-retrieve.dto';
+import { PreSaleSetAddressDTO } from '../dto/pre-sale-set-address.dto';
 
 @Injectable()
 export class PreSaleService {
@@ -57,6 +58,47 @@ export class PreSaleService {
         include: { customer: true },
       });
 
+      return presale;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error API');
+    }
+  }
+
+  async setAddress(
+    data: PreSaleSetAddressDTO,
+  ): Promise<PreSaleFullRetrieveDTO> {
+    try {
+      const presale = await this.prisma.preOrder.update({
+        where: { id: data.preorderId },
+        data: {
+          customerAddressId: data.deliveryAddressId,
+          deliveryOption: DeliveryOptionEnum.DELIVERY,
+        },
+      });
+      return presale;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error API');
+    }
+  }
+
+  async setDeliveryOption(data: {
+    preorderId: string;
+    deliveryOption: string;
+  }): Promise<PreSaleFullRetrieveDTO> {
+    console.info('data', data);
+    try {
+      const option =
+        data.deliveryOption === 'PICKUP'
+          ? DeliveryOptionEnum.PICKUP
+          : DeliveryOptionEnum.DONATE;
+      const presale = await this.prisma.preOrder.update({
+        where: { id: data.preorderId },
+        data: {
+          deliveryOption: option,
+        },
+      });
       return presale;
     } catch (error) {
       console.error(error);

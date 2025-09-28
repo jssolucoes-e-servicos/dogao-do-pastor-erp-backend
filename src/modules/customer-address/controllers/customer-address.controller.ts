@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CustomerAddressCreateDTO } from 'src/modules/customer-address/dto/customer-address-create.dto';
 import { CustomerAddressRetrieve } from 'src/modules/customer-address/dto/customer-address-retrieve';
 import { CustomerAddressService } from 'src/modules/customer-address/services/customer-address.service';
@@ -16,5 +16,16 @@ export class CustomerAddressController {
     const address =
       await this.customerAddressService.proccessAddressEntry(data);
     return address;
+  }
+
+  @Get('find-by-customer/:customerId')
+  async findByCustomer(
+    @Param('customerId') customerId: string,
+  ): Promise<CustomerAddressRetrieve[]> {
+    console.log('input', customerId);
+    const addresses =
+      await this.customerAddressService.findByCustomer(customerId);
+    console.log('addresses', addresses);
+    return addresses;
   }
 }

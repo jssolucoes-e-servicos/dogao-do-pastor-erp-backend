@@ -4,6 +4,7 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PreSaleFirstCreateDTO } from '../dto/pre-sale-first-create.dto';
 import { PreSaleFullRetrieveDTO } from '../dto/pre-sale-full-retrieve.dto';
 import { PreSaleInitRetrieveDTO } from '../dto/pre-sale-init-retrieve.dto';
+import { PreSaleSetAddressDTO } from '../dto/pre-sale-set-address.dto';
 import { PreSaleService } from '../services/pre-sale.service';
 
 @Controller('pre-sale')
@@ -27,8 +28,17 @@ export class PreSaleController {
     return await this.preSaleService.findById(id);
   }
 
-  /*  @Post('checkout')
-  async checkout(@Body() body: PreSaleCreateDTO): Promise<IPaymentResponse> {
-    return await this.preSaleService.processOrder(body);
-  } */
+  @Post('set-address')
+  async setAddress(
+    @Body() body: PreSaleSetAddressDTO,
+  ): Promise<PreSaleFullRetrieveDTO> {
+    return await this.preSaleService.setAddress(body);
+  }
+
+  @Post('set-selivery-option')
+  async setDeliveryOption(
+    @Body() data: { preorderId: string; deliveryOption: string },
+  ): Promise<PreSaleFullRetrieveDTO> {
+    return await this.preSaleService.setDeliveryOption(data);
+  }
 }
