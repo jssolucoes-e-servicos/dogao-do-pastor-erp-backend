@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { PreOrderStepEnum } from 'src/common/enums';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { CustomerCreateDTO } from '../dto/customer-create.dto';
 import { CustomerRetrieve } from '../dto/customer-retrieve';
@@ -38,7 +39,7 @@ export class CustomerService {
     if (presaleId) {
       await this.prisma.preOrder.update({
         where: { id: presaleId },
-        data: { customerId: customerId },
+        data: { customerId: customerId, step: PreOrderStepEnum.order },
       });
     }
 

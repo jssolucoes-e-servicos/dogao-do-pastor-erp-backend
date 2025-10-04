@@ -1,5 +1,9 @@
 export enum PaymentMethodEnum {
-  'pix' = '  pix',
-  'card' = 'card',
-  'checkout_pro' = 'checkout_pro',
+  undefined = 'undefined',
+  pix = 'pix',
+  card = 'card',
+  card_credit = 'card_credit',
+  card_debit = 'card_debit',
+  pos = 'pos',
+  monney = 'monney',
 }

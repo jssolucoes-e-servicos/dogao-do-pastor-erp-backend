@@ -8,7 +8,7 @@ import { ICustomer } from './customer.interface';
 import { IDeliveryAddress } from './delivery-address.interface';
 import { IEmailValidator } from './email-validator.inteface';
 import { IFindWithName } from './find-with-name.interface';
-import { IGenre } from './genre.interface';
+import { IGender } from './gender.interface';
 import { IMercadoPagoWebhookNotification } from './mercadopago-webhook.interface';
 import { IMongoIdValidator } from './mongo-id-validator.inteface';
 import { IMPCheckout } from './mp-checkout.interface';
@@ -30,6 +30,6 @@ import { IWeekDay } from './weekday.interface';
 
 export type {
   IAddress, IBooleanValidator, ICepValidator, ICustomer, ICustomerData, ICustomerEntry, IDeliveryAddress,
-  IEmailValidator, IFindWithName, IGenre, IMercadoPagoWebhookNotification, IMongoIdValidator, IMPCheckout, IMPCustomer, IMPOrder, IMPPayment, IMPPix, IMPWebhook, IPagination, IPaymentRequest, IPaymentResponse, IPhoneValidator, IPreOrder, IPreOrderItem, IPreOrderRequest, IRequestWithUser, IStringValidator, IUserResponse, IWeekDay
+  IEmailValidator, IFindWithName, IGender, IMercadoPagoWebhookNotification, IMongoIdValidator, IMPCheckout, IMPCustomer, IMPOrder, IMPPayment, IMPPix, IMPWebhook, IPagination, IPaymentRequest, IPaymentResponse, IPhoneValidator, IPreOrder, IPreOrderItem, IPreOrderRequest, IRequestWithUser, IStringValidator, IUserResponse, IWeekDay
 };
 

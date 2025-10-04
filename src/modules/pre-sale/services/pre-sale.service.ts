@@ -1,5 +1,11 @@
 //ENDEREÇO/NOME DO ARQUIVO: src/modules/pre-sale/services/pre-sale.service.ts
-import { DeliveryOptionEnum, PaymentStatusEnum } from '@/common/enums';
+import {
+  DeliveryOptionEnum,
+  OrderStatsEnum,
+  PaymentStatsEnum,
+} from '@/common/enums';
+import { PreOrderStepEnum } from '@/common/enums/pre-order-step.enum';
+import { DatesHelper } from '@/common/helpers/dates-helper';
 import { CustomerRetrieve } from '@/modules/customer/dto/customer-retrieve';
 import { CustomerService } from '@/modules/customer/services/customer.service';
 import { Injectable } from '@nestjs/common';
@@ -27,6 +33,23 @@ export class PreSaleService {
   }> {
     const { cpf, sellerId } = body;
     const customer = await this.customerService.findByCpf({ cpf: cpf });
+
+    if (customer) {
+      const haspreorder = await this.prisma.preOrder.findFirst({
+        where: {
+          customerId: customer.id,
+          editionId: EDITION_ID,
+          status: OrderStatsEnum.digitation,
+        },
+      });
+      if (haspreorder) {
+        return {
+          presale: haspreorder,
+          customer: customer,
+        };
+      }
+    }
+    const isPromo: boolean = DatesHelper.IsPromoDate();
     const preSale = await this.prisma.preOrder.create({
       data: {
         customerId: customer ? customer.id : undefined,
@@ -35,13 +58,14 @@ export class PreSaleService {
         quantity: 0,
         valueTotal: 0,
         customerAddressId: undefined,
-        paymentStatus: PaymentStatusEnum.PENDING,
+        paymentStatus: PaymentStatsEnum.pending,
         paymentProvider: 'starting',
         paymentId: null,
         paymentUrl: null,
         observations: cpf,
-        deliveryOption: DeliveryOptionEnum.PICKUP,
-        isPromo: true,
+        deliveryOption: DeliveryOptionEnum.undefined,
+        step: PreOrderStepEnum.customer,
+        isPromo: isPromo,
       },
     });
     const result = {
@@ -73,7 +97,8 @@ export class PreSaleService {
         where: { id: data.preorderId },
         data: {
           customerAddressId: data.deliveryAddressId,
-          deliveryOption: DeliveryOptionEnum.DELIVERY,
+          deliveryOption: DeliveryOptionEnum.delivery,
+          step: PreOrderStepEnum.payment,
         },
       });
       return presale;
@@ -90,13 +115,15 @@ export class PreSaleService {
     console.info('data', data);
     try {
       const option =
-        data.deliveryOption === 'PICKUP'
-          ? DeliveryOptionEnum.PICKUP
-          : DeliveryOptionEnum.DONATE;
+        data.deliveryOption === 'pickup'
+          ? DeliveryOptionEnum.pickup
+          : DeliveryOptionEnum.donate;
       const presale = await this.prisma.preOrder.update({
         where: { id: data.preorderId },
         data: {
+          customerAddressId: null,
           deliveryOption: option,
+          step: PreOrderStepEnum.payment,
         },
       });
       return presale;
@@ -106,80 +133,43 @@ export class PreSaleService {
     }
   }
 
-  /* async processOrder(body: PreSaleCreateDTO) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const { customerId, orderItems, deliveryAddressId, deliveryOption } = body;
-    const editionActivedId: string = process.env.EDITION_ID!;
-
-    if (!customerId || !orderItems || !deliveryOption) {
-      throw new HttpException(
-        'Dados do pedido incompletos.',
-        HttpStatus.BAD_REQUEST,
-      );
+  selectNewStep(step: string) {
+    switch (step) {
+      case 'pix':
+        return PreOrderStepEnum.pix;
+      case 'card':
+        return PreOrderStepEnum.card;
+      case 'cartao':
+        return PreOrderStepEnum.card;
+      case 'customer':
+        return PreOrderStepEnum.customer;
+      case 'delivery':
+        return PreOrderStepEnum.delivery;
+      case 'order':
+        return PreOrderStepEnum.order;
+      case 'payment':
+        return PreOrderStepEnum.payment;
+      default:
+        return PreOrderStepEnum.tanks;
     }
+  }
 
-    const requiredDeliveryAddressId =
-      deliveryOption === 'delivery' ? true : false;
-    if (requiredDeliveryAddressId === true && deliveryAddressId === null) {
-      throw new HttpException(
-        'Dados do pedido incompletos.',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
+  async changeStep(data: {
+    preorderId: string;
+    step: string;
+  }): Promise<PreSaleFullRetrieveDTO> {
     try {
-      const customer = await this.prisma.customer.findUnique({
-        where: { id: customerId },
+      const newStep = this.selectNewStep(data.step);
+      const presale = await this.prisma.preOrder.update({
+        where: { id: data.preorderId },
+        data: {
+          step: newStep, //,
+        },
       });
-      if (!customer) {
-        throw new HttpException('Cliente inválido.', HttpStatus.BAD_REQUEST);
-      }
-
-      const totalAmount = orderItems.length * 19.99;
-
-      const dataSend = {
-        customerId: customerId,
-        deliveryOption: deliveryOption,
-        addressId: deliveryOption === 'delivery' ? deliveryAddressId : null,
-        editionId: editionActivedId,
-        quantity: orderItems.length,
-        valueTotal: totalAmount,
-        paymentStatus: 'pending',
-        paymentProvider: 'mercadopago',
-        isPromo: true,
-      };
-
-      const preOrder = await this.prisma.$transaction(async (tx) => {
-        const newPreOrder = await tx.preOrder.create({
-          data: dataSend,
-        });
-
-        const itemsToCreate = orderItems.map((item) => ({
-          preOrderId: newPreOrder.id,
-          removedIngredients: item.removedIngredients,
-        }));
-
-        await tx.preOrderItem.createMany({
-          data: itemsToCreate,
-        });
-
-        return newPreOrder;
-      });
-
-      // Aqui, o PreSaleService agora usa o PaymentService para criar o pagamento
-      // É importante notar que ele pode usar createPixPayment ou createCardPayment dependendo da lógica que você quiser implementar aqui
-      // Como não temos a lógica de escolha, manteremos apenas o `preOrder` e os dados para que o cliente possa chamar o endpoint de pagamento por conta própria.
-      return {
-        preOrderId: preOrder.id,
-        totalAmount: totalAmount,
-        customerEmail: customer.email,
-      };
+      return presale;
     } catch (error) {
-      console.error('Erro ao processar pedido:', error);
-      throw new HttpException(
-        'Erro interno do servidor.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      console.error(error);
+      throw new Error('Error API');
     }
-  } */
+  }
 }

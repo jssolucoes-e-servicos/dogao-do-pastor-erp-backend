@@ -1,5 +1,6 @@
 export enum DeliveryOptionEnum {
-  PICKUP = 'PICKUP',
-  DELIVERY = 'DELIVERY',
-  DONATE = 'DONATE',
+  undefined = 'undefined',
+  pickup = 'pickup',
+  delivery = 'delivery',
+  donate = 'donate',
 }

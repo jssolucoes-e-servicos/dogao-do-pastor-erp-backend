@@ -1,4 +1,8 @@
-import { OrderStatsEnum } from '@/common/enums';
+import {
+  OrderStatsEnum,
+  PaymentMethodEnum,
+  PreOrderStepEnum,
+} from '@/common/enums';
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { Payment } from 'mercadopago';
 import { PaymentStatusEnum } from 'src/common/enums/payment-status.enum';
@@ -41,7 +45,7 @@ export class MercadoPagoService {
 
   private emailFallback(preorderId: string, existing?: string | null): string {
     if (existing && /\S+@\S+\.\S+/.test(existing)) return existing;
-    return `noemail+${preorderId}@smartchurch.com`;
+    return `noemail+${preorderId}@smartchurches.com.br`;
   }
 
   // ------------------ PIX ------------------
@@ -55,60 +59,80 @@ export class MercadoPagoService {
       throw new HttpException('Pré-venda não encontrada', HttpStatus.NOT_FOUND);
 
     const customer = preorder.customer!;
-    const { first_name, last_name } = this.splitName(customer.name);
-    const phoneObj = this.normalizePhone(customer.phone);
-    const email = this.emailFallback(preorder.id, customer.email);
 
-    try {
-      const payment = await this.mpClient.create({
-        body: {
-          transaction_amount: preorder.valueTotal,
-          description: `Pré-venda ${preorder.id}`,
-          payment_method_id: 'pix',
-          payer: {
-            first_name,
-            last_name,
-            email,
-            phone: phoneObj,
-          },
-        },
-      });
-
-      const pi = payment.point_of_interaction;
-      const td = pi?.transaction_data;
-      const pix: IMPPix = {
-        qrCodeBase64: td?.qr_code_base64 ?? null,
-        qrCode: td?.qr_code ?? null,
-        ticketUrl: td?.ticket_url ?? null,
-      };
-
+    if (preorder.paymentPixQrcode && preorder.paymentId) {
       const response: IMPPayment = {
-        id: String(payment.id),
+        id: String(preorder.paymentId),
         status:
-          (payment.status as PaymentStatusEnum) ?? PaymentStatusEnum.PENDING,
-        detail: payment.status_detail ?? '',
-        pix,
-      };
-
-      await this.prisma.preOrder.update({
-        where: { id: preorder.id },
-        data: {
-          paymentStatus: PaymentStatusEnum.PENDING,
-          paymentProvider: 'mercadopago',
-          paymentId: String(payment.id),
-          paymentMethod: 'PIX',
-          status: OrderStatsEnum.PENDING_PAYMENT,
+          (preorder.paymentStatus as PaymentStatusEnum) ??
+          PaymentStatusEnum.pending,
+        detail: '',
+        pix: {
+          qrCodeBase64: preorder.paymentPixQrcode,
+          qrCode: preorder.paymentPixCopyPaste,
+          ticketUrl: null,
         },
-      });
-
+      };
       return { success: true, payment: response };
-    } catch (err: any) {
-      this.logger.error('Erro ao processar PIX', err?.response ?? err);
-      const msg = err?.response?.message ?? err?.message;
-      throw new HttpException(
-        msg || 'Erro ao processar pagamento PIX',
-        HttpStatus.BAD_REQUEST,
-      );
+    } else {
+      const { first_name, last_name } = this.splitName(customer.name);
+      const phoneObj = this.normalizePhone(customer.phone);
+      const email = this.emailFallback(preorder.id, customer.email);
+
+      try {
+        const payment = await this.mpClient.create({
+          body: {
+            transaction_amount: preorder.valueTotal,
+            description: `Pré-venda Dogão: ${preorder.id}`,
+            payment_method_id: 'pix',
+            payer: {
+              first_name,
+              last_name,
+              email,
+              phone: phoneObj,
+            },
+          },
+        });
+
+        const pi = payment.point_of_interaction;
+        const td = pi?.transaction_data;
+        const pix: IMPPix = {
+          qrCodeBase64: td?.qr_code_base64 ?? null,
+          qrCode: td?.qr_code ?? null,
+          ticketUrl: td?.ticket_url ?? null,
+        };
+
+        const response: IMPPayment = {
+          id: String(payment.id),
+          status:
+            (payment.status as PaymentStatusEnum) ?? PaymentStatusEnum.pending,
+          detail: payment.status_detail ?? '',
+          pix,
+        };
+
+        await this.prisma.preOrder.update({
+          where: { id: preorder.id },
+          data: {
+            paymentStatus: PaymentStatusEnum.pending,
+            paymentProvider: 'mercadopago',
+            paymentId: String(payment.id),
+            paymentMethod: PaymentMethodEnum.pix,
+            paymentPixCopyPaste: pix.qrCode,
+            paymentPixQrcode: pix.qrCodeBase64,
+            status: OrderStatsEnum.pending_payment,
+            step: PreOrderStepEnum.pix,
+          },
+        });
+
+        return { success: true, payment: response };
+      } catch (err: any) {
+        this.logger.error('Erro ao processar PIX', err?.response ?? err);
+        const msg = err?.response?.message ?? err?.message;
+        throw new HttpException(
+          msg || 'Erro ao processar pagamento PIX',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
     }
   }
 
@@ -146,7 +170,7 @@ export class MercadoPagoService {
       const payment = await this.mpClient.create({
         body: {
           transaction_amount: preorder.valueTotal,
-          description: `Pré-venda ${preorder.id}`,
+          description: `Pré-venda Dogão: ${preorder.id}`,
           token: body.token,
           installments: body.installments ?? 1,
           payer: { first_name, last_name, email, phone: phoneObj },
@@ -156,7 +180,7 @@ export class MercadoPagoService {
       const response: IMPPayment = {
         id: String(payment.id),
         status:
-          (payment.status as PaymentStatusEnum) ?? PaymentStatusEnum.PENDING,
+          (payment.status as PaymentStatusEnum) ?? PaymentStatusEnum.pending,
         detail: payment.status_detail ?? '',
       };
 
@@ -165,11 +189,12 @@ export class MercadoPagoService {
         data: {
           paymentStatus:
             payment.status === 'approved'
-              ? PaymentStatusEnum.APPROVED
-              : PaymentStatusEnum.PENDING,
+              ? PaymentStatusEnum.approved
+              : PaymentStatusEnum.pending,
           paymentProvider: 'mercadopago',
           paymentId: String(payment.id),
-          paymentMethod: 'CARD',
+          paymentMethod: PaymentMethodEnum.card,
+          step: PreOrderStepEnum.card,
         },
       });
 

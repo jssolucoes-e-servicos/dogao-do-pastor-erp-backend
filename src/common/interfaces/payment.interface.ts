@@ -1,4 +1,4 @@
-import { PaymentMethodEnum, PaymentStatusEnum } from 'src/common/enums';
+import { PaymentMethodEnum, PaymentStatsEnum } from 'src/common/enums';
 
 export interface IPaymentRequest {
   orderId: string;
@@ -9,7 +9,7 @@ export interface IPaymentRequest {
 
 export interface IPaymentResponse {
   paymentId: string;
-  status: PaymentStatusEnum;
+  status: PaymentStatsEnum;
   qrCode?: string;
   qrCodeBase64?: string;
   checkoutUrl?: string;

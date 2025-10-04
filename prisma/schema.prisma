@@ -9,30 +9,71 @@ datasource db {
 }
 
 enum VoucherStats {
-  NEW
-  REGISTRED
-  USED
-  CANCELLED
+  new
+  registred
+  used
+  cancelled
 }
 
 enum OrderStats {
-  DIGITATION
-  PENDING_PAYMENT
-  PAYMENT
-  NEW
-  QUEUE
-  PRODUCTION
-  EXPEDITION
-  DELIVERING
-  DELIVERED
-  CANCELLED
+  digitation
+  pending_payment
+  payment
+  new
+  queue
+  production
+  expedition
+  delivering
+  delivered
+  cancelled
+}
+
+enum PreOrderStep {
+  customer
+  order
+  delivery
+  payment
+  pix
+  card
+  tanks
 }
 
 enum DeliveryOption {
-  PICKUP
-  DELIVERY
-  DONATE
+  undefined
+  pickup
+  delivery
+  donate
 }
+
+enum PaymentOrigin {
+ preorder
+  order
+  pdv
+}
+
+
+enum PaymentStats {
+  pending
+  paid
+  failed
+  cancelled
+  refunded
+}
+
+enum PaymetProviders {
+  mercadopago
+}
+
+enum PaymentMethod {
+  undefined
+  pix
+  card
+  card_credit
+  card_debit
+  pos
+  monney
+}
+
 
 // Definindo a edição do evento
 model Edition {
@@ -122,7 +163,7 @@ model Voucher {
   orderItemId String?      @db.ObjectId
   used        Boolean      @default(false)
   usedAt      DateTime?
-  stats       VoucherStats @default(NEW)
+  stats       VoucherStats @default(new)
   active      Boolean      @default(true)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
@@ -202,6 +243,28 @@ model CustomerAddress {
   @@map("customers_addresses")
 }
 
+
+model Payment {
+  id                String           @id @default(auto()) @map("_id") @db.ObjectId
+  origin PaymentOrigin @default(preorder)
+  idReference String @db.ObjectId
+  value Float
+  paymentStatus     PaymentStats? @default(pending)
+  provider   PaymetProviders? @default(mercadopago) // 'mercadopago'
+  paymentId         String?
+  method     PaymentMethod? @default(undefined)
+  pixQrcode String?
+  pixCopyPaste String?
+  paymentUrl        String? //url payment init
+  cardToken String?
+  active            Boolean          @default(true)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  deletedAt         DateTime?
+
+  @@map("payments")
+}
+
 // O pedido de pré-venda
 model PreOrder {
   id                String           @id @default(auto()) @map("_id") @db.ObjectId
@@ -218,12 +281,15 @@ model PreOrder {
   paymentId         String? // ID da transação do Mercado Pago
   paymentUrl        String? //url payment init
   paymentMethod     String?          @default("NEW") // PIX  OU CARD - NEW apenas antes de ir para tela de pgto
+  paymentPixQrcode String?
+  paymentPixCopyPaste String?
   address           CustomerAddress? @relation(fields: [customerAddressId], references: [id])
   customerAddressId String?          @db.ObjectId
   observations      String?
-  deliveryOption    DeliveryOption   @default(PICKUP)
-  status            OrderStats       @default(DIGITATION)
+  deliveryOption    DeliveryOption   @default(undefined)
+  status            OrderStats       @default(digitation)
   isPromo           Boolean          @default(false)
+  step              PreOrderStep @default(customer)
   active            Boolean          @default(true)
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt

@@ -1,5 +1,6 @@
 //ENDEREÇO/NOME DO ARQUIVO: src/modules/pre-sale/services/pre-sale.service.ts
 import { PRICE_PER_DOG } from '@/common/constants';
+import { PreOrderStepEnum } from '@/common/enums';
 import { Injectable } from '@nestjs/common';
 import { PreSaleInitRetrieveDTO } from 'src/modules/pre-sale/dto/pre-sale-init-retrieve.dto';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
@@ -36,6 +37,7 @@ export class PreSaleItemsService {
       data: {
         quantity: orderItems.length,
         valueTotal: orderItems.length * PRICE_PER_DOG,
+        step: PreOrderStepEnum.payment,
       },
     });
 

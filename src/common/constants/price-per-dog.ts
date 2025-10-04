@@ -1,1 +1,1 @@
-export const PRICE_PER_DOG: number = Number(process.env.DOGPRICE) | 19.99;
+export const PRICE_PER_DOG: number = 19.99;

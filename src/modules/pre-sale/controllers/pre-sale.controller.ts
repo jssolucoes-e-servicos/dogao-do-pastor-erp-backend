@@ -28,6 +28,13 @@ export class PreSaleController {
     return await this.preSaleService.findById(id);
   }
 
+  @Post('change-step')
+  async chageStep(
+    @Body() data: { preorderId: string; step: string },
+  ): Promise<PreSaleFullRetrieveDTO> {
+    return await this.preSaleService.changeStep(data);
+  }
+
   @Post('set-address')
   async setAddress(
     @Body() body: PreSaleSetAddressDTO,
