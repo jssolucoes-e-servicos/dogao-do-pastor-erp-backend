@@ -4,11 +4,17 @@ import { CustomerAddressService } from 'src/modules/customer-address/services/cu
 import { CustomerModule } from 'src/modules/customer/customer.module';
 import { CustomerService } from 'src/modules/customer/services/customer.service';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
+import { LoggerService } from '../logger/services/logger.service';
 
 @Module({
   imports: [CustomerModule],
   controllers: [CustomerAddressController],
-  providers: [PrismaService, CustomerService, CustomerAddressService],
+  providers: [
+    PrismaService,
+    LoggerService,
+    CustomerService,
+    CustomerAddressService,
+  ],
   exports: [CustomerAddressService],
 })
 export class CustomerAddressModule {

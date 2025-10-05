@@ -6,16 +6,18 @@ import { WebhookController } from 'src/modules/payment/controllers/webhook.contr
 import { PaymentTaskService } from 'src/modules/payment/services/payment-task.service';
 import { PaymentService } from 'src/modules/payment/services/payment.service';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
+import { LoggerService } from '../logger/services/logger.service';
 import { MercadoPagoService } from './services/mercadopago.service';
 
 @Module({
   imports: [ScheduleModule.forRoot()],
   controllers: [PaymentController, WebhookController],
   providers: [
+    PrismaService,
+    LoggerService,
     MercadoPagoService,
     PaymentTaskService,
-    PrismaService,
-    PaymentService
+    PaymentService,
   ],
   exports: [PaymentService, MercadoPagoService],
 })

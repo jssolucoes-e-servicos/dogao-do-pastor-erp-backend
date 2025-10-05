@@ -3,7 +3,6 @@ import {
   Controller,
   HttpException,
   HttpStatus,
-  Logger,
   Param,
   Post,
 } from '@nestjs/common';
@@ -11,9 +10,7 @@ import { MercadoPagoService } from '../services/mercadopago.service';
 
 @Controller('payments')
 export class PaymentController {
-  private readonly logger = new Logger(PaymentController.name);
-
-  constructor(private readonly mpService: MercadoPagoService) { }
+  constructor(private readonly mpService: MercadoPagoService) {}
 
   /**
    * Gera pagamento PIX para um preorder.
@@ -27,10 +24,6 @@ export class PaymentController {
         HttpStatus.BAD_REQUEST,
       );
     }
-
-    this.logger.log(
-      `Solicitado pagamento PIX para preorder ${body.preorderId}`,
-    );
     return this.mpService.processPixPayment(body.preorderId);
   }
 
@@ -66,7 +59,6 @@ export class PaymentController {
       );
     }
 
-    this.logger.log(`Solicitado pagamento CARD para preorder ${preOrderId}`);
     return this.mpService.processCardPayment(preOrderId, {
       token: body.card.token,
       installments: body.card.installments ?? 1,

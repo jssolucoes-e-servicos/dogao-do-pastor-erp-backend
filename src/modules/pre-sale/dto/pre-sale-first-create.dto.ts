@@ -9,4 +9,7 @@ export class PreSaleFirstCreateDTO {
     label: 'Id do Vendedor',
   })
   sellerId: string;
+
+  @StringValidator({ fieldName: 'sellerTag', label: 'Tag do vendedor' })
+  sellerTag: string;
 }

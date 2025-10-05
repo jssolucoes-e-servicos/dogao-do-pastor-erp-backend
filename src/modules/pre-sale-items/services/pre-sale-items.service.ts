@@ -1,15 +1,17 @@
 //ENDEREÇO/NOME DO ARQUIVO: src/modules/pre-sale/services/pre-sale.service.ts
 import { PRICE_PER_DOG } from '@/common/constants';
 import { PreOrderStepEnum } from '@/common/enums';
+import { BaseService } from '@/common/services/base.service';
+import { LoggerService } from '@/modules/logger/services/logger.service';
 import { Injectable } from '@nestjs/common';
 import { PreSaleInitRetrieveDTO } from 'src/modules/pre-sale/dto/pre-sale-init-retrieve.dto';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { PreSaleItemsManyCreateDTO } from '../dto/pre-sale-items-many-create.dto';
 
 @Injectable()
-export class PreSaleItemsService {
-  constructor(private readonly prisma: PrismaService) {
-    /* void */
+export class PreSaleItemsService extends BaseService {
+  constructor(loggerService: LoggerService, prismaService: PrismaService) {
+    super(loggerService, prismaService);
   }
 
   async inserts(

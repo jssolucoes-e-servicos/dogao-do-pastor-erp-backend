@@ -1,3 +1,5 @@
+import { BaseService } from '@/common/services/base.service';
+import { LoggerService } from '@/modules/logger/services/logger.service';
 import { Injectable } from '@nestjs/common';
 import { PreOrderStepEnum } from 'src/common/enums';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
@@ -7,11 +9,10 @@ import { CustomerWithAddressRetriveDTO } from '../dto/customer-whit-address-retr
 import { OnlyCPFRequestDTO } from '../dto/only-cpf-request.dto';
 
 @Injectable()
-export class CustomerService {
-  constructor(private prisma: PrismaService) {
-    /* void */
+export class CustomerService extends BaseService {
+  constructor(loggerService: LoggerService, prismaService: PrismaService) {
+    super(loggerService, prismaService);
   }
-
   async proccessCustomerEntry(
     customerDTO: CustomerCreateDTO,
   ): Promise<CustomerWithAddressRetriveDTO | null> {
@@ -57,6 +58,9 @@ export class CustomerService {
         allowsChurch: customerDTO.allowsChurch,
       },
     });
+    this.logger.log(
+      `Novo Cliente: [CPF: ${customer.cpf}, Nome: ${customer.name}, Telefone: ${customer.phone} ]`,
+    );
     return customer;
   }
 

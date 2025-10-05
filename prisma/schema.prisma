@@ -16,16 +16,17 @@ enum VoucherStats {
 }
 
 enum OrderStats {
-  digitation
-  pending_payment
-  payment
-  new
-  queue
-  production
-  expedition
-  delivering
-  delivered
-  cancelled
+  digitation // Pedido em digitação no online
+  pending_payment  // Quando pedido online esta finalizado, mas sem pagamento
+  payd // Quando pedido online recebe Pagamento
+  new // Quando pedido novo (PDV)
+  queue  // Quando na fila esperando para horario de produção
+  production  // Quando estiver na produção
+  expedition  // Quando Termicada produção, estiver no balcão
+  delivering  // Quando sai para entrega
+  delivered  // Quando com estatus de já entregue
+  cancelled // Quando cancelado
+  rejected  // Quando pedido rejeitado pelo sistema (não pago)
 }
 
 enum PreOrderStep {
@@ -274,6 +275,7 @@ model PreOrder {
   editionId         String           @db.ObjectId
   seller            Seller           @relation(fields: [sellerId], references: [id])
   sellerId          String           @db.ObjectId
+  sellerTag         String
   quantity          Int
   valueTotal        Float
   paymentStatus     String // 'pending', 'paid', 'failed'

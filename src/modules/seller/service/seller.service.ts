@@ -1,3 +1,5 @@
+import { BaseService } from '@/common/services/base.service';
+import { LoggerService } from '@/modules/logger/services/logger.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { SellerCreateDTO } from 'src/modules/seller/dto/seller-create.dto';
@@ -9,9 +11,9 @@ import {
 import { SellerUpdateDTO } from 'src/modules/seller/dto/seller-update.dto';
 
 @Injectable()
-export class SellerService {
-  constructor(private prisma: PrismaService) {
-    /* void */
+export class SellerService extends BaseService {
+  constructor(loggerService: LoggerService, prismaService: PrismaService) {
+    super(loggerService, prismaService);
   }
 
   async create(sellerDTO: SellerCreateDTO): Promise<SellerRetrieveDTO> {

@@ -6,12 +6,19 @@ import { PreSaleService } from 'src/modules/pre-sale/services/pre-sale.service';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { CustomerModule } from '../customer/customer.module';
 import { CustomerService } from '../customer/services/customer.service';
+import { LoggerService } from '../logger/services/logger.service';
 import { PaymentService } from '../payment/services/payment.service';
 
 @Module({
   imports: [PaymentModule, CustomerModule],
   controllers: [PreSaleController],
-  providers: [PrismaService, PreSaleService, PaymentService, CustomerService],
+  providers: [
+    PrismaService,
+    LoggerService,
+    PreSaleService,
+    PaymentService,
+    CustomerService,
+  ],
   exports: [PreSaleService],
 })
 export class PreSaleModule {

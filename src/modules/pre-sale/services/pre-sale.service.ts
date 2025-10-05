@@ -6,8 +6,10 @@ import {
 } from '@/common/enums';
 import { PreOrderStepEnum } from '@/common/enums/pre-order-step.enum';
 import { DatesHelper } from '@/common/helpers/dates-helper';
+import { BaseService } from '@/common/services/base.service';
 import { CustomerRetrieve } from '@/modules/customer/dto/customer-retrieve';
 import { CustomerService } from '@/modules/customer/services/customer.service';
+import { LoggerService } from '@/modules/logger/services/logger.service';
 import { Injectable } from '@nestjs/common';
 import { EDITION_ID } from 'src/common/constants/ids';
 import { PaymentService } from 'src/modules/payment/services/payment.service';
@@ -18,20 +20,21 @@ import { PreSaleFullRetrieveDTO } from '../dto/pre-sale-full-retrieve.dto';
 import { PreSaleSetAddressDTO } from '../dto/pre-sale-set-address.dto';
 
 @Injectable()
-export class PreSaleService {
+export class PreSaleService extends BaseService {
   constructor(
-    private readonly prisma: PrismaService,
+    loggerService: LoggerService,
+    prismaService: PrismaService,
     private readonly customerService: CustomerService,
     private readonly paymentService: PaymentService,
   ) {
-    /* void */
+    super(loggerService, prismaService);
   }
 
   async start(body: PreSaleFirstCreateDTO): Promise<{
     presale: PreSaleInitRetrieveDTO;
     customer: CustomerRetrieve | null;
   }> {
-    const { cpf, sellerId } = body;
+    const { cpf, sellerId, sellerTag } = body;
     const customer = await this.customerService.findByCpf({ cpf: cpf });
 
     if (customer) {
@@ -55,6 +58,7 @@ export class PreSaleService {
         customerId: customer ? customer.id : undefined,
         editionId: EDITION_ID,
         sellerId: sellerId,
+        sellerTag: sellerTag,
         quantity: 0,
         valueTotal: 0,
         customerAddressId: undefined,

@@ -1,18 +1,14 @@
 //ENDEREÇO/NOME DO ARQUIVO: src/modules/payment/services/payment.service.ts
-import { Injectable, Logger } from '@nestjs/common';
+import { BaseService } from '@/common/services/base.service';
+import { LoggerService } from '@/modules/logger/services/logger.service';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { IMercadoPagoPaymentResponse } from '../interfaces/mercadopago.interface';
-import { MercadoPagoService } from './mercadopago.service';
 
 @Injectable()
-export class PaymentService {
-  private readonly logger = new Logger(PaymentService.name);
-
-  constructor(
-    private readonly mercadoPagoService: MercadoPagoService,
-    private readonly prisma: PrismaService,
-  ) {
-    /* void */
+export class PaymentService extends BaseService {
+  constructor(loggerService: LoggerService, prismaService: PrismaService) {
+    super(loggerService, prismaService);
   }
 
   async getPaymentStatus(
@@ -28,8 +24,7 @@ export class PaymentService {
       return null; //paymentDetails;
     } catch (error) {
       this.logger.error(
-        `Erro ao buscar status do pagamento ${paymentId}:`,
-        error.stack,
+        `Erro ao buscar status do pagamento ${paymentId}: ${error.stack}`,
       );
       throw error;
     }

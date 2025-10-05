@@ -3,7 +3,9 @@ import {
   PaymentMethodEnum,
   PreOrderStepEnum,
 } from '@/common/enums';
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { BaseService } from '@/common/services/base.service';
+import { LoggerService } from '@/modules/logger/services/logger.service';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Payment } from 'mercadopago';
 import { PaymentStatusEnum } from 'src/common/enums/payment-status.enum';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
@@ -14,11 +16,10 @@ import {
 } from '../interfaces/payment.interface';
 
 @Injectable()
-export class MercadoPagoService {
-  private readonly logger = new Logger(MercadoPagoService.name);
+export class MercadoPagoService extends BaseService {
   private readonly mpClient: Payment;
-
-  constructor(private readonly prisma: PrismaService) {
+  constructor(loggerService: LoggerService, prismaService: PrismaService) {
+    super(loggerService, prismaService);
     this.mpClient = new Payment({
       accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
     });
@@ -126,7 +127,7 @@ export class MercadoPagoService {
 
         return { success: true, payment: response };
       } catch (err: any) {
-        this.logger.error('Erro ao processar PIX', err?.response ?? err);
+        this.logger.error(`Erro ao processar PIX: ${err?.response ?? err}`);
         const msg = err?.response?.message ?? err?.message;
         throw new HttpException(
           msg || 'Erro ao processar pagamento PIX',
@@ -150,13 +151,20 @@ export class MercadoPagoService {
       include: { customer: true },
     });
 
-    if (!preorder)
+    if (!preorder) {
+      this.logger.error(`Pré-venda: ${preOrderId} não encontrada`);
       throw new HttpException('Pré-venda não encontrada', HttpStatus.NOT_FOUND);
-    if (!body?.token)
+    }
+
+    if (!body?.token) {
+      this.logger.error(
+        `Pré-venda: ${preOrderId} -> Token do cartão não fornecido`,
+      );
       throw new HttpException(
         'Token do cartão não fornecido',
         HttpStatus.BAD_REQUEST,
       );
+    }
 
     const customer = preorder.customer!;
     const providedName = body.payer?.name ?? customer.name;
@@ -167,6 +175,7 @@ export class MercadoPagoService {
     const phoneObj = this.normalizePhone(customer.phone);
 
     try {
+      this.logger.log(`Pré-venda: ${preOrderId} -> Iniciando MP - Cartão`);
       const payment = await this.mpClient.create({
         body: {
           transaction_amount: preorder.valueTotal,
@@ -176,7 +185,9 @@ export class MercadoPagoService {
           payer: { first_name, last_name, email, phone: phoneObj },
         },
       });
-
+      this.logger.log(
+        `Pré-venda: ${preOrderId} -> Resposta MP: ${payment.status}`,
+      );
       const response: IMPPayment = {
         id: String(payment.id),
         status:
@@ -194,13 +205,24 @@ export class MercadoPagoService {
           paymentProvider: 'mercadopago',
           paymentId: String(payment.id),
           paymentMethod: PaymentMethodEnum.card,
-          step: PreOrderStepEnum.card,
+          step:
+            payment.status === 'approved'
+              ? PreOrderStepEnum.tanks
+              : PreOrderStepEnum.card,
+          status:
+            payment.status === 'approved'
+              ? OrderStatsEnum.payd
+              : OrderStatsEnum.pending_payment,
+          paymentPixCopyPaste: null,
+          paymentPixQrcode: null,
         },
       });
 
       return { success: true, payment: response };
     } catch (err: any) {
-      this.logger.error('Erro ao processar cartão', err?.response ?? err);
+      this.logger.error(
+        `Pré-venda: ${preOrderId} -> Erro ao processar cartão: ${err?.response ?? err}`,
+      );
       const msg = err?.response?.message ?? err?.message;
       throw new HttpException(
         msg || 'Erro ao processar pagamento com cartão',

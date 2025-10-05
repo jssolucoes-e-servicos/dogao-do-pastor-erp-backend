@@ -1,17 +1,18 @@
 // src/modules/payment/services/payment-task.service.ts
-import { Injectable, Logger } from '@nestjs/common';
+import { BaseService } from '@/common/services/base.service';
+import { LoggerService } from '@/modules/logger/services/logger.service';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { PaymentService } from './payment.service';
 
 @Injectable()
-export class PaymentTaskService {
-  private readonly logger = new Logger(PaymentTaskService.name);
-
+export class PaymentTaskService extends BaseService {
   constructor(
-    private readonly prisma: PrismaService,
+    loggerService: LoggerService,
+    prismaService: PrismaService,
     private readonly paymentService: PaymentService,
   ) {
-    /* void */
+    super(loggerService, prismaService);
   }
 
   // Executa a cada hora

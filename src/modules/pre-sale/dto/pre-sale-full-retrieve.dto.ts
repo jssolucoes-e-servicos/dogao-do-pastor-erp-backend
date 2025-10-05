@@ -2,6 +2,8 @@ import { CustomerRetrieve } from '@/modules/customer/dto/customer-retrieve';
 
 export class PreSaleFullRetrieveDTO {
   id: string;
+  sellerId: string;
+  sellerTag: string;
   customerId?: string | null;
   customer?: CustomerRetrieve | null;
   editionId: string;
