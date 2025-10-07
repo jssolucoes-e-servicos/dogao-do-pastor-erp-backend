@@ -3,10 +3,12 @@ import {
   PaymentMethodEnum,
   PreOrderStepEnum,
 } from '@/common/enums';
+import * as crypto from 'crypto';
+
 import { BaseService } from '@/common/services/base.service';
 import { LoggerService } from '@/modules/logger/services/logger.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Payment } from 'mercadopago';
+import MercadoPagoConfig, { Payment } from 'mercadopago';
 import { PaymentStatusEnum } from 'src/common/enums/payment-status.enum';
 import { EvolutionNotificationsService } from 'src/modules/evolution/services/evolution-notifications.service';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
@@ -16,18 +18,44 @@ import {
   IPaymentResponse,
 } from '../interfaces/payment.interface';
 
+export interface MercadoPagoPaymentResponse {
+  id: number;
+  status: 'pending' | 'approved' | 'rejected' | 'cancelled';
+  status_detail: string;
+  // Adicione outras propriedades que você usa, se necessário
+  // transaction_amount: number;
+  // date_approved: string;
+}
+
+export interface MercadoPagoWebhookNotification {
+  id: string;
+  live_mode: boolean;
+  type: string;
+  date_created: string;
+  user_id: number;
+  api_version: string;
+  action: string;
+  data: {
+    id: string;
+  };
+}
+
 @Injectable()
 export class MercadoPagoService extends BaseService {
   private readonly mpClient: Payment;
+  private readonly mercadoPagoSecretKey = process.env.MERCADOPAGO_SECRET_KEY!;
+
   constructor(
     loggerService: LoggerService,
     prismaService: PrismaService,
     private readonly evolutionNotificationsService: EvolutionNotificationsService,
   ) {
     super(loggerService, prismaService);
-    this.mpClient = new Payment({
+    const client = new MercadoPagoConfig({
       accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
+      options: { timeout: 5000 },
     });
+    this.mpClient = new Payment(client);
   }
 
   // ------------------ Helpers ------------------
@@ -52,6 +80,99 @@ export class MercadoPagoService extends BaseService {
   private emailFallback(preorderId: string, existing?: string | null): string {
     if (existing && /\S+@\S+\.\S+/.test(existing)) return existing;
     return `noemail+${preorderId}@smartchurches.com.br`;
+  }
+
+  validateWebhookSignature(rawBody: string, signatureHeader: string): boolean {
+    if (!this.mercadoPagoSecretKey) {
+      this.logger.error('MERCADOPAGO_SECRET_KEY não configurada.');
+      return false;
+    }
+
+    const signatureParts = signatureHeader.split(',');
+    let timestamp: string | undefined;
+    let v1Signature: string | undefined;
+
+    for (const part of signatureParts) {
+      if (part.startsWith('ts=')) {
+        timestamp = part.substring(3);
+      } else if (part.startsWith('v1=')) {
+        v1Signature = part.substring(3);
+      }
+    }
+
+    if (!timestamp || !v1Signature) {
+      this.logger.warn(
+        'Faltando timestamp ou v1Signature no cabeçalho x-signature.',
+      );
+      return false;
+    }
+
+    // A assinatura é gerada a partir do template "id:[notification_id];ts:[timestamp];",
+    // onde [notification_id] é o ID da notificação (que pode ser encontrado no body)
+    // e [timestamp] é o valor extraído do cabeçalho.
+    // O Mercado Pago simplificou a validação para usar o `rawBody` completo.
+    // Vamos usar o template mais simples e robusto.
+
+    const signatureTemplate = `id:${JSON.parse(rawBody).id};ts:${timestamp};`;
+
+    const computedSignature = crypto
+      .createHmac('sha256', this.mercadoPagoSecretKey)
+      .update(signatureTemplate)
+      .digest('hex');
+
+    if (computedSignature !== v1Signature) {
+      this.logger.warn('Assinatura do webhook inválida.');
+      return false;
+    }
+
+    return true;
+  }
+
+  async processWebhookEvent(
+    payload: MercadoPagoWebhookNotification,
+  ): Promise<void> {
+    this.logger.log(
+      `Recebendo webhook do Mercado Pago: ${JSON.stringify(payload)}`,
+    );
+
+    const { type, data } = payload; // Usa o payload recebido como parâmetro
+
+    if (type === 'payment') {
+      const paymentId = data.id;
+      this.logger.log(
+        `Notificação de pagamento recebida para o ID: ${paymentId}`,
+      );
+
+      // Exemplo de lógica de negócio: buscar o status atualizado do pagamento
+      try {
+        const paymentDetails = await this.getPaymentStatus(paymentId);
+        if (paymentDetails) {
+          // Lógica para atualizar o status da ordem no banco de dados
+          const order = await this.prisma.orderOnline.findFirst({
+            where: { paymentId: paymentId },
+          });
+
+          if (order) {
+            // Supondo que você tenha um enum para o status do pagamento
+            const newStatus = paymentDetails.status;
+            await this.prisma.orderOnline.update({
+              where: { id: order.id },
+              data: { paymentStatus: newStatus },
+            });
+            this.logger.log(
+              `Status da ordem ${order.id} atualizado para ${newStatus}`,
+            );
+          }
+        }
+      } catch (error) {
+        this.logger.error(
+          `Erro ao processar notificação de pagamento ${paymentId}: ${error}`,
+        );
+      }
+    } else {
+      this.logger.log(`Notificação recebida do tipo: ${type}`);
+      // Adicione lógica para outros tipos de eventos, se necessário
+    }
   }
 
   // ------------------ PIX ------------------
@@ -135,11 +256,11 @@ export class MercadoPagoService extends BaseService {
         });
 
         return { success: true, payment: response };
-      } catch (err: any) {
-        this.logger.error(`Erro ao processar PIX: ${err?.response ?? err}`);
-        const msg = err?.response?.message ?? err?.message;
+      } catch (err) {
+        this.logger.error(`Erro ao processar PIX: ${err}`);
+
         throw new HttpException(
-          msg || 'Erro ao processar pagamento PIX',
+          'Erro ao processar pagamento PIX',
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -237,6 +358,32 @@ export class MercadoPagoService extends BaseService {
         msg || 'Erro ao processar pagamento com cartão',
         HttpStatus.BAD_REQUEST,
       );
+    }
+  }
+
+  // ------------------ VERIFICAR PAGAMENTOS MANUALMENTE ------------------
+  async getPaymentStatus(
+    paymentId: string,
+  ): Promise<MercadoPagoPaymentResponse | null> {
+    try {
+      this.logger.log(
+        `Consultando status do pagamento ${paymentId} no Mercado Pago...`,
+      );
+      const response = await this.mpClient.get({ id: paymentId });
+      return response as MercadoPagoPaymentResponse;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        this.logger.error(
+          `Erro ao consultar pagamento ${paymentId} no Mercado Pago: ${error.message}`,
+        );
+      } else {
+        // Se não for um objeto Error, trata como uma string ou outro tipo
+        this.logger.error(
+          `Erro desconhecido ao consultar pagamento ${paymentId} no Mercado Pago: ${JSON.stringify(error)}`,
+        );
+      }
+      console.error(error);
+      return null;
     }
   }
 }
