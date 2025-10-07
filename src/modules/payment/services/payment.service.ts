@@ -1,7 +1,7 @@
 //ENDEREÇO/NOME DO ARQUIVO: src/modules/payment/services/payment.service.ts
-import { BaseService } from '@/common/services/base.service';
-import { LoggerService } from '@/modules/logger/services/logger.service';
 import { Injectable } from '@nestjs/common';
+import { BaseService } from 'src/common/services/base.service';
+import { LoggerService } from 'src/modules/logger/services/logger.service';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { IMercadoPagoPaymentResponse } from '../interfaces/mercadopago.interface';
 
@@ -24,7 +24,7 @@ export class PaymentService extends BaseService {
       return null; //paymentDetails;
     } catch (error) {
       this.logger.error(
-        `Erro ao buscar status do pagamento ${paymentId}: ${error.stack}`,
+        `Erro ao buscar status do pagamento ${paymentId}: ${error}`,
       );
       throw error;
     }
