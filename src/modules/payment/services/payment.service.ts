@@ -31,8 +31,9 @@ export class PaymentService extends BaseService {
   }
 
   async processWebhook(paymentId: string) {
+    console.log('paymentId: ', paymentId);
     const payment = await this.getPaymentStatus(paymentId);
-
+    console.log('payment: ', payment);
     if (payment) {
       const orderToUpdate = await this.prisma.orderOnline.findFirst({
         where: {
