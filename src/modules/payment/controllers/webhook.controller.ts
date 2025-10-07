@@ -11,7 +11,7 @@ interface WebhookQuery {
   };
 }
 
-@Controller('webhook')
+@Controller('webhooks')
 export class WebhookController {
   constructor(private readonly paymentService: PaymentService) {
     /* void */

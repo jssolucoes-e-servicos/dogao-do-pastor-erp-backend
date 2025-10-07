@@ -32,13 +32,18 @@ export class OrderOnlineItemsService extends BaseService {
       data: itemsToCreate,
     });
 
+    const inDevelopment =
+      process.env.ENVIROMENT === 'developement' ? true : false;
+    const totalToSave: number =
+      inDevelopment === true ? 1 : orderItems.length * PRICE_PER_DOG;
+
     const presale = await this.prisma.orderOnline.update({
       where: {
         id: orderOnlineId,
       },
       data: {
         quantity: orderItems.length,
-        valueTotal: orderItems.length * PRICE_PER_DOG,
+        valueTotal: totalToSave, // orderItems.length * PRICE_PER_DOG,
         step: PreOrderStepEnum.delivery,
       },
     });
