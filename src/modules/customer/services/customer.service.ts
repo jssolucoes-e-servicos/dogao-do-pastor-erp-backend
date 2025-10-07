@@ -38,7 +38,7 @@ export class CustomerService extends BaseService {
     });
 
     if (presaleId) {
-      await this.prisma.preOrder.update({
+      await this.prisma.orderOnline.update({
         where: { id: presaleId },
         data: { customerId: customerId, step: PreOrderStepEnum.order },
       });

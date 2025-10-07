@@ -3,9 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { CustomerAddressModule } from './modules/customer-address/customer-address.module';
 import { CustomerModule } from './modules/customer/customer.module';
 import { EvolutionModule } from './modules/evolution/evolution.module';
+import { OrderOnlineItemsModule } from './modules/order-online-items/order-online-items.module';
+import { OrderOnlineModule } from './modules/order-online/order-online.module';
 import { PaymentModule } from './modules/payment/payment.module';
-import { PreSaleItemsModule } from './modules/pre-sale-items/pre-sale-items.module';
-import { PreSaleModule } from './modules/pre-sale/pre-sale.module';
 import { PrismaService } from './modules/prisma/services/prisma.service';
 import { SellerModule } from './modules/seller/seller.module';
 
@@ -15,8 +15,8 @@ import { SellerModule } from './modules/seller/seller.module';
     EvolutionModule,
     CustomerModule,
     CustomerAddressModule,
-    PreSaleModule,
-    PreSaleItemsModule,
+    OrderOnlineModule,
+    OrderOnlineItemsModule,
     PaymentModule,
     SellerModule,
   ],

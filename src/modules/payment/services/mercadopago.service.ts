@@ -8,6 +8,7 @@ import { LoggerService } from '@/modules/logger/services/logger.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Payment } from 'mercadopago';
 import { PaymentStatusEnum } from 'src/common/enums/payment-status.enum';
+import { EvolutionNotificationsService } from 'src/modules/evolution/services/evolution-notifications.service';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import {
   IMPPayment,
@@ -18,7 +19,11 @@ import {
 @Injectable()
 export class MercadoPagoService extends BaseService {
   private readonly mpClient: Payment;
-  constructor(loggerService: LoggerService, prismaService: PrismaService) {
+  constructor(
+    loggerService: LoggerService,
+    prismaService: PrismaService,
+    private readonly evolutionNotificationsService: EvolutionNotificationsService,
+  ) {
     super(loggerService, prismaService);
     this.mpClient = new Payment({
       accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
@@ -50,14 +55,17 @@ export class MercadoPagoService extends BaseService {
   }
 
   // ------------------ PIX ------------------
-  async processPixPayment(preOrderId: string): Promise<IPaymentResponse> {
-    const preorder = await this.prisma.preOrder.findUnique({
-      where: { id: preOrderId },
+  async processPixPayment(orderOnlineId: string): Promise<IPaymentResponse> {
+    const preorder = await this.prisma.orderOnline.findUnique({
+      where: { id: orderOnlineId },
       include: { customer: true },
     });
 
     if (!preorder)
-      throw new HttpException('Pré-venda não encontrada', HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        'Compra Online não encontrada',
+        HttpStatus.NOT_FOUND,
+      );
 
     const customer = preorder.customer!;
 
@@ -74,6 +82,7 @@ export class MercadoPagoService extends BaseService {
           ticketUrl: null,
         },
       };
+      //await this.evolutionNotificationsService.sendDeliveryNotification(customerName: string, phone: string, orderNumber: string, deliveryPersonName: string)
       return { success: true, payment: response };
     } else {
       const { first_name, last_name } = this.splitName(customer.name);
@@ -84,7 +93,7 @@ export class MercadoPagoService extends BaseService {
         const payment = await this.mpClient.create({
           body: {
             transaction_amount: preorder.valueTotal,
-            description: `Pré-venda Dogão: ${preorder.id}`,
+            description: `Compra Online Dogão: ${preorder.id}`,
             payment_method_id: 'pix',
             payer: {
               first_name,
@@ -111,7 +120,7 @@ export class MercadoPagoService extends BaseService {
           pix,
         };
 
-        await this.prisma.preOrder.update({
+        await this.prisma.orderOnline.update({
           where: { id: preorder.id },
           data: {
             paymentStatus: PaymentStatusEnum.pending,
@@ -146,19 +155,19 @@ export class MercadoPagoService extends BaseService {
       payer?: { name?: string; email?: string };
     },
   ): Promise<IPaymentResponse> {
-    const preorder = await this.prisma.preOrder.findUnique({
+    const preorder = await this.prisma.orderOnline.findUnique({
       where: { id: preOrderId },
       include: { customer: true },
     });
 
     if (!preorder) {
-      this.logger.error(`Pré-venda: ${preOrderId} não encontrada`);
-      throw new HttpException('Pré-venda não encontrada', HttpStatus.NOT_FOUND);
+      this.logger.error(`Venda Online: ${preOrderId} não encontrada`);
+      throw new HttpException('Pedido não encontrado', HttpStatus.NOT_FOUND);
     }
 
     if (!body?.token) {
       this.logger.error(
-        `Pré-venda: ${preOrderId} -> Token do cartão não fornecido`,
+        `Compra Online: ${preOrderId} -> Token do cartão não fornecido`,
       );
       throw new HttpException(
         'Token do cartão não fornecido',
@@ -175,18 +184,18 @@ export class MercadoPagoService extends BaseService {
     const phoneObj = this.normalizePhone(customer.phone);
 
     try {
-      this.logger.log(`Pré-venda: ${preOrderId} -> Iniciando MP - Cartão`);
+      this.logger.log(`Compra Online: ${preOrderId} -> Iniciando MP - Cartão`);
       const payment = await this.mpClient.create({
         body: {
           transaction_amount: preorder.valueTotal,
-          description: `Pré-venda Dogão: ${preorder.id}`,
+          description: `Compra Online Dogão: ${preorder.id}`,
           token: body.token,
           installments: body.installments ?? 1,
           payer: { first_name, last_name, email, phone: phoneObj },
         },
       });
       this.logger.log(
-        `Pré-venda: ${preOrderId} -> Resposta MP: ${payment.status}`,
+        `Compra Online: ${preOrderId} -> Resposta MP: ${payment.status}`,
       );
       const response: IMPPayment = {
         id: String(payment.id),
@@ -195,7 +204,7 @@ export class MercadoPagoService extends BaseService {
         detail: payment.status_detail ?? '',
       };
 
-      await this.prisma.preOrder.update({
+      await this.prisma.orderOnline.update({
         where: { id: preorder.id },
         data: {
           paymentStatus:
@@ -221,7 +230,7 @@ export class MercadoPagoService extends BaseService {
       return { success: true, payment: response };
     } catch (err: any) {
       this.logger.error(
-        `Pré-venda: ${preOrderId} -> Erro ao processar cartão: ${err?.response ?? err}`,
+        `Compra Online: ${preOrderId} -> Erro ao processar cartão: ${err?.response ?? err}`,
       );
       const msg = err?.response?.message ?? err?.message;
       throw new HttpException(

@@ -2,7 +2,7 @@ import { OrderStatsEnum } from '@/common/enums/order-stats.enum';
 import { MongoIdValidator, StringValidator } from '@/common/validators';
 import { Type } from 'class-transformer';
 import { IsArray, IsEnum, IsString, ValidateNested } from 'class-validator';
-export class PreSaleCreateDTO {
+export class OrderOnlineCreateDTO {
   @MongoIdValidator({
     fieldName: 'customerId',
     label: 'Id do Clinte',

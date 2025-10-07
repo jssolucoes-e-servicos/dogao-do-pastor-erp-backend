@@ -1,4 +1,4 @@
-export class PreSaleInitRetrieveDTO {
+export class OrderOnlineInitRetrieveDTO {
   id: string;
   customerId?: string | null;
   editionId: string;
@@ -13,6 +13,7 @@ export class PreSaleInitRetrieveDTO {
   deliveryOption: string;
   status: string;
   isPromo: boolean;
+  step: string;
   active: boolean;
   createdAt: Date;
   updatedAt: Date;

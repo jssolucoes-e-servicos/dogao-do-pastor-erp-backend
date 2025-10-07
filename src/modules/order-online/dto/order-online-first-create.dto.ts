@@ -1,6 +1,6 @@
 import { MongoIdValidator, StringValidator } from '@/common/validators';
 
-export class PreSaleFirstCreateDTO {
+export class OrderOnlineFirstCreateDTO {
   @StringValidator({ fieldName: 'cpf', label: 'CPF do Clinte' })
   cpf: string;
 

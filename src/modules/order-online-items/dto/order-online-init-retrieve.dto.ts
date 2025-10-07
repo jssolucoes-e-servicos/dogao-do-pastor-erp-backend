@@ -1,11 +1,6 @@
-import { CustomerRetrieve } from '@/modules/customer/dto/customer-retrieve';
-
-export class PreSaleFullRetrieveDTO {
+export class OrderOnlineInitRetrieveDTO {
   id: string;
-  sellerId: string;
-  sellerTag: string;
   customerId?: string | null;
-  customer?: CustomerRetrieve | null;
   editionId: string;
   quantity: number;
   valueTotal: number;

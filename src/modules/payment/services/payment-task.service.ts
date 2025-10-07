@@ -20,7 +20,7 @@ export class PaymentTaskService extends BaseService {
   //@Cron(CronExpression.EVERY_MINUTE)
   async handlePendingPayments() {
     this.logger.log('Verificando pagamentos pendentes...');
-    const pendingOrders = await this.prisma.preOrder.findMany({
+    const pendingOrders = await this.prisma.orderOnline.findMany({
       where: {
         paymentStatus: 'pending',
       },
@@ -34,7 +34,7 @@ export class PaymentTaskService extends BaseService {
         );
 
         if (paymentDetails && paymentDetails.status !== 'pending') {
-          await this.prisma.preOrder.update({
+          await this.prisma.orderOnline.update({
             where: { id: order.id },
             data: {
               paymentStatus: paymentDetails.status,

@@ -34,14 +34,14 @@ export class PaymentService extends BaseService {
     const payment = await this.getPaymentStatus(paymentId);
 
     if (payment) {
-      const orderToUpdate = await this.prisma.preOrder.findFirst({
+      const orderToUpdate = await this.prisma.orderOnline.findFirst({
         where: {
           paymentId: payment.id.toString(),
         },
       });
 
       if (orderToUpdate) {
-        await this.prisma.preOrder.update({
+        await this.prisma.orderOnline.update({
           where: { id: orderToUpdate.id },
           data: { paymentStatus: payment.status },
         });

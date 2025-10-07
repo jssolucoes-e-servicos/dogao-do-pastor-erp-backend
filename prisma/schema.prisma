@@ -89,7 +89,7 @@ model Edition {
 
   vouchers  Voucher[]
   tickets   Tickets[]
-  preOrders PreOrder[]
+  ordersOnline OrderOnline[]
 
   @@map("editions")
 }
@@ -121,7 +121,7 @@ model Seller {
   deletedAt DateTime?
 
   tickets   Tickets[]
-  preOrders PreOrder[]
+  ordersOnline OrderOnline[]
 
   @@map("sellers")
 }
@@ -218,7 +218,7 @@ model Customer {
   deletedAt    DateTime?
   vouchers     Voucher[]
   addresses    CustomerAddress[]
-  preOrders    PreOrder[]
+  ordersOnline    OrderOnline[]
 
   @@map("customers")
 }
@@ -239,7 +239,7 @@ model CustomerAddress {
   updatedAt    DateTime  @updatedAt
   deletedAt    DateTime?
 
-  preOrders PreOrder[]
+  ordersOnline OrderOnline[]
 
   @@map("customers_addresses")
 }
@@ -267,7 +267,7 @@ model Payment {
 }
 
 // O pedido de pré-venda
-model PreOrder {
+model OrderOnline {
   id                String           @id @default(auto()) @map("_id") @db.ObjectId
   customer          Customer?        @relation(fields: [customerId], references: [id])
   customerId        String?          @db.ObjectId
@@ -297,21 +297,21 @@ model PreOrder {
   updatedAt         DateTime         @updatedAt
   deletedAt         DateTime?
 
-  preOrderItems PreOrderItem[]
+  preOrderItems OrderOnlineItem[]
 
-  @@map("pre_orders")
+  @@map("orders-online")
 }
 
 // O item do pedido de pré-venda, que representa um único cachorro-quente
-model PreOrderItem {
+model OrderOnlineItem {
   id                 String    @id @default(auto()) @map("_id") @db.ObjectId
-  preOrder           PreOrder  @relation(fields: [preOrderId], references: [id])
-  preOrderId         String    @db.ObjectId
+  orderOnline           OrderOnline  @relation(fields: [orderOnlineId], references: [id])
+  orderOnlineId         String    @db.ObjectId
   removedIngredients String[] // Lista de ingredientes removidos
   active             Boolean   @default(true)
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
   deletedAt          DateTime?
 
-  @@map("pre_orders_items")
+  @@map("orders-online_items")
 }

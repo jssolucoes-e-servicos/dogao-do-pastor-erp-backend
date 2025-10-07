@@ -1,6 +1,6 @@
 import { DeliveryOptionEnum } from '@/common/enums';
 
-export class PreSaleSetAddressDTO {
+export class OrderOnlineSetAddressDTO {
   preorderId: string;
   deliveryAddressId: string;
   deliveryOption: DeliveryOptionEnum;

@@ -1,6 +1,11 @@
-export class PreSaleInitRetrieveDTO {
+import { CustomerRetrieve } from '@/modules/customer/dto/customer-retrieve';
+
+export class OrderOnlineFullRetrieveDTO {
   id: string;
+  sellerId: string;
+  sellerTag: string;
   customerId?: string | null;
+  customer?: CustomerRetrieve | null;
   editionId: string;
   quantity: number;
   valueTotal: number;
@@ -13,7 +18,6 @@ export class PreSaleInitRetrieveDTO {
   deliveryOption: string;
   status: string;
   isPromo: boolean;
-  step: string;
   active: boolean;
   createdAt: Date;
   updatedAt: Date;

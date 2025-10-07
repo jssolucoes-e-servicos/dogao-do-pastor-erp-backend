@@ -1,44 +1,45 @@
-//ENDEREÇO/NOME DO ARQUIVO: src/modules/pre-sale/services/pre-sale.service.ts
+import { Injectable } from '@nestjs/common';
+import { EDITION_ID } from 'src/common/constants/ids';
 import {
   DeliveryOptionEnum,
   OrderStatsEnum,
   PaymentStatsEnum,
-} from '@/common/enums';
-import { PreOrderStepEnum } from '@/common/enums/pre-order-step.enum';
-import { DatesHelper } from '@/common/helpers/dates-helper';
-import { BaseService } from '@/common/services/base.service';
-import { CustomerRetrieve } from '@/modules/customer/dto/customer-retrieve';
-import { CustomerService } from '@/modules/customer/services/customer.service';
-import { LoggerService } from '@/modules/logger/services/logger.service';
-import { Injectable } from '@nestjs/common';
-import { EDITION_ID } from 'src/common/constants/ids';
-import { PaymentService } from 'src/modules/payment/services/payment.service';
-import { PreSaleFirstCreateDTO } from 'src/modules/pre-sale/dto/pre-sale-first-create.dto';
-import { PreSaleInitRetrieveDTO } from 'src/modules/pre-sale/dto/pre-sale-init-retrieve.dto';
+} from 'src/common/enums';
+import { PreOrderStepEnum } from 'src/common/enums/pre-order-step.enum';
+import { DatesHelper } from 'src/common/helpers/dates-helper';
+import { BaseService } from 'src/common/services/base.service';
+import { CustomerRetrieve } from 'src/modules/customer/dto/customer-retrieve';
+import { CustomerService } from 'src/modules/customer/services/customer.service';
+import { LoggerService } from 'src/modules/logger/services/logger.service';
+import { OrderOnlineFirstCreateDTO } from 'src/modules/order-online/dto/order-online-first-create.dto';
+import { OrderOnlineInitRetrieveDTO } from 'src/modules/order-online/dto/order-online-init-retrieve.dto';
+//import { PaymentService } from 'src/modules/payment/services/payment.service';
+import { EvolutionNotificationsService } from 'src/modules/evolution/services/evolution-notifications.service';
+import { OrderOnlineFullRetrieveDTO } from 'src/modules/order-online/dto/order-online-full-retrieve.dto';
+import { OrderOnlineSetAddressDTO } from 'src/modules/order-online/dto/order-online-set-address.dto';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
-import { PreSaleFullRetrieveDTO } from '../dto/pre-sale-full-retrieve.dto';
-import { PreSaleSetAddressDTO } from '../dto/pre-sale-set-address.dto';
 
 @Injectable()
-export class PreSaleService extends BaseService {
+export class OrderOnlineService extends BaseService {
   constructor(
     loggerService: LoggerService,
     prismaService: PrismaService,
     private readonly customerService: CustomerService,
-    private readonly paymentService: PaymentService,
+    private readonly evolutionNotificationsService: EvolutionNotificationsService,
+    //private readonly paymentService: PaymentService,
   ) {
     super(loggerService, prismaService);
   }
 
-  async start(body: PreSaleFirstCreateDTO): Promise<{
-    presale: PreSaleInitRetrieveDTO;
+  async start(body: OrderOnlineFirstCreateDTO): Promise<{
+    presale: OrderOnlineInitRetrieveDTO;
     customer: CustomerRetrieve | null;
   }> {
     const { cpf, sellerId, sellerTag } = body;
     const customer = await this.customerService.findByCpf({ cpf: cpf });
 
     if (customer) {
-      const haspreorder = await this.prisma.preOrder.findFirst({
+      const haspreorder = await this.prisma.orderOnline.findFirst({
         where: {
           customerId: customer.id,
           editionId: EDITION_ID,
@@ -53,7 +54,7 @@ export class PreSaleService extends BaseService {
       }
     }
     const isPromo: boolean = DatesHelper.IsPromoDate();
-    const preSale = await this.prisma.preOrder.create({
+    const preSale = await this.prisma.orderOnline.create({
       data: {
         customerId: customer ? customer.id : undefined,
         editionId: EDITION_ID,
@@ -79,9 +80,9 @@ export class PreSaleService extends BaseService {
     return result;
   }
 
-  async findById(id: string): Promise<PreSaleFullRetrieveDTO | null> {
+  async findById(id: string): Promise<OrderOnlineFullRetrieveDTO | null> {
     try {
-      const presale = await this.prisma.preOrder.findUnique({
+      const presale = await this.prisma.orderOnline.findUnique({
         where: { id },
         include: { customer: true },
       });
@@ -94,10 +95,10 @@ export class PreSaleService extends BaseService {
   }
 
   async setAddress(
-    data: PreSaleSetAddressDTO,
-  ): Promise<PreSaleFullRetrieveDTO> {
+    data: OrderOnlineSetAddressDTO,
+  ): Promise<OrderOnlineFullRetrieveDTO> {
     try {
-      const presale = await this.prisma.preOrder.update({
+      const presale = await this.prisma.orderOnline.update({
         where: { id: data.preorderId },
         data: {
           customerAddressId: data.deliveryAddressId,
@@ -115,14 +116,14 @@ export class PreSaleService extends BaseService {
   async setDeliveryOption(data: {
     preorderId: string;
     deliveryOption: string;
-  }): Promise<PreSaleFullRetrieveDTO> {
+  }): Promise<OrderOnlineFullRetrieveDTO> {
     console.info('data', data);
     try {
       const option =
         data.deliveryOption === 'pickup'
           ? DeliveryOptionEnum.pickup
           : DeliveryOptionEnum.donate;
-      const presale = await this.prisma.preOrder.update({
+      const presale = await this.prisma.orderOnline.update({
         where: { id: data.preorderId },
         data: {
           customerAddressId: null,
@@ -161,10 +162,10 @@ export class PreSaleService extends BaseService {
   async changeStep(data: {
     preorderId: string;
     step: string;
-  }): Promise<PreSaleFullRetrieveDTO> {
+  }): Promise<OrderOnlineFullRetrieveDTO> {
     try {
       const newStep = this.selectNewStep(data.step);
-      const presale = await this.prisma.preOrder.update({
+      const presale = await this.prisma.orderOnline.update({
         where: { id: data.preorderId },
         data: {
           step: newStep, //,
