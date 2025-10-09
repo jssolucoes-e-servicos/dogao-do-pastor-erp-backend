@@ -57,7 +57,7 @@ export class SellerService extends BaseService {
   async findByTag({
     tag,
   }: SellerFindByTagDTO): Promise<SellerRetrieveWithCellDTO | null> {
-    const seller = await this.prisma.seller.findUnique({
+    const seller = await this.prisma.seller.findFirst({
       where: { tag: tag },
       include: { cell: true },
     });

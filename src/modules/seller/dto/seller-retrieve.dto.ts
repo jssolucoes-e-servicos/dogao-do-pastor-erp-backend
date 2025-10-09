@@ -14,7 +14,6 @@ export class SellerRetrieveWithCellDTO extends SellerRetrieveDTO {
   cell: {
     id: string;
     name: string;
-    networkName: string;
     leaderName: string;
     active: boolean;
     createdAt: Date;

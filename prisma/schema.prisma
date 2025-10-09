@@ -139,7 +139,6 @@ model CellNetwork {
 model Cell {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   name        String
-  networkName String
   network CellNetwork @relation(fields: [networkId], references: [id])
   networkId String @db.ObjectId
   leaderName  String
