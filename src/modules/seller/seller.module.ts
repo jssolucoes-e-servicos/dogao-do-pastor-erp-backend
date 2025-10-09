@@ -1,7 +1,6 @@
 // src/modules/payment/payment.module.ts
+import { LoggerService, PrismaService } from '@/common/helpers/importer-helper';
 import { Module } from '@nestjs/common';
-import { PrismaService } from 'src/modules/prisma/services/prisma.service';
-import { LoggerService } from '../logger/services/logger.service';
 import { SellerController } from './controllers/seller.controller';
 import { SellerService } from './service/seller.service';
 

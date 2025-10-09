@@ -1,3 +1,9 @@
+import {
+  BaseService,
+  ConfigService,
+  LoggerService,
+  PrismaService,
+} from '@/common/helpers/importer-helper';
 import { Injectable } from '@nestjs/common';
 import { EDITION_ID } from 'src/common/constants/ids';
 import {
@@ -7,28 +13,22 @@ import {
 } from 'src/common/enums';
 import { PreOrderStepEnum } from 'src/common/enums/pre-order-step.enum';
 import { DatesHelper } from 'src/common/helpers/dates-helper';
-import { BaseService } from 'src/common/services/base.service';
 import { CustomerRetrieve } from 'src/modules/customer/dto/customer-retrieve';
 import { CustomerService } from 'src/modules/customer/services/customer.service';
-import { LoggerService } from 'src/modules/logger/services/logger.service';
 import { OrderOnlineFirstCreateDTO } from 'src/modules/order-online/dto/order-online-first-create.dto';
-import { OrderOnlineInitRetrieveDTO } from 'src/modules/order-online/dto/order-online-init-retrieve.dto';
-//import { PaymentService } from 'src/modules/payment/services/payment.service';
-import { EvolutionNotificationsService } from 'src/modules/evolution/services/evolution-notifications.service';
 import { OrderOnlineFullRetrieveDTO } from 'src/modules/order-online/dto/order-online-full-retrieve.dto';
+import { OrderOnlineInitRetrieveDTO } from 'src/modules/order-online/dto/order-online-init-retrieve.dto';
 import { OrderOnlineSetAddressDTO } from 'src/modules/order-online/dto/order-online-set-address.dto';
-import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 
 @Injectable()
 export class OrderOnlineService extends BaseService {
   constructor(
     loggerService: LoggerService,
     prismaService: PrismaService,
+    configService: ConfigService,
     private readonly customerService: CustomerService,
-    private readonly evolutionNotificationsService: EvolutionNotificationsService,
-    //private readonly paymentService: PaymentService,
   ) {
-    super(loggerService, prismaService);
+    super(loggerService, prismaService, configService);
   }
 
   async start(body: OrderOnlineFirstCreateDTO): Promise<{
@@ -169,6 +169,33 @@ export class OrderOnlineService extends BaseService {
         where: { id: data.preorderId },
         data: {
           step: newStep, //,
+        },
+      });
+      return presale;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error API');
+    }
+  }
+
+  async setAnalysis(data: {
+    preorderId: string;
+    deliveryAddressId: string;
+    deliveryTime: string;
+    distance: string;
+  }): Promise<OrderOnlineFullRetrieveDTO> {
+    try {
+      const exists = await this.prisma.orderOnline.findFirst({
+        where: { id: data.preorderId },
+      });
+      const presale = await this.prisma.orderOnline.update({
+        where: { id: data.preorderId },
+        data: {
+          step: PreOrderStepEnum.analysis,
+          deliveryOption: DeliveryOptionEnum.delivery,
+          customerAddressId: data.deliveryAddressId,
+          observations:
+            exists?.observations + 'Distancia da sede: ' + data.distance,
         },
       });
       return presale;

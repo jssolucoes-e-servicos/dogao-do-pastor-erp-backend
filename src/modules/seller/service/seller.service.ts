@@ -1,7 +1,10 @@
-import { BaseService } from '@/common/services/base.service';
-import { LoggerService } from '@/modules/logger/services/logger.service';
+import {
+  BaseService,
+  ConfigService,
+  LoggerService,
+  PrismaService,
+} from '@/common/helpers/importer-helper';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { SellerCreateDTO } from 'src/modules/seller/dto/seller-create.dto';
 import { SellerFindByTagDTO } from 'src/modules/seller/dto/seller-find-by-tag.dto';
 import {
@@ -12,8 +15,12 @@ import { SellerUpdateDTO } from 'src/modules/seller/dto/seller-update.dto';
 
 @Injectable()
 export class SellerService extends BaseService {
-  constructor(loggerService: LoggerService, prismaService: PrismaService) {
-    super(loggerService, prismaService);
+  constructor(
+    loggerService: LoggerService,
+    prismaService: PrismaService,
+    configService: ConfigService,
+  ) {
+    super(loggerService, prismaService, configService);
   }
 
   async create(sellerDTO: SellerCreateDTO): Promise<SellerRetrieveDTO> {

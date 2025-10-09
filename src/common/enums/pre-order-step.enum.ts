@@ -5,5 +5,6 @@ export enum PreOrderStepEnum {
   payment = 'payment',
   pix = 'pix',
   card = 'card',
+  analysis = 'analysis',
   tanks = 'tanks',
 }

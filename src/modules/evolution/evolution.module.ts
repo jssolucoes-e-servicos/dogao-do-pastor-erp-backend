@@ -7,7 +7,6 @@ import { LoggerService } from 'src/modules/logger/services/logger.service';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 
 @Module({
-  imports: [],
   controllers: [EvolutionController],
   providers: [
     PrismaService,

@@ -1,14 +1,21 @@
-import { BaseService } from '@/common/services/base.service';
-import { LoggerService } from '@/modules/logger/services/logger.service';
+import {
+  BaseService,
+  ConfigService,
+  LoggerService,
+  PrismaService,
+} from '@/common/helpers/importer-helper';
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { CustomerAddressCreateDTO } from '../dto/customer-address-create.dto';
 import { CustomerAddressRetrieve } from '../dto/customer-address-retrieve';
 
 @Injectable()
 export class CustomerAddressService extends BaseService {
-  constructor(loggerService: LoggerService, prismaService: PrismaService) {
-    super(loggerService, prismaService);
+  constructor(
+    loggerService: LoggerService,
+    prismaService: PrismaService,
+    configService: ConfigService,
+  ) {
+    super(loggerService, prismaService, configService);
   }
 
   async proccessAddressEntry(

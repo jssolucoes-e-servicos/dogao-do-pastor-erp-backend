@@ -1,8 +1,11 @@
-import { BaseService } from '@/common/services/base.service';
-import { LoggerService } from '@/modules/logger/services/logger.service';
+import {
+  BaseService,
+  ConfigService,
+  LoggerService,
+  PrismaService,
+} from '@/common/helpers/importer-helper';
 import { Injectable } from '@nestjs/common';
 import { PreOrderStepEnum } from 'src/common/enums';
-import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { CustomerCreateDTO } from '../dto/customer-create.dto';
 import { CustomerRetrieve } from '../dto/customer-retrieve';
 import { CustomerWithAddressRetriveDTO } from '../dto/customer-whit-address-retrieve.dto';
@@ -10,9 +13,25 @@ import { OnlyCPFRequestDTO } from '../dto/only-cpf-request.dto';
 
 @Injectable()
 export class CustomerService extends BaseService {
-  constructor(loggerService: LoggerService, prismaService: PrismaService) {
-    super(loggerService, prismaService);
+  constructor(
+    loggerService: LoggerService,
+    prismaService: PrismaService,
+    configService: ConfigService,
+  ) {
+    super(loggerService, prismaService, configService);
   }
+
+  async findAll(): Promise<CustomerRetrieve[]> {
+    const customers = await this.prisma.customer.findMany();
+    return customers;
+  }
+
+  async count(): Promise<{ customers: number }> {
+    const count = await this.prisma.customer.count();
+
+    return { customers: count };
+  }
+
   async proccessCustomerEntry(
     customerDTO: CustomerCreateDTO,
   ): Promise<CustomerWithAddressRetriveDTO | null> {

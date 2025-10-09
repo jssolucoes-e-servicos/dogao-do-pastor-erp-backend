@@ -4,6 +4,7 @@ import { BaseService } from '@/common/services/base.service';
 import { LoggerService } from '@/modules/logger/services/logger.service';
 import { PrismaService } from '@/modules/prisma/services/prisma.service';
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { EvolutionService } from './evolution.service'; // Injeta o serviço de API
 
 @Injectable()
@@ -17,10 +18,11 @@ export class EvolutionNotificationsService extends BaseService {
   constructor(
     loggerService: LoggerService,
     prismaService: PrismaService,
+    configService: ConfigService,
     // Injeta o serviço responsável pela comunicação HTTP
     private readonly evolutionService: EvolutionService,
   ) {
-    super(loggerService, prismaService);
+    super(loggerService, prismaService, configService);
   }
 
   // Método interno para envio de localização, utilizando os dados fixos

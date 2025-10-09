@@ -3,15 +3,17 @@ import {
   PaymentMethodEnum,
   PreOrderStepEnum,
 } from '@/common/enums';
-import * as crypto from 'crypto';
-
-import { BaseService } from '@/common/services/base.service';
-import { LoggerService } from '@/modules/logger/services/logger.service';
+import {
+  BaseService,
+  ConfigService,
+  LoggerService,
+  PrismaService,
+} from '@/common/helpers/importer-helper';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import * as crypto from 'crypto';
 import MercadoPagoConfig, { Payment } from 'mercadopago';
 import { PaymentStatusEnum } from 'src/common/enums/payment-status.enum';
 import { EvolutionNotificationsService } from 'src/modules/evolution/services/evolution-notifications.service';
-import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import {
   IMPPayment,
   IMPPix,
@@ -48,9 +50,10 @@ export class MercadoPagoService extends BaseService {
   constructor(
     loggerService: LoggerService,
     prismaService: PrismaService,
+    configService: ConfigService,
     private readonly evolutionNotificationsService: EvolutionNotificationsService,
   ) {
-    super(loggerService, prismaService);
+    super(loggerService, prismaService, configService);
     const client = new MercadoPagoConfig({
       accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
       options: { timeout: 5000 },

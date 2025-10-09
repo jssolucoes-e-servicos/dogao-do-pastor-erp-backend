@@ -36,6 +36,7 @@ enum PreOrderStep {
   payment
   pix
   card
+  analysis
   tanks
 }
 
@@ -76,6 +77,32 @@ enum PaymentMethod {
 }
 
 
+model Admin {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  username String @unique
+  password String
+  active         Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+  @@map("admins")
+}
+
+model WhatsappQueue {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  type      String // Ex: "send-text", "send-location"
+  data      Json // Dados da mensagem a ser enviada
+  status    String    @default("pending") // "pending", "processing", "completed", "failed"
+  attempts  Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  processedAt DateTime?
+  error     String?
+
+  @@map("whatsapp_queue")
+}
+
 // Definindo a edição do evento
 model Edition {
   id             String    @id @default(auto()) @map("_id") @db.ObjectId
@@ -94,10 +121,27 @@ model Edition {
   @@map("editions")
 }
 
+model CellNetwork {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  supervisorName String
+  phone String
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  cells Cell[]
+
+  @@map("cells_networks")
+}
+
 model Cell {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   networkName String
+  network CellNetwork @relation(fields: [networkId], references: [id])
+  networkId String @db.ObjectId
   leaderName  String
   active      Boolean   @default(true)
   createdAt   DateTime  @default(now())

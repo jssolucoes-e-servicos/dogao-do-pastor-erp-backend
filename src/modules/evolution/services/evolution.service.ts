@@ -1,8 +1,10 @@
-import { BaseService } from '@/common/services/base.service';
-import { LoggerService } from '@/modules/logger/services/logger.service';
-import { PrismaService } from '@/modules/prisma/services/prisma.service';
+import {
+  BaseService,
+  ConfigService,
+  LoggerService,
+  PrismaService,
+} from '@/common/helpers/importer-helper';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { EvolutionApiSendResponse } from 'src/common/interfaces';
 
 @Injectable()
@@ -14,20 +16,17 @@ export class EvolutionService extends BaseService {
   constructor(
     loggerService: LoggerService,
     prismaService: PrismaService,
-    private readonly configService: ConfigService,
+    configService: ConfigService,
   ) {
-    super(loggerService, prismaService);
+    super(loggerService, prismaService, configService);
 
     // Lendo configurações do ambiente
-    this.baseUrl = this.configService.get<string>(
+    this.baseUrl = this.configs.get<string>(
       'EVOLUTION_API_URL',
       'https://whats-api.default.com.br',
     );
-    this.token = this.configService.get<string>(
-      'EVOLUTION_TOKEN',
-      'DEFAULT_TOKEN',
-    );
-    this.instance = this.configService.get<string>(
+    this.token = this.configs.get<string>('EVOLUTION_TOKEN', 'DEFAULT_TOKEN');
+    this.instance = this.configs.get<string>(
       'EVOLUTION_INSTANCE',
       'DEFAULT_INSTANCE',
     );

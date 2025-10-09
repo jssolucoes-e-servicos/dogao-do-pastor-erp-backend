@@ -1,17 +1,24 @@
 //ENDEREÇO/NOME DO ARQUIVO: src/modules/pre-sale/services/pre-sale.service.ts
 import { PRICE_PER_DOG } from '@/common/constants';
 import { PreOrderStepEnum } from '@/common/enums';
-import { BaseService } from '@/common/services/base.service';
-import { LoggerService } from '@/modules/logger/services/logger.service';
+import {
+  BaseService,
+  ConfigService,
+  LoggerService,
+  PrismaService,
+} from '@/common/helpers/importer-helper';
 import { Injectable } from '@nestjs/common';
 import { OrderOnlineInitRetrieveDTO } from 'src/modules/order-online/dto/order-online-init-retrieve.dto';
-import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { OrderOnlineItemsManyCreateDTO } from '../dto/order-online-items-many-create.dto';
 
 @Injectable()
 export class OrderOnlineItemsService extends BaseService {
-  constructor(loggerService: LoggerService, prismaService: PrismaService) {
-    super(loggerService, prismaService);
+  constructor(
+    loggerService: LoggerService,
+    prismaService: PrismaService,
+    configService: ConfigService,
+  ) {
+    super(loggerService, prismaService, configService);
   }
 
   async inserts(

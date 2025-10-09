@@ -1,14 +1,21 @@
 //ENDEREÇO/NOME DO ARQUIVO: src/modules/payment/services/payment.service.ts
+import {
+  BaseService,
+  ConfigService,
+  LoggerService,
+  PrismaService,
+} from '@/common/helpers/importer-helper';
 import { Injectable } from '@nestjs/common';
-import { BaseService } from 'src/common/services/base.service';
-import { LoggerService } from 'src/modules/logger/services/logger.service';
-import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { IMercadoPagoPaymentResponse } from '../interfaces/mercadopago.interface';
 
 @Injectable()
 export class PaymentService extends BaseService {
-  constructor(loggerService: LoggerService, prismaService: PrismaService) {
-    super(loggerService, prismaService);
+  constructor(
+    loggerService: LoggerService,
+    prismaService: PrismaService,
+    configService: ConfigService,
+  ) {
+    super(loggerService, prismaService, configService);
   }
 
   async getPaymentStatus(

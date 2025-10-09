@@ -48,4 +48,17 @@ export class OrderOnlineController {
   ): Promise<OrderOnlineFullRetrieveDTO> {
     return await this.orderOnlineService.setDeliveryOption(data);
   }
+
+  @Post('set-analysis')
+  async setAnalysis(
+    @Body()
+    data: {
+      preorderId: string;
+      deliveryAddressId: string;
+      distance: string;
+      deliveryTime: string;
+    },
+  ): Promise<OrderOnlineFullRetrieveDTO> {
+    return await this.orderOnlineService.setAnalysis(data);
+  }
 }

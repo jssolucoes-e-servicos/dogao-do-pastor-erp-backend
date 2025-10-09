@@ -1,10 +1,12 @@
 // src/modules/payment/services/payment-task.service.ts
 import { OrderStatsEnum, PreOrderStepEnum } from '@/common/enums';
-import { BaseService } from '@/common/services/base.service';
-import { LoggerService } from '@/modules/logger/services/logger.service';
+import {
+  BaseService,
+  ConfigService,
+  LoggerService,
+  PrismaService,
+} from '@/common/helpers/importer-helper';
 import { Injectable } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
-import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { MercadoPagoService } from './mercadopago.service';
 import { PaymentService } from './payment.service';
 
@@ -13,14 +15,15 @@ export class PaymentTaskService extends BaseService {
   constructor(
     loggerService: LoggerService,
     prismaService: PrismaService,
+    configService: ConfigService,
     private readonly paymentService: PaymentService,
     private readonly mercadoPagoService: MercadoPagoService,
   ) {
-    super(loggerService, prismaService);
+    super(loggerService, prismaService, configService);
   }
 
   //@Cron('*/20 * * * *') // Executa a cada 20 minutos
-  @Cron(CronExpression.EVERY_MINUTE)
+  //@Cron(CronExpression.EVERY_MINUTE)
   async handlePendingPayments() {
     this.logger.log('Iniciando verificação de pagamentos pendentes...');
 
