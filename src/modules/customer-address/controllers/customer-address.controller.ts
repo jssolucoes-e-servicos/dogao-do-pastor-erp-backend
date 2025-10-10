@@ -22,10 +22,10 @@ export class CustomerAddressController {
   async findByCustomer(
     @Param('customerId') customerId: string,
   ): Promise<CustomerAddressRetrieve[]> {
-    console.log('input', customerId);
+    //console.log('input', customerId);
     const addresses =
       await this.customerAddressService.findByCustomer(customerId);
-    console.log('addresses', addresses);
+    //console.log('addresses', addresses);
     return addresses;
   }
 }
