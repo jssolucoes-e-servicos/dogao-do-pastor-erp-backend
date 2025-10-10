@@ -23,9 +23,9 @@ export class DatesHelper {
 
     const currentDate: Date = new Date();
     const isPromo: boolean = currentDate <= limitDate;
-    console.log(`Data atual: ${currentDate.toLocaleString('pt-BR')}`);
-    console.log(`Data limite: ${limitDate.toLocaleString('pt-BR')}`);
-    console.log(`A promoção está ativa? ${isPromo}`);
+    //console.log(`Data atual: ${currentDate.toLocaleString('pt-BR')}`);
+    // console.log(`Data limite: ${limitDate.toLocaleString('pt-BR')}`);
+    //  console.log(`A promoção está ativa? ${isPromo}`);
     return isPromo;
   }
 }

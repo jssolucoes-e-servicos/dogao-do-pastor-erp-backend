@@ -99,8 +99,8 @@ export class EvolutionService extends BaseService {
 
     const data = {
       number: formattedPhone,
-      text: text,
-      delay: 1200,
+      textMessage: { text: text },
+      options: { delay: 1200, presence: 'composing' },
     };
     this.logger.log(`API Call: sendText para: ${formattedPhone}`);
     return await this.makeRequest<EvolutionApiSendResponse>(
@@ -123,10 +123,12 @@ export class EvolutionService extends BaseService {
 
       const data = {
         number: formattedPhone,
-        latitude,
-        longitude,
-        name,
-        address,
+        locationMessage: {
+          name,
+          address,
+          latitude,
+          longitude,
+        },
       };
 
       this.logger.log(`API Call: sendLocation para: ${formattedPhone}`);

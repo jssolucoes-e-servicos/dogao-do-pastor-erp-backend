@@ -7,6 +7,7 @@ import { EvolutionModule } from 'src/modules/evolution/evolution.module';
 import { EvolutionNotificationsService } from 'src/modules/evolution/services/evolution-notifications.service';
 import { OrderOnlineController } from 'src/modules/order-online/controllers/order-online.controller';
 import { OrderOnlineService } from 'src/modules/order-online/services/order-online.service';
+import { EvolutionService } from '../evolution/services/evolution.service';
 
 @Module({
   imports: [CustomerModule, EvolutionModule],
@@ -15,6 +16,7 @@ import { OrderOnlineService } from 'src/modules/order-online/services/order-onli
     PrismaService,
     LoggerService,
     EvolutionNotificationsService,
+    EvolutionService,
     OrderOnlineService,
     CustomerService,
   ],

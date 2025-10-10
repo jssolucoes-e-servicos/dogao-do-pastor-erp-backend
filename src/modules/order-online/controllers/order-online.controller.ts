@@ -57,6 +57,7 @@ export class OrderOnlineController {
       deliveryAddressId: string;
       distance: string;
       deliveryTime: string;
+      addressInline: string;
     },
   ): Promise<OrderOnlineFullRetrieveDTO> {
     return await this.orderOnlineService.setAnalysis(data);

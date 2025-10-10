@@ -4,6 +4,7 @@ import {
   LoggerService,
   PrismaService,
 } from '@/common/helpers/importer-helper';
+import { EvolutionNotificationsService } from '@/modules/evolution/services/evolution-notifications.service';
 import { Injectable } from '@nestjs/common';
 import { EDITION_ID } from 'src/common/constants/ids';
 import {
@@ -27,6 +28,7 @@ export class OrderOnlineService extends BaseService {
     prismaService: PrismaService,
     configService: ConfigService,
     private readonly customerService: CustomerService,
+    private readonly evolutionNotificationsService: EvolutionNotificationsService,
   ) {
     super(loggerService, prismaService, configService);
   }
@@ -165,11 +167,13 @@ export class OrderOnlineService extends BaseService {
   }): Promise<OrderOnlineFullRetrieveDTO> {
     try {
       const newStep = this.selectNewStep(data.step);
+
+      const dataToChange = {
+        step: newStep,
+      };
       const presale = await this.prisma.orderOnline.update({
         where: { id: data.preorderId },
-        data: {
-          step: newStep, //,
-        },
+        data: dataToChange,
       });
       return presale;
     } catch (error) {
@@ -183,21 +187,36 @@ export class OrderOnlineService extends BaseService {
     deliveryAddressId: string;
     deliveryTime: string;
     distance: string;
+    addressInline: string;
   }): Promise<OrderOnlineFullRetrieveDTO> {
     try {
       const exists = await this.prisma.orderOnline.findFirst({
         where: { id: data.preorderId },
+        include: { customer: true },
       });
+      if (!exists || !exists.customer) {
+        throw new Error('Não encontrado o pedido');
+      }
       const presale = await this.prisma.orderOnline.update({
         where: { id: data.preorderId },
         data: {
           step: PreOrderStepEnum.analysis,
           deliveryOption: DeliveryOptionEnum.delivery,
           customerAddressId: data.deliveryAddressId,
-          observations:
-            exists?.observations + 'Distancia da sede: ' + data.distance,
+          observations: `${exists?.observations} | Analise de pedido com excesso e distância: ${data.distance}km da sede`,
         },
       });
+      this.logger.warn(
+        `Pedido ${data.preorderId}, do CPF: ${exists?.customer?.cpf}, foi enviado para análise.`,
+      );
+      this.evolutionNotificationsService.sendEntryAnalysis(
+        '51982488374',
+        data.preorderId,
+        exists?.customer?.name,
+        exists?.customer?.cpf,
+        data.distance,
+        data.addressInline,
+      );
       return presale;
     } catch (error) {
       console.error(error);
