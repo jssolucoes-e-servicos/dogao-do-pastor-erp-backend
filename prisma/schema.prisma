@@ -255,6 +255,7 @@ model Customer {
   cpf          String?           @unique
   knowsChurch  Boolean           @default(true)
   allowsChurch Boolean           @default(true)
+  firstRegister Boolean          @default(true)
   active       Boolean           @default(true)
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt

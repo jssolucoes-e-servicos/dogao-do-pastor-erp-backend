@@ -13,6 +13,7 @@ export class OrderOnlineFullRetrieveDTO {
   paymentProvider: string;
   paymentId?: string | null;
   paymentUrl?: string | null;
+  paymentMethod?: string | null;
   customerAddressId?: string | null;
   observations?: string | null;
   deliveryOption: string;

@@ -2,9 +2,15 @@
 
 import { BaseService } from '@/common/services/base.service';
 import { LoggerService } from '@/modules/logger/services/logger.service';
+import { OrderOnlineFullRetrieveDTO } from '@/modules/order-online/dto/order-online-full-retrieve.dto';
 import { PrismaService } from '@/modules/prisma/services/prisma.service';
+import { SellerRetrieveWithCellDTO } from '@/modules/seller/dto/seller-retrieve.dto';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import {
+  SellerCreateNotification,
+  SellerCreateNotificationLink,
+} from '../messages/seller-create-notification';
 import { EvolutionService } from './evolution.service'; // Injeta o serviço de API
 
 @Injectable()
@@ -177,5 +183,24 @@ export class EvolutionNotificationsService extends BaseService {
     this.logger.log(`Enviando notificação para pedido de analise`);
 
     return this.evolutionService.sendText(phone, message);
+  }
+
+  async sendSellerCreateNotification(
+    seller: SellerRetrieveWithCellDTO,
+  ): Promise<boolean> {
+    const message1 = SellerCreateNotification(
+      seller.name,
+      seller.cell?.name,
+      seller.tag,
+    );
+    const message2 = SellerCreateNotificationLink(seller.tag);
+    this.logger.log(`Enviando notificação de vendedor`);
+    await this.evolutionService.sendText(seller.phone, message1);
+    await this.evolutionService.sendText(seller.phone, message2);
+    return true;
+  }
+
+  async sendConfimPayment(order: OrderOnlineFullRetrieveDTO): Promise<boolean> {
+    return true;
   }
 }

@@ -7,6 +7,7 @@ import {
   PrismaService,
 } from '@/common/helpers/importer-helper';
 import { Injectable } from '@nestjs/common';
+import { EvolutionNotificationsService } from '../../evolution/services/evolution-notifications.service';
 import { MercadoPagoService } from './mercadopago.service';
 import { PaymentService } from './payment.service';
 
@@ -18,18 +19,25 @@ export class PaymentTaskService extends BaseService {
     configService: ConfigService,
     private readonly paymentService: PaymentService,
     private readonly mercadoPagoService: MercadoPagoService,
+    private readonly evolutionNotificationsService: EvolutionNotificationsService,
   ) {
     super(loggerService, prismaService, configService);
   }
 
-  //@Cron('*/20 * * * *') // Executa a cada 20 minutos
-  //@Cron(CronExpression.EVERY_MINUTE)
+  //call in crons
   async handlePendingPayments() {
     this.logger.log('Iniciando verificação de pagamentos pendentes...');
 
     try {
       const pendents = await this.prisma.orderOnline.findMany({
-        where: { paymentStatus: 'pending' },
+        where: {
+          paymentStatus: 'pending',
+          status: 'digitation',
+          OR: [{ step: 'pix' }, { step: 'card' }],
+        },
+        include: {
+          customer: true,
+        },
       });
 
       if (pendents.length === 0) {
@@ -63,10 +71,11 @@ export class PaymentTaskService extends BaseService {
         let newPaymentStatus: string;
         let newOrderStatus = order.status;
         let newStep = order.step;
-
+        let sendNotification: boolean = false;
         switch (mpPaymentStatus) {
           case 'approved':
             {
+              sendNotification = true;
               newPaymentStatus = 'approved';
               newOrderStatus = OrderStatsEnum.payd;
               newStep = PreOrderStepEnum.tanks;
@@ -110,6 +119,9 @@ export class PaymentTaskService extends BaseService {
           this.logger.log(
             `Ordem ${order.id} atualizada para o status: ${newPaymentStatus}`,
           );
+        }
+        if (sendNotification === true) {
+          this.evolutionNotificationsService.sendConfimPayment(order);
         }
       }
     } catch (error) {

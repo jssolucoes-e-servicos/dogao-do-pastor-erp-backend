@@ -83,6 +83,24 @@ export class CustomerService extends BaseService {
     return customer;
   }
 
+  async createFirst(cpf: string): Promise<CustomerRetrieve> {
+    const customer = await this.prisma.customer.create({
+      data: {
+        cpf: cpf,
+        name: '',
+        email: '',
+        phone: '',
+        knowsChurch: true,
+        allowsChurch: true,
+        firstRegister: true,
+      },
+    });
+    this.logger.log(
+      `Novo Cliente: [CPF: ${customer.cpf}, Nome: ${customer.name}, Telefone: ${customer.phone} ]`,
+    );
+    return customer;
+  }
+
   async update(customerDTO: CustomerCreateDTO): Promise<CustomerRetrieve> {
     const customer = await this.prisma.customer.update({
       where: { cpf: customerDTO.cpf },
@@ -93,6 +111,7 @@ export class CustomerService extends BaseService {
         phone: customerDTO.phone,
         knowsChurch: customerDTO.knowsChurch,
         allowsChurch: customerDTO.allowsChurch,
+        firstRegister: false,
       },
     });
     return customer;
