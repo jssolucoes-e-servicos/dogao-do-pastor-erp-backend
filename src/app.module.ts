@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { CellsNetworksModule } from './modules/cells-networks/cells-networks.model';
+import { CellsModule } from './modules/cells/cells.model';
 import { CronsModule } from './modules/crons/crons.modules';
 import { CustomerAddressModule } from './modules/customer-address/customer-address.module';
 import { CustomerModule } from './modules/customer/customer.module';
@@ -22,6 +24,8 @@ import { SellerModule } from './modules/seller/seller.module';
     PaymentModule,
     SellerModule,
     CronsModule,
+    CellsModule,
+    CellsNetworksModule,
     DashboardModule,
   ],
   controllers: [],
