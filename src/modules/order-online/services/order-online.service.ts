@@ -38,7 +38,7 @@ export class OrderOnlineService extends BaseService {
     customer: CustomerRetrieve | null;
   }> {
     const { cpf, sellerId, sellerTag } = body;
-    const customer = await this.customerService.findByCpf({ cpf: cpf });
+    let customer = await this.customerService.findByCpf({ cpf: cpf });
 
     if (customer) {
       const haspreorder = await this.prisma.orderOnline.findFirst({
@@ -54,11 +54,17 @@ export class OrderOnlineService extends BaseService {
           customer: customer,
         };
       }
+    } else {
+      await this.customerService.createFirst(cpf);
+      customer = await this.customerService.findByCpf({ cpf: cpf });
     }
+
+    if (!customer) throw new Error('lasou');
+
     const isPromo: boolean = DatesHelper.IsPromoDate();
     const preSale = await this.prisma.orderOnline.create({
       data: {
-        customerId: customer ? customer.id : undefined,
+        customerId: customer.id,
         editionId: EDITION_ID,
         sellerId: sellerId,
         sellerTag: sellerTag,
