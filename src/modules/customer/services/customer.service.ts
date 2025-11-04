@@ -1,3 +1,4 @@
+// src/modules/customer/services/customer.service.ts
 import {
   BaseService,
   ConfigService,
@@ -124,6 +125,18 @@ export class CustomerService extends BaseService {
       where: { cpf: cpf },
       include: {
         addresses: true,
+      },
+    });
+    return customer;
+  }
+
+  async findByEmailOrCpf(identifier: string) {
+    // Tenta buscar por email OU CPF
+    const customer = await this.prisma.customer.findFirst({
+      where: {
+        OR: [{ email: identifier }, { cpf: identifier }],
+        active: true,
+        deletedAt: null,
       },
     });
     return customer;

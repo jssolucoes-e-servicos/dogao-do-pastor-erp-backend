@@ -1,3 +1,4 @@
+// src/modules/logger/services/logger.service.ts
 import { Logger } from '@nestjs/common';
 
 export class LoggerService {

@@ -7,6 +7,7 @@ import {
   PrismaService,
 } from '@/common/helpers/importer-helper';
 import { Injectable } from '@nestjs/common';
+import { OrderOnline } from '@prisma/client';
 import { MercadoPagoService } from './mercadopago.service';
 import { PaymentService } from './payment.service';
 
@@ -22,102 +23,76 @@ export class PaymentTaskService extends BaseService {
     super(loggerService, prismaService, configService);
   }
 
-  //@Cron('*/20 * * * *') // Executa a cada 20 minutos
-  //@Cron(CronExpression.EVERY_MINUTE)
-  async handlePendingPayments() {
-    this.logger.log('Iniciando verificação de pagamentos pendentes...');
+  async handlePendingPayments(order: OrderOnline, paymentId: string) {
+    this.logger.log(
+      `Iniciando verificação de pagamentos pendentes do pedido: ${order.id}`,
+    );
 
     try {
-      const pendents = await this.prisma.orderOnline.findMany({
-        where: { paymentStatus: 'pending' },
-      });
+      const mpPayment =
+        await this.mercadoPagoService.getPaymentStatus(paymentId);
 
-      if (pendents.length === 0) {
-        this.logger.log('Nenhum pagamento pendente encontrado.');
+      if (!mpPayment) {
+        // O erro já foi logado no MercadoPagoService, então continuamos.
         return;
       }
 
-      this.logger.log(`Encontrados ${pendents.length} pagamentos pendentes.`);
+      const mpPaymentStatus = mpPayment.status;
+      //const mpPaymentStatusDetail = mpPayment.status_detail;
 
-      for (const order of pendents) {
-        const paymentId = order.paymentId;
+      let newPaymentStatus: string;
+      let newOrderStatus = order.status;
+      let newStep = order.step;
 
-        if (!paymentId) {
+      switch (mpPaymentStatus) {
+        case 'approved':
+          {
+            newPaymentStatus = 'approved';
+            newOrderStatus = OrderStatsEnum.payd;
+            newStep = PreOrderStepEnum.tanks;
+          }
+          break;
+        case 'pending':
+          {
+            newPaymentStatus = 'pending';
+            newOrderStatus = OrderStatsEnum.pending_payment;
+            newStep = order.step;
+          }
+          break;
+        case 'rejected':
+        case 'cancelled':
+          {
+            newPaymentStatus = 'rejected';
+            newOrderStatus = OrderStatsEnum.pending_payment;
+            newStep = PreOrderStepEnum.payment;
+          }
+          break;
+        default:
+          newPaymentStatus = 'unknown';
           this.logger.warn(
-            `Ordem ${order.id} não possui mercadopagoPaymentId. Pulando.`,
+            `Status do Mercado Pago desconhecido: ${mpPaymentStatus} para a ordem ${order.id}`,
           );
-          continue;
-        }
+      }
 
-        const mpPayment =
-          await this.mercadoPagoService.getPaymentStatus(paymentId);
-
-        if (!mpPayment) {
-          // O erro já foi logado no MercadoPagoService, então continuamos.
-          continue;
-        }
-
-        const mpPaymentStatus = mpPayment.status;
-        //const mpPaymentStatusDetail = mpPayment.status_detail;
-
-        let newPaymentStatus: string;
-        let newOrderStatus = order.status;
-        let newStep = order.step;
-
-        switch (mpPaymentStatus) {
-          case 'approved':
-            {
-              newPaymentStatus = 'approved';
-              newOrderStatus = OrderStatsEnum.payd;
-              newStep = PreOrderStepEnum.tanks;
-            }
-            break;
-          case 'pending':
-            {
-              newPaymentStatus = 'pending';
-              newOrderStatus = OrderStatsEnum.pending_payment;
-              newStep = order.step;
-            }
-            break;
-          case 'rejected':
-          case 'cancelled':
-            {
-              newPaymentStatus = 'rejected';
-              newOrderStatus = OrderStatsEnum.pending_payment;
-              newStep = PreOrderStepEnum.payment;
-            }
-            break;
-          default:
-            newPaymentStatus = 'unknown';
-            this.logger.warn(
-              `Status do Mercado Pago desconhecido: ${mpPaymentStatus} para a ordem ${order.id}`,
-            );
-        }
-
-        if (
-          order.paymentStatus !== newPaymentStatus &&
-          newPaymentStatus !== 'unknown' &&
-          newPaymentStatus !== 'pending'
-        ) {
-          await this.prisma.orderOnline.update({
-            where: { id: order.id },
-            data: {
-              paymentStatus: newPaymentStatus,
-              status: newOrderStatus,
-              step: newStep,
-            },
-          });
-          this.logger.log(
-            `Ordem ${order.id} atualizada para o status: ${newPaymentStatus}`,
-          );
-        }
+      if (
+        order.paymentStatus !== newPaymentStatus &&
+        newPaymentStatus !== 'unknown' &&
+        newPaymentStatus !== 'pending'
+      ) {
+        await this.prisma.orderOnline.update({
+          where: { id: order.id },
+          data: {
+            paymentStatus: newPaymentStatus,
+            status: newOrderStatus,
+            step: newStep,
+          },
+        });
+        this.logger.log(
+          `Ordem ${order.id} atualizada para o status: ${newPaymentStatus}`,
+        );
       }
     } catch (error) {
-      this.logger.error(
-        `Erro ao buscar pagamentos pendentes no banco de dados: ${error}`,
-      );
+      this.logger.error(`Erro ao processar pagamento pendente: ${error}`);
     }
-
-    this.logger.log('Verificação de pagamentos pendentes finalizada.');
   }
 }

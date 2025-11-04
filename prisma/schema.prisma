@@ -17,16 +17,16 @@ enum VoucherStats {
 
 enum OrderStats {
   digitation // Pedido em digitação no online
-  pending_payment  // Quando pedido online esta finalizado, mas sem pagamento
+  pending_payment // Quando pedido online esta finalizado, mas sem pagamento
   payd // Quando pedido online recebe Pagamento
   new // Quando pedido novo (PDV)
-  queue  // Quando na fila esperando para horario de produção
-  production  // Quando estiver na produção
-  expedition  // Quando Termicada produção, estiver no balcão
-  delivering  // Quando sai para entrega
-  delivered  // Quando com estatus de já entregue
+  queue // Quando na fila esperando para horario de produção
+  production // Quando estiver na produção
+  expedition // Quando Termicada produção, estiver no balcão
+  delivering // Quando sai para entrega
+  delivered // Quando com estatus de já entregue
   cancelled // Quando cancelado
-  rejected  // Quando pedido rejeitado pelo sistema (não pago)
+  rejected // Quando pedido rejeitado pelo sistema (não pago)
 }
 
 enum PreOrderStep {
@@ -48,11 +48,10 @@ enum DeliveryOption {
 }
 
 enum PaymentOrigin {
- preorder
+  preorder
   order
   pdv
 }
-
 
 enum PaymentStats {
   pending
@@ -76,31 +75,85 @@ enum PaymentMethod {
   monney
 }
 
+enum EmailStatusEnum {
+  QUEUED
+  SENDING
+  SENT
+  FAILED
+  RETRYING
+}
 
 model Admin {
-  id             String    @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-  username String @unique
-  password String
-  active         Boolean   @default(true)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  deletedAt      DateTime?
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  username  String    @unique
+  password  String
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
   @@map("admins")
 }
 
-model WhatsappQueue {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  type      String // Ex: "send-text", "send-location"
-  data      Json // Dados da mensagem a ser enviada
-  status    String    @default("pending") // "pending", "processing", "completed", "failed"
-  attempts  Int       @default(0)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  processedAt DateTime?
-  error     String?
+model User {
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  username       String           @unique
+  password       String
+  active         Boolean          @default(true)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  deletedAt      DateTime?
+  Seller         Seller[]
+  Cell           Cell[]
+  CellNetwork    CellNetwork[]
+  DeliveryPerson DeliveryPerson[]
 
-  @@map("whatsapp_queue")
+  @@map("users")
+}
+
+model File {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  path       String @unique // O caminho completo do arquivo no MinIO/S3
+  fileName   String
+  mimeType   String
+  sizeBytes  Int
+  uploadedBy String // personId que fez o upload
+
+  // Opcional: Para vincular o arquivo a uma entidade específica (Ex: Profile Picture, Fatura PDF)
+  entityId   String? // ID do registro onde este arquivo está sendo usado
+  entityType String? // Ex: 'person', 'invoice', 'product'
+  active     Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  @@map("files")
+}
+
+model EmailLog {
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  senderId     String? // personId que disparou o envio
+  to           String
+  subject      String
+  templateName String? // Ex: 'welcome', 'password_reset'
+
+  // Status do envio
+  status       EmailStatusEnum @default(QUEUED) // 'QUEUED', 'SENDING', 'SENT', 'FAILED', 'RETRYING'
+  errorMessage String?
+  sentAt       DateTime?
+
+  // Conteúdo (para debug ou reenvio)
+  contextSnapshot Json? // JSON dos dados que preencheram o template (para reenvio)
+  attemptCount    Int       @default(0)
+  // Padrões de CRUD
+  active          Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime? // Geralmente não se usa soft delete em logs, mas mantemos o padrão
+
+  @@map("emaillogs")
 }
 
 // Definindo a edição do evento
@@ -114,22 +167,24 @@ model Edition {
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime?
 
-  vouchers  Voucher[]
-  tickets   Tickets[]
+  vouchers     Voucher[]
+  tickets      Tickets[]
   ordersOnline OrderOnline[]
 
   @@map("editions")
 }
 
 model CellNetwork {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  name String
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
   supervisorName String
-  phone String
-  active      Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
+  phone          String
+  user           User?     @relation(fields: [userId], references: [id])
+  userId         String?   @db.ObjectId
+  active         Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
 
   cells Cell[]
 
@@ -137,16 +192,18 @@ model CellNetwork {
 }
 
 model Cell {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  network CellNetwork @relation(fields: [networkId], references: [id])
-  networkId String @db.ObjectId
-  leaderName  String
-  active      Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
-  sellers     Seller[]
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  network    CellNetwork @relation(fields: [networkId], references: [id])
+  networkId  String      @db.ObjectId
+  leaderName String
+  user       User?       @relation(fields: [userId], references: [id])
+  userId     String?     @db.ObjectId
+  active     Boolean     @default(true)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  deletedAt  DateTime?
+  sellers    Seller[]
 
   @@map("cells")
 }
@@ -158,12 +215,14 @@ model Seller {
   name      String
   phone     String
   tag       String    @unique
+  user      User?     @relation(fields: [userId], references: [id])
+  userId    String?   @db.ObjectId
   active    Boolean   @default(true)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  tickets   Tickets[]
+  tickets      Tickets[]
   ordersOnline OrderOnline[]
 
   @@map("sellers")
@@ -173,6 +232,8 @@ model DeliveryPerson {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   phone     String?
+  user      User?     @relation(fields: [userId], references: [id])
+  userId    String?   @db.ObjectId
   active    Boolean   @default(true)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -248,21 +309,22 @@ model OrderItem {
 
 // Representa o cliente que está fazendo a pré-venda
 model Customer {
-  id           String            @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  email        String?           @unique
-  phone        String
-  cpf          String?           @unique
-  knowsChurch  Boolean           @default(true)
-  allowsChurch Boolean           @default(true)
+  id            String            @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  email         String?           @unique
+  phone         String
+  cpf           String?           @unique
+  password      String?           @default("dogao@25")
+  knowsChurch   Boolean           @default(true)
+  allowsChurch  Boolean           @default(true)
   firstRegister Boolean           @default(false)
-  active       Boolean           @default(true)
-  createdAt    DateTime          @default(now())
-  updatedAt    DateTime          @updatedAt
-  deletedAt    DateTime?
-  vouchers     Voucher[]
-  addresses    CustomerAddress[]
-  ordersOnline    OrderOnline[]
+  active        Boolean           @default(true)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  deletedAt     DateTime?
+  vouchers      Voucher[]
+  addresses     CustomerAddress[]
+  ordersOnline  OrderOnline[]
 
   @@map("customers")
 }
@@ -288,58 +350,57 @@ model CustomerAddress {
   @@map("customers_addresses")
 }
 
-
 model Payment {
-  id                String           @id @default(auto()) @map("_id") @db.ObjectId
-  origin PaymentOrigin @default(preorder)
-  idReference String @db.ObjectId
-  value Float
-  paymentStatus     PaymentStats? @default(pending)
-  provider   PaymetProviders? @default(mercadopago) // 'mercadopago'
-  paymentId         String?
-  method     PaymentMethod? @default(undefined)
-  pixQrcode String?
-  pixCopyPaste String?
-  paymentUrl        String? //url payment init
-  cardToken String?
-  active            Boolean          @default(true)
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-  deletedAt         DateTime?
+  id            String           @id @default(auto()) @map("_id") @db.ObjectId
+  origin        PaymentOrigin    @default(preorder)
+  idReference   String           @db.ObjectId
+  value         Float
+  paymentStatus PaymentStats?    @default(pending)
+  provider      PaymetProviders? @default(mercadopago) // 'mercadopago'
+  paymentId     String?
+  method        PaymentMethod?   @default(undefined)
+  pixQrcode     String?
+  pixCopyPaste  String?
+  paymentUrl    String? //url payment init
+  cardToken     String?
+  active        Boolean          @default(true)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  deletedAt     DateTime?
 
   @@map("payments")
 }
 
 // O pedido de pré-venda
 model OrderOnline {
-  id                String           @id @default(auto()) @map("_id") @db.ObjectId
-  customer          Customer?        @relation(fields: [customerId], references: [id])
-  customerId        String?          @db.ObjectId
-  edition           Edition          @relation(fields: [editionId], references: [id])
-  editionId         String           @db.ObjectId
-  seller            Seller           @relation(fields: [sellerId], references: [id])
-  sellerId          String           @db.ObjectId
-  sellerTag         String
-  quantity          Int
-  valueTotal        Float
-  paymentStatus     String // 'pending', 'paid', 'failed'
-  paymentProvider   String // 'mercadopago'
-  paymentId         String? // ID da transação do Mercado Pago
-  paymentUrl        String? //url payment init
-  paymentMethod     String?          @default("NEW") // PIX  OU CARD - NEW apenas antes de ir para tela de pgto
-  paymentPixQrcode String?
+  id                  String           @id @default(auto()) @map("_id") @db.ObjectId
+  customer            Customer?        @relation(fields: [customerId], references: [id])
+  customerId          String?          @db.ObjectId
+  edition             Edition          @relation(fields: [editionId], references: [id])
+  editionId           String           @db.ObjectId
+  seller              Seller           @relation(fields: [sellerId], references: [id])
+  sellerId            String           @db.ObjectId
+  sellerTag           String
+  quantity            Int
+  valueTotal          Float
+  paymentStatus       String // 'pending', 'paid', 'failed'
+  paymentProvider     String // 'mercadopago'
+  paymentId           String? // ID da transação do Mercado Pago
+  paymentUrl          String? //url payment init
+  paymentMethod       String?          @default("NEW") // PIX  OU CARD - NEW apenas antes de ir para tela de pgto
+  paymentPixQrcode    String?
   paymentPixCopyPaste String?
-  address           CustomerAddress? @relation(fields: [customerAddressId], references: [id])
-  customerAddressId String?          @db.ObjectId
-  observations      String?
-  deliveryOption    DeliveryOption   @default(undefined)
-  status            OrderStats       @default(digitation)
-  isPromo           Boolean          @default(false)
-  step              PreOrderStep @default(customer)
-  active            Boolean          @default(true)
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-  deletedAt         DateTime?
+  address             CustomerAddress? @relation(fields: [customerAddressId], references: [id])
+  customerAddressId   String?          @db.ObjectId
+  observations        String?
+  deliveryOption      DeliveryOption   @default(undefined)
+  status              OrderStats       @default(digitation)
+  isPromo             Boolean          @default(false)
+  step                PreOrderStep     @default(customer)
+  active              Boolean          @default(true)
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  deletedAt           DateTime?
 
   preOrderItems OrderOnlineItem[]
 
@@ -348,13 +409,13 @@ model OrderOnline {
 
 // O item do pedido de pré-venda, que representa um único cachorro-quente
 model OrderOnlineItem {
-  id                 String    @id @default(auto()) @map("_id") @db.ObjectId
-  orderOnline           OrderOnline  @relation(fields: [orderOnlineId], references: [id])
-  orderOnlineId         String    @db.ObjectId
+  id                 String      @id @default(auto()) @map("_id") @db.ObjectId
+  orderOnline        OrderOnline @relation(fields: [orderOnlineId], references: [id])
+  orderOnlineId      String      @db.ObjectId
   removedIngredients String[] // Lista de ingredientes removidos
-  active             Boolean   @default(true)
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
+  active             Boolean     @default(true)
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
   deletedAt          DateTime?
 
   @@map("orders-online_items")
