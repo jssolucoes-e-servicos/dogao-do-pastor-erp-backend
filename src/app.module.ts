@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MemoryStoredFile, NestjsFormDataModule } from 'nestjs-form-data';
 import { getMailerConfig } from './common/configs/mailer.config';
 import { validationSchema } from './common/configs/validation.schema';
+import { AuthModule } from './modules/auth/auth.module';
 import { CellsNetworksModule } from './modules/cells-networks/cells-networks.model';
 import { CellsModule } from './modules/cells/cells.model';
 import { CronsModule } from './modules/crons/crons.modules';
@@ -46,7 +47,7 @@ import { UploadsModule } from './modules/uploads/uploads.module';
     }),
     LoggerModule,
     PrismaModule,
-
+    AuthModule,
     UploadsModule,
     EvolutionModule,
     CustomerModule,

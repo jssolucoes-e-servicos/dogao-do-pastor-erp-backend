@@ -213,19 +213,24 @@ export class MercadoPagoService extends BaseService {
       const phoneObj = this.normalizePhone(customer.phone);
       const email = this.emailFallback(preorder.id, customer.email);
 
+      const transaction_amount = Math.floor(preorder.valueTotal * 100) / 100;
+
+      const bodyMP = {
+        transaction_amount: transaction_amount,
+        description: `Compra Online Dogão: ${preorder.id}`,
+        payment_method_id: 'pix',
+        payer: {
+          first_name,
+          last_name,
+          email,
+          phone: phoneObj,
+        },
+      };
+      console.log('send: ', bodyMP);
+
       try {
         const payment = await this.mpClient.create({
-          body: {
-            transaction_amount: preorder.valueTotal,
-            description: `Compra Online Dogão: ${preorder.id}`,
-            payment_method_id: 'pix',
-            payer: {
-              first_name,
-              last_name,
-              email,
-              phone: phoneObj,
-            },
-          },
+          body: bodyMP,
         });
 
         const pi = payment.point_of_interaction;
@@ -261,7 +266,7 @@ export class MercadoPagoService extends BaseService {
         return { success: true, payment: response };
       } catch (err) {
         this.logger.error(`Erro ao processar PIX: ${err}`);
-
+        console.log(err);
         throw new HttpException(
           'Erro ao processar pagamento PIX',
           HttpStatus.BAD_REQUEST,

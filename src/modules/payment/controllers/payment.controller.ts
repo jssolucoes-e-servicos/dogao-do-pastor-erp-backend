@@ -6,18 +6,19 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
+import { PixDTO } from '../dto/pix.dto';
 import { MercadoPagoService } from '../services/mercadopago.service';
 
 @Controller('payments')
 export class PaymentController {
-  constructor(private readonly mpService: MercadoPagoService) {}
+  constructor(private readonly mpService: MercadoPagoService) { }
 
   /**
    * Gera pagamento PIX para um preorder.
-   * Body: { preorderId: string }
+   * Body: { preorderId: string }*asAvatarPrimitive
    */
   @Post('pix')
-  async payWithPix(@Body() body: { preorderId?: string }) {
+  async payWithPix(@Body() body: PixDTO) {
     if (!body?.preorderId) {
       throw new HttpException(
         'preorderId é obrigatório',
