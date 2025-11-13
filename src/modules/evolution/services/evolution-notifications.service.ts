@@ -1,5 +1,6 @@
 // src/modules/evolution/services/evolution-notifications.service.ts (Novo Serviço)
 
+import { ICountSoldsWithRank, IGetSaleBySeller } from '@/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { BaseService } from 'src/common/services/base.service';
@@ -7,6 +8,18 @@ import { LoggerService } from 'src/modules/logger/services/logger.service';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { SellerReportCache } from 'src/modules/reports/interfaces/SellerReportCache.interface';
 import { EvolutionService } from './evolution.service'; // Injeta o serviço de API
+import { MessageDeliveryAbandoned } from './messages/order-abandoned.message';
+import { MessageOrderAnalisys } from './messages/order-analisys.message';
+import { MessageOrderDelivered } from './messages/order-delivered.message';
+import { MessageOrderDeliveryFailed } from './messages/order-delivery-failed.message';
+import { MessageOrderDeliverySkiped } from './messages/order-delivery-skiped.message';
+import { MessageOrderNextDelivery } from './messages/order-next-delivery.message';
+import { MessageDeliveryPaymentPending } from './messages/order-payment-pending-24h.message';
+import { MessageReportCell } from './messages/report-cells.mesage';
+import { MessageReportSeller } from './messages/report-seller.message';
+import { MessageSellerTag } from './messages/report-sellet-tag.message';
+import { MessageReportSoldsRanking } from './messages/report-solds-ranking.message';
+import { MessageRouteAssigned } from './messages/route-assigned.message';
 
 @Injectable()
 export class EvolutionNotificationsService extends BaseService {
@@ -168,30 +181,19 @@ export class EvolutionNotificationsService extends BaseService {
     distance: string,
     addressInline: string,
   ) {
-    let message = `🚚 *Dogão do Pastor - Solicitação de Analise* 🚚\n\nOlá, temos um novo pedido para analise.\n\n`;
-    message += `Pedido: ${preorderId}.\n\n`;
-    message += `Cliente: [ ${cpf} ] ${customerName}.\n\n`;
-    message += `Endereço: ${addressInline}.\n\n`;
-    message += `Distância do Endereço até a sede: ${distance}km.\n\n`;
-    message += `link de analise: https://dogao.igrejavivaemcelulas.com.br/app/analise-distancia/${preorderId}`;
-
+    const message = MessageOrderAnalisys(
+      preorderId,
+      customerName,
+      cpf,
+      distance,
+      addressInline,
+    );
     this.logger.log(`Enviando notificação para pedido de analise`);
-
     return this.evolutionService.sendText(phone, message);
   }
 
   async sendSellerReport(phone: string, report: SellerReportCache) {
-    const message = `🌭 *Dogão do Pastor - Relatório de Vendas* 🌭
-
-Olá, *${report.Seller}*! 🙌
-
-📊 Seu resumo até agora:
-• Pedidos: ${report.Orders}
-• Dogs: ${report.Dogs}
-• Total: R$ ${report.Total.toFixed(2)}
-
-Continue firme! 💪`;
-
+    const message = MessageReportSeller(report);
     this.logger.log(`Enviando relatório para vendedor: ${phone}`);
     return await this.evolutionService.sendText(phone, message);
   }
@@ -205,25 +207,7 @@ Continue firme! 💪`;
       sellers: SellerReportCache[];
     },
   ) {
-    const sellersList = cellSummary.sellers
-      .map(
-        (v) =>
-          `• ${v.Seller}: ${v.Orders} pedidos, ${v.Dogs} dogs (R$ ${v.Total.toFixed(2)})`,
-      )
-      .join('\n');
-
-    const message = `🌭 *Dogão do Pastor - Relatório da Célula* 🌭
-
-📊 Resumo total:
-• Pedidos: ${cellSummary.Orders}
-• Dogs: ${cellSummary.Dogs}
-• Total: R$ ${cellSummary.Total.toFixed(2)}
-
-👥 *Vendedores:*
-${sellersList}
-
-Deus abençoe sua liderança! 🙏`;
-
+    const message = MessageReportCell(cellSummary);
     this.logger.log(`Enviando relatório para célula: ${phone}}`);
     return await this.evolutionService.sendText(phone, message);
   }
@@ -245,42 +229,47 @@ Deus abençoe sua liderança! 🙏`;
       );
       return;
     }
-
-    const link = `https://dogao.igrejavivaemcelulas.com.br/comprar/${orderId}`;
-
-    const baseMessage = isAbandoned
-      ? `🌭 *Dogão do Pastor* 🌭\n\nOlá ${customerName}! 👋\n\nPercebemos que você iniciou seu pedido mas ainda não concluiu.\n\nNão perca a chance de garantir seu Dogão e participar da promoção *Noite no Natal Luz de Gramado*. Hoje é o *último dia*! 🎄\n\nFinalize seu pedido agora mesmo no link abaixo. \n\n 🙏 Deus abençoe!`
-      : `🌭 *Dogão do Pastor* 🌭\n\nOlá ${customerName}! 👋\n\nSeu pedido ainda está com *pagamento pendente*.\n\nHoje é o *último dia* para garantir sua participação na promoção do *Noite no Natal Luz de Gramado*! 🎄\n\nFinalize seu pagamento aqui no link abaixo. \n\n 🙏 Deus abençoe!`;
-
-    //const phoneFake = '51982488374';
-
+    const message = isAbandoned
+      ? MessageDeliveryPaymentPending(customerName)
+      : MessageDeliveryAbandoned(customerName);
     this.logger.log(`Enviando lembrete de pedido para: ${phone}`);
-    await this.evolutionService.sendText(phone, baseMessage);
+    await this.evolutionService.sendText(phone, message);
+    const link = `https://dogao.igrejavivaemcelulas.com.br/comprar/${orderId}`;
     return await this.evolutionService.sendText(phone, link);
   }
 
   async sendRouteAssigned(phone: string, totalStops: number) {
-    const message = `🚚 Uma nova rota foi atribuída para você com ${totalStops} paradas. Inicie a rota no app.`;
-    return this.evolutionService.sendText(phone, message);
+    const message = MessageRouteAssigned(totalStops);
+    return await this.evolutionService.sendText(phone, message);
   }
 
-  async sendNextDelivery(phone, name) {
-    const message = `🚚 Olá ${name}, seu pedido está a caminho! Sua casa é a próxima parada.`;
-    return this.evolutionService.sendText(phone, message);
+  async sendNextDelivery(phone: string, name: string) {
+    const message = MessageOrderNextDelivery(name);
+    return await this.evolutionService.sendText(phone, message);
   }
 
-  async orderDelivered(phone, orderId) {
-    const message = `✅ Seu pedido #${orderId} foi entregue. Obrigado!`;
-    return this.evolutionService.sendText(phone, message);
+  async orderDelivered(phone: string, orderId: string) {
+    const message = MessageOrderDelivered(orderId);
+    return await this.evolutionService.sendText(phone, message);
   }
 
-  async orderDeliverySkiped(phone) {
-    const message = `⚠️ O entregador não pôde entregar seu pedido agora. Vamos tentar novamente em outro momento.`;
-    return this.evolutionService.sendText(phone, message);
+  async orderDeliverySkiped(phone: string) {
+    const message = MessageOrderDeliverySkiped();
+    return await this.evolutionService.sendText(phone, message);
   }
 
-  async orderDeliveryFailed(phone, orderId) {
-    const message = `❌ Não foi possível concluir a entrega do pedido #${orderId}. Em breve alguém da equipe entrará em contato.`;
-    return this.evolutionService.sendText(phone, message);
+  async orderDeliveryFailed(phone: string, orderId: string) {
+    const message = MessageOrderDeliveryFailed(orderId);
+    return await this.evolutionService.sendText(phone, message);
+  }
+
+  async sendSoldsRanking(phone: string, report: ICountSoldsWithRank) {
+    const message = MessageReportSoldsRanking(report);
+    return await this.evolutionService.sendText(phone, message);
+  }
+
+  async sendReportSellerTag(phone: string, report: IGetSaleBySeller) {
+    const message = MessageSellerTag(report);
+    return await this.evolutionService.sendText(phone, message);
   }
 }

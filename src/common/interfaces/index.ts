@@ -3,6 +3,7 @@ import { IAddress } from './address.interface';
 import { IBooleanValidator } from './boolean-validator.inteface';
 import { ICepValidator } from './cep-validator.inteface';
 import { IConfig } from './config.interface';
+import { ICountSoldsWithRank } from './count-solds-with-rank.interface';
 import { ICustomerData } from './customer-data.interface';
 import { ICustomerEntry } from './customer-entry.interface';
 import { ICustomer } from './customer.interface';
@@ -12,6 +13,7 @@ import { EvolutionApiSendResponse } from './evolution.interface';
 import { IFindWithName } from './find-with-name.interface';
 import { IGender } from './gender.interface';
 import { IGenericUploadResult } from './generic-upload-result.interface';
+import { IGetSaleBySeller } from './get-sales-by-seller.interface';
 import { IMercadoPagoWebhookNotification } from './mercadopago-webhook.interface';
 import { IMongoIdValidator } from './mongo-id-validator.inteface';
 import { IMPCheckout } from './mp-checkout.interface';
@@ -31,7 +33,7 @@ import { IUserResponse } from './user-response.interface';
 import { IWeekDay } from './weekday.interface';
 
 export type {
-  EvolutionApiSendResponse, IAddress, IBooleanValidator, ICepValidator, IConfig, ICustomer, ICustomerData, ICustomerEntry, IDeliveryAddress,
-  IEmailValidator, IFindWithName, IGender, IGenericUploadResult, IMercadoPagoWebhookNotification, IMongoIdValidator, IMPCheckout, IMPCustomer, IMPOrder, IMPPayment, IMPPix, IMPWebhook, IPagination, IPaymentRequest, IPaymentResponse, IPhoneValidator, IPreOrder, IPreOrderItem, IPreOrderRequest, IStringValidator, IUserResponse, IWeekDay
+  EvolutionApiSendResponse, IAddress, IBooleanValidator, ICepValidator, IConfig, ICountSoldsWithRank, ICustomer, ICustomerData, ICustomerEntry, IDeliveryAddress,
+  IEmailValidator, IFindWithName, IGender, IGenericUploadResult, IGetSaleBySeller, IMercadoPagoWebhookNotification, IMongoIdValidator, IMPCheckout, IMPCustomer, IMPOrder, IMPPayment, IMPPix, IMPWebhook, IPagination, IPaymentRequest, IPaymentResponse, IPhoneValidator, IPreOrder, IPreOrderItem, IPreOrderRequest, IStringValidator, IUserResponse, IWeekDay
 };
 

@@ -6,6 +6,9 @@ import {
 import { BaseService } from '@/common/services/base.service';
 import { EvolutionNotificationsService } from '@/modules/evolution/services/evolution-notifications.service';
 import { Injectable } from '@nestjs/common';
+import { ICountSoldsWithRank, IGetSaleBySeller } from 'src/common/interfaces';
+import { SendReportByTagDTO } from '../dto/send-report-by-tag.dto';
+import { SendReportWhastappDTO } from '../dto/send-report-whatsapp.dto';
 import { SellerReportCache } from '../interfaces/SellerReportCache.interface';
 
 interface ISummary {
@@ -319,4 +322,271 @@ export class ReportsService extends BaseService {
 
     this.logger.log('Daily report notifications completed successfully.');
   }
+
+  async getCountAllSolds(): Promise<ICountSoldsWithRank> {
+    const agg = await this.prisma.orderOnline.aggregate({
+      where: {
+        paymentStatus: 'approved',
+        active: true,
+      },
+      _sum: {
+        quantity: true,
+        valueTotal: true,
+      },
+    });
+
+    const totalCount = agg._sum?.quantity ?? 0;
+    const totalValue = agg._sum?.valueTotal ?? 0;
+
+    // --- Ranking de vendedores ---
+    const sellerSales = await this.prisma.orderOnline.groupBy({
+      by: ['sellerId'],
+      where: {
+        paymentStatus: 'approved',
+        active: true,
+      },
+      _sum: {
+        quantity: true,
+      },
+      orderBy: {
+        _sum: {
+          quantity: 'desc',
+        },
+      },
+    });
+
+    const sellers = await this.prisma.seller.findMany({
+      where: {
+        id: { in: sellerSales.map((s) => s.sellerId) },
+      },
+      select: { id: true, name: true },
+    });
+
+    const rank_sellers = sellerSales.map((s) => ({
+      name: sellers.find((x) => x.id === s.sellerId)?.name || 'Sem vendedor',
+      quantity: s._sum.quantity ?? 0,
+    }));
+
+    // --- Ranking de células ---
+    const sellersWithCells = await this.prisma.seller.findMany({
+      where: {
+        id: { in: sellerSales.map((s) => s.sellerId) },
+      },
+      select: {
+        id: true,
+        cellId: true,
+      },
+    });
+
+    const cellQuantities: Record<string, number> = {};
+
+    // soma quantidade de cada célula
+    for (const sale of sellerSales) {
+      const seller = sellersWithCells.find((x) => x.id === sale.sellerId);
+      if (!seller?.cellId) continue;
+      cellQuantities[seller.cellId] =
+        (cellQuantities[seller.cellId] ?? 0) + (sale._sum.quantity ?? 0);
+    }
+
+    const cells = await this.prisma.cell.findMany({
+      where: { id: { in: Object.keys(cellQuantities) } },
+      select: { id: true, name: true },
+    });
+
+    const rank_cells = Object.entries(cellQuantities)
+      .map(([cellId, quantity]) => ({
+        name: cells.find((c) => c.id === cellId)?.name || 'Sem célula',
+        quantity,
+      }))
+      .sort((a, b) => b.quantity - a.quantity);
+
+    return {
+      totalCount,
+      totalValue,
+      rank_cells,
+      rank_sellers,
+    };
+  }
+
+  async sendSalesReportToWhatsapp(body: SendReportWhastappDTO): Promise<void> {
+    try {
+      const report = await this.getCountAllSolds();
+      await this.evolutionNotifications.sendSoldsRanking(body.phone, report);
+    } catch (error) {
+      console.error('Erro ao enviar relatório pelo WhatsApp:', error);
+      throw new Error('Falha ao enviar relatório de vendas via WhatsApp');
+    }
+  }
+
+  async getSalesBySellerTag(sellerTag: string): Promise<IGetSaleBySeller> {
+    const orders = await this.prisma.orderOnline.findMany({
+      where: {
+        sellerTag,
+        paymentStatus: 'approved', // ou "payd", dependendo de como está salvo
+        active: true,
+      },
+      include: {
+        customer: true,
+        seller: true,
+      },
+    });
+
+    if (!orders.length) {
+      /* throw new Error(
+        `Nenhuma venda encontrada para o vendedor com tag ${sellerTag}`,
+      ); */
+      return {
+        sellerName: `Nenhuma venda com a tag: ${sellerTag}`,
+        sales: [],
+        totalDogs: 0,
+      };
+    }
+
+    const sellerName = orders[0].seller?.name ?? 'Vendedor não identificado';
+
+    // Agrupa por cliente
+    const customerMap: Record<
+      string,
+      { customerName: string; quantity: number }
+    > = {};
+
+    for (const order of orders) {
+      const customerName = order.customer?.name ?? 'Cliente não identificado';
+      const quantity = order.quantity ?? 0;
+
+      if (!customerMap[customerName]) {
+        customerMap[customerName] = { customerName, quantity };
+      } else {
+        customerMap[customerName].quantity += quantity;
+      }
+    }
+
+    const sales = Object.values(customerMap).sort(
+      (a, b) => b.quantity - a.quantity,
+    );
+    const totalDogs = sales.reduce((acc, s) => acc + s.quantity, 0);
+
+    return {
+      sellerName,
+      sales,
+      totalDogs,
+    };
+  }
+
+  async sendSalesBySellerTagToWhatsapp(
+    body: SendReportByTagDTO,
+  ): Promise<void> {
+    try {
+      const report = await this.getSalesBySellerTag(body.tag);
+      if (report.totalDogs > 0) {
+        await this.evolutionNotifications.sendReportSellerTag(
+          body.phone,
+          report,
+        );
+      } else {
+        throw new Error('Tag sem venda');
+      }
+    } catch (error) {
+      console.error('Erro ao enviar relatório do vendedor:', error);
+      throw new Error('Falha ao enviar relatório via WhatsApp');
+    }
+  }
+
+  async sendAllSellersSalesReports(): Promise<{
+    totalSellers: number;
+    success: number;
+    failed: number;
+  }> {
+    const sellers = await this.prisma.seller.findMany({
+      where: {
+        active: true,
+      },
+      select: {
+        id: true,
+        name: true,
+        phone: true,
+        tag: true,
+      },
+    });
+
+    if (!sellers.length) {
+      throw new Error('Nenhum vendedor ativo com telefone e tag encontrado');
+    }
+
+    let success = 0;
+    let failed = 0;
+
+    // envia em paralelo controlando a concorrência (Promise.allSettled)
+    await Promise.allSettled(
+      sellers.map(async (seller) => {
+        try {
+          await this.sendSalesBySellerTagToWhatsapp({
+            tag: seller.tag,
+            phone: seller.phone,
+          });
+          success++;
+        } catch (err) {
+          this.logger.error(
+            `Erro ao enviar relatório para ${seller.name}: ${err.message}`,
+          );
+          failed++;
+        }
+      }),
+    );
+
+    return {
+      totalSellers: sellers.length,
+      success,
+      failed,
+    };
+  }
+
+  /* async generateSalesReportPdf(): Promise<{ url: string }> {
+    try {
+      const report = await this.getCountAllSolds();
+
+      // Cria PDF
+      const doc = new PDFDocument({ margin: 40 });
+      const chunks: Buffer[] = [];
+
+      doc.on('data', (chunk) => chunks.push(chunk));
+      const endPromise = new Promise<Buffer>((resolve) => {
+        doc.on('end', () => resolve(Buffer.concat(chunks)));
+      });
+
+      doc.fontSize(20).text('Relatório de Vendas', { align: 'center' });
+      doc.moveDown();
+
+      doc.fontSize(14).text(`Total de Dogs Vendidos: ${report.totalCount}`);
+      doc.text(`Valor Total: R$ ${report.totalValue.toFixed(2)}`);
+      doc.moveDown();
+
+      doc.fontSize(16).text('Ranking de Células', { underline: true });
+      report.rank_cells.forEach((c, i) => {
+        doc.fontSize(12).text(`${i + 1}. ${c.name} — ${c.quantity}`);
+      });
+      doc.moveDown();
+
+      doc.fontSize(16).text('Ranking de Vendedores', { underline: true });
+      report.rank_sellers.forEach((s, i) => {
+        doc.fontSize(12).text(`${i + 1}. ${s.name} — ${s.quantity}`);
+      });
+
+      doc.end();
+
+      const pdfBuffer = await endPromise;
+      const fileName = `relatorio-vendas-${Date.now()}.pdf`;
+
+      const file = await this.uploadService.uploadFile(
+        pdfBuffer,
+        fileName,
+        'application/pdf',
+      );
+
+      return { url: file.url };
+    } catch (error) {
+      console.error('Erro ao gerar relatório PDF:', error);
+      throw new Error('Falha ao gerar PDF de relatório de vendas');
+    }
+  } */
 }

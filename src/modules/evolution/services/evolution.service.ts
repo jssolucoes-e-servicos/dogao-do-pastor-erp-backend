@@ -102,7 +102,7 @@ export class EvolutionService extends BaseService {
       textMessage: { text: text },
       options: { delay: 1200, presence: 'composing' },
     };
-    this.logger.log(`API Call: sendText para: ${formattedPhone}`);
+    this.logger.log(`Evolution API Call: sendText para: ${formattedPhone}`);
     return await this.makeRequest<EvolutionApiSendResponse>(
       endpoint,
       'POST',
