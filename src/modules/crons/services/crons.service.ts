@@ -1,3 +1,4 @@
+// src/modules/crons/services/crons.service.ts
 import {
   BaseService,
   ConfigService,
@@ -5,6 +6,7 @@ import {
   PrismaService,
 } from '@/common/helpers/importer-helper';
 import { PaymentTaskService } from '@/modules/payment/services/payment-task.service';
+import { ReportsService } from '@/modules/reports/services/reports.service';
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { EvolutionService } from 'src/modules/evolution/services/evolution.service';
@@ -17,11 +19,17 @@ export class CronsService extends BaseService {
     configService: ConfigService,
     private readonly evolutionService: EvolutionService,
     private readonly paymentTaskService: PaymentTaskService,
+    private readonly reportsService: ReportsService,
   ) {
     super(loggerService, prismaService, configService);
   }
 
-/*   //@Cron(CronExpression.EVERY_MINUTE)
+  @Cron('0 9 * * *', { timeZone: 'America/Sao_Paulo' })
+  async handleDailyReport() {
+    await this.reportsService.sendReportsIfChanged();
+  }
+
+  /*   //@Cron(CronExpression.EVERY_MINUTE)
   async processWhatsappMessages() {
     const penddings = await this.prisma.whatsappQueue.findMany();
     if (penddings) {

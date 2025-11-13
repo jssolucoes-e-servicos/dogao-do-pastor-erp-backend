@@ -1,10 +1,11 @@
 // src/modules/evolution/services/evolution-notifications.service.ts (Novo Serviço)
 
-import { BaseService } from '@/common/services/base.service';
-import { LoggerService } from '@/modules/logger/services/logger.service';
-import { PrismaService } from '@/modules/prisma/services/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { BaseService } from 'src/common/services/base.service';
+import { LoggerService } from 'src/modules/logger/services/logger.service';
+import { PrismaService } from 'src/modules/prisma/services/prisma.service';
+import { SellerReportCache } from 'src/modules/reports/interfaces/SellerReportCache.interface';
 import { EvolutionService } from './evolution.service'; // Injeta o serviço de API
 
 @Injectable()
@@ -176,6 +177,110 @@ export class EvolutionNotificationsService extends BaseService {
 
     this.logger.log(`Enviando notificação para pedido de analise`);
 
+    return this.evolutionService.sendText(phone, message);
+  }
+
+  async sendSellerReport(phone: string, report: SellerReportCache) {
+    const message = `🌭 *Dogão do Pastor - Relatório de Vendas* 🌭
+
+Olá, *${report.Seller}*! 🙌
+
+📊 Seu resumo até agora:
+• Pedidos: ${report.Orders}
+• Dogs: ${report.Dogs}
+• Total: R$ ${report.Total.toFixed(2)}
+
+Continue firme! 💪`;
+
+    this.logger.log(`Enviando relatório para vendedor: ${phone}`);
+    return await this.evolutionService.sendText(phone, message);
+  }
+
+  async sendCellReport(
+    phone: string,
+    cellSummary: {
+      Orders: number;
+      Dogs: number;
+      Total: number;
+      sellers: SellerReportCache[];
+    },
+  ) {
+    const sellersList = cellSummary.sellers
+      .map(
+        (v) =>
+          `• ${v.Seller}: ${v.Orders} pedidos, ${v.Dogs} dogs (R$ ${v.Total.toFixed(2)})`,
+      )
+      .join('\n');
+
+    const message = `🌭 *Dogão do Pastor - Relatório da Célula* 🌭
+
+📊 Resumo total:
+• Pedidos: ${cellSummary.Orders}
+• Dogs: ${cellSummary.Dogs}
+• Total: R$ ${cellSummary.Total.toFixed(2)}
+
+👥 *Vendedores:*
+${sellersList}
+
+Deus abençoe sua liderança! 🙏`;
+
+    this.logger.log(`Enviando relatório para célula: ${phone}}`);
+    return await this.evolutionService.sendText(phone, message);
+  }
+
+  async sendPendingPaymentMessage({
+    customerName,
+    phone,
+    orderId,
+    isAbandoned = false,
+  }: {
+    customerName: string;
+    phone?: string | null;
+    orderId: string;
+    isAbandoned?: boolean;
+  }) {
+    if (!phone) {
+      this.logger.warn(
+        `Cliente ${customerName} sem telefone — pedido ${orderId}`,
+      );
+      return;
+    }
+
+    const link = `https://dogao.igrejavivaemcelulas.com.br/comprar/${orderId}`;
+
+    const baseMessage = isAbandoned
+      ? `🌭 *Dogão do Pastor* 🌭\n\nOlá ${customerName}! 👋\n\nPercebemos que você iniciou seu pedido mas ainda não concluiu.\n\nNão perca a chance de garantir seu Dogão e participar da promoção *Noite no Natal Luz de Gramado*. Hoje é o *último dia*! 🎄\n\nFinalize seu pedido agora mesmo no link abaixo. \n\n 🙏 Deus abençoe!`
+      : `🌭 *Dogão do Pastor* 🌭\n\nOlá ${customerName}! 👋\n\nSeu pedido ainda está com *pagamento pendente*.\n\nHoje é o *último dia* para garantir sua participação na promoção do *Noite no Natal Luz de Gramado*! 🎄\n\nFinalize seu pagamento aqui no link abaixo. \n\n 🙏 Deus abençoe!`;
+
+    //const phoneFake = '51982488374';
+
+    this.logger.log(`Enviando lembrete de pedido para: ${phone}`);
+    await this.evolutionService.sendText(phone, baseMessage);
+    return await this.evolutionService.sendText(phone, link);
+  }
+
+  async sendRouteAssigned(phone: string, totalStops: number) {
+    const message = `🚚 Uma nova rota foi atribuída para você com ${totalStops} paradas. Inicie a rota no app.`;
+    return this.evolutionService.sendText(phone, message);
+  }
+
+  async sendNextDelivery(phone, name) {
+    const message = `🚚 Olá ${name}, seu pedido está a caminho! Sua casa é a próxima parada.`;
+    return this.evolutionService.sendText(phone, message);
+  }
+
+  async orderDelivered(phone, orderId) {
+    const message = `✅ Seu pedido #${orderId} foi entregue. Obrigado!`;
+    return this.evolutionService.sendText(phone, message);
+  }
+
+  async orderDeliverySkiped(phone) {
+    const message = `⚠️ O entregador não pôde entregar seu pedido agora. Vamos tentar novamente em outro momento.`;
+    return this.evolutionService.sendText(phone, message);
+  }
+
+  async orderDeliveryFailed(phone, orderId) {
+    const message = `❌ Não foi possível concluir a entrega do pedido #${orderId}. Em breve alguém da equipe entrará em contato.`;
     return this.evolutionService.sendText(phone, message);
   }
 }

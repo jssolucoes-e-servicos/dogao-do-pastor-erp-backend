@@ -1,20 +1,39 @@
+import {
+  ConfigService,
+  LoggerService,
+  PrismaService,
+} from '@/common/helpers/importer-helper';
+import { EvolutionNotificationsService } from '@/modules/evolution/services/evolution-notifications.service';
+import { EvolutionService } from '@/modules/evolution/services/evolution.service';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { PrismaService } from '../prisma/services/prisma.service';
 import { AuthController } from './controllers/auth.controller';
-import { UserJwtStrategy } from './estrategies/user.jwt.strategy';
-import { AuthUserService } from './services/auth-user.service';
-import { UserService } from './services/user.service';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { PermissionsGuard } from './guards/permissions.guard';
+import { AuthService } from './services/auth.service';
 
 @Module({
   imports: [
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '1d' },
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        secret: config.get('JWT_SECRET'),
+        signOptions: { expiresIn: config.get('JWT_EXPIRES_IN') || '7d' },
+      }),
     }),
   ],
   controllers: [AuthController],
-  providers: [UserService, AuthUserService, UserJwtStrategy, PrismaService],
+  providers: [
+    AuthService,
+    JwtAuthGuard,
+    PermissionsGuard,
+    LoggerService,
+    PrismaService,
+    ConfigService,
+    EvolutionService,
+    EvolutionNotificationsService,
+  ],
+  exports: [AuthService, JwtAuthGuard, PermissionsGuard],
 })
 export class AuthModule {
   /* void */

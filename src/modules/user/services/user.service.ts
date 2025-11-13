@@ -30,4 +30,8 @@ export class UserService extends BaseService {
       },
     });
   }
+
+  async listModules() {
+    return this.prisma.module.findMany();
+  }
 }

@@ -20,6 +20,8 @@ import { OrderOnlineFirstCreateDTO } from 'src/modules/order-online/dto/order-on
 import { OrderOnlineFullRetrieveDTO } from 'src/modules/order-online/dto/order-online-full-retrieve.dto';
 import { OrderOnlineInitRetrieveDTO } from 'src/modules/order-online/dto/order-online-init-retrieve.dto';
 import { OrderOnlineSetAddressDTO } from 'src/modules/order-online/dto/order-online-set-address.dto';
+import { CounterRetrieveDTO } from '../dto/counter-retrieve,dto';
+import { OrderOnlineWithCustomerItemsAddressDTO } from '../dto/order-online-with-customer-items-address.dto';
 
 @Injectable()
 export class OrderOnlineService extends BaseService {
@@ -33,6 +35,9 @@ export class OrderOnlineService extends BaseService {
     super(loggerService, prismaService, configService);
   }
 
+  /* 
+    Cria a venda
+  */
   async start(body: OrderOnlineFirstCreateDTO): Promise<{
     presale: OrderOnlineInitRetrieveDTO;
     customer: CustomerRetrieve | null;
@@ -88,6 +93,7 @@ export class OrderOnlineService extends BaseService {
     return result;
   }
 
+  // busa por id
   async findById(id: string): Promise<OrderOnlineFullRetrieveDTO | null> {
     try {
       const presale = await this.prisma.orderOnline.findUnique({
@@ -102,6 +108,7 @@ export class OrderOnlineService extends BaseService {
     }
   }
 
+  // salva id endereço no pedido
   async setAddress(
     data: OrderOnlineSetAddressDTO,
   ): Promise<OrderOnlineFullRetrieveDTO> {
@@ -121,6 +128,7 @@ export class OrderOnlineService extends BaseService {
     }
   }
 
+  // troca o tipo de pedido
   async setDeliveryOption(data: {
     preorderId: string;
     deliveryOption: string;
@@ -146,6 +154,7 @@ export class OrderOnlineService extends BaseService {
     }
   }
 
+  //return nova etapa
   selectNewStep(step: string) {
     switch (step) {
       case 'pix':
@@ -167,6 +176,7 @@ export class OrderOnlineService extends BaseService {
     }
   }
 
+  // altera a etapa do pedido
   async changeStep(data: {
     preorderId: string;
     step: string;
@@ -188,6 +198,7 @@ export class OrderOnlineService extends BaseService {
     }
   }
 
+  // envia pedido para analise
   async setAnalysis(data: {
     preorderId: string;
     deliveryAddressId: string;
@@ -224,6 +235,91 @@ export class OrderOnlineService extends BaseService {
         data.addressInline,
       );
       return presale;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error API');
+    }
+  }
+
+  //lista pedidos em analise
+  async getInAnalisys(): Promise<OrderOnlineWithCustomerItemsAddressDTO[]> {
+    try {
+      const orders = await this.prisma.orderOnline.findMany({
+        where: {
+          step: PreOrderStepEnum.analysis,
+        },
+        include: {
+          customer: true,
+          address: true,
+          preOrderItems: true,
+        },
+      });
+      return orders;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error API');
+    }
+  }
+
+  async getPaydsCounter(): Promise<CounterRetrieveDTO[]> {
+    try {
+      const orders = await this.prisma.orderOnline.findMany({
+        where: {
+          paymentStatus: 'approved',
+        },
+        include: {
+          preOrderItems: true,
+          seller: {
+            include: {
+              cell: {
+                include: {
+                  network: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const statsMap = new Map<
+        string,
+        {
+          Vendedor: string;
+          Celula: string;
+          Rede: string;
+          Pedidos: number;
+          Dogs: number;
+          Total: number;
+        }
+      >();
+
+      for (const order of orders) {
+        const seller = order.seller;
+        if (!seller) continue;
+
+        const cell = seller.cell;
+        const network = cell?.network;
+        const key = seller.id;
+
+        if (!statsMap.has(key)) {
+          statsMap.set(key, {
+            Vendedor: seller.name,
+            Celula: cell?.name ?? 'Sem célula',
+            Rede: network?.name ?? 'Sem rede',
+            Pedidos: 0,
+            Dogs: 0,
+            Total: 0,
+          });
+        }
+
+        const current = statsMap.get(key)!;
+        current.Pedidos += 1;
+        current.Dogs += order.preOrderItems.length; // soma total de items do pedido
+        current.Total += order.valueTotal; // soma valor total do pedido
+      }
+
+      // Retorna formatado e ordenado do maior Total para o menor
+      return Array.from(statsMap.values()).sort((a, b) => b.Total - a.Total);
     } catch (error) {
       console.error(error);
       throw new Error('Error API');

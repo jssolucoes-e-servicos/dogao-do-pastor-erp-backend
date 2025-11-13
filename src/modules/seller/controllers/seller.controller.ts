@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { SellerCreateDTO } from '../dto/seller-create.dto';
 import { SellerFindByTagDTO } from '../dto/seller-find-by-tag.dto';
 import { SellerRetrieveWithCellDTO } from '../dto/seller-retrieve.dto';
@@ -22,5 +22,10 @@ export class SellerController {
   ): Promise<SellerRetrieveWithCellDTO | null> {
     const seller = await this.sellerService.findByTag(data);
     return seller;
+  }
+
+  @Get()
+  async list(): Promise<SellerRetrieveWithCellDTO[]> {
+    return this.sellerService.list();
   }
 }

@@ -67,4 +67,13 @@ export class SellerService extends BaseService {
     }
     return seller;
   }
+
+  async list(): Promise<SellerRetrieveWithCellDTO[]> {
+    const sellers = await this.prisma.seller.findMany({
+      where: { active: true },
+      include: { cell: true },
+    });
+
+    return sellers;
+  }
 }

@@ -1,6 +1,6 @@
 import { StringValidator } from '@/common/validators';
 
-export class UserLoginDto {
+export class LoginDto {
   @StringValidator({ fieldName: 'username', label: 'Username' })
   username: string;
 

@@ -23,12 +23,21 @@ export class CustomerService extends BaseService {
   }
 
   async findAll(): Promise<CustomerRetrieve[]> {
-    const customers = await this.prisma.customer.findMany();
+    const customers = await this.prisma.customer.findMany({
+      where: {
+        NOT: [{ name: undefined }, { name: '' }],
+      },
+    });
     return customers;
   }
 
   async count(): Promise<{ customers: number }> {
-    const count = await this.prisma.customer.count();
+    const count = await this.prisma.customer.count({
+      where: {
+        firstRegister: false,
+        active: true,
+      },
+    });
 
     return { customers: count };
   }

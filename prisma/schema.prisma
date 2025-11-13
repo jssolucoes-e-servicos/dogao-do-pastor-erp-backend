@@ -83,6 +83,12 @@ enum EmailStatusEnum {
   RETRYING
 }
 
+enum OrderOrigin {
+  SITE
+  TICKET
+  PDV
+}
+
 model Admin {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   name      String
@@ -103,14 +109,81 @@ model User {
   password       String
   active         Boolean          @default(true)
   createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  updatedAt      DateTime         @default(now()) @updatedAt
   deletedAt      DateTime?
   Seller         Seller[]
   Cell           Cell[]
   CellNetwork    CellNetwork[]
   DeliveryPerson DeliveryPerson[]
+  userRoles      UserRole[]
+  permissions    Permission[]
 
   @@map("users")
+}
+
+model Role {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String // 'Seller', 'DeliveryPerson', 'ProductionManager', 'Backoffice', 'Reception'
+  description String?
+  active      Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now()) @updatedAt
+  deletedAt   DateTime?
+  users       UserRole[]
+  permissions Permission[]
+
+  @@unique([name])
+  @@map("roles")
+}
+
+model UserRole {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @db.ObjectId
+  role      Role     @relation(fields: [roleId], references: [id])
+  roleId    String   @db.ObjectId
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, roleId])
+  @@map("user_roles")
+}
+
+model Module {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  ctrl        String
+  page        String
+  active      Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now()) @updatedAt
+  deletedAt   DateTime?
+  permissions Permission[]
+
+  @@map("modules")
+}
+
+model Permission {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  user      User?     @relation(fields: [userId], references: [id])
+  userId    String?   @db.ObjectId
+  role      Role?     @relation(fields: [roleId], references: [id])
+  roleId    String?   @db.ObjectId
+  module    Module    @relation(fields: [moduleId], references: [id])
+  moduleId  String    @db.ObjectId
+  access    Boolean   @default(false)
+  create    Boolean   @default(false)
+  update    Boolean   @default(false)
+  delete    Boolean   @default(false)
+  report    Boolean   @default(false)
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("permissions")
 }
 
 model File {
@@ -153,7 +226,7 @@ model EmailLog {
   updatedAt       DateTime  @updatedAt
   deletedAt       DateTime? // Geralmente não se usa soft delete em logs, mas mantemos o padrão
 
-  @@map("emaillogs")
+  @@map("email_logs")
 }
 
 // Definindo a edição do evento
@@ -197,6 +270,7 @@ model Cell {
   network    CellNetwork @relation(fields: [networkId], references: [id])
   networkId  String      @db.ObjectId
   leaderName String
+  phone      String?
   user       User?       @relation(fields: [userId], references: [id])
   userId     String?     @db.ObjectId
   active     Boolean     @default(true)
@@ -229,15 +303,16 @@ model Seller {
 }
 
 model DeliveryPerson {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  phone     String?
-  user      User?     @relation(fields: [userId], references: [id])
-  userId    String?   @db.ObjectId
-  active    Boolean   @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  phone          String?
+  user           User?           @relation(fields: [userId], references: [id])
+  userId         String?         @db.ObjectId
+  active         Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  deletedAt      DateTime?
+  deliveryRoutes DeliveryRoute[]
 
   @@map("delivery_persons")
 }
@@ -397,12 +472,14 @@ model OrderOnline {
   status              OrderStats       @default(digitation)
   isPromo             Boolean          @default(false)
   step                PreOrderStep     @default(customer)
+  origin              OrderOrigin      @default(SITE)
   active              Boolean          @default(true)
   createdAt           DateTime         @default(now())
   updatedAt           DateTime         @updatedAt
   deletedAt           DateTime?
 
   preOrderItems OrderOnlineItem[]
+  deliveryStops DeliveryStop[]
 
   @@map("orders-online")
 }
@@ -419,4 +496,61 @@ model OrderOnlineItem {
   deletedAt          DateTime?
 
   @@map("orders-online_items")
+}
+
+type DailyReportSoldsCacheSummaryType {
+  Seller  String
+  Cell    String
+  Network String
+  Orders  Int    @default(0)
+  Dogs    Int    @default(0)
+  Total   Int    @default(0)
+}
+
+model DailyReportSoldsCache {
+  id        String                           @id @default(auto()) @map("_id") @db.ObjectId
+  type      String // 'seller' ou 'cell'
+  refId     String // id do vendedor ou da célula
+  summary   DailyReportSoldsCacheSummaryType // { Pedidos, Dogs, Total }
+  sentAt    DateTime                         @default(now())
+  createdAt DateTime                         @default(now())
+  updatedAt DateTime                         @updatedAt
+
+  @@map("daily_report_solds_cache")
+}
+
+model DeliveryRoute {
+  id               String         @id @default(auto()) @map("_id") @db.ObjectId
+  deliveryPerson   DeliveryPerson @relation(fields: [deliveryPersonId], references: [id])
+  deliveryPersonId String         @db.ObjectId
+  startedAt        DateTime?
+  finishedAt       DateTime?
+  status           String         @default("pending") // pending | in_progress | finished | cancelled
+  totalStops       Int            @default(0)
+  completedStops   Int            @default(0)
+  active           Boolean        @default(true)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  stops            DeliveryStop[]
+
+  @@map("delivery_routes")
+}
+
+model DeliveryStop {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  route       DeliveryRoute @relation(fields: [routeId], references: [id])
+  routeId     String        @db.ObjectId
+  order       OrderOnline   @relation(fields: [orderId], references: [id])
+  orderId     String        @db.ObjectId
+  sequence    Int
+  status      String        @default("pending") // pending | delivering | delivered | skipped | failed
+  deliveredAt DateTime?
+  skippedAt   DateTime?
+  failedAt    DateTime?
+  lat         Float?
+  lng         Float?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("delivery_stops")
 }

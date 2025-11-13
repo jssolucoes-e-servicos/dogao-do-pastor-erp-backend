@@ -11,6 +11,7 @@ import { CronsModule } from './modules/crons/crons.modules';
 import { CustomerAddressModule } from './modules/customer-address/customer-address.module';
 import { CustomerModule } from './modules/customer/customer.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { DeliveryModule } from './modules/delivery/delivery.module';
 import { EvolutionModule } from './modules/evolution/evolution.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { OrderOnlineItemsModule } from './modules/order-online-items/order-online-items.module';
@@ -18,6 +19,7 @@ import { OrderOnlineModule } from './modules/order-online/order-online.module';
 import { PaymentModule } from './modules/payment/payment.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { PrismaService } from './modules/prisma/services/prisma.service';
+import { ReportsModule } from './modules/reports/reports.module';
 import { SellerModule } from './modules/seller/seller.module';
 import { UploadsModule } from './modules/uploads/uploads.module';
 
@@ -54,12 +56,15 @@ import { UploadsModule } from './modules/uploads/uploads.module';
     CustomerAddressModule,
     OrderOnlineModule,
     OrderOnlineItemsModule,
+    DeliveryModule,
     PaymentModule,
     SellerModule,
     CronsModule,
     CellsModule,
     CellsNetworksModule,
     DashboardModule,
+    AuthModule,
+    ReportsModule,
   ],
   controllers: [],
   providers: [PrismaService],

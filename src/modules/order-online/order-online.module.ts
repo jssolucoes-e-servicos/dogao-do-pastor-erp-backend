@@ -8,6 +8,7 @@ import { EvolutionNotificationsService } from 'src/modules/evolution/services/ev
 import { OrderOnlineController } from 'src/modules/order-online/controllers/order-online.controller';
 import { OrderOnlineService } from 'src/modules/order-online/services/order-online.service';
 import { EvolutionService } from '../evolution/services/evolution.service';
+import { OrderOnlinePendingService } from './services/orders-online-pending.service';
 
 @Module({
   imports: [CustomerModule, EvolutionModule],
@@ -19,8 +20,9 @@ import { EvolutionService } from '../evolution/services/evolution.service';
     EvolutionService,
     OrderOnlineService,
     CustomerService,
+    OrderOnlinePendingService,
   ],
-  exports: [OrderOnlineService],
+  exports: [OrderOnlineService, OrderOnlinePendingService],
 })
 export class OrderOnlineModule {
   /* void */

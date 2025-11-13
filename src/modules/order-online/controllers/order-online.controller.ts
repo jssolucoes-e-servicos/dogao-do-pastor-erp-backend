@@ -6,10 +6,16 @@ import { OrderOnlineFullRetrieveDTO } from 'src/modules/order-online/dto/order-o
 import { OrderOnlineInitRetrieveDTO } from 'src/modules/order-online/dto/order-online-init-retrieve.dto';
 import { OrderOnlineSetAddressDTO } from 'src/modules/order-online/dto/order-online-set-address.dto';
 import { OrderOnlineService } from 'src/modules/order-online/services/order-online.service';
+import { CounterRetrieveDTO } from '../dto/counter-retrieve,dto';
+import { OrderOnlineWithCustomerItemsAddressDTO } from '../dto/order-online-with-customer-items-address.dto';
+import { OrderOnlinePendingService } from '../services/orders-online-pending.service';
 
 @Controller('order-online')
 export class OrderOnlineController {
-  constructor(private readonly orderOnlineService: OrderOnlineService) {
+  constructor(
+    private readonly orderOnlineService: OrderOnlineService,
+    private readonly orderOnlinePendingService: OrderOnlinePendingService,
+  ) {
     /* void */
   }
 
@@ -26,6 +32,18 @@ export class OrderOnlineController {
     @Param('id') id: string,
   ): Promise<OrderOnlineFullRetrieveDTO | null> {
     return await this.orderOnlineService.findById(id);
+  }
+
+  @Post('in-analisys')
+  async getInAnalisys(): Promise<
+    OrderOnlineWithCustomerItemsAddressDTO[] | null
+  > {
+    return await this.orderOnlineService.getInAnalisys();
+  }
+
+  @Post('payds-counter')
+  async getPaydsCounter(): Promise<CounterRetrieveDTO[]> {
+    return await this.orderOnlineService.getPaydsCounter();
   }
 
   @Post('change-step')
@@ -62,4 +80,9 @@ export class OrderOnlineController {
   ): Promise<OrderOnlineFullRetrieveDTO> {
     return await this.orderOnlineService.setAnalysis(data);
   }
+
+  /* @Post('pending')
+  async sendPendingPaymentReminders() {
+    await this.orderOnlinePendingService.sendPendingPaymentReminders();
+  } */
 }
