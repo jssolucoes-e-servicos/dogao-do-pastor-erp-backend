@@ -1,3 +1,4 @@
+// src/modules/delivery/dto/update-stop.dto.ts
 import { IsIn, IsOptional, IsString } from 'class-validator';
 
 export class UpdateStopDto {

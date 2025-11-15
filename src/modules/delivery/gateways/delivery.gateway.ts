@@ -9,36 +9,21 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { PrismaService } from 'src/common/helpers/importer-helper';
+
+// Helper para room por entregador
+function roomForDeliveryPerson(deliveryPersonId: string) {
+  return `deliveryPerson:${deliveryPersonId}`;
+}
 
 /**
  * DeliveryGateway
- *
- * - Emite eventos globais para o painel (manager) e rooms por entregador.
- * - Recebe atualizações de localização do app do entregador via socket (evento 'location:update:in')
- * - Métodos utilitários para broadcast (usados pelo DeliveryService)
- *
- * Eventos emitidos (server -> client):
- * - 'location:update' { deliveryPersonId, lat, lng, updatedAt }
- * - 'route:created'   { route }
- * - 'route:started'   { route }
- * - 'stop:updated'    { routeId, stopId, stop }
- * - 'route:finished'  { routeId }
- *
- * Eventos aceitos (client -> server):
- * - 'location:update:in' { deliveryPersonId, lat, lng }  (entregador envia)
- * - 'join' { room }  (cliente se inscreve em room: ex: 'deliveryPerson:ID' ou 'manager')
- * - 'leave' { room } (sai do room)
- *
- * Nota: esse gateway foi mantido simples — para produção recomendo:
- * - autenticação do socket (JWT) no handshake,
- * - usar adapter Redis para escala (socket.io-redis),
- * - armazenar últimas localizações em Redis para múltiplas instâncias.
+ * - Gerencia comunicação real-time com entregador e painel
  */
-
 @WebSocketGateway({
-  namespace: '/delivery',
+  namespace: 'delivery',
   cors: {
-    origin: '*', // restrinja em prod
+    origin: '*',
     methods: ['GET', 'POST'],
   },
 })
@@ -47,40 +32,42 @@ export class DeliveryGateway
   implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
+  private prisma: PrismaService;
 
-  // Conexões ativas por socket id (opcional tracking)
+  constructor(prisma: PrismaService) {
+    this.prisma = prisma;
+  }
+
+  // Rooms socket<>entregador
   private socketsByDeliveryPerson: Record<string, Set<string>> = {};
 
-  // --- Lifecycle ---
-  handleConnection(client: Socket, ...args: any[]) {
-    /*  this.logger.setLog(
-      `Socket connected: ${client.id} (handshake: ${JSON.stringify(client.handshake.query)})`,
-    ); */
-    // Optional: authenticate here using token in handshake
-    // const token = client.handshake.query?.token as string | undefined;
-    // verify token if needed and attach user info to client.data
+  // ----- Connection Lifecycle -----
+  handleConnection(client: Socket) {
+    // Opcional: autenticação com token no handshake
+    // TODO: validar JWT, associar à deliveryPersonId
+    console.log(
+      '[Gateway] Cliente conectado:',
+      client.id,
+      'Query:',
+      client.handshake.query,
+    );
   }
 
   handleDisconnect(client: Socket) {
-    //this.logger.setLog(`Socket disconnected: ${client.id}`);
-    // remove from any deliveryPerson mappings
     for (const dpId of Object.keys(this.socketsByDeliveryPerson)) {
       if (this.socketsByDeliveryPerson[dpId].has(client.id)) {
         this.socketsByDeliveryPerson[dpId].delete(client.id);
         if (this.socketsByDeliveryPerson[dpId].size === 0)
           delete this.socketsByDeliveryPerson[dpId];
-        /*  this.logger.setLog(
-          `Socket ${client.id} removed from deliveryPerson ${dpId}`,
-        ); */
       }
     }
   }
 
-  // --- Client -> Server events ---
+  // ----- Subscribe events - do client para o server -----
 
   /**
-   * Entregador envia posição via websocket (opcional: app pode usar HTTP endpoint em vez disso)
-   * payload: { deliveryPersonId, lat, lng }
+   * Entregador envia posição via websocket
+   * { deliveryPersonId, lat, lng }
    */
   @SubscribeMessage('location:update:in')
   async handleLocationUpdate(
@@ -88,40 +75,31 @@ export class DeliveryGateway
     payload: { deliveryPersonId: string; lat: number; lng: number },
     @ConnectedSocket() client: Socket,
   ) {
+    console.log('[Gateway] Evento recebido: location:update:in =>', payload);
     try {
       const { deliveryPersonId, lat, lng } = payload;
-      // broadcast para todos (manager) e para a room específica do entregador
       const data = {
         deliveryPersonId,
         lat,
         lng,
         updatedAt: new Date().toISOString(),
       };
-      // broadcast global
       this.server.emit('location:update', data);
-      // broadcast para room
       this.server
-        .to(this.roomForDeliveryPerson(deliveryPersonId))
+        .to(roomForDeliveryPerson(deliveryPersonId))
         .emit('location:update', data);
-
-      // track socket membership (optional)
       if (!this.socketsByDeliveryPerson[deliveryPersonId])
         this.socketsByDeliveryPerson[deliveryPersonId] = new Set();
       this.socketsByDeliveryPerson[deliveryPersonId].add(client.id);
-
-      /*   this.logger.setLog(
-        `Received location from ${deliveryPersonId}: ${lat},${lng}`,
-      ); */
       return { ok: true };
     } catch (err) {
-      //  this.logger.setError('handleLocationUpdate error: ' + err.message);
       return { ok: false, error: err.message };
     }
   }
 
   /**
-   * Join a room
-   * payload: { room: string }  e.g. room = 'deliveryPerson:abc' ou 'manager'
+   * Entregador entra em uma sala (room)
+   * { room }
    */
   @SubscribeMessage('join')
   handleJoin(
@@ -131,13 +109,12 @@ export class DeliveryGateway
     const { room } = payload;
     if (!room) return;
     client.join(room);
-    // this.logger.setLog(`Socket ${client.id} joined room ${room}`);
     return { ok: true };
   }
 
   /**
-   * Leave a room
-   * payload: { room: string }
+   * Entregador sai de uma sala
+   * { room }
    */
   @SubscribeMessage('leave')
   handleLeave(
@@ -147,18 +124,48 @@ export class DeliveryGateway
     const { room } = payload;
     if (!room) return;
     client.leave(room);
-    // this.logger.setLog(`Socket ${client.id} left room ${room}`);
     return { ok: true };
   }
 
-  // --- Server -> Client helper emits (used pelo DeliveryService) ---
-
-  // helper para definir nome de room padrão
-  roomForDeliveryPerson(deliveryPersonId: string) {
-    return `deliveryPerson:${deliveryPersonId}`;
+  /**
+   * Entregador responde ao alerta da fila (aceita/recusa rota)
+   * { deliveryPersonId, accepted, orderIds, editionId }
+   */
+  @SubscribeMessage('queue:route:response')
+  async receiveQueueRouteResponse(
+    @MessageBody()
+    payload: {
+      deliveryPersonId: string;
+      accepted: boolean;
+      orderIds: string[];
+      editionId?: string;
+    },
+    @ConnectedSocket() client: Socket,
+  ) {
+    // Implementação no service do delivery (inject ali)
+    // Para simplificar, só emite de volta, a lógica do service cuidará do resto
+    this.server.emit('queue:route:response', payload);
+    return { ok: true };
   }
 
-  // broadcast global (managers listening)
+  // ----- Emit (server para client) -----
+
+  /**
+   * Envia alert/modal para entregador disponível da fila
+   * payload: { orderIds, editionId, message }
+   */
+  sendToDeliveryPerson(deliveryPersonId: string, event: string, payload: any) {
+    console.log(
+      `[Gateway] Emitindo evento ${event} para deliveryPerson:${deliveryPersonId} =>`,
+      payload,
+    );
+    const room = roomForDeliveryPerson(deliveryPersonId);
+    this.server.to(room).emit(event, payload);
+  }
+
+  /**
+   * Broadcast dos eventos globais da entrega
+   */
   broadcastLocationUpdate(deliveryPersonId: string, lat: number, lng: number) {
     const data = {
       deliveryPersonId,
@@ -166,54 +173,48 @@ export class DeliveryGateway
       lng,
       updatedAt: new Date().toISOString(),
     };
-    // global
     this.server.emit('location:update', data);
-    // room specific
     this.server
-      .to(this.roomForDeliveryPerson(deliveryPersonId))
+      .to(roomForDeliveryPerson(deliveryPersonId))
       .emit('location:update', data);
-    /*  this.logger.setLog(
-      `broadcastLocationUpdate -> ${deliveryPersonId} ${lat},${lng}`,
-    ); */
   }
 
   broadcastRouteCreated(route: any) {
     this.server.emit('route:created', route);
-    // notify specific delivery person room if needed
-    const dpRoom = this.roomForDeliveryPerson(route.deliveryPersonId);
+    const dpRoom = roomForDeliveryPerson(route.deliveryPersonId);
     this.server.to(dpRoom).emit('route:created', route);
-    //  this.logger.setLog(`broadcastRouteCreated -> route ${route.id}`);
   }
 
   broadcastRouteStarted(route: any) {
     this.server.emit('route:started', route);
-    const dpRoom = this.roomForDeliveryPerson(route.deliveryPersonId);
+    const dpRoom = roomForDeliveryPerson(route.deliveryPersonId);
     this.server.to(dpRoom).emit('route:started', route);
-    //this.logger.setLog(`broadcastRouteStarted -> route ${route.id}`);
   }
 
   broadcastStopUpdated(routeId: string, stopId: string, stop?: any) {
     const payload = { routeId, stopId, stop: stop ?? null };
     this.server.emit('stop:updated', payload);
-    // also emit to route room (optional)
     this.server.to(`route:${routeId}`).emit('stop:updated', payload);
-    /* this.logger.setLog(
-      `broadcastStopUpdated -> route ${routeId} stop ${stopId}`,
-    ); */
   }
 
   broadcastRouteFinished(routeId: string) {
     this.server.emit('route:finished', { routeId });
     this.server.to(`route:${routeId}`).emit('route:finished', { routeId });
-    //this.logger.setLog(`broadcastRouteFinished -> route ${routeId}`);
   }
 
-  // emitir mensagem privada para entregador (room)
-  sendToDeliveryPerson(deliveryPersonId: string, event: string, payload: any) {
-    const room = this.roomForDeliveryPerson(deliveryPersonId);
-    this.server.to(room).emit(event, payload);
-    /*  this.logger.setLog(
-      `sendToDeliveryPerson -> ${deliveryPersonId} event ${event}`,
-    ); */
+  /**
+   * Atualiza status online/offline e salva no MongoDB (DeliveryPerson)
+   * Usar no service: await gateway.setDeliveryPersonOnlineMongo(deliveryPersonId, online);
+   */
+  async setDeliveryPersonOnlineMongo(
+    deliveryPersonId: string,
+    online: boolean,
+  ) {
+    await this.prisma.deliveryPerson.update({
+      where: { id: deliveryPersonId },
+      data: { active: online },
+    });
+    // Notifica manager/entregadores
+    this.server.emit('delivery-person:online', { deliveryPersonId, online });
   }
 }

@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-
-import fetch from 'node-fetch'; // `npm i node-fetch@2` se precisar
+import fetch from 'node-fetch'; // Se não tiver: npm i node-fetch@2
 import {
   BaseService,
   ConfigService,
@@ -13,13 +12,15 @@ import { haversineDistance } from '../utils/geo';
 
 @Injectable()
 export class DeliveryService extends BaseService {
-  // optional in-memory last locations (consider Redis for production)
-  private lastLocations: Record<
-    string,
-    { lat: number; lng: number; updatedAt: Date }
-  > = {};
   private readonly HQ_LAT = parseFloat(process.env.HQ_LAT || '-30.1146');
   private readonly HQ_LNG = parseFloat(process.env.HQ_LNG || '-51.1281');
+
+  // Fila de entregadores online e sem rota
+  private deliveryQueue: string[] = [];
+  private waitingRouteRequests: Array<{
+    orderIds: string[];
+    editionId: string;
+  }> = [];
 
   constructor(
     loggerService: LoggerService,
@@ -31,59 +32,115 @@ export class DeliveryService extends BaseService {
     super(loggerService, prismaService, configService);
   }
 
-  // --- helper: geocode an address with Nominatim (optional) ---
-  private async geocodeAddress(address: string) {
-    // Keep this optional — Nominatim free service has rate limits. You can replace with Google geocoding if you have key.
-    try {
-      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-        address,
-      )}&limit=1`;
-      const res = await fetch(url, {
-        headers: {
-          'User-Agent':
-            'dogao-delivery/1.0 (+https://igrejavivaemcelulas.com.br)',
-        },
-      });
-      const json = await res.json();
-      if (json && json.length > 0) {
-        return { lat: parseFloat(json[0].lat), lng: parseFloat(json[0].lon) };
-      }
-    } catch (err) {
-      this.logger.error('Geocode failed: ' + err.message);
+  // ----- Controle online/offline via Mongo -----
+  async setDeliveryPersonOnlineStatus(
+    deliveryPersonId: string,
+    online: boolean,
+  ) {
+    await this.prisma.deliveryPerson.update({
+      where: { id: deliveryPersonId },
+      data: { active: online },
+    });
+    // Atualiza fila local em memória
+    if (online) {
+      if (!this.deliveryQueue.includes(deliveryPersonId))
+        this.deliveryQueue.push(deliveryPersonId);
+    } else {
+      this.deliveryQueue = this.deliveryQueue.filter(
+        (id) => id !== deliveryPersonId,
+      );
     }
-    return null;
+    // Notifica gerentes/frontends
+    this.gateway.server.emit('delivery-person:online', {
+      deliveryPersonId,
+      online,
+    });
+    return { ok: true };
   }
 
-  // core: generate route using nearest neighbor starting from HQ
-  async generateRoute(orderIds: string[], deliveryPersonId: string) {
-    if (!orderIds || orderIds.length === 0) {
-      throw new Error('No order IDs provided');
-    }
+  // Consulta entregadores realmente online (ativo no banco)
+  async listOnlineDeliveryPersons(): Promise<string[]> {
+    const persons = await this.prisma.deliveryPerson.findMany({
+      where: { active: true },
+    });
+    return persons.map((p) => p.id);
+  }
 
-    // Fetch orders + address + customer
+  // ----- Lógica da Fila -----
+  async processExpeditionRoute(orderIds: string[], editionId: string) {
+    // Atualiza fila a partir do banco, remove ocupados
+    const onlineIds = await this.listOnlineDeliveryPersons();
+    const busy = (
+      await this.prisma.deliveryRoute.findMany({
+        where: { status: { in: ['pending', 'in_progress'] }, active: true },
+      })
+    ).map((r) => r.deliveryPersonId);
+
+    const available = onlineIds.filter((id) => !busy.includes(id));
+    if (!available.length) throw new Error('Nenhum entregador disponível');
+
+    // Escolhe aleatório (pode usar round robin fifo se preferir)
+    const candidate = available[Math.floor(Math.random() * available.length)];
+
+    // Garante na fila local também
+    if (!this.deliveryQueue.includes(candidate))
+      this.deliveryQueue.push(candidate);
+
+    this.waitingRouteRequests.push({ orderIds, editionId });
+
+    // Dispara alerta apenas para o candidato via socket
+    this.gateway.sendToDeliveryPerson(candidate, 'queue:route', {
+      orderIds,
+      editionId,
+      message: 'Nova rota disponível para você!',
+    });
+  }
+
+  // ----- Aceitar ou recusar rota (chamado pelo socket gateway) -----
+  async queueRouteResponse(payload: {
+    deliveryPersonId: string;
+    accepted: boolean;
+    orderIds: string[];
+    editionId?: string;
+  }) {
+    if (payload.accepted) {
+      await this.generateRoute(payload.orderIds, payload.deliveryPersonId);
+    } else {
+      // Remove da fila e tenta próximo
+      this.deliveryQueue = this.deliveryQueue.filter(
+        (id) => id !== payload.deliveryPersonId,
+      );
+      const idx = this.waitingRouteRequests.findIndex(
+        (r) => JSON.stringify(r.orderIds) === JSON.stringify(payload.orderIds),
+      );
+      if (idx >= 0) {
+        const request = this.waitingRouteRequests[idx];
+        this.waitingRouteRequests.splice(idx, 1);
+        await this.processExpeditionRoute(request.orderIds, request.editionId);
+      }
+    }
+  }
+
+  // ----- Rota direta (ERP/Manager designa voluntário específico) -----
+  async generateRoute(orderIds: string[], deliveryPersonId: string) {
+    if (!orderIds || !orderIds.length) throw new Error('No order IDs provided');
+    // Busca pedidos, endereços
     const orders = await this.prisma.orderOnline.findMany({
       where: { id: { in: orderIds }, active: true },
-      include: {
-        customer: true,
-        address: true,
-        preOrderItems: true,
-      },
+      include: { customer: true, address: true, preOrderItems: true },
     });
 
-    // For each order, try to get lat/lng (use order.address lat/lng if you store it,
-    // otherwise geocode concatenated address)
+    // Geocodifica e ordena por vizinhança
     const points: Array<{
       orderId: string;
       lat: number;
       lng: number;
       order: any;
     }> = [];
-
     for (const o of orders) {
       let lat = (o as any).address?.lat ?? (o as any).address?.latitude;
       let lng = (o as any).address?.lng ?? (o as any).address?.longitude;
       if (lat == null || lng == null) {
-        // build address text
         const addr = o.address
           ? `${o.address.street} ${o.address.number || ''}, ${o.address.neighborhood || ''} ${o.address.city || ''} ${o.address.state || ''}`
           : `${o.customer?.name || ''}`;
@@ -100,25 +157,17 @@ export class DeliveryService extends BaseService {
           lng: Number(lng),
           order: o,
         });
-      } else {
-        this.logger.warn(
-          `Order ${o.id} has no coordinates, skipping from route generation.`,
-        );
       }
     }
+    if (!points.length) throw new Error('No points with coordinates');
 
-    if (points.length === 0) {
-      throw new Error('No points with coordinates available to generate route');
-    }
-
-    // nearest neighbor order
+    // Nearest neighbor para sequência das paradas
     const sequence: typeof points = [];
     let current = { lat: this.HQ_LAT, lng: this.HQ_LNG };
     const remaining = [...points];
-
-    while (remaining.length > 0) {
-      let bestIdx = 0;
-      let bestDist = Infinity;
+    while (remaining.length) {
+      let bestIdx = 0,
+        bestDist = Infinity;
       for (let i = 0; i < remaining.length; i++) {
         const p = remaining[i];
         const d = haversineDistance(current.lat, current.lng, p.lat, p.lng);
@@ -132,8 +181,7 @@ export class DeliveryService extends BaseService {
       current = { lat: picked.lat, lng: picked.lng };
     }
 
-    // optionally return to HQ — sequence remains as is, we don't explicitly add HQ as stop
-    // create DeliveryRoute and stops
+    // Cria rota DeliveryRoute/stops
     const route = await this.prisma.deliveryRoute.create({
       data: {
         deliveryPersonId,
@@ -153,31 +201,26 @@ export class DeliveryService extends BaseService {
       include: { stops: true },
     });
 
-    // notify delivery person (via WhatsApp) that a route was assigned
+    // Notifica voluntário por socket (+ WhatsApp/evolution opcional)
     try {
       const person = await this.prisma.deliveryPerson.findUnique({
         where: { id: deliveryPersonId },
       });
       const phone = person?.phone;
-      if (phone) {
-        // build short message
-        //const msg = `🚚 *Rota de entrega atribuída*\nVocê tem ${sequence.length} parada(s).\nInicie a rota no app para ver a ordem e começar a entregar.`;
+      if (phone)
         await this.evolutionNotifications.sendRouteAssigned(
           phone,
           sequence.length,
         );
-      }
     } catch (err) {
-      this.logger.error('Error notifying delivery person: ' + err.message);
+      this.logger.error('Notif error: ' + err.message);
     }
 
-    // broadcast route created
     this.gateway.broadcastRouteCreated(route);
-
     return route;
   }
 
-  // start route
+  // ---- Iniciar rota, stops, finalização ----
   async startRoute(routeId: string) {
     const route = await this.prisma.deliveryRoute.update({
       where: { id: routeId },
@@ -185,7 +228,7 @@ export class DeliveryService extends BaseService {
       include: { stops: true, deliveryPerson: true },
     });
 
-    // mark first stop as delivering (optional)
+    // Marca o primeiro stop como delivering
     const nextStop = route.stops.find((s) => s.status === 'pending');
     if (nextStop) {
       await this.prisma.deliveryStop.update({
@@ -193,27 +236,21 @@ export class DeliveryService extends BaseService {
         data: { status: 'delivering' },
       });
       this.gateway.broadcastStopUpdated(nextStop.routeId, nextStop.id);
-      // notify client and delivery person:
       const order = await this.prisma.orderOnline.findUnique({
         where: { id: nextStop.orderId },
         include: { customer: true },
       });
       if (order?.customer?.phone) {
-        // send "your house is next"
         await this.evolutionNotifications.sendNextDelivery(
           order.customer.phone,
           order.customer.name,
         );
       }
     }
-
-    // notify delivery manager via gateway
     this.gateway.broadcastRouteStarted(route);
-
     return route;
   }
 
-  // update stop status (delivered, skipped, failed)
   async updateStopStatus(
     stopId: string,
     status: 'delivered' | 'skipped' | 'failed',
@@ -231,35 +268,37 @@ export class DeliveryService extends BaseService {
       include: { route: true, order: { include: { customer: true } } },
     });
 
-    // increment route completedStops if delivered
     if (status === 'delivered') {
       await this.prisma.deliveryRoute.update({
         where: { id: stop.routeId },
         data: { completedStops: { increment: 1 } },
       });
     }
-
-    // notify via websocket
     this.gateway.broadcastStopUpdated(stop.routeId, stop.id);
 
-    // send notifications
+    // Notificações ao cliente/manager
     const customerPhone = stop.order?.customer?.phone;
     if (customerPhone) {
       if (status === 'delivered') {
-        await this.evolutionNotifications.orderDelivered(customerPhone,stop.orderId);
+        await this.evolutionNotifications.orderDelivered(
+          customerPhone,
+          stop.orderId,
+        );
       } else if (status === 'skipped') {
         await this.evolutionNotifications.orderDeliverySkiped(customerPhone);
       } else if (status === 'failed') {
-        await this.evolutionNotifications.orderDeliveryFailed(customerPhone,stop.orderId);
+        await this.evolutionNotifications.orderDeliveryFailed(
+          customerPhone,
+          stop.orderId,
+        );
       }
     }
 
-    // if all stops completed or route finished, finalize route
+    // Finaliza rota se todas paradas completas
     const route = await this.prisma.deliveryRoute.findUnique({
       where: { id: stop.routeId },
       include: { stops: true },
     });
-
     if (
       route &&
       route.stops.every(
@@ -275,35 +314,32 @@ export class DeliveryService extends BaseService {
       });
       this.gateway.broadcastRouteFinished(route.id);
     }
-
     return stop;
   }
 
-  // update location (from app) - broadcasts to websocket and stores last location in memory
+  // Location update e broadcast
   async updateLocation(deliveryPersonId: string, lat: number, lng: number) {
-    this.lastLocations[deliveryPersonId] = { lat, lng, updatedAt: new Date() };
-    // broadcast
+    // Salva local no campo deliveryPerson se desejar (adapte seu model)
+    await this.prisma.deliveryPerson.update({
+      where: { id: deliveryPersonId },
+      data: {
+        /* lat, lng */
+      },
+    });
     this.gateway.broadcastLocationUpdate(deliveryPersonId, lat, lng);
     return { ok: true };
   }
 
-  // list delivery persons with status and last location
+  // Listar entregadores (para painel DM)
   async listDeliveryPersons(onlyActive?: boolean) {
     const where: any = {};
     if (onlyActive !== undefined) where.active = onlyActive;
-
-    const persons = await this.prisma.deliveryPerson.findMany({
-      where,
-      include: { user: true },
-    });
-
+    const persons = await this.prisma.deliveryPerson.findMany({ where });
     return persons.map((p) => ({
       id: p.id,
       name: p.name,
       phone: p.phone,
       active: p.active,
-      lastLocation: this.lastLocations[p.id] ?? null,
-      // status is deduced by active + if has in_progress route
     }));
   }
 
@@ -316,6 +352,28 @@ export class DeliveryService extends BaseService {
     return routes;
   }
 
+  async setDeliveryPersonStatus(
+    deliveryPersonId: string,
+    online: boolean,
+    inRoute?: boolean,
+  ) {
+    console.log('receidev call: ' + deliveryPersonId + ' - ' + online);
+    const data: any = { online };
+    if (typeof inRoute === 'boolean') data.inRoute = inRoute;
+    await this.prisma.deliveryPerson.update({
+      where: { id: deliveryPersonId },
+      data: {
+        online: online,
+      },
+    });
+    // Notifica via socket (opcional)
+    this.gateway.server.emit('delivery-person:status', {
+      deliveryPersonId,
+      ...data,
+    });
+    return { ok: true, status: data };
+  }
+
   async getRouteDetails(routeId: string) {
     const route = await this.prisma.deliveryRoute.findUnique({
       where: { id: routeId },
@@ -325,5 +383,33 @@ export class DeliveryService extends BaseService {
       },
     });
     return route;
+  }
+
+  // --- Geocode de endereço ---
+  private async geocodeAddress(address: string) {
+    try {
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`;
+      const res = await fetch(url, {
+        headers: {
+          'User-Agent':
+            'dogao-delivery/1.0 (+https://igrejavivaemcelulas.com.br)',
+        },
+      });
+      const json = await res.json();
+      if (json && json.length > 0) {
+        return { lat: parseFloat(json[0].lat), lng: parseFloat(json[0].lon) };
+      }
+    } catch (err) {
+      this.logger.error('Geocode failed: ' + err.message);
+    }
+    return null;
+  }
+
+  async getDeliveryPersonStatus(deliveryPersonId: string) {
+    const dp = await this.prisma.deliveryPerson.findUnique({
+      where: { id: deliveryPersonId },
+      select: { online: true, inRoute: true },
+    });
+    return dp || { online: false, inRoute: false };
   }
 }

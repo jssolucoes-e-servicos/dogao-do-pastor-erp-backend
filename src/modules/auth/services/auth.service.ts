@@ -116,26 +116,37 @@ export class AuthService extends BaseService {
 
   // Login: validate, build payload and sign token
   async login(username: string, password: string) {
+    // Busca o usuário com relacionamentos relevantes
     const user = await this.prisma.user.findFirst({
       where: { username, active: true },
-      select: { id: true, username: true, name: true },
+      include: {
+        Seller: true,
+        Cell: true,
+        CellNetwork: true,
+        DeliveryPerson: true,
+        userRoles: { include: { role: true } },
+      },
     });
 
-    if (!user) throw new UnauthorizedException('Invalid credentials');
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
 
+    // Validação da senha
     const isValid = await this.validateUser(username, password);
-    if (!isValid) throw new UnauthorizedException('Invalid credentials');
+    if (!isValid) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
 
-    // roles names
-    const userRoles = await this.prisma.userRole.findMany({
-      where: { userId: user.id, AND: { active: true } },
-      include: { role: true },
-    });
-    const roles = userRoles.map((r) => r.role.name);
+    // Extrair roles
+    const roles = user.userRoles
+      .filter((x) => x.active && x.role?.active)
+      .map((x) => x.role.name);
 
-    // build merged permissions
+    // Obter permissões combinadas (usuário + roles)
     const permissions = await this.buildPermissionsForUser(user.id);
 
+    // Gerar payload JWT
     const payload: AuthPayload = {
       sub: user.id,
       username: user.username,
@@ -145,12 +156,13 @@ export class AuthService extends BaseService {
 
     const token = this.jwtService.sign(payload);
 
+    // Remover password antes de retornar
+    const { password: _, ...sanitizedUser } = user;
+
     return {
       access_token: token,
       user: {
-        id: user.id,
-        username: user.username,
-        name: user.name,
+        ...sanitizedUser,
         roles,
         permissions,
       },
