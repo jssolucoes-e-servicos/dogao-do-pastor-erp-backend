@@ -7,12 +7,15 @@ import { validationSchema } from './common/configs/validation.schema';
 import { AuthModule } from './modules/auth/auth.module';
 import { CellsNetworksModule } from './modules/cells-networks/cells-networks.model';
 import { CellsModule } from './modules/cells/cells.model';
+import { CommandsModule } from './modules/commands/commands.module';
 import { CronsModule } from './modules/crons/crons.modules';
 import { CustomerAddressModule } from './modules/customer-address/customer-address.module';
 import { CustomerModule } from './modules/customer/customer.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { DeliveryPersonModule } from './modules/delivery-person/delivery-person.module';
 import { DeliveryModule } from './modules/delivery/delivery.module';
 import { EvolutionModule } from './modules/evolution/evolution.module';
+import { ExportsModule } from './modules/exports/exports.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { OrderOnlineItemsModule } from './modules/order-online-items/order-online-items.module';
 import { OrderOnlineModule } from './modules/order-online/order-online.module';
@@ -58,6 +61,9 @@ import { UploadsModule } from './modules/uploads/uploads.module';
     OrderOnlineItemsModule,
     DeliveryModule,
     PaymentModule,
+    CommandsModule,
+    ExportsModule,
+    DeliveryPersonModule,
     SellerModule,
     CronsModule,
     CellsModule,

@@ -81,6 +81,19 @@ export class OrderOnlineController {
     return await this.orderOnlineService.setAnalysis(data);
   }
 
+  @Get('dogs-paid-promo/count')
+  async countPaidPromoDogs() {
+    const total = await this.orderOnlineService.countPaidPromoDogs();
+    return { total };
+  }
+
+  // 2. Endpoint para listar nomes de clientes (repetidos por dog)
+  @Get('dogs-paid-promo/names')
+  async getPaidPromoDogCustomerNames() {
+    const names = await this.orderOnlineService.listPromoDogCustomerNames();
+    return { names };
+  }
+
   /* @Post('pending')
   async sendPendingPaymentReminders() {
     await this.orderOnlinePendingService.sendPendingPaymentReminders();

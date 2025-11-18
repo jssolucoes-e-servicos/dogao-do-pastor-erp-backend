@@ -10,9 +10,19 @@ import { PaymentModule } from 'src/modules/payment/payment.module';
 import { PaymentTaskService } from 'src/modules/payment/services/payment-task.service';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { ReportsService } from 'src/modules/reports/services/reports.service';
+import { CommandsModule } from '../commands/commands.module';
+import { CommandsService } from '../commands/services/commands.service';
+import { ReportsModule } from '../reports/reports.module';
+import { OrderReportService } from '../reports/services/order-report.service';
 
 @Module({
-  imports: [EvolutionModule, PaymentModule, OrderOnlineModule],
+  imports: [
+    EvolutionModule,
+    PaymentModule,
+    OrderOnlineModule,
+    CommandsModule,
+    ReportsModule,
+  ],
   controllers: [],
   providers: [
     PrismaService,
@@ -22,6 +32,8 @@ import { ReportsService } from 'src/modules/reports/services/reports.service';
     PaymentTaskService,
     ReportsService,
     OrderOnlinePendingService,
+    CommandsService,
+    OrderReportService,
   ],
   exports: [],
 })

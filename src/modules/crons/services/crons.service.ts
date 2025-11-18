@@ -5,10 +5,14 @@ import {
   LoggerService,
   PrismaService,
 } from '@/common/helpers/importer-helper';
+import { CommandsService } from '@/modules/commands/services/commands.service';
 import { PaymentTaskService } from '@/modules/payment/services/payment-task.service';
+import { OrderReportService } from '@/modules/reports/services/order-report.service';
 import { ReportsService } from '@/modules/reports/services/reports.service';
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import * as fs from 'fs';
+import path from 'path';
 import { EvolutionService } from 'src/modules/evolution/services/evolution.service';
 
 @Injectable()
@@ -20,6 +24,8 @@ export class CronsService extends BaseService {
     private readonly evolutionService: EvolutionService,
     private readonly paymentTaskService: PaymentTaskService,
     private readonly reportsService: ReportsService,
+    private readonly orderReportService: OrderReportService,
+    private readonly commandService: CommandsService,
   ) {
     super(loggerService, prismaService, configService);
   }
@@ -70,6 +76,55 @@ export class CronsService extends BaseService {
       this.logger.error(
         `Erro ao buscar pagamentos pendentes no banco de dados: ${error}`,
       );
+    }
+  }
+
+  //@Cron(CronExpression.EVERY_MINUTE)
+  async processNextCommand() {
+    this.logger.log('Checking for next command to print...');
+
+    const command = await this.commandService.findNextUnprinted();
+    if (!command) {
+      this.logger.log('No commands to process.');
+      return;
+    }
+
+    this.logger.log(`Processing command: ${command.sequentialId}`);
+
+    try {
+      // Gera o PDF
+      const pdfBuffer = await this.orderReportService.generateOrderPDFHtml(
+        command.orderOnlineId,
+      );
+
+      // Salva o PDF (local ou MinIO)
+      const fileName = `command_${command.sequentialId}.pdf`;
+      const filePath = path.join(
+        process.cwd(),
+        'storage',
+        'commands',
+        fileName,
+      );
+
+      // Garante que o diretório existe
+      fs.mkdirSync(path.dirname(filePath), { recursive: true });
+      fs.writeFileSync(filePath, pdfBuffer);
+
+      // Marca como impresso
+      await this.commandService.markAsPrinted(command.id, filePath);
+
+      // (Opcional) Envia por WhatsApp
+      // await this.whatsappService.sendPDF(command.orderOnline.seller.phone, filePath);
+      // await this.commandService.markAsSent(command.id);
+
+      this.logger.log(
+        `Command ${command.sequentialId} processed successfully.`,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Error processing command ${command.sequentialId}: ${error}`,
+      );
+      // Pode implementar retry ou log de erro no banco
     }
   }
 }

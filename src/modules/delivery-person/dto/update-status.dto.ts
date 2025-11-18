@@ -1,6 +1,6 @@
 import { BooleanValidator, MongoIdValidator } from '@/common/validators';
 
-export class UpdateOnlineStatusDto {
+export class UpdateStatusDto {
   @MongoIdValidator({
     fieldName: 'deliveryPersonId',
     label: 'ID do Entregador',

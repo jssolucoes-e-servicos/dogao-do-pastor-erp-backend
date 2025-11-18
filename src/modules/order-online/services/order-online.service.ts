@@ -35,6 +35,49 @@ export class OrderOnlineService extends BaseService {
     super(loggerService, prismaService, configService);
   }
 
+  async countPaidPromoDogs(): Promise<number> {
+    // Busca todos os pedidos promo, pagos
+    const orders = await this.prisma.orderOnline.findMany({
+      where: {
+        isPromo: true,
+        paymentStatus: 'approved', // ou 'payd' se for o valor correto
+      },
+      include: {
+        preOrderItems: true,
+      },
+    });
+
+    // Soma quantos dogs (1 dog por preOrderItem)
+    let totalDogs = 0;
+    for (const order of orders) {
+      totalDogs += order.preOrderItems.length;
+    }
+    return totalDogs;
+  }
+
+  async listPromoDogCustomerNames(): Promise<string[]> {
+    const orders = await this.prisma.orderOnline.findMany({
+      where: {
+        isPromo: true,
+        paymentStatus: 'approved', // ou 'payd'
+      },
+      include: {
+        preOrderItems: true,
+        customer: true,
+      },
+    });
+
+    const names: string[] = [];
+    for (const order of orders) {
+      const customerName = order.customer?.name ?? 'Sem Nome';
+      // Repete o nome um por item/dog
+      for (let i = 0; i < order.preOrderItems.length; i++) {
+        names.push(customerName);
+      }
+    }
+    return names;
+  }
+
   /* 
     Cria a venda
   */
@@ -119,6 +162,7 @@ export class OrderOnlineService extends BaseService {
           customerAddressId: data.deliveryAddressId,
           deliveryOption: DeliveryOptionEnum.delivery,
           step: PreOrderStepEnum.payment,
+          deliveryTime: data.deliveryTime,
         },
       });
       return presale;
@@ -324,5 +368,29 @@ export class OrderOnlineService extends BaseService {
       console.error(error);
       throw new Error('Error API');
     }
+  }
+
+  async findAllOrdersForReport() {
+    return await this.prisma.orderOnline.findMany({
+      include: {
+        customer: { include: { addresses: true } },
+        seller: { include: { cell: true } },
+        preOrderItems: true,
+        edition: true,
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+  }
+
+  async findOrderByIdForReport(orderOnlineId: string) {
+    return await this.prisma.orderOnline.findUnique({
+      where: { id: orderOnlineId },
+      include: {
+        customer: { include: { addresses: true } },
+        seller: { include: { cell: true } },
+        preOrderItems: true,
+        edition: true,
+      },
+    });
   }
 }

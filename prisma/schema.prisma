@@ -303,18 +303,19 @@ model Seller {
 }
 
 model DeliveryPerson {
-  id             String          @id @default(auto()) @map("_id") @db.ObjectId
-  name           String
-  phone          String?
-  user           User?           @relation(fields: [userId], references: [id])
-  userId         String?         @db.ObjectId
-  online         Boolean         @default(false)
-  inRoute        Boolean         @default(false)
-  active         Boolean         @default(true)
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  deletedAt      DateTime?
-  deliveryRoutes DeliveryRoute[]
+  id               String          @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  phone            String?
+  user             User?           @relation(fields: [userId], references: [id])
+  userId           String?         @db.ObjectId
+  online           Boolean         @default(false)
+  inRoute          Boolean         @default(false)
+  pushSubscription Json?
+  active           Boolean         @default(true)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  deletedAt        DateTime?
+  deliveryRoutes   DeliveryRoute[]
 
   @@map("delivery_persons")
 }
@@ -471,6 +472,7 @@ model OrderOnline {
   customerAddressId   String?          @db.ObjectId
   observations        String?
   deliveryOption      DeliveryOption   @default(undefined)
+  deliveryTime        String?
   status              OrderStats       @default(digitation)
   isPromo             Boolean          @default(false)
   step                PreOrderStep     @default(customer)
@@ -482,6 +484,7 @@ model OrderOnline {
 
   preOrderItems OrderOnlineItem[]
   deliveryStops DeliveryStop[]
+  commands      Command[]
 
   @@map("orders-online")
 }
@@ -498,6 +501,25 @@ model OrderOnlineItem {
   deletedAt          DateTime?
 
   @@map("orders-online_items")
+}
+
+model Command {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  sequentialId  String      @unique // Ex: "2520001", "2520002"
+  order         OrderOnline @relation(fields: [orderOnlineId], references: [id])
+  orderOnlineId String      @db.ObjectId
+  editionCode   Int // Ex: 2 (segunda edição do ano)
+  sequence      Int // Ex: 1, 2, 3... até 1000
+  printed       Boolean     @default(false)
+  pdfUrl        String? // URL/caminho do PDF gerado (storage/MinIO)
+  sentWhatsApp  Boolean     @default(false)
+  sentAt        DateTime?
+  active        Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  deletedAt     DateTime?
+
+  @@map("commands")
 }
 
 type DailyReportSoldsCacheSummaryType {

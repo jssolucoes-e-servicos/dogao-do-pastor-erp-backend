@@ -9,8 +9,6 @@ import {
   Query,
 } from '@nestjs/common';
 import { GenerateRouteDto } from '../dto/generate-route.dto';
-import { UpdateLocationDto } from '../dto/location.dto';
-import { UpdateOnlineStatusDto } from '../dto/update-online-status.dto';
 import { UpdateStopDto } from '../dto/update-stop.dto';
 import { DeliveryGateway } from '../gateways/delivery.gateway';
 import { DeliveryService } from '../services/delivery.service';
@@ -50,15 +48,6 @@ export class DeliveryController {
     return this.service.updateStopStatus(body.stopId, body.status, body.reason);
   }
 
-  @Patch('location')
-  async updateLocation(@Body() body: UpdateLocationDto) {
-    return this.service.updateLocation(
-      body.deliveryPersonId,
-      body.lat,
-      body.lng,
-    );
-  }
-
   @Get('by-delivery-person/:deliveryPersonId')
   async getRoutesByDeliveryPerson(@Param('deliveryPersonId') id: string) {
     return this.service.getRoutesByDeliveryPerson(id);
@@ -73,20 +62,5 @@ export class DeliveryController {
   async listDeliveryPersons(@Query('active') active?: string) {
     const onlyActive = active === 'true' ? true : undefined;
     return this.service.listDeliveryPersons(onlyActive);
-  }
-
-  @Patch('delivery-person/status')
-  async updateDeliveryPersonStatus(@Body() body: UpdateOnlineStatusDto) {
-    return this.service.setDeliveryPersonStatus(
-      body.deliveryPersonId,
-      body.online,
-      body.inRoute,
-    );
-  }
-
-  @Get('delivery-person/get-status')
-  async getDeliveryPersonStatus(@Query('id') deliveryPersonId: string) {
-    const res = await this.service.getDeliveryPersonStatus(deliveryPersonId);
-    return res;
   }
 }

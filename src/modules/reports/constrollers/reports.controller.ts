@@ -1,64 +1,51 @@
-import { IGetSaleBySeller } from '@/common/interfaces';
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { ICountSoldsWithRank } from '../../../common/interfaces/count-solds-with-rank.interface';
-import { BySellerTagDTO } from '../dto/by-seller-tag.dto';
-import { SendReportByTagDTO } from '../dto/send-report-by-tag.dto';
-import { SendReportWhastappDTO } from '../dto/send-report-whatsapp.dto';
-import { SellerReportCache } from '../interfaces/SellerReportCache.interface';
-import { ReportsService } from '../services/reports.service';
+// src/modules/reports/controllers/reports.controller.ts
+import { Controller, Get, Param, Res } from '@nestjs/common';
+import type { Response } from 'express';
+import { OrderReportService } from '../services/order-report.service';
 
 @Controller('reports')
 export class ReportsController {
-  constructor(private readonly reportsService: ReportsService) {
+  constructor(private readonly orderReportService: OrderReportService) {
     /* void */
   }
 
-  @Get('generate-solds')
-  async generateReport(): Promise<SellerReportCache[]> {
-    return await this.reportsService.generateReport();
+  /* 
+  @Get('test')
+async test(){
+  return await 
+} */
+
+  @Get('orders-command/:id/pdf')
+  async generateOrderPDFHtml(@Param('id') id: string, @Res() res: Response) {
+    const pdfBuffer = await this.orderReportService.generateOrderPDFHtml(id);
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename=order_${id}.pdf`,
+      'Content-Length': pdfBuffer.length,
+    });
+    res.end(pdfBuffer);
   }
 
-  @Get('send-solds')
-  async sendReport(): Promise<void> {
-    await this.reportsService.sendReportsIfChanged();
+  @Get('orders-command/:id/preview')
+  async previewHtmlOrderIndividual(
+    @Param('id') id: string,
+    @Res() res: Response,
+  ) {
+    const html =
+      await this.orderReportService.generateHtmlPreviewOrderIndividual(id);
+    res.set({ 'Content-Type': 'text/html' });
+    res.send(html);
   }
 
-  @Get('count-solds')
-  async getCountAllSolds(): Promise<ICountSoldsWithRank> {
-    return await this.reportsService.getCountAllSolds();
+  @Get('orders-sheet/pdf')
+  async generateAllOrdersSheetPDF(@Res() res: Response) {
+    const pdfBuffer =
+      await this.orderReportService.generateAllOrdersSinglePDF();
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename=orders_sheet.pdf`,
+      'Content-Length': pdfBuffer.length,
+    });
+    res.end(pdfBuffer);
   }
-
-  @Post('send-ranking')
-  async sendSalesReportToWhatsapp(
-    @Body() body: SendReportWhastappDTO,
-  ): Promise<void> {
-    return await this.reportsService.sendSalesReportToWhatsapp(body);
-  }
-
-  @Post('get-sales-by-tag')
-  async getSalesBySellerTag(
-    @Body() body: BySellerTagDTO,
-  ): Promise<IGetSaleBySeller> {
-    return await this.reportsService.getSalesBySellerTag(body.tag);
-  }
-  @Post('send-sales-by-tag')
-  async sendSalesBySellerTagToWhatsapp(
-    @Body() body: SendReportByTagDTO,
-  ): Promise<void> {
-    return await this.reportsService.sendSalesBySellerTagToWhatsapp(body);
-  }
-
-  @Get()
-  async sendAllSellersSalesReports(): Promise<{
-    totalSellers: number;
-    success: number;
-    failed: number;
-  }> {
-    return await this.reportsService.sendAllSellersSalesReports();
-  }
-
-  /*   @Get('send-solds')
-  async reportSoldsForSeller(@Param('sellerId') sellerId:string): Promise<void> {
-    await this.reportsService.sendReportsIfChanged();
-  } */
 }

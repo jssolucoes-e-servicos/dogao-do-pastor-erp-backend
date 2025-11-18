@@ -4,4 +4,5 @@ export class OrderOnlineSetAddressDTO {
   preorderId: string;
   deliveryAddressId: string;
   deliveryOption: DeliveryOptionEnum;
+  deliveryTime?: string | null;
 }
