@@ -130,8 +130,8 @@ export class CronsService extends BaseService {
     }
   }
 
-  //@Cron(CronExpression.EVERY_MINUTE)
-  @Cron('*/30 * * * * *') // a cada 30 segundos
+  @Cron(CronExpression.EVERY_10_MINUTES)
+  //@Cron('*/30 * * * * *') // a cada 30 segundos
   async fetchPaidDeliveryOrdersNeedingConfirmation() {
     console.log('validating paid delivery orders needing confirmation...');
     await this.evolutionNotificationsService.sendDeliveryConfirmationToCustomer();

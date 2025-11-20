@@ -1,6 +1,7 @@
 //ENDEREÇO/NOME DO ARQUIVO: src/modules/pre-sale/controllers/pre-sale.controller.ts
 import { CustomerRetrieve } from '@/modules/customer/dto/customer-retrieve';
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { ApiBody, ApiParam } from '@nestjs/swagger';
 import { OrderOnlineFirstCreateDTO } from 'src/modules/order-online/dto/order-online-first-create.dto';
 import { OrderOnlineFullRetrieveDTO } from 'src/modules/order-online/dto/order-online-full-retrieve.dto';
 import { OrderOnlineInitRetrieveDTO } from 'src/modules/order-online/dto/order-online-init-retrieve.dto';
@@ -94,8 +95,28 @@ export class OrderOnlineController {
     return { names };
   }
 
-  /* @Post('pending')
-  async sendPendingPaymentReminders() {
-    await this.orderOnlinePendingService.sendPendingPaymentReminders();
-  } */
+  @Patch(':id/delivery-time')
+  @ApiParam({ name: 'id', description: 'ID do pedido' })
+  @ApiBody({ schema: { example: { deliveryTime: '14:00' } } })
+  async updateDeliveryTime(
+    @Param('id') id: string,
+    @Body('deliveryTime') deliveryTime: string,
+  ) {
+    // Ajuste para seu formato real ('HH:mm' ou datetime completo)
+    return await this.orderOnlineService.updateDeliveryTime(id, deliveryTime);
+  }
+}
+
+@Controller('order-online-2')
+export class OrderOnline2Controller {
+  constructor(
+    private readonly orderOnlineService: OrderOnlineService,
+    private readonly orderOnlinePendingService: OrderOnlinePendingService,
+  ) {
+    /* void */
+  }
+  @Get('delivery')
+  async listDeliveries() {
+    return await this.orderOnlineService.listPaidDeliveries();
+  }
 }

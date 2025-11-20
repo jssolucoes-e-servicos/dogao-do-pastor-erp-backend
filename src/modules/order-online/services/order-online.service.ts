@@ -393,4 +393,26 @@ export class OrderOnlineService extends BaseService {
       },
     });
   }
+
+  async updateDeliveryTime(id: string, deliveryTime: string) {
+    // Se salvar como string simples ou datetime, ajuste a lógica abaixo
+    return this.prisma.orderOnline.update({
+      where: { id },
+      data: { deliveryTime },
+    });
+  }
+
+  async listPaidDeliveries() {
+    return this.prisma.orderOnline.findMany({
+      where: {
+        paymentStatus: 'approved', // ou 'paid' conforme seu sistema
+        deliveryOption: 'delivery',
+      },
+      include: {
+        customer: { include: { addresses: true } },
+        preOrderItems: true,
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+  }
 }

@@ -45,6 +45,7 @@ enum DeliveryOption {
   pickup
   delivery
   donate
+  scheduled
 }
 
 enum PaymentOrigin {

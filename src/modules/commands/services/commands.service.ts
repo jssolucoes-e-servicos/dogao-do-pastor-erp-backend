@@ -1,3 +1,4 @@
+import { DeliveryOptionEnum } from '@/common/enums';
 import {
   BaseService,
   ConfigService,
@@ -111,6 +112,25 @@ export class CommandsService extends BaseService {
     return await this.prisma.command.update({
       where: { id: commandId },
       data: { sentWhatsApp: true },
+    });
+  }
+
+  async listCommands(type: DeliveryOptionEnum) {
+    return this.prisma.command.findMany({
+      where: {
+        order: {
+          deliveryOption: type,
+        },
+      },
+      include: {
+        order: {
+          include: {
+            customer: { include: { addresses: true } },
+            preOrderItems: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'asc' },
     });
   }
 }

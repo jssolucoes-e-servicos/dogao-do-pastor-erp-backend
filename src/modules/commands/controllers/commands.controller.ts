@@ -1,5 +1,7 @@
-import { Controller, Param, Post } from '@nestjs/common';
+import { Controller, Get, Param, Post, Query } from '@nestjs/common';
 
+import { DeliveryOptionEnum } from '@/common/enums';
+import { ApiQuery } from '@nestjs/swagger';
 import { CommandsService } from '../services/commands.service';
 
 @Controller('commands')
@@ -33,6 +35,18 @@ export class CommandsController {
   async reprintCommand(@Param('id') id: string) {
     await this.service.markAsUnprinted(id);
     return { message: 'Command queued for reprint' };
+  }
+
+  @Get()
+  @ApiQuery({
+    name: 'type',
+    required: false,
+    enum: ['delivery', 'pickup', 'scheduled'],
+    description:
+      'Filtra o tipo da comanda (Entregas, Retiradas ou Retirada Programada)',
+  })
+  async listCommands(@Query('type') type: DeliveryOptionEnum) {
+    return this.service.listCommands(type);
   }
 
   /* @Get('count')
