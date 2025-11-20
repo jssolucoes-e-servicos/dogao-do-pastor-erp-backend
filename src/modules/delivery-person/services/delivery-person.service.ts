@@ -7,13 +7,13 @@ import { BaseService } from '@/common/services/base.service';
 import { DeliveryGateway } from '@/modules/delivery/gateways/delivery.gateway';
 import { Injectable } from '@nestjs/common';
 import { InputJsonValue } from '@prisma/client/runtime/library';
-import * as webpush from 'web-push';
+//import * as webpush from 'web-push';
 
-webpush.setVapidDetails(
+/* webpush.setVapidDetails(
   'mailto:seu-email@exemplo.com',
   process.env.VAPID_PUBLIC_KEY!,
   process.env.VAPID_PRIVATE_KEY!,
-);
+); */
 
 @Injectable()
 export class DeliveryPersonService extends BaseService {
@@ -34,21 +34,6 @@ export class DeliveryPersonService extends BaseService {
       where: { id: deliveryPersonId },
       data: { pushSubscription: subscription }, // Adicione pushSubscription no model do Prisma
     });
-  }
-
-  async sendPushToDeliveryPerson(
-    deliveryPersonId: string,
-    title: string,
-    body: string,
-  ) {
-    /* const dp = await this.prisma.deliveryPerson.findUnique({
-      where: { id: deliveryPersonId },
-    });
-    if (!dp?.pushSubscription) return;
-    await webpush.sendNotification(
-      dp.pushSubscription,
-      JSON.stringify({ title, body }),
-    ); */
   }
 
   async getStatus(deliveryPersonId: string) {
