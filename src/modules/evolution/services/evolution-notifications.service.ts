@@ -272,4 +272,84 @@ export class EvolutionNotificationsService extends BaseService {
     const message = MessageSellerTag(report);
     return await this.evolutionService.sendText(phone, message);
   }
+
+  /**
+   * Monta e envia mensagem de confirmação de delivery, marca o pedido como enviado.
+   */
+  async sendDeliveryConfirmationToCustomer() {
+    const orders = (await this.prisma.orderOnline.findMany({
+      where: {
+        paymentStatus: 'approved',
+        deliveryOption: 'delivery',
+      },
+      include: {
+        customer: { include: { addresses: true } },
+        preOrderItems: true,
+      },
+      orderBy: { createdAt: 'asc' },
+    })) as any[];
+
+    const order = orders.find((order) => !order.confirmationSend); // pega o primeiro ainda não enviado
+    if (!order) {
+      this.logger.log(
+        'Nenhum pedido elegível encontrado para confirmação de delivery.',
+      );
+      return;
+    }
+
+    const addressObj = order.customer?.addresses?.[0];
+    const address = addressObj
+      ? `${addressObj.street}, ${addressObj.number} - ${addressObj.neighborhood ?? ''} - ${addressObj.city ?? ''}`
+      : '-';
+
+    // AGRUPAMENTO de itens:
+    const groupedItems: Record<string, number> = {};
+    for (const item of order.preOrderItems) {
+      const key =
+        item.removedIngredients && item.removedIngredients.length > 0
+          ? `SEM ${item.removedIngredients.join(', ')}`
+          : 'Dogão Completo';
+      groupedItems[key] = (groupedItems[key] || 0) + 1;
+    }
+    const itemsList = Object.entries(groupedItems)
+      .map(([nome, qtd]) => `• ${qtd} x ${nome}`)
+      .join('\n');
+
+    const message = `Olá ${order.customer?.name ?? ''}! 👋
+
+Neste sábado 22/11 será o nosso Dogão!
+Vamos confirmar os dados da sua entrega do Dogão:
+
+📍 Endereço: ${address}
+
+🗓️ Data do pedido: ${order.createdAt ? new Date(order.createdAt).toLocaleString('pt-BR') : '-'}
+💵 Valor total: R$${order.valueTotal?.toFixed(2) ?? '-'}
+👤 Nome completo: ${order.customer?.name ?? ''}
+
+Itens:
+${itemsList}
+
+Por favor, informe o melhor HORÁRIO para a entrega (das 10h às 22h).
+
+Se algum dado estiver incorreto, por favor responda esta mensagem.
+`;
+
+    const phone = order.customer?.phone;
+    if (phone) {
+      this.logger.log(
+        `[WhatsApp] Enviando confirmação de pedido delivery para: ${phone}`,
+      );
+      await this.evolutionService.sendText(phone, message);
+      //await this.evolutionService.sendText('51982488374', message);
+    } else {
+      this.logger.warn(
+        `[WhatsApp] Não foi possível enviar confirmação: pedido sem telefone de cliente.`,
+      );
+    }
+
+    await this.prisma.orderOnline.update({
+      where: { id: order.id },
+      data: { confirmationSend: true },
+    });
+  }
 }

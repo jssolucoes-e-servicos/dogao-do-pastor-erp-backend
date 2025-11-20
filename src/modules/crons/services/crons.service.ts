@@ -6,6 +6,7 @@ import {
   PrismaService,
 } from '@/common/helpers/importer-helper';
 import { CommandsService } from '@/modules/commands/services/commands.service';
+import { EvolutionNotificationsService } from '@/modules/evolution/services/evolution-notifications.service';
 import { PaymentTaskService } from '@/modules/payment/services/payment-task.service';
 import { OrderReportService } from '@/modules/reports/services/order-report.service';
 import { ReportsService } from '@/modules/reports/services/reports.service';
@@ -22,6 +23,7 @@ export class CronsService extends BaseService {
     prismaService: PrismaService,
     configService: ConfigService,
     private readonly evolutionService: EvolutionService,
+    private readonly evolutionNotificationsService: EvolutionNotificationsService,
     private readonly paymentTaskService: PaymentTaskService,
     private readonly reportsService: ReportsService,
     private readonly orderReportService: OrderReportService,
@@ -126,5 +128,12 @@ export class CronsService extends BaseService {
       );
       // Pode implementar retry ou log de erro no banco
     }
+  }
+
+  //@Cron(CronExpression.EVERY_MINUTE)
+  @Cron('*/30 * * * * *') // a cada 30 segundos
+  async fetchPaidDeliveryOrdersNeedingConfirmation() {
+    console.log('validating paid delivery orders needing confirmation...');
+    await this.evolutionNotificationsService.sendDeliveryConfirmationToCustomer();
   }
 }
