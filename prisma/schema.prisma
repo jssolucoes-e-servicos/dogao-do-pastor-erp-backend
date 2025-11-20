@@ -477,6 +477,7 @@ model OrderOnline {
   isPromo             Boolean          @default(false)
   step                PreOrderStep     @default(customer)
   origin              OrderOrigin      @default(SITE)
+  confirmationSend    Boolean          @default(false)
   active              Boolean          @default(true)
   createdAt           DateTime         @default(now())
   updatedAt           DateTime         @updatedAt
