@@ -28,7 +28,7 @@ export class OrderOnlineController {
     return await this.orderOnlineService.start(body);
   }
 
-  @Get(':id')
+  @Get('show/:id')
   async findById(
     @Param('id') id: string,
   ): Promise<OrderOnlineFullRetrieveDTO | null> {
@@ -105,16 +105,7 @@ export class OrderOnlineController {
     // Ajuste para seu formato real ('HH:mm' ou datetime completo)
     return await this.orderOnlineService.updateDeliveryTime(id, deliveryTime);
   }
-}
 
-@Controller('order-online-2')
-export class OrderOnline2Controller {
-  constructor(
-    private readonly orderOnlineService: OrderOnlineService,
-    private readonly orderOnlinePendingService: OrderOnlinePendingService,
-  ) {
-    /* void */
-  }
   @Get('delivery')
   async listDeliveries() {
     return await this.orderOnlineService.listPaidDeliveries();
