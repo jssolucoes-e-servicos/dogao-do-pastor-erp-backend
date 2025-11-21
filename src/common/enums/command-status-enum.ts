@@ -1,0 +1,10 @@
+// src/modules/commands/services/commands.service.ts
+export enum CommandStatusEnum {
+  PENDING = 'PENDING',
+  IN_PRODUCTION = 'IN_PRODUCTION',
+  PRODUCED = 'PRODUCED',
+  EXPEDITION = 'EXPEDITION',
+  QUEEUED_FOR_DELIVERY = 'QUEEUED_FOR_DELIVERY',
+  OUT_FOR_DELIVERY = 'OUT_FOR_DELIVERY',
+  DELIVERED = 'DELIVERED',
+}

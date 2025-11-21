@@ -1,6 +1,7 @@
 import { GendersEnum } from 'src/common/enums/genders.enum';
 import { LoginStatsEnum } from 'src/common/enums/login-stats.enum';
 import { WeekDayEnum } from 'src/common/enums/weekday.enum';
+import { CommandStatusEnum } from './command-status-enum';
 import { DeliveryOptionEnum } from './delivery-oprions.num';
 import { OrderStatsEnum } from './order-stats.enum';
 import { PaymentMethodEnum } from './payment-method.enum';
@@ -10,8 +11,7 @@ import { PaymentStatsEnum } from './payment-stats.enum';
 import { PreOrderStepEnum } from './pre-order-step.enum';
 
 export {
-  DeliveryOptionEnum,
-  GendersEnum,
+  CommandStatusEnum, DeliveryOptionEnum, GendersEnum,
   LoginStatsEnum,
   OrderStatsEnum,
   PaymentMethodEnum,

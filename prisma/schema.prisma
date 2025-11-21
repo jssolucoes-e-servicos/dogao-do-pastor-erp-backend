@@ -505,20 +505,31 @@ model OrderOnlineItem {
   @@map("orders-online_items")
 }
 
+enum CommandStatusEnum {
+  PENDING
+  IN_PRODUCTION
+  PRODUCED
+  EXPEDITION
+  QUEEUED_FOR_DELIVERY
+  OUT_FOR_DELIVERY
+  DELIVERED
+}
+
 model Command {
-  id            String      @id @default(auto()) @map("_id") @db.ObjectId
-  sequentialId  String      @unique // Ex: "2520001", "2520002"
-  order         OrderOnline @relation(fields: [orderOnlineId], references: [id])
-  orderOnlineId String      @db.ObjectId
+  id            String             @id @default(auto()) @map("_id") @db.ObjectId
+  sequentialId  String             @unique // Ex: "2520001", "2520002"
+  order         OrderOnline        @relation(fields: [orderOnlineId], references: [id])
+  orderOnlineId String             @db.ObjectId
   editionCode   Int // Ex: 2 (segunda edição do ano)
   sequence      Int // Ex: 1, 2, 3... até 1000
-  printed       Boolean     @default(false)
+  printed       Boolean            @default(false)
   pdfUrl        String? // URL/caminho do PDF gerado (storage/MinIO)
-  sentWhatsApp  Boolean     @default(false)
+  sentWhatsApp  Boolean            @default(false)
   sentAt        DateTime?
-  active        Boolean     @default(true)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  status        CommandStatusEnum? @default(PENDING)
+  active        Boolean            @default(true)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
   deletedAt     DateTime?
 
   @@map("commands")

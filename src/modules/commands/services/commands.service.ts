@@ -1,4 +1,10 @@
-import { DeliveryOptionEnum } from '@/common/enums';
+import { EDITION_ID } from '@/common/constants';
+import {
+  CommandStatusEnum,
+  DeliveryOptionEnum,
+  OrderStatsEnum,
+  PreOrderStepEnum,
+} from '@/common/enums';
 import {
   BaseService,
   ConfigService,
@@ -76,6 +82,13 @@ export class CommandsService extends BaseService {
     });
   }
 
+  async updateCommandStatus(commandId: string, status: CommandStatusEnum) {
+    return this.prisma.command.update({
+      where: { id: commandId },
+      data: { status: status },
+    });
+  }
+
   async findNextUnprinted() {
     return await this.prisma.command.findFirst({
       where: { printed: false, order: { deliveryOption: 'delivery' } },
@@ -115,13 +128,17 @@ export class CommandsService extends BaseService {
     });
   }
 
-  async listCommands(type: DeliveryOptionEnum) {
+  async listCommands(type?: DeliveryOptionEnum, status?: CommandStatusEnum) {
+    const where: any = {};
+    if (type) {
+      where.order = { deliveryOption: type };
+    }
+    if (status) {
+      where.status = status;
+    }
+    // Se ambos, filtra pelos dois!
     return this.prisma.command.findMany({
-      where: {
-        order: {
-          deliveryOption: type,
-        },
-      },
+      where,
       include: {
         order: {
           include: {
@@ -132,5 +149,128 @@ export class CommandsService extends BaseService {
       },
       orderBy: { createdAt: 'asc' },
     });
+  }
+
+  async insertManual(data: any) {
+    // 1. Busca ou cria cliente
+    let customer: any = null;
+    if (data.customerId) {
+      customer = await this.prisma.customer.findUnique({
+        where: { id: data.customerId },
+      });
+    } else {
+      customer = await this.prisma.customer.create({
+        data: {
+          name: data.customerName,
+          phone: data.phone,
+          cpf: data.cpf,
+        },
+      });
+    }
+
+    // 2. Endereço (somente se delivery!)
+    let address: any = null;
+    if (data.deliveryOption === 'delivery' && data.address) {
+      if (data.address.id) {
+        address = await this.prisma.customerAddress.findUnique({
+          where: { id: data.address.id },
+        });
+      } else {
+        address = await this.prisma.customerAddress.create({
+          data: {
+            customerId: customer.id,
+            street: data.address.street,
+            number: data.address.number,
+            neighborhood: data.address.neighborhood,
+            city: data.address.city,
+            state: data.address.state,
+            zipCode: data.address.zipCode,
+            complement: data.address.complement,
+          },
+        });
+      }
+    }
+
+    // 3. Usa dados do seller do próprio body (não faz busca extra)
+    const { sellerId, sellerTag } = data;
+
+    // 4. Cria pedido na orderOnline
+    const orderOnline = await this.prisma.orderOnline.create({
+      data: {
+        editionId: EDITION_ID, // Passe pelo body ou defina um padrão
+        customerId: customer.id,
+        sellerId: sellerId,
+        sellerTag: sellerTag,
+        quantity: data.items.length,
+        valueTotal: Number(data.items.length) * 19.99,
+        paymentStatus: 'approved',
+        paymentProvider: 'ticket',
+        deliveryOption: data.deliveryOption,
+        deliveryTime:
+          data.deliveryOption === 'delivery' ? data.scheduledTime : null,
+        customerAddressId: address?.id || null,
+        observations: data.observation,
+        status: OrderStatsEnum.payd,
+        step: PreOrderStepEnum.tanks,
+        confirmationSend: true,
+        paymentMethod: 'monney',
+        origin: 'TICKET',
+        preOrderItems: {
+          create: data.items.map((item) => ({
+            removedIngredients: item.removedIngredients,
+          })),
+        },
+      },
+      include: { preOrderItems: true },
+    });
+
+    // 5. Cria comanda vinculada
+
+    const command = await this.createCommand(orderOnline.id, 253);
+
+    return { success: true, orderId: orderOnline.id, commandCode: command.id };
+  }
+
+  async startProduction(commandId: string) {
+    return this.updateCommandStatus(commandId, CommandStatusEnum.IN_PRODUCTION);
+  }
+
+  // Finaliza produção
+  async finishProduction(commandId: string) {
+    return this.updateCommandStatus(commandId, CommandStatusEnum.PRODUCED);
+  }
+
+  // Marca para expedição (gestor puxa antes)
+  async markExpedition(commandId: string) {
+    return this.updateCommandStatus(commandId, CommandStatusEnum.EXPEDITION);
+  }
+
+  // Marcar como entregue
+  async markAsDelivered(commandId: string) {
+    return this.updateCommandStatus(commandId, CommandStatusEnum.DELIVERED);
+  }
+
+  // Puxa pendentes, agrupados (fila de produção)
+  async listPendingCommands(groupedBySlot = true) {
+    const commands = await this.prisma.command.findMany({
+      where: { status: CommandStatusEnum.PENDING },
+      include: {
+        order: true,
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+    // Agrupe por slot se necessário aqui antes de devolver
+    if (!groupedBySlot) return commands;
+    // Exemplo simples de agrupamento no service (ajuste slot conforme regra do frontend):
+    const slots: Record<string, any[]> = {};
+    commands.forEach((cmd) => {
+      const time = cmd.order.deliveryTime || 'SEM_HORARIO';
+      // Calcule slot da regra (ex: subtract 30 min, agrupamento etc)
+      const hora = time.split(':')[0];
+      const slot = `${hora}:${parseInt(time.split(':')[1]) < 30 ? '00' : '30'}`;
+      slots[slot] = slots[slot] || [];
+      slots[slot].push(cmd);
+    });
+    return slots;
   }
 }

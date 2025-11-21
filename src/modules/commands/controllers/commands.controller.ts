@@ -1,6 +1,14 @@
-import { Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 
-import { DeliveryOptionEnum } from '@/common/enums';
+import { CommandStatusEnum, DeliveryOptionEnum } from '@/common/enums';
 import { ApiQuery } from '@nestjs/swagger';
 import { CommandsService } from '../services/commands.service';
 
@@ -41,21 +49,54 @@ export class CommandsController {
   @ApiQuery({
     name: 'type',
     required: false,
-    enum: ['delivery', 'pickup', 'scheduled'],
+    enum: ['delivery', 'pickup', 'scheduled', 'donate'],
     description:
-      'Filtra o tipo da comanda (Entregas, Retiradas ou Retirada Programada)',
+      'Filtra o tipo da comanda (Entregas, Retiradas, Doações ou Programadas)',
   })
-  async listCommands(@Query('type') type: DeliveryOptionEnum) {
-    return this.service.listCommands(type);
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    enum: CommandStatusEnum,
+    description: 'Filtra por status da comanda',
+  })
+  async listCommands(
+    @Query('type') type?: DeliveryOptionEnum,
+    @Query('status') status?: CommandStatusEnum,
+  ) {
+    return this.service.listCommands(type, status);
+  }
+  @Post('manual')
+  async manualInsert(@Body() body) {
+    return await this.service.insertManual(body);
   }
 
-  /* @Get('count')
-  async count(): Promise<{ cells: number }> {
-    return await this.service.count();
-  } */
+  // Atualiza status de comanda para IN_PRODUCTION
+  @Patch(':id/start-production')
+  async startProduction(@Param('id') id: string) {
+    return await this.service.startProduction(id);
+  }
 
-  /* @Get()
-  async list(): Promise<ICellNetwork[]> {
-    return await this.service.findAll();
-  } */
+  // Atualiza status para PRODUCED
+  @Patch(':id/finish-production')
+  async finishProduction(@Param('id') id: string) {
+    return await this.service.finishProduction(id);
+  }
+
+  // Atualiza para EXPEDITION
+  @Patch(':id/to-expedition')
+  async toExpedition(@Param('id') id: string) {
+    return await this.service.markExpedition(id);
+  }
+
+  // Marca como entregue
+  @Patch(':id/delivered')
+  async delivered(@Param('id') id: string) {
+    return await this.service.markAsDelivered(id);
+  }
+
+  // Lista pendentes agrupados (fila de produção por slot)
+  @Get('pending')
+  async listPending() {
+    return await this.service.listPendingCommands(true);
+  }
 }

@@ -130,10 +130,33 @@ export class CronsService extends BaseService {
     }
   }
 
-  @Cron(CronExpression.EVERY_10_MINUTES)
+  //@Cron(CronExpression.EVERY_10_MINUTES)
   //@Cron('*/30 * * * * *') // a cada 30 segundos
   async fetchPaidDeliveryOrdersNeedingConfirmation() {
     console.log('validating paid delivery orders needing confirmation...');
     await this.evolutionNotificationsService.sendDeliveryConfirmationToCustomer();
+  }
+
+  @Cron(CronExpression.EVERY_MINUTE)
+  async autoGenerateCommandsForPaidOrders() {
+    const orders = await this.prisma.orderOnline.findMany({
+      where: {
+        paymentStatus: 'approved',
+        deliveryOption: { in: ['delivery', 'scheduled'] },
+        commands: { none: {} },
+      },
+    });
+
+    let createdCount = 0;
+    for (const order of orders) {
+      await this.commandService.createCommand(order.id, 253); // ou editionCode correto
+      createdCount++;
+    }
+    if (createdCount) {
+      this.logger.log(
+        `Geradas ${createdCount} comandas para pedidos com paymentStatus=approved e deliveryOption=delivery/scheduled`,
+      );
+    }
+    return createdCount;
   }
 }

@@ -150,4 +150,15 @@ export class CustomerService extends BaseService {
     });
     return customer;
   }
+
+  async searchCustomer({ phone, cpf }: { phone?: string; cpf?: string }) {
+    const or: { phone?: string; cpf?: string }[] = [];
+    if (phone) or.push({ phone });
+    if (cpf) or.push({ cpf });
+
+    return this.prisma.customer.findFirst({
+      where: or.length > 0 ? { OR: or } : {},
+      include: { addresses: true },
+    });
+  }
 }

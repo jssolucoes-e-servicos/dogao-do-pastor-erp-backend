@@ -9,14 +9,10 @@ import { OrderOnlineSetAddressDTO } from 'src/modules/order-online/dto/order-onl
 import { OrderOnlineService } from 'src/modules/order-online/services/order-online.service';
 import { CounterRetrieveDTO } from '../dto/counter-retrieve,dto';
 import { OrderOnlineWithCustomerItemsAddressDTO } from '../dto/order-online-with-customer-items-address.dto';
-import { OrderOnlinePendingService } from '../services/orders-online-pending.service';
 
 @Controller('order-online')
 export class OrderOnlineController {
-  constructor(
-    private readonly orderOnlineService: OrderOnlineService,
-    private readonly orderOnlinePendingService: OrderOnlinePendingService,
-  ) {
+  constructor(private readonly service: OrderOnlineService) {
     /* void */
   }
 
@@ -25,47 +21,47 @@ export class OrderOnlineController {
     presale: OrderOnlineInitRetrieveDTO;
     customer: CustomerRetrieve | null;
   }> {
-    return await this.orderOnlineService.start(body);
+    return await this.service.start(body);
   }
 
   @Get('show/:id')
   async findById(
     @Param('id') id: string,
   ): Promise<OrderOnlineFullRetrieveDTO | null> {
-    return await this.orderOnlineService.findById(id);
+    return await this.service.findById(id);
   }
 
   @Post('in-analisys')
   async getInAnalisys(): Promise<
     OrderOnlineWithCustomerItemsAddressDTO[] | null
   > {
-    return await this.orderOnlineService.getInAnalisys();
+    return await this.service.getInAnalisys();
   }
 
   @Post('payds-counter')
   async getPaydsCounter(): Promise<CounterRetrieveDTO[]> {
-    return await this.orderOnlineService.getPaydsCounter();
+    return await this.service.getPaydsCounter();
   }
 
   @Post('change-step')
   async chageStep(
     @Body() data: { preorderId: string; step: string },
   ): Promise<OrderOnlineFullRetrieveDTO> {
-    return await this.orderOnlineService.changeStep(data);
+    return await this.service.changeStep(data);
   }
 
   @Post('set-address')
   async setAddress(
     @Body() body: OrderOnlineSetAddressDTO,
   ): Promise<OrderOnlineFullRetrieveDTO> {
-    return await this.orderOnlineService.setAddress(body);
+    return await this.service.setAddress(body);
   }
 
   @Post('set-selivery-option')
   async setDeliveryOption(
     @Body() data: { preorderId: string; deliveryOption: string },
   ): Promise<OrderOnlineFullRetrieveDTO> {
-    return await this.orderOnlineService.setDeliveryOption(data);
+    return await this.service.setDeliveryOption(data);
   }
 
   @Post('set-analysis')
@@ -79,19 +75,19 @@ export class OrderOnlineController {
       addressInline: string;
     },
   ): Promise<OrderOnlineFullRetrieveDTO> {
-    return await this.orderOnlineService.setAnalysis(data);
+    return await this.service.setAnalysis(data);
   }
 
   @Get('dogs-paid-promo/count')
   async countPaidPromoDogs() {
-    const total = await this.orderOnlineService.countPaidPromoDogs();
+    const total = await this.service.countPaidPromoDogs();
     return { total };
   }
 
   // 2. Endpoint para listar nomes de clientes (repetidos por dog)
   @Get('dogs-paid-promo/names')
   async getPaidPromoDogCustomerNames() {
-    const names = await this.orderOnlineService.listPromoDogCustomerNames();
+    const names = await this.service.listPromoDogCustomerNames();
     return { names };
   }
 
@@ -103,11 +99,11 @@ export class OrderOnlineController {
     @Body('deliveryTime') deliveryTime: string,
   ) {
     // Ajuste para seu formato real ('HH:mm' ou datetime completo)
-    return await this.orderOnlineService.updateDeliveryTime(id, deliveryTime);
+    return await this.service.updateDeliveryTime(id, deliveryTime);
   }
 
   @Get('delivery')
   async listDeliveries() {
-    return await this.orderOnlineService.listPaidDeliveries();
+    return await this.service.listPaidDeliveries();
   }
 }

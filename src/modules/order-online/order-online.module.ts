@@ -20,7 +20,6 @@ import { OrderOnlinePendingService } from './services/orders-online-pending.serv
     EvolutionService,
     OrderOnlineService,
     CustomerService,
-
     OrderOnlinePendingService,
   ],
   exports: [OrderOnlineService, OrderOnlinePendingService],
