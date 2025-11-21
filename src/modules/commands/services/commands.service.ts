@@ -232,7 +232,6 @@ export class CommandsService extends BaseService {
   }
 
   async startProduction(commandId: string) {
-    return this.updateCommandStatus(commandId, CommandStatusEnum.IN_PRODUCTION);
   }
 
   // Finaliza produção
