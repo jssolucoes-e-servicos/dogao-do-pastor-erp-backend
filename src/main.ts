@@ -4,7 +4,6 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { corsOrigns } from './common/configs/cors.config';
 import { LoggerService } from './common/helpers/importer-helper';
 import { IConfig } from './common/interfaces';
 
@@ -18,7 +17,7 @@ async function bootstrap() {
   const port = configService.get('PORT')!;
 
   app.enableCors({
-    origin: corsOrigns, // Permitir o frontend e o ambiente de desenvolvimento local
+    origin: '*', // corsOrigns, // Permitir o frontend e o ambiente de desenvolvimento local
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
