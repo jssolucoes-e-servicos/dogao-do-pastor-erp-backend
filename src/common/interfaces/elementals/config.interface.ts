@@ -9,7 +9,6 @@ export interface IConfig {
   NODE_ENV: 'development' | 'production';
   PORT: number;
   DATABASE_URL: string;
-  MONGO_DATABASE_URL: string;
   // SECURITY
   JWT_SECRET: string;
   // ERROR TRACKING

@@ -12,11 +12,7 @@ export const validationSchema = Joi.object({
     .uri()
     .required()
     .description('URL de conexão com o Postgres'),
-  MONGO_DATABASE_URL: Joi.string()
-    .uri() // Garante que é uma URI válida (mongodb://...)
-    .required()
-    .description('URL de conexão com o MongoDB Atlas'),
-
+  
   // SECURITY
   JWT_SECRET: Joi.string().required().description('Chave secreta para JWT'),
 
