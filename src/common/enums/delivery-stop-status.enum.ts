@@ -1,0 +1,7 @@
+export enum DeliveryStopStatusEnum {
+  PENDING = 'PENDING',
+  DELIVERING = 'DELIVERING',
+  DELIVERED = 'DELIVERED',
+  SKIPPED = 'SKIPPED',
+  FAILED = 'FAILED',
+}

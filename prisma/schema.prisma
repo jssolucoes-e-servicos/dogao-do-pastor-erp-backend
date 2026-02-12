@@ -1,0 +1,713 @@
+// prisma/schema.prisma
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated"
+  moduleFormat = "cjs"
+}
+
+generator seedClient {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+//// ENUMS ////
+
+enum UserTypesEnum {
+  PARTNER
+  CUSTOMER
+  CONTRIBUTOR
+}
+
+enum VoucherStatusEnum {
+  NEW
+  REGISTERED
+  USED
+  CANCELLED
+}
+
+enum OrderStatusEnum {
+  DIGITATION // Pedido em digitação no online
+  PENDING_PAYMENT // Finalizado mas sem pagamento
+  PAID // Pagamento aprovado
+  QUEUE // Fila aguardando produção
+  PRODUCTION // Em produção
+  EXPEDITION // Pronto no balcão
+  DELIVERING // Saiu para entrega
+  DELIVERED // Entregue
+  CANCELLED // Cancelado
+  REJECTED // Rejeitado (não pago ou falha)
+}
+
+enum SiteOrderStepEnum {
+  CUSTOMER
+  ORDER
+  DELIVERY
+  PAYMENT
+  PIX
+  CARD
+  ANALYSIS
+  THANKS
+}
+
+enum DeliveryOptionEnum {
+  UNDEFINED
+  PICKUP
+  DELIVERY
+  DONATE
+  SCHEDULED
+}
+
+enum PaymentOriginEnum {
+  PREORDER
+  ORDER
+  PDV
+}
+
+enum PaymentStatusEnum {
+  PENDING
+  PAID
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentProviderEnum {
+  MERCADOPAGO
+  MANUAL
+}
+
+enum PaymentMethodEnum {
+  UNDEFINED
+  PIX
+  CARD
+  CARD_CREDIT
+  CARD_DEBIT
+  POS
+  MONEY
+}
+
+enum EmailStatusEnum {
+  QUEUED
+  SENDING
+  SENT
+  FAILED
+  RETRYING
+}
+
+enum OrderOriginEnum {
+  SITE
+  TICKET
+  PDV
+}
+
+enum CommandStatusEnum {
+  PENDING
+  IN_PRODUCTION
+  PRODUCED
+  EXPEDITION
+  QUEUED_FOR_DELIVERY
+  OUT_FOR_DELIVERY
+  DELIVERED
+}
+
+enum DeliveryRouteStatusEnum {
+  PENDING
+  IN_PROGRESS
+  FINISHED
+  CANCELLED
+}
+
+enum DeliveryStopStatusEnum {
+  PENDING
+  DELIVERING
+  DELIVERED
+  SKIPPED
+  FAILED
+}
+
+//// BASE / AUTH / PERMISSÕES ////
+
+model Contributor {
+  id        String    @id @default(cuid())
+  name      String
+  phone     String?
+  photo     String?
+  username  String?   @unique
+  password  String // bcrypt("dogao@2026") como padrão ao criar
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  sellers         Seller[]
+  cells           Cell[]
+  cellNetworks    CellNetwork[]
+  deliveryPersons DeliveryPerson[]
+  userRoles       UserRole[]
+  permissions     Permission[]
+
+  @@map("contributors")
+}
+
+model Role {
+  id          String    @id @default(cuid())
+  name        String    @unique // 'Seller', 'DeliveryPerson', 'Backoffice', etc.
+  description String?
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  users       UserRole[]
+  permissions Permission[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  id            String      @id @default(cuid())
+  contributor   Contributor @relation(fields: [contributorId], references: [id])
+  contributorId String
+  role          Role        @relation(fields: [roleId], references: [id])
+  roleId        String
+  active        Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  deletedAt     DateTime?
+
+  @@unique([contributorId, roleId])
+  @@map("user_roles")
+}
+
+model Module {
+  id          String    @id @default(cuid())
+  name        String
+  description String
+  ctrl        String
+  page        String
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  permissions Permission[]
+
+  @@map("modules")
+}
+
+model Permission {
+  id            String       @id @default(cuid())
+  contributor   Contributor? @relation(fields: [contributorId], references: [id])
+  contributorId String?
+  role          Role?        @relation(fields: [roleId], references: [id])
+  roleId        String?
+  module        Module       @relation(fields: [moduleId], references: [id])
+  moduleId      String
+  access        Boolean      @default(false)
+  create        Boolean      @default(false)
+  update        Boolean      @default(false)
+  delete        Boolean      @default(false)
+  report        Boolean      @default(false)
+  active        Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  deletedAt     DateTime?
+
+  @@map("permissions")
+}
+
+model File {
+  id         String @id @default(cuid())
+  path       String @unique // caminho completo no storage
+  fileName   String
+  mimeType   String
+  sizeBytes  Int
+  uploadedBy String // contributorId
+
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("files")
+}
+
+//// EDIÇÃO / ESTRUTURA DE REDE ////
+
+model Edition {
+  id             String   @id @default(cuid())
+  name           String   @unique
+  productionDate DateTime @unique
+  code           String   @unique // id da edicao no formado de 3 digitos numericos a exemplo 261 para enumeracao dos tickets e das comandas
+
+  saleStartDate   DateTime // início das vendas
+  saleEndDate     DateTime // fim das vendas
+  autoEnableDate  DateTime? // quando ativar active = true
+  autoDisableDate DateTime? // quando desativar active = false
+
+  limitSale Int // limite máximo de dogs
+  dogsSold  Int @default(0) // cache para dashboard
+
+  dogPrice         Float              @default(19.99)
+  active           Boolean            @default(true)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  deletedAt        DateTime?
+  // Vouchers emitidos nesta edição
+  issuedVouchers   Voucher[]          @relation("VoucherIssuedEdition")
+  // Vouchers resgatados nesta edição
+  redeemedVouchers Voucher[]          @relation("VoucherRedeemedEdition")
+  tickets          Ticket[]
+  orders           Order[]
+  settlements      SellerSettlement[]
+  commands         Command[]
+
+  @@index([saleEndDate, saleStartDate])
+  @@map("editions")
+}
+
+model CellNetwork {
+  id           String       @id @default(cuid())
+  name         String
+  supervisor   Contributor? @relation(fields: [supervisorId], references: [id])
+  supervisorId String?
+  phone        String
+  active       Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  deletedAt    DateTime?
+
+  cells Cell[]
+
+  @@map("cells_networks")
+}
+
+model Cell {
+  id        String       @id @default(cuid())
+  name      String
+  network   CellNetwork  @relation(fields: [networkId], references: [id])
+  networkId String
+  leader    Contributor? @relation(fields: [leaderId], references: [id])
+  leaderId  String?
+  active    Boolean      @default(true)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  deletedAt DateTime?
+
+  sellers Seller[]
+
+  @@map("cells")
+}
+
+model Seller {
+  id            String      @id @default(cuid())
+  name          String
+  cell          Cell        @relation(fields: [cellId], references: [id])
+  cellId        String
+  contributor   Contributor @relation(fields: [contributorId], references: [id])
+  contributorId String
+  tag           String      @unique
+  active        Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  deletedAt     DateTime?
+
+  tickets     Ticket[]
+  orders      Order[]
+  settlements SellerSettlement[]
+
+  @@index([cellId])
+  @@map("sellers")
+}
+
+model DeliveryPerson {
+  id               String      @id @default(cuid())
+  contributor      Contributor @relation(fields: [contributorId], references: [id])
+  contributorId    String
+  online           Boolean     @default(false)
+  inRoute          Boolean     @default(false)
+  pushSubscription Json?
+  active           Boolean     @default(true)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  deletedAt        DateTime?
+
+  routes DeliveryRoute[]
+
+  @@map("delivery_persons")
+}
+
+//// CLIENTES ////
+
+model Customer {
+  id            String    @id @default(cuid())
+  name          String
+  email         String?   @unique
+  phone         String
+  cpf           String?   @unique
+  password      String
+  knowsChurch   Boolean   @default(true)
+  allowsChurch  Boolean   @default(true)
+  firstRegister Boolean   @default(false)
+  active        Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  vouchers  Voucher[]
+  addresses CustomerAddress[]
+  orders    Order[]
+
+  @@map("customers")
+}
+
+model CustomerAddress {
+  id           String    @id @default(cuid())
+  customer     Customer  @relation(fields: [customerId], references: [id])
+  customerId   String
+  street       String
+  number       String
+  neighborhood String
+  city         String
+  state        String
+  zipCode      String
+  complement   String?
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  orders Order[]
+
+  @@index([customerId, neighborhood])
+  @@map("customers_addresses")
+}
+
+//// PEDIDO UNIFICADO ////
+
+model Order {
+  id            String          @id @default(cuid())
+  edition       Edition         @relation(fields: [editionId], references: [id])
+  editionId     String
+  customer      Customer        @relation(fields: [customerId], references: [id])
+  customerId    String
+  customerName  String
+  customerPhone String
+  customerCPF   String
+  seller        Seller          @relation(fields: [sellerId], references: [id])
+  sellerId      String
+  sellerTag     String
+  origin        OrderOriginEnum @default(SITE)
+
+  totalValue Float
+  status     OrderStatusEnum   @default(DIGITATION)
+  siteStep   SiteOrderStepEnum @default(CUSTOMER)
+  paymentStatus PaymentStatusEnum @default(PENDING)
+  paymentType PaymentMethodEnum @default(UNDEFINED)
+  deliveryOption DeliveryOptionEnum @default(UNDEFINED)
+  deliveryTime   String?
+  partner       Partner?        @relation(fields: [partnerId], references: [id])
+  partnerId     String?
+  address        CustomerAddress?   @relation(fields: [addressId], references: [id])
+  addressId      String?
+
+  observations     String?
+
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  items         OrderItem[]
+  vouchers      Voucher[]
+  tickets       Ticket[]
+  payments      Payment[]
+  commands      Command[]
+  deliveryStops DeliveryStop[]
+
+  @@index([origin, editionId, status, sellerId])
+  @@map("orders")
+}
+
+model OrderItem {
+  id                 String    @id @default(cuid())
+  order              Order     @relation(fields: [orderId], references: [id])
+  orderId            String
+  unitPrice          Float
+  removedIngredients String[]
+  active             Boolean   @default(true)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  deletedAt          DateTime?
+
+  vouchers Voucher[]
+
+  @@index([orderId])
+  @@map("orders_items")
+}
+
+//// TICKETS & VOUCHERS ////
+
+model Ticket {
+  id        String  @id @default(cuid())
+  edition   Edition @relation(fields: [editionId], references: [id])
+  editionId String
+  number    String
+  ordered   Boolean @default(false)
+
+  seller   Seller @relation(fields: [sellerId], references: [id])
+  sellerId String
+
+  order   Order?  @relation(fields: [orderId], references: [id])
+  orderId String?
+
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([editionId, sellerId, orderId])
+  @@map("tickets")
+}
+
+model Voucher {
+  id   String @id @default(cuid())
+  code String @unique
+
+  // Edição onde o voucher foi emitido
+  issuedEdition   Edition @relation("VoucherIssuedEdition", fields: [issuedEditionId], references: [id])
+  issuedEditionId String
+
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId String?
+
+  // Edição onde foi resgatado (geralmente outra edição)
+  redeemedEdition   Edition? @relation("VoucherRedeemedEdition", fields: [redeemedEditionId], references: [id])
+  redeemedEditionId String?
+
+  order       Order?     @relation(fields: [orderId], references: [id])
+  orderId     String?
+  orderItem   OrderItem? @relation(fields: [orderItemId], references: [id])
+  orderItemId String?
+
+  used      Boolean           @default(false)
+  usedAt    DateTime?
+  status    VoucherStatusEnum @default(NEW)
+  active    Boolean           @default(true)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  deletedAt DateTime?
+
+  @@index([customerId, redeemedEditionId, issuedEditionId])
+  @@map("vouchers")
+}
+
+//// PAGAMENTOS ////
+
+model Payment {
+  id      String @id @default(cuid())
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String
+
+  origin            PaymentOriginEnum   @default(PREORDER)
+  value             Float
+  status            PaymentStatusEnum   @default(PENDING)
+  provider          PaymentProviderEnum @default(MERCADOPAGO)
+  providerPaymentId String? // ID MP ou similar
+  method            PaymentMethodEnum   @default(UNDEFINED)
+
+  pixQrcode    String?
+  pixCopyPaste String?
+  paymentUrl   String?
+  cardToken    String?
+
+  rawPayload String? // payload do provedor (init/webhook)
+
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  events PaymentEvent[]
+
+  @@index([providerPaymentId, orderId, status, provider])
+  @@map("payments")
+}
+
+model PaymentEvent {
+  id              String    @id @default(cuid())
+  payment         Payment   @relation(fields: [paymentId], references: [id])
+  paymentId       String
+  providerEventId String? // id do evento no MP
+  type            String? // tipo do evento
+  rawPayload      Json
+  processedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  @@index([paymentId])
+  @@map("payments_events")
+}
+
+//// COMANDOS / IMPRESSÃO ////
+
+model Command {
+  id           String  @id @default(cuid())
+  sequentialId String  @unique // Ex: "2520001"
+  order        Order   @relation(fields: [orderId], references: [id])
+  orderId      String
+  edition      Edition @relation(fields: [editionId], references: [id])
+  editionId    String
+
+  editionCode  Int // Ex: 2 (segunda edição)
+  sequence     Int // 1..N
+  printed      Boolean           @default(false)
+  pdfUrl       String?
+  sentWhatsApp Boolean           @default(false)
+  sentAt       DateTime?
+  status       CommandStatusEnum @default(PENDING)
+
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("commands")
+}
+
+//// RELATÓRIOS ////
+
+model DailyReportSoldsCache {
+  id        String    @id @default(cuid())
+  type      String // 'seller' ou 'cell'
+  refId     String // id do vendedor ou célula
+  seller    String
+  cell      String
+  network   String
+  orders    Int       @default(0)
+  dogs      Int       @default(0)
+  total     Int       @default(0)
+  sentAt    DateTime  @default(now())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("daily_report_sold_caches")
+}
+
+//// ROTAS DE ENTREGA ////
+
+model DeliveryRoute {
+  id               String                  @id @default(cuid())
+  deliveryPerson   DeliveryPerson          @relation(fields: [deliveryPersonId], references: [id])
+  deliveryPersonId String
+  startedAt        DateTime?
+  finishedAt       DateTime?
+  status           DeliveryRouteStatusEnum @default(PENDING)
+  totalStops       Int                     @default(0)
+  completedStops   Int                     @default(0)
+  active           Boolean                 @default(true)
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+  deletedAt        DateTime?
+
+  stops DeliveryStop[]
+
+  @@index([deliveryPersonId, status])
+  @@map("delivery_routes")
+}
+
+model DeliveryStop {
+  id          String                 @id @default(cuid())
+  route       DeliveryRoute          @relation(fields: [routeId], references: [id])
+  routeId     String
+  order       Order                  @relation(fields: [orderId], references: [id])
+  orderId     String
+  sequence    Int
+  status      DeliveryStopStatusEnum @default(PENDING)
+  deliveredAt DateTime?
+  skippedAt   DateTime?
+  failedAt    DateTime?
+  lat         Float?
+  lng         Float?
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+  deletedAt   DateTime?
+
+  @@index([routeId, orderId])
+  @@map("delivery_stops")
+}
+
+//// ACERTO COM VENDEDORES ////
+
+model SellerSettlement {
+  id               String    @id @default(cuid())
+  edition          Edition   @relation(fields: [editionId], references: [id])
+  editionId        String
+  seller           Seller    @relation(fields: [sellerId], references: [id])
+  sellerId         String
+  totalTicketsSold Int
+  totalValue       Float
+  totalReturned    Int
+  status           String    @default("PENDING") // PENDING | CLOSED | PAID
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime?
+
+  @@index([editionId, sellerId])
+  @@map("sellers_settlements")
+}
+
+model Partner {
+  id               String    @id @default(cuid())
+  name             String
+  cnpj             String   @unique
+  phone            String
+  description      String?
+  website          String?
+  facebook         String?
+  instagram        String?
+  addressInLine     String
+  street           String
+  number           String
+  neighborhood     String
+  city             String
+  state            String
+  zipCode          String
+  complement       String?
+  responsibleName  String
+  responsiblePhone String
+  logo             String?
+  password         String
+  approved         Boolean   @default(true)
+  active           Boolean   @default(true)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime?
+
+  donations Order[]
+
+  @@map("partners")
+}
+
+model OtpVerification {
+  id        String   @id @default(cuid())
+  userId    String   
+  userType  UserTypesEnum   // "PARTNER" | "CUSTOMER" | "CONTRIBUTOR"
+  code      String 
+  phone     String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  active Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime?
+
+  @@index([userId, code])
+  @@map("otp_verifications")
+}
