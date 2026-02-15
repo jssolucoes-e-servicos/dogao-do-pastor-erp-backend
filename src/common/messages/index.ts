@@ -9,6 +9,7 @@ import { MW_OrderNextDelivery } from './whatsapp/orders/next-delivery.message';
 import { MW_OrderPaymentPending24h } from './whatsapp/orders/payment-pending-24h.message';
 import { MW_OrderRecoveryAbandoned } from './whatsapp/orders/recovery-abandoned.message';
 import { MW_OrderSendAnalisys } from './whatsapp/orders/send-analisys.message';
+import { MW_PartnerWellcomePortal } from './whatsapp/partners/wellcome-portal.message';
 
 const validateContact = (order: OrderEntity): boolean => {
   if (!order.customer.phone) {
@@ -23,8 +24,7 @@ const validateContact = (order: OrderEntity): boolean => {
 export {
   MW_DeliveryPersons_RouteAssigned, MW_OrderDelivered,
   MW_OrderDeliveryFailed,
-  MW_OrderDeliverySkiped,
-  MW_OrderNewSite, MW_OrderNextDelivery, MW_OrderPaymentPending24h, MW_OrderRecoveryAbandoned,
-  MW_OrderSendAnalisys, validateContact
+  MW_OrderDeliverySkiped, MW_OrderNewSite, MW_OrderNextDelivery, MW_OrderPaymentPending24h, MW_OrderRecoveryAbandoned,
+  MW_OrderSendAnalisys, MW_PartnerWellcomePortal, validateContact
 };
 

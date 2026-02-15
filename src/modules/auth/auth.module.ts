@@ -12,6 +12,8 @@ import { AuthController } from './controllers/auth.controller';
 import { AuthOtpService } from './services/auth-otp.service';
 import { AuthPartnerService } from './services/auth-partner.service';
 import { AuthService } from './services/auth.service';
+import { AuthContributorService } from './services/auth-contributor.service';
+import { AuthCustomerService } from './services/auth-customer.service';
 
 @Module({
   imports: [
@@ -33,6 +35,8 @@ import { AuthService } from './services/auth.service';
     AuthService,
     AuthOtpService,
     AuthPartnerService,
+    AuthContributorService,
+    AuthCustomerService,
     EvolutionService,
   ],
   exports: [AuthService],

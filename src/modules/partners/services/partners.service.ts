@@ -13,9 +13,10 @@ import {
   PrismaBase,
   PrismaService,
 } from 'src/common/helpers/importer.helper';
-import { Partner } from 'src/generated/client';
 import { EvolutionService } from 'src/modules/evolution/services/evolution.service';
+import { PartnersNotificationsService } from 'src/modules/evolution/services/notifications/partners-notifications.service';
 import { UploadsService } from 'src/modules/uploads/services/uploads.service';
+import { inviteSendWhatsappDTO } from '../dto/invite-sendwhatsapp.dto';
 import { RegisterPartnerDto } from '../dto/register-partner.dto';
 import { UpdatePartnerDto } from '../dto/update-partner.dto';
 
@@ -32,6 +33,7 @@ export class PartnersService extends BaseCrudService<
     loggerService: LoggerService,
     prismaService: PrismaService,
     private readonly evolutionService: EvolutionService,
+    private readonly partnersNotificationsService: PartnersNotificationsService,
     private readonly uploadsService: UploadsService,
   ) {
     super(configService, loggerService, prismaService);
@@ -67,27 +69,8 @@ export class PartnersService extends BaseCrudService<
         active: true,
       },
     });
-
-    await this.sendWelcomeMessage(updatePartner);
-
+    await this.partnersNotificationsService.welcomePortal(updatePartner);
     return updatePartner;
-  }
-
-  private async sendWelcomeMessage(partner: Partner) {
-    const loginUrl = `${this.configService.get('FRONTEND_PORTALS_URL')}/parceiros/acesso`;
-    const message =
-      `*Bem-vindo ao Dogão do Pastor!* 🌭🙏\n\n` +
-      `Olá *${partner.responsibleName}*, sua instituição *${partner.name}* já está ativa no sistema.\n\n` +
-      `*Dados de Acesso:*\n` +
-      `• CNPJ: ${partner.cnpj}\n` +
-      `• Link de Acesso: ${loginUrl}\n\n` +
-      `Agora você já pode gerenciar suas doações e parceiros. Estamos felizes em ter você conosco!`;
-
-    try {
-      await this.evolutionService.sendText(partner.responsiblePhone, message);
-    } catch (error) {
-      console.error('Falha ao enviar boas-vindas:', error);
-    }
   }
 
   async verifyLink(id: string): Promise<{ valid: boolean; message: string }> {
@@ -164,5 +147,67 @@ export class PartnersService extends BaseCrudService<
     });
 
     return partners;
+  }
+
+  async listAll(): Promise<PartnerEntity[]> {
+    const partners = await this.model.findMany({
+      orderBy: {
+        name: 'asc',
+      },
+    });
+
+    return partners;
+  }
+
+  async inviteGenerate(): Promise<PartnerEntity> {
+    const password = await bcrypt.hash('dogao@2026', 10);
+    const countPartners = await this.model.count();
+    const sequence = countPartners + 1;
+    // Gera um CNPJ fake único com 14 dígitos (ex: 00000000000001, 00000000000002...)
+    const cnpj = sequence.toString().padStart(14, '0');
+    // Gera um Telefone fake único com 11 dígitos iniciando em 51 (ex: 51000000001, 51000000002...)
+    const phone = `51${sequence.toString().padStart(9, '0')}`;
+
+    const forRegister = {
+      name: `Parceiro temporário ${sequence}`,
+      cnpj,
+      phone,
+      description: 'Descrição da entidade parceira (Aguardando preenchimento)',
+      website: '',
+      facebook: '',
+      instagram: '',
+      addressInLine: '',
+      street: '',
+      number: '',
+      neighborhood: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      complement: '',
+      responsibleName: '',
+      responsiblePhone: '',
+      approved: false,
+      password,
+      active: false,
+    };
+    const partner = await super.create(forRegister);
+    return partner;
+  }
+
+  async inviteSendWhatsapp(dto: inviteSendWhatsappDTO): Promise<boolean> {
+    const partner = await this.model.findUnique({
+      where: {
+        id: dto.inviteId,
+      },
+    });
+    console.log(partner);
+    if (!partner) {
+      throw new NotFoundException('Não foi encontrado convite com este id');
+    }
+    await this.partnersNotificationsService.sendInvite(
+      partner,
+      dto.destination,
+    );
+    return true;
   }
 }

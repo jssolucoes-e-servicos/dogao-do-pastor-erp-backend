@@ -5,6 +5,7 @@ import { LoggerService } from 'src/modules/logger/services/logger.service';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { EvolutionController } from './controllers/evolution.controller';
 import { OrdersNotificationsService } from './services/notifications/orders-notifications.service';
+import { PartnersNotificationsService } from './services/notifications/partners-notifications.service';
 
 @Module({
   controllers: [EvolutionController],
@@ -13,6 +14,7 @@ import { OrdersNotificationsService } from './services/notifications/orders-noti
     LoggerService,
     EvolutionService,
     OrdersNotificationsService,
+    PartnersNotificationsService,
   ],
   exports: [EvolutionService, OrdersNotificationsService],
 })

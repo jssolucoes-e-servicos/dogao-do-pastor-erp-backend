@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { EvolutionModule } from '../evolution/evolution.module';
 import { EvolutionService } from '../evolution/services/evolution.service';
+import { PartnersNotificationsService } from '../evolution/services/notifications/partners-notifications.service';
 import { LoggerService } from '../logger/services/logger.service';
 import { PrismaService } from '../prisma/services/prisma.service';
 import { UploadsService } from '../uploads/services/uploads.service';
@@ -16,6 +17,7 @@ import { PartnersService } from './services/partners.service';
     PrismaService,
     PartnersService,
     EvolutionService,
+    PartnersNotificationsService,
     UploadsService,
   ],
   exports: [PartnersService],
