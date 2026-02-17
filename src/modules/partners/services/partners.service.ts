@@ -106,7 +106,7 @@ export class PartnersService extends BaseCrudService<
   }
 
   async update(id: string, data: UpdatePartnerDto): Promise<PartnerEntity> {
-    const partner = await super.findOne({ where: { id } });
+    const partner = await super.findOne({ id });
     if (!partner) throw new NotFoundException('Parceiro não encontrado');
     try {
       return await super.update(id, data);
@@ -200,7 +200,6 @@ export class PartnersService extends BaseCrudService<
         id: dto.inviteId,
       },
     });
-    console.log(partner);
     if (!partner) {
       throw new NotFoundException('Não foi encontrado convite com este id');
     }

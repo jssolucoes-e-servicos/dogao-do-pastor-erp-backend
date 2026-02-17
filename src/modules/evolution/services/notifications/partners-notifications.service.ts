@@ -36,7 +36,8 @@ export class PartnersNotificationsService extends BaseService {
 
   async sendInvite(partner: PartnerEntity, destination: string) {
     console.log('entrou na message do sendInvite');
-    if (partner.responsiblePhone) {
+    console.log(partner);
+    if (destination) {
       this.logger.log(
         `Enviando aviso de falha na entrega para ${partner.responsiblePhone}`,
       );
