@@ -684,7 +684,7 @@ model Partner {
   responsiblePhone String
   logo             String?
   password         String
-  approved         Boolean   @default(true)
+  approved         Boolean   @default(false)
   active           Boolean   @default(true)
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt

@@ -55,9 +55,11 @@ export class PartnersService extends BaseCrudService<
     });
 
     if (existing) {
-      throw new BadRequestException(
-        'Este CNPJ já está cadastrado em nossa base.',
-      );
+      if (existing.cnpj !== data.cnpj) {
+        throw new BadRequestException(
+          'Este CNPJ já está cadastrado em nossa base.',
+        );
+      }
     }
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const updatePartner = await this.model.update({

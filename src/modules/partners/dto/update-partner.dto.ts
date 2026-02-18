@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { StringValidator } from 'src/common/validators';
+import { BooleanValidator, StringValidator } from 'src/common/validators';
 import { RegisterPartnerDto } from './register-partner.dto';
 
 export class UpdatePartnerDto extends PartialType(RegisterPartnerDto) {
@@ -9,4 +9,18 @@ export class UpdatePartnerDto extends PartialType(RegisterPartnerDto) {
     optional: true,
   })
   logo?: string;
+
+  @BooleanValidator({
+    fieldName: 'active',
+    label: 'Ativo?',
+    optional: true,
+  })
+  active?: boolean;
+
+  @BooleanValidator({
+    fieldName: 'approved',
+    label: 'Aprovado?',
+    optional: true,
+  })
+  approved?: boolean;
 }
