@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { FormDataRequest } from 'nestjs-form-data';
 import { IdParamDto } from 'src/common/dto/id.param.dto';
 import { inviteSendWhatsappDTO } from '../dto/invite-sendwhatsapp.dto';
@@ -61,5 +61,10 @@ export class PartnersController {
   @Post('invite/send-whatsapp')
   async inviteSendWhatsapp(@Body() dto: inviteSendWhatsappDTO) {
     return await this.service.inviteSendWhatsapp(dto);
+  }
+
+  @Delete('delete/:id')
+  async delete(@Param() { id }: IdParamDto) {
+    return await this.service.delete(id);
   }
 }

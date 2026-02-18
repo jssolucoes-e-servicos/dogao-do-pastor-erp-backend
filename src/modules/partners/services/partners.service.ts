@@ -211,4 +211,13 @@ export class PartnersService extends BaseCrudService<
     );
     return true;
   }
+
+  async delete(id: string) {
+    await this.model.delete({
+      where: {
+        id: id,
+      },
+    });
+    return true;
+  }
 }
