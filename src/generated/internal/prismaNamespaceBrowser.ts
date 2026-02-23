@@ -76,7 +76,10 @@ export const ModelName = {
   DeliveryStop: 'DeliveryStop',
   SellerSettlement: 'SellerSettlement',
   Partner: 'Partner',
-  OtpVerification: 'OtpVerification'
+  OtpVerification: 'OtpVerification',
+  DonationEntry: 'DonationEntry',
+  Withdrawal: 'Withdrawal',
+  WithdrawalItem: 'WithdrawalItem'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -425,6 +428,7 @@ export const CommandScalarFieldEnum = {
   id: 'id',
   sequentialId: 'sequentialId',
   orderId: 'orderId',
+  withdrawalId: 'withdrawalId',
   editionId: 'editionId',
   editionCode: 'editionCode',
   sequence: 'sequence',
@@ -559,6 +563,50 @@ export const OtpVerificationScalarFieldEnum = {
 } as const
 
 export type OtpVerificationScalarFieldEnum = (typeof OtpVerificationScalarFieldEnum)[keyof typeof OtpVerificationScalarFieldEnum]
+
+
+export const DonationEntryScalarFieldEnum = {
+  id: 'id',
+  partnerId: 'partnerId',
+  orderId: 'orderId',
+  withdrawalId: 'withdrawalId',
+  quantity: 'quantity',
+  type: 'type',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type DonationEntryScalarFieldEnum = (typeof DonationEntryScalarFieldEnum)[keyof typeof DonationEntryScalarFieldEnum]
+
+
+export const WithdrawalScalarFieldEnum = {
+  id: 'id',
+  partnerId: 'partnerId',
+  status: 'status',
+  scheduledAt: 'scheduledAt',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type WithdrawalScalarFieldEnum = (typeof WithdrawalScalarFieldEnum)[keyof typeof WithdrawalScalarFieldEnum]
+
+
+export const WithdrawalItemScalarFieldEnum = {
+  id: 'id',
+  withdrawalId: 'withdrawalId',
+  quantity: 'quantity',
+  removedIngredients: 'removedIngredients',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type WithdrawalItemScalarFieldEnum = (typeof WithdrawalItemScalarFieldEnum)[keyof typeof WithdrawalItemScalarFieldEnum]
 
 
 export const SortOrder = {

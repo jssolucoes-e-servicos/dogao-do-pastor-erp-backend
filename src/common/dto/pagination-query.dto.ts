@@ -26,7 +26,6 @@ export class PaginationQueryDto {
   perPage: number = 10;
 
   @ApiPropertyOptional({
-    example: 'joao',
     description: 'Texto para busca (nome, telefone, cpf, etc)',
   })
   @IsOptional()

@@ -1,6 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import MercadoPagoConfig, { Payment } from 'mercadopago';
+import { CustomerEntity } from 'src/common/entities';
+import { PaymentStatusEnum } from 'src/common/enums';
 import {
   LoggerService,
   PrismaService,
@@ -8,6 +10,7 @@ import {
 import { NumbersHelper } from 'src/common/helpers/number.helper';
 import { StringsHelper } from 'src/common/helpers/strings.helper';
 import { BaseService } from 'src/common/services/base.service';
+import { GenerateOrderCardDTO } from '../../dto/generate-order-card.dto';
 import { IMercadopagoPix } from '../../interfaces/mercadopago/mercadopago-pix.interface';
 import { IMPPayment, IPaymentResponse } from '../../interfaces/payment.interface';
 
@@ -71,27 +74,57 @@ export class MpPaymentsService extends BaseService {
       const response: IMPPayment = {
         id: String(payment.id),
         status: payment.status ?? 'pending',
-          /* (payment.status as PaymentStatusEnum) ?? PaymentStatusEnum.pending, */
         detail: payment.status_detail ?? '',
         pix,
       };
-      /* await this.prisma.orderOnline.update({
-        where: { id: preorder.id },
-        data: {
-          paymentStatus: PaymentStatusEnum.pending,
-          paymentProvider: 'mercadopago',
-          paymentId: String(payment.id),
-          paymentMethod: PaymentMethodEnum.pix,
-          paymentPixCopyPaste: pix.qrCode,
-          paymentPixQrcode: pix.qrCodeBase64,
-          status: OrderStatsEnum.pending_payment,
-          step: PreOrderStepEnum.pix,
-        },
-      }); */
       return { success: true, payment: response };
     } catch (error) {
       this.logger.error(`Erro ao processar MP-PIX: ${error}`);
       throw new BadRequestException('Erro ao processar pagamento PIX');
+    }
+  }
+
+  async processCardPayment(
+    dto: GenerateOrderCardDTO,
+    customer: CustomerEntity,
+    valueTotal: number,
+  ): Promise<IPaymentResponse> {
+    const providedName = dto.payer?.name ?? customer.name;
+    const providedEmail = dto.payer?.email ?? customer.email;
+
+    const { first_name, last_name } = StringsHelper.splitName(providedName);
+    const email = StringsHelper.emailFallback(dto.orderId, providedEmail);
+    const phoneObj = NumbersHelper.normalizePhone(customer.phone);
+
+    try {
+      this.logger.log(`Compra Online: ${dto.orderId} -> Iniciando MP - Cartão`);
+      const payment = await this.mpClient.create({
+        body: {
+          transaction_amount: valueTotal,
+          description: `Compra Online Dogão: ${dto.orderId}`,
+          token: dto.token,
+          installments: dto.installments ?? 1,
+          payer: { first_name, last_name, email, phone: phoneObj },
+        },
+      });
+      this.logger.log(
+        `Compra Online: ${dto.orderId} -> Resposta MP: ${payment.status}`,
+      );
+      const response: IMPPayment = {
+        id: String(payment.id),
+        status:
+          (payment.status as PaymentStatusEnum) ?? PaymentStatusEnum.PENDING,
+        detail: payment.status_detail ?? '',
+      };
+      return { success: true, payment: response };
+    } catch (err: any) {
+      this.logger.error(
+        `Compra Online: ${dto.orderId} -> Erro ao processar cartão: ${err?.response ?? err}`,
+      );
+      const msg = err?.response?.message ?? err?.message;
+      throw new BadRequestException(
+        msg || 'Erro ao processar pagamento com cartão',
+      );
     }
   }
 }

@@ -10,6 +10,7 @@ import { DailyReportSoldsCacheEntity } from './daily-report-solds-cache.entity';
 import { DeliveryPersonEntity } from './delivery-person.entity';
 import { DeliveryRouteEntity } from './delivery-route.entity';
 import { DeliveryStopEntity } from './delivery-stop.entity';
+import { DonationEntryEntity } from './donation-entry.entity';
 import { EditionEntity } from './edition.enttity';
 import { FileEntity } from './file.entity';
 import { ModuleEntity } from './module.entity';
@@ -25,6 +26,8 @@ import { SellerEntity } from './seller.entity';
 import { TicketEntity } from './ticket.entity';
 import { UserRoleEntity } from './user-role.entity';
 import { VoucherEntity } from './voucher.entity';
+import { WithdrawalItemEntity } from './withdrawal-item.entity';
+import { WithdrawalEntity } from './withdrawal.entity';
 export type {
   CellEntity,
   CellNetworkEntity,
@@ -35,12 +38,9 @@ export type {
   DailyReportSoldsCacheEntity,
   DeliveryPersonEntity,
   DeliveryRouteEntity,
-  DeliveryStopEntity,
-  EditionEntity,
+  DeliveryStopEntity, DonationEntryEntity, EditionEntity,
   FileEntity,
-  ModuleEntity,
-  OrderEntity,
-  OrderItemEntity, PartnerEntity, PaymentEntity,
+  ModuleEntity, OrderEntity, OrderItemEntity, PartnerEntity, PaymentEntity,
   PaymentEventEntity,
   PermissionEntity,
   RoleEntity,
@@ -48,6 +48,7 @@ export type {
   SellerSettlementEntity,
   TicketEntity,
   UserRoleEntity,
-  VoucherEntity
+  VoucherEntity, WithdrawalEntity,
+  WithdrawalItemEntity
 };
 

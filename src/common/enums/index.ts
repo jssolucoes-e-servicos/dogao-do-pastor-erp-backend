@@ -5,6 +5,7 @@ import { CommandStatusEnum } from './command-status.enum';
 import { DeliveryOptionEnum } from './delivery-option.enum';
 import { DeliveryRouteStatusEnum } from './delivery-route-status.enum';
 import { DeliveryStopStatusEnum } from './delivery-stop-status.enum';
+import { DonationEntryTypeEnum } from './donation-entry-type.enum';
 import { EmailStatusEnum } from './elementals/email-status.enum';
 import { UserTypesEnum } from './elementals/user-types.enum';
 import { OrderOriginEnum } from './order-origin.enum';
@@ -15,22 +16,20 @@ import { PaymentProviderEnum } from './payment-provider.enum';
 import { PaymentStatusEnum } from './payment-status.enum';
 import { SiteOrderStepEnum } from './site-order-step.enum';
 import { VoucherStatusEnum } from './voucher-status.enum';
+import { WithdrawalStatusEnum } from './withdrawal-status.enum';
 
 export {
   CommandStatusEnum,
   DeliveryOptionEnum,
   DeliveryRouteStatusEnum,
-  DeliveryStopStatusEnum,
-  EmailStatusEnum,
-  GendersEnum,
-  LoginStatsEnum,
-  OrderOriginEnum,
+  DeliveryStopStatusEnum, DonationEntryTypeEnum, EmailStatusEnum, GendersEnum,
+  LoginStatsEnum, OrderOriginEnum,
   OrderStatusEnum,
   PaymentMethodEnum,
   PaymentOriginEnum,
   PaymentProviderEnum,
   PaymentStatusEnum,
   SiteOrderStepEnum, UserTypesEnum, VoucherStatusEnum,
-  WeekDayEnum
+  WeekDayEnum, WithdrawalStatusEnum
 };
 

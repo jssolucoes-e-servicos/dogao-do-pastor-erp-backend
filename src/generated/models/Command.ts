@@ -40,6 +40,7 @@ export type CommandMinAggregateOutputType = {
   id: string | null
   sequentialId: string | null
   orderId: string | null
+  withdrawalId: string | null
   editionId: string | null
   editionCode: number | null
   sequence: number | null
@@ -58,6 +59,7 @@ export type CommandMaxAggregateOutputType = {
   id: string | null
   sequentialId: string | null
   orderId: string | null
+  withdrawalId: string | null
   editionId: string | null
   editionCode: number | null
   sequence: number | null
@@ -76,6 +78,7 @@ export type CommandCountAggregateOutputType = {
   id: number
   sequentialId: number
   orderId: number
+  withdrawalId: number
   editionId: number
   editionCode: number
   sequence: number
@@ -106,6 +109,7 @@ export type CommandMinAggregateInputType = {
   id?: true
   sequentialId?: true
   orderId?: true
+  withdrawalId?: true
   editionId?: true
   editionCode?: true
   sequence?: true
@@ -124,6 +128,7 @@ export type CommandMaxAggregateInputType = {
   id?: true
   sequentialId?: true
   orderId?: true
+  withdrawalId?: true
   editionId?: true
   editionCode?: true
   sequence?: true
@@ -142,6 +147,7 @@ export type CommandCountAggregateInputType = {
   id?: true
   sequentialId?: true
   orderId?: true
+  withdrawalId?: true
   editionId?: true
   editionCode?: true
   sequence?: true
@@ -246,7 +252,8 @@ export type CommandGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type CommandGroupByOutputType = {
   id: string
   sequentialId: string
-  orderId: string
+  orderId: string | null
+  withdrawalId: string | null
   editionId: string
   editionCode: number
   sequence: number
@@ -287,7 +294,8 @@ export type CommandWhereInput = {
   NOT?: Prisma.CommandWhereInput | Prisma.CommandWhereInput[]
   id?: Prisma.StringFilter<"Command"> | string
   sequentialId?: Prisma.StringFilter<"Command"> | string
-  orderId?: Prisma.StringFilter<"Command"> | string
+  orderId?: Prisma.StringNullableFilter<"Command"> | string | null
+  withdrawalId?: Prisma.StringNullableFilter<"Command"> | string | null
   editionId?: Prisma.StringFilter<"Command"> | string
   editionCode?: Prisma.IntFilter<"Command"> | number
   sequence?: Prisma.IntFilter<"Command"> | number
@@ -300,14 +308,16 @@ export type CommandWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Command"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Command"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Command"> | Date | string | null
-  order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
+  order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
+  withdrawal?: Prisma.XOR<Prisma.WithdrawalNullableScalarRelationFilter, Prisma.WithdrawalWhereInput> | null
   edition?: Prisma.XOR<Prisma.EditionScalarRelationFilter, Prisma.EditionWhereInput>
 }
 
 export type CommandOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   sequentialId?: Prisma.SortOrder
-  orderId?: Prisma.SortOrder
+  orderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  withdrawalId?: Prisma.SortOrderInput | Prisma.SortOrder
   editionId?: Prisma.SortOrder
   editionCode?: Prisma.SortOrder
   sequence?: Prisma.SortOrder
@@ -321,16 +331,18 @@ export type CommandOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   order?: Prisma.OrderOrderByWithRelationInput
+  withdrawal?: Prisma.WithdrawalOrderByWithRelationInput
   edition?: Prisma.EditionOrderByWithRelationInput
 }
 
 export type CommandWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   sequentialId?: string
+  withdrawalId?: string
   AND?: Prisma.CommandWhereInput | Prisma.CommandWhereInput[]
   OR?: Prisma.CommandWhereInput[]
   NOT?: Prisma.CommandWhereInput | Prisma.CommandWhereInput[]
-  orderId?: Prisma.StringFilter<"Command"> | string
+  orderId?: Prisma.StringNullableFilter<"Command"> | string | null
   editionId?: Prisma.StringFilter<"Command"> | string
   editionCode?: Prisma.IntFilter<"Command"> | number
   sequence?: Prisma.IntFilter<"Command"> | number
@@ -343,14 +355,16 @@ export type CommandWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Command"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Command"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Command"> | Date | string | null
-  order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
+  order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
+  withdrawal?: Prisma.XOR<Prisma.WithdrawalNullableScalarRelationFilter, Prisma.WithdrawalWhereInput> | null
   edition?: Prisma.XOR<Prisma.EditionScalarRelationFilter, Prisma.EditionWhereInput>
-}, "id" | "sequentialId">
+}, "id" | "sequentialId" | "withdrawalId">
 
 export type CommandOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   sequentialId?: Prisma.SortOrder
-  orderId?: Prisma.SortOrder
+  orderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  withdrawalId?: Prisma.SortOrderInput | Prisma.SortOrder
   editionId?: Prisma.SortOrder
   editionCode?: Prisma.SortOrder
   sequence?: Prisma.SortOrder
@@ -376,7 +390,8 @@ export type CommandScalarWhereWithAggregatesInput = {
   NOT?: Prisma.CommandScalarWhereWithAggregatesInput | Prisma.CommandScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Command"> | string
   sequentialId?: Prisma.StringWithAggregatesFilter<"Command"> | string
-  orderId?: Prisma.StringWithAggregatesFilter<"Command"> | string
+  orderId?: Prisma.StringNullableWithAggregatesFilter<"Command"> | string | null
+  withdrawalId?: Prisma.StringNullableWithAggregatesFilter<"Command"> | string | null
   editionId?: Prisma.StringWithAggregatesFilter<"Command"> | string
   editionCode?: Prisma.IntWithAggregatesFilter<"Command"> | number
   sequence?: Prisma.IntWithAggregatesFilter<"Command"> | number
@@ -405,14 +420,16 @@ export type CommandCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  order: Prisma.OrderCreateNestedOneWithoutCommandsInput
+  order?: Prisma.OrderCreateNestedOneWithoutCommandsInput
+  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutCommandsInput
   edition: Prisma.EditionCreateNestedOneWithoutCommandsInput
 }
 
 export type CommandUncheckedCreateInput = {
   id?: string
   sequentialId: string
-  orderId: string
+  orderId?: string | null
+  withdrawalId?: string | null
   editionId: string
   editionCode: number
   sequence: number
@@ -441,14 +458,16 @@ export type CommandUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  order?: Prisma.OrderUpdateOneRequiredWithoutCommandsNestedInput
+  order?: Prisma.OrderUpdateOneWithoutCommandsNestedInput
+  withdrawal?: Prisma.WithdrawalUpdateOneWithoutCommandsNestedInput
   edition?: Prisma.EditionUpdateOneRequiredWithoutCommandsNestedInput
 }
 
 export type CommandUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   sequentialId?: Prisma.StringFieldUpdateOperationsInput | string
-  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  withdrawalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editionId?: Prisma.StringFieldUpdateOperationsInput | string
   editionCode?: Prisma.IntFieldUpdateOperationsInput | number
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
@@ -466,7 +485,8 @@ export type CommandUncheckedUpdateInput = {
 export type CommandCreateManyInput = {
   id?: string
   sequentialId: string
-  orderId: string
+  orderId?: string | null
+  withdrawalId?: string | null
   editionId: string
   editionCode: number
   sequence: number
@@ -500,7 +520,8 @@ export type CommandUpdateManyMutationInput = {
 export type CommandUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   sequentialId?: Prisma.StringFieldUpdateOperationsInput | string
-  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  withdrawalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editionId?: Prisma.StringFieldUpdateOperationsInput | string
   editionCode?: Prisma.IntFieldUpdateOperationsInput | number
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
@@ -529,6 +550,7 @@ export type CommandCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sequentialId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  withdrawalId?: Prisma.SortOrder
   editionId?: Prisma.SortOrder
   editionCode?: Prisma.SortOrder
   sequence?: Prisma.SortOrder
@@ -552,6 +574,7 @@ export type CommandMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sequentialId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  withdrawalId?: Prisma.SortOrder
   editionId?: Prisma.SortOrder
   editionCode?: Prisma.SortOrder
   sequence?: Prisma.SortOrder
@@ -570,6 +593,7 @@ export type CommandMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sequentialId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  withdrawalId?: Prisma.SortOrder
   editionId?: Prisma.SortOrder
   editionCode?: Prisma.SortOrder
   sequence?: Prisma.SortOrder
@@ -677,6 +701,48 @@ export type EnumCommandStatusEnumFieldUpdateOperationsInput = {
   set?: $Enums.CommandStatusEnum
 }
 
+export type CommandCreateNestedManyWithoutWithdrawalInput = {
+  create?: Prisma.XOR<Prisma.CommandCreateWithoutWithdrawalInput, Prisma.CommandUncheckedCreateWithoutWithdrawalInput> | Prisma.CommandCreateWithoutWithdrawalInput[] | Prisma.CommandUncheckedCreateWithoutWithdrawalInput[]
+  connectOrCreate?: Prisma.CommandCreateOrConnectWithoutWithdrawalInput | Prisma.CommandCreateOrConnectWithoutWithdrawalInput[]
+  createMany?: Prisma.CommandCreateManyWithdrawalInputEnvelope
+  connect?: Prisma.CommandWhereUniqueInput | Prisma.CommandWhereUniqueInput[]
+}
+
+export type CommandUncheckedCreateNestedManyWithoutWithdrawalInput = {
+  create?: Prisma.XOR<Prisma.CommandCreateWithoutWithdrawalInput, Prisma.CommandUncheckedCreateWithoutWithdrawalInput> | Prisma.CommandCreateWithoutWithdrawalInput[] | Prisma.CommandUncheckedCreateWithoutWithdrawalInput[]
+  connectOrCreate?: Prisma.CommandCreateOrConnectWithoutWithdrawalInput | Prisma.CommandCreateOrConnectWithoutWithdrawalInput[]
+  createMany?: Prisma.CommandCreateManyWithdrawalInputEnvelope
+  connect?: Prisma.CommandWhereUniqueInput | Prisma.CommandWhereUniqueInput[]
+}
+
+export type CommandUpdateManyWithoutWithdrawalNestedInput = {
+  create?: Prisma.XOR<Prisma.CommandCreateWithoutWithdrawalInput, Prisma.CommandUncheckedCreateWithoutWithdrawalInput> | Prisma.CommandCreateWithoutWithdrawalInput[] | Prisma.CommandUncheckedCreateWithoutWithdrawalInput[]
+  connectOrCreate?: Prisma.CommandCreateOrConnectWithoutWithdrawalInput | Prisma.CommandCreateOrConnectWithoutWithdrawalInput[]
+  upsert?: Prisma.CommandUpsertWithWhereUniqueWithoutWithdrawalInput | Prisma.CommandUpsertWithWhereUniqueWithoutWithdrawalInput[]
+  createMany?: Prisma.CommandCreateManyWithdrawalInputEnvelope
+  set?: Prisma.CommandWhereUniqueInput | Prisma.CommandWhereUniqueInput[]
+  disconnect?: Prisma.CommandWhereUniqueInput | Prisma.CommandWhereUniqueInput[]
+  delete?: Prisma.CommandWhereUniqueInput | Prisma.CommandWhereUniqueInput[]
+  connect?: Prisma.CommandWhereUniqueInput | Prisma.CommandWhereUniqueInput[]
+  update?: Prisma.CommandUpdateWithWhereUniqueWithoutWithdrawalInput | Prisma.CommandUpdateWithWhereUniqueWithoutWithdrawalInput[]
+  updateMany?: Prisma.CommandUpdateManyWithWhereWithoutWithdrawalInput | Prisma.CommandUpdateManyWithWhereWithoutWithdrawalInput[]
+  deleteMany?: Prisma.CommandScalarWhereInput | Prisma.CommandScalarWhereInput[]
+}
+
+export type CommandUncheckedUpdateManyWithoutWithdrawalNestedInput = {
+  create?: Prisma.XOR<Prisma.CommandCreateWithoutWithdrawalInput, Prisma.CommandUncheckedCreateWithoutWithdrawalInput> | Prisma.CommandCreateWithoutWithdrawalInput[] | Prisma.CommandUncheckedCreateWithoutWithdrawalInput[]
+  connectOrCreate?: Prisma.CommandCreateOrConnectWithoutWithdrawalInput | Prisma.CommandCreateOrConnectWithoutWithdrawalInput[]
+  upsert?: Prisma.CommandUpsertWithWhereUniqueWithoutWithdrawalInput | Prisma.CommandUpsertWithWhereUniqueWithoutWithdrawalInput[]
+  createMany?: Prisma.CommandCreateManyWithdrawalInputEnvelope
+  set?: Prisma.CommandWhereUniqueInput | Prisma.CommandWhereUniqueInput[]
+  disconnect?: Prisma.CommandWhereUniqueInput | Prisma.CommandWhereUniqueInput[]
+  delete?: Prisma.CommandWhereUniqueInput | Prisma.CommandWhereUniqueInput[]
+  connect?: Prisma.CommandWhereUniqueInput | Prisma.CommandWhereUniqueInput[]
+  update?: Prisma.CommandUpdateWithWhereUniqueWithoutWithdrawalInput | Prisma.CommandUpdateWithWhereUniqueWithoutWithdrawalInput[]
+  updateMany?: Prisma.CommandUpdateManyWithWhereWithoutWithdrawalInput | Prisma.CommandUpdateManyWithWhereWithoutWithdrawalInput[]
+  deleteMany?: Prisma.CommandScalarWhereInput | Prisma.CommandScalarWhereInput[]
+}
+
 export type CommandCreateWithoutEditionInput = {
   id?: string
   sequentialId: string
@@ -691,13 +757,15 @@ export type CommandCreateWithoutEditionInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  order: Prisma.OrderCreateNestedOneWithoutCommandsInput
+  order?: Prisma.OrderCreateNestedOneWithoutCommandsInput
+  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutCommandsInput
 }
 
 export type CommandUncheckedCreateWithoutEditionInput = {
   id?: string
   sequentialId: string
-  orderId: string
+  orderId?: string | null
+  withdrawalId?: string | null
   editionCode: number
   sequence: number
   printed?: boolean
@@ -743,7 +811,8 @@ export type CommandScalarWhereInput = {
   NOT?: Prisma.CommandScalarWhereInput | Prisma.CommandScalarWhereInput[]
   id?: Prisma.StringFilter<"Command"> | string
   sequentialId?: Prisma.StringFilter<"Command"> | string
-  orderId?: Prisma.StringFilter<"Command"> | string
+  orderId?: Prisma.StringNullableFilter<"Command"> | string | null
+  withdrawalId?: Prisma.StringNullableFilter<"Command"> | string | null
   editionId?: Prisma.StringFilter<"Command"> | string
   editionCode?: Prisma.IntFilter<"Command"> | number
   sequence?: Prisma.IntFilter<"Command"> | number
@@ -772,12 +841,14 @@ export type CommandCreateWithoutOrderInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutCommandsInput
   edition: Prisma.EditionCreateNestedOneWithoutCommandsInput
 }
 
 export type CommandUncheckedCreateWithoutOrderInput = {
   id?: string
   sequentialId: string
+  withdrawalId?: string | null
   editionId: string
   editionCode: number
   sequence: number
@@ -818,10 +889,73 @@ export type CommandUpdateManyWithWhereWithoutOrderInput = {
   data: Prisma.XOR<Prisma.CommandUpdateManyMutationInput, Prisma.CommandUncheckedUpdateManyWithoutOrderInput>
 }
 
+export type CommandCreateWithoutWithdrawalInput = {
+  id?: string
+  sequentialId: string
+  editionCode: number
+  sequence: number
+  printed?: boolean
+  pdfUrl?: string | null
+  sentWhatsApp?: boolean
+  sentAt?: Date | string | null
+  status?: $Enums.CommandStatusEnum
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  order?: Prisma.OrderCreateNestedOneWithoutCommandsInput
+  edition: Prisma.EditionCreateNestedOneWithoutCommandsInput
+}
+
+export type CommandUncheckedCreateWithoutWithdrawalInput = {
+  id?: string
+  sequentialId: string
+  orderId?: string | null
+  editionId: string
+  editionCode: number
+  sequence: number
+  printed?: boolean
+  pdfUrl?: string | null
+  sentWhatsApp?: boolean
+  sentAt?: Date | string | null
+  status?: $Enums.CommandStatusEnum
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type CommandCreateOrConnectWithoutWithdrawalInput = {
+  where: Prisma.CommandWhereUniqueInput
+  create: Prisma.XOR<Prisma.CommandCreateWithoutWithdrawalInput, Prisma.CommandUncheckedCreateWithoutWithdrawalInput>
+}
+
+export type CommandCreateManyWithdrawalInputEnvelope = {
+  data: Prisma.CommandCreateManyWithdrawalInput | Prisma.CommandCreateManyWithdrawalInput[]
+  skipDuplicates?: boolean
+}
+
+export type CommandUpsertWithWhereUniqueWithoutWithdrawalInput = {
+  where: Prisma.CommandWhereUniqueInput
+  update: Prisma.XOR<Prisma.CommandUpdateWithoutWithdrawalInput, Prisma.CommandUncheckedUpdateWithoutWithdrawalInput>
+  create: Prisma.XOR<Prisma.CommandCreateWithoutWithdrawalInput, Prisma.CommandUncheckedCreateWithoutWithdrawalInput>
+}
+
+export type CommandUpdateWithWhereUniqueWithoutWithdrawalInput = {
+  where: Prisma.CommandWhereUniqueInput
+  data: Prisma.XOR<Prisma.CommandUpdateWithoutWithdrawalInput, Prisma.CommandUncheckedUpdateWithoutWithdrawalInput>
+}
+
+export type CommandUpdateManyWithWhereWithoutWithdrawalInput = {
+  where: Prisma.CommandScalarWhereInput
+  data: Prisma.XOR<Prisma.CommandUpdateManyMutationInput, Prisma.CommandUncheckedUpdateManyWithoutWithdrawalInput>
+}
+
 export type CommandCreateManyEditionInput = {
   id?: string
   sequentialId: string
-  orderId: string
+  orderId?: string | null
+  withdrawalId?: string | null
   editionCode: number
   sequence: number
   printed?: boolean
@@ -849,13 +983,15 @@ export type CommandUpdateWithoutEditionInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  order?: Prisma.OrderUpdateOneRequiredWithoutCommandsNestedInput
+  order?: Prisma.OrderUpdateOneWithoutCommandsNestedInput
+  withdrawal?: Prisma.WithdrawalUpdateOneWithoutCommandsNestedInput
 }
 
 export type CommandUncheckedUpdateWithoutEditionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   sequentialId?: Prisma.StringFieldUpdateOperationsInput | string
-  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  withdrawalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editionCode?: Prisma.IntFieldUpdateOperationsInput | number
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   printed?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -872,7 +1008,8 @@ export type CommandUncheckedUpdateWithoutEditionInput = {
 export type CommandUncheckedUpdateManyWithoutEditionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   sequentialId?: Prisma.StringFieldUpdateOperationsInput | string
-  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  withdrawalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editionCode?: Prisma.IntFieldUpdateOperationsInput | number
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
   printed?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -889,6 +1026,7 @@ export type CommandUncheckedUpdateManyWithoutEditionInput = {
 export type CommandCreateManyOrderInput = {
   id?: string
   sequentialId: string
+  withdrawalId?: string | null
   editionId: string
   editionCode: number
   sequence: number
@@ -917,12 +1055,14 @@ export type CommandUpdateWithoutOrderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawal?: Prisma.WithdrawalUpdateOneWithoutCommandsNestedInput
   edition?: Prisma.EditionUpdateOneRequiredWithoutCommandsNestedInput
 }
 
 export type CommandUncheckedUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   sequentialId?: Prisma.StringFieldUpdateOperationsInput | string
+  withdrawalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editionId?: Prisma.StringFieldUpdateOperationsInput | string
   editionCode?: Prisma.IntFieldUpdateOperationsInput | number
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
@@ -940,6 +1080,79 @@ export type CommandUncheckedUpdateWithoutOrderInput = {
 export type CommandUncheckedUpdateManyWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   sequentialId?: Prisma.StringFieldUpdateOperationsInput | string
+  withdrawalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editionId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionCode?: Prisma.IntFieldUpdateOperationsInput | number
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
+  printed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentWhatsApp?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumCommandStatusEnumFieldUpdateOperationsInput | $Enums.CommandStatusEnum
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type CommandCreateManyWithdrawalInput = {
+  id?: string
+  sequentialId: string
+  orderId?: string | null
+  editionId: string
+  editionCode: number
+  sequence: number
+  printed?: boolean
+  pdfUrl?: string | null
+  sentWhatsApp?: boolean
+  sentAt?: Date | string | null
+  status?: $Enums.CommandStatusEnum
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type CommandUpdateWithoutWithdrawalInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sequentialId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionCode?: Prisma.IntFieldUpdateOperationsInput | number
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
+  printed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentWhatsApp?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumCommandStatusEnumFieldUpdateOperationsInput | $Enums.CommandStatusEnum
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  order?: Prisma.OrderUpdateOneWithoutCommandsNestedInput
+  edition?: Prisma.EditionUpdateOneRequiredWithoutCommandsNestedInput
+}
+
+export type CommandUncheckedUpdateWithoutWithdrawalInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sequentialId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editionId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionCode?: Prisma.IntFieldUpdateOperationsInput | number
+  sequence?: Prisma.IntFieldUpdateOperationsInput | number
+  printed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentWhatsApp?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumCommandStatusEnumFieldUpdateOperationsInput | $Enums.CommandStatusEnum
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type CommandUncheckedUpdateManyWithoutWithdrawalInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sequentialId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editionId?: Prisma.StringFieldUpdateOperationsInput | string
   editionCode?: Prisma.IntFieldUpdateOperationsInput | number
   sequence?: Prisma.IntFieldUpdateOperationsInput | number
@@ -960,6 +1173,7 @@ export type CommandSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   sequentialId?: boolean
   orderId?: boolean
+  withdrawalId?: boolean
   editionId?: boolean
   editionCode?: boolean
   sequence?: boolean
@@ -972,7 +1186,8 @@ export type CommandSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  order?: boolean | Prisma.Command$orderArgs<ExtArgs>
+  withdrawal?: boolean | Prisma.Command$withdrawalArgs<ExtArgs>
   edition?: boolean | Prisma.EditionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["command"]>
 
@@ -980,6 +1195,7 @@ export type CommandSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   sequentialId?: boolean
   orderId?: boolean
+  withdrawalId?: boolean
   editionId?: boolean
   editionCode?: boolean
   sequence?: boolean
@@ -992,7 +1208,8 @@ export type CommandSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  order?: boolean | Prisma.Command$orderArgs<ExtArgs>
+  withdrawal?: boolean | Prisma.Command$withdrawalArgs<ExtArgs>
   edition?: boolean | Prisma.EditionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["command"]>
 
@@ -1000,6 +1217,7 @@ export type CommandSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   sequentialId?: boolean
   orderId?: boolean
+  withdrawalId?: boolean
   editionId?: boolean
   editionCode?: boolean
   sequence?: boolean
@@ -1012,7 +1230,8 @@ export type CommandSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  order?: boolean | Prisma.Command$orderArgs<ExtArgs>
+  withdrawal?: boolean | Prisma.Command$withdrawalArgs<ExtArgs>
   edition?: boolean | Prisma.EditionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["command"]>
 
@@ -1020,6 +1239,7 @@ export type CommandSelectScalar = {
   id?: boolean
   sequentialId?: boolean
   orderId?: boolean
+  withdrawalId?: boolean
   editionId?: boolean
   editionCode?: boolean
   sequence?: boolean
@@ -1034,30 +1254,35 @@ export type CommandSelectScalar = {
   deletedAt?: boolean
 }
 
-export type CommandOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sequentialId" | "orderId" | "editionId" | "editionCode" | "sequence" | "printed" | "pdfUrl" | "sentWhatsApp" | "sentAt" | "status" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["command"]>
+export type CommandOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sequentialId" | "orderId" | "withdrawalId" | "editionId" | "editionCode" | "sequence" | "printed" | "pdfUrl" | "sentWhatsApp" | "sentAt" | "status" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["command"]>
 export type CommandInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  order?: boolean | Prisma.Command$orderArgs<ExtArgs>
+  withdrawal?: boolean | Prisma.Command$withdrawalArgs<ExtArgs>
   edition?: boolean | Prisma.EditionDefaultArgs<ExtArgs>
 }
 export type CommandIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  order?: boolean | Prisma.Command$orderArgs<ExtArgs>
+  withdrawal?: boolean | Prisma.Command$withdrawalArgs<ExtArgs>
   edition?: boolean | Prisma.EditionDefaultArgs<ExtArgs>
 }
 export type CommandIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  order?: boolean | Prisma.Command$orderArgs<ExtArgs>
+  withdrawal?: boolean | Prisma.Command$withdrawalArgs<ExtArgs>
   edition?: boolean | Prisma.EditionDefaultArgs<ExtArgs>
 }
 
 export type $CommandPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Command"
   objects: {
-    order: Prisma.$OrderPayload<ExtArgs>
+    order: Prisma.$OrderPayload<ExtArgs> | null
+    withdrawal: Prisma.$WithdrawalPayload<ExtArgs> | null
     edition: Prisma.$EditionPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     sequentialId: string
-    orderId: string
+    orderId: string | null
+    withdrawalId: string | null
     editionId: string
     editionCode: number
     sequence: number
@@ -1464,7 +1689,8 @@ readonly fields: CommandFieldRefs;
  */
 export interface Prisma__CommandClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  order<T extends Prisma.OrderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderDefaultArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  order<T extends Prisma.Command$orderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Command$orderArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  withdrawal<T extends Prisma.Command$withdrawalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Command$withdrawalArgs<ExtArgs>>): Prisma.Prisma__WithdrawalClient<runtime.Types.Result.GetResult<Prisma.$WithdrawalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   edition<T extends Prisma.EditionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EditionDefaultArgs<ExtArgs>>): Prisma.Prisma__EditionClient<runtime.Types.Result.GetResult<Prisma.$EditionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1498,6 +1724,7 @@ export interface CommandFieldRefs {
   readonly id: Prisma.FieldRef<"Command", 'String'>
   readonly sequentialId: Prisma.FieldRef<"Command", 'String'>
   readonly orderId: Prisma.FieldRef<"Command", 'String'>
+  readonly withdrawalId: Prisma.FieldRef<"Command", 'String'>
   readonly editionId: Prisma.FieldRef<"Command", 'String'>
   readonly editionCode: Prisma.FieldRef<"Command", 'Int'>
   readonly sequence: Prisma.FieldRef<"Command", 'Int'>
@@ -1903,6 +2130,44 @@ export type CommandDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Commands to delete.
    */
   limit?: number
+}
+
+/**
+ * Command.order
+ */
+export type Command$orderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Order
+   */
+  select?: Prisma.OrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Order
+   */
+  omit?: Prisma.OrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderInclude<ExtArgs> | null
+  where?: Prisma.OrderWhereInput
+}
+
+/**
+ * Command.withdrawal
+ */
+export type Command$withdrawalArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Withdrawal
+   */
+  select?: Prisma.WithdrawalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Withdrawal
+   */
+  omit?: Prisma.WithdrawalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WithdrawalInclude<ExtArgs> | null
+  where?: Prisma.WithdrawalWhereInput
 }
 
 /**

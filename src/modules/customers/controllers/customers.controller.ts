@@ -37,7 +37,7 @@ export class CustomersController {
     return created;
   }
 
-  @Get(':id')
+  @Get('find/:id')
   async findById(@Param() { id }: IdParamDto) {
     return await this.service.findById(id);
   }

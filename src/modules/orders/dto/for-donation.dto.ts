@@ -12,4 +12,10 @@ export class ForDonationDTO {
     label: 'ID do parceiro',
   })
   partnerId: string;
+  
+  @StringValidator({
+    fieldName: 'observations',
+    label: 'Observações',
+  })
+  observations?: string;
 }

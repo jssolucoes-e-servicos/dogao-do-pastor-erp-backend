@@ -18,10 +18,10 @@ import { DefinePaymetnDTO } from '../dto/define-payment.dto';
 import { ForDeliveryDTO } from '../dto/for-delivery.dto';
 import { ForDonationDTO } from '../dto/for-donation.dto';
 import { InitOrderDto } from '../dto/init-order.dto';
+import { OrderIdOnly } from '../dto/order-id-only.dto';
 import { SendToAnalysisDTO } from '../dto/send-to-analysis.dto';
 import { SyncCustomerDTO } from '../dto/sync-customer.dto';
 import { OrdersService } from '../services/orders.service';
-import { OrderIdOnly } from '../dto/order-id-only.dto';
 
 @Controller('orders')
 export class OrdersController {
@@ -120,5 +120,10 @@ export class OrdersController {
   @Post('change-payment-method')
   async changePaymentMethod(@Body() dto: OrderIdOnly) {
     return this.service.changePaymentMethod(dto.orderId);
+  }
+
+  @Post('downstep')
+  async downstep(@Body() dto: OrderIdOnly) {
+    return this.service.downstep(dto.orderId);
   }
 }

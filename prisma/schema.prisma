@@ -129,6 +129,18 @@ enum DeliveryStopStatusEnum {
   FAILED
 }
 
+enum DonationEntryType {
+  CREDIT
+  DEBIT
+}
+
+enum WithdrawalStatusEnum {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
 //// BASE / AUTH / PERMISSÕES ////
 
 model Contributor {
@@ -428,6 +440,7 @@ model Order {
   payments      Payment[]
   commands      Command[]
   deliveryStops DeliveryStop[]
+  donationsEntries DonationEntry[]
 
   @@index([origin, editionId, status, sellerId])
   @@map("orders")
@@ -558,20 +571,20 @@ model PaymentEvent {
 
 model Command {
   id           String  @id @default(cuid())
-  sequentialId String  @unique // Ex: "2520001"
-  order        Order   @relation(fields: [orderId], references: [id])
-  orderId      String
+  sequentialId String  @unique 
+  order        Order?  @relation(fields: [orderId], references: [id])
+  orderId      String?
+  withdrawal   Withdrawal? @relation(fields: [withdrawalId], references: [id])
+  withdrawalId String?     @unique
   edition      Edition @relation(fields: [editionId], references: [id])
   editionId    String
-
-  editionCode  Int // Ex: 2 (segunda edição)
-  sequence     Int // 1..N
+  editionCode  Int 
+  sequence     Int 
   printed      Boolean           @default(false)
   pdfUrl       String?
   sentWhatsApp Boolean           @default(false)
   sentAt       DateTime?
   status       CommandStatusEnum @default(PENDING)
-
   active    Boolean   @default(true)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -691,6 +704,8 @@ model Partner {
   deletedAt        DateTime?
 
   donations Order[]
+  withdrawals Withdrawal[]
+  donationEntry DonationEntry[]
 
   @@map("partners")
 }
@@ -710,4 +725,56 @@ model OtpVerification {
 
   @@index([userId, code])
   @@map("otp_verifications")
+}
+model DonationEntry {
+  id           String       @id @default(cuid())
+  partner      Partner @relation(fields: [partnerId], references: [id])
+  partnerId String
+  order        Order? @relation(fields: [orderId], references: [id])
+  orderId String?
+  withdrawal   Withdrawal? @relation(fields: [withdrawalId], references: [id])
+  withdrawalId String?
+  quantity     Int          // Positivo para CREDIT, Negativo para DEBIT
+  type         DonationEntryType
+  active       Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  deletedAt    DateTime?
+
+  @@index([partnerId, type, orderId, withdrawalId])
+  @@map("donation_entries")
+}
+
+model Withdrawal {
+  id          String           @id @default(cuid())
+  partner     Partner @relation(fields: [partnerId], references: [id])
+  partnerId String
+  status      WithdrawalStatusEnum @default(PENDING)
+  scheduledAt DateTime         // Quando o parceiro virá buscar
+  active       Boolean         @default(true)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  deletedAt    DateTime?
+
+  items       WithdrawalItem[]
+  donationLogs DonationEntry[]
+  commands Command[]
+
+  @@index([partnerId, status])
+  @@map("withdrawals")
+}
+
+model WithdrawalItem {
+  id                 String     @id @default(cuid())
+  withdrawal         Withdrawal @relation(fields: [withdrawalId], references: [id])
+  withdrawalId String
+  quantity           Int
+  removedIngredients String[]
+  active             Boolean    @default(true)
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  deletedAt          DateTime?
+
+  @@index([withdrawalId])
+  @@map("withdrawal_items")
 }

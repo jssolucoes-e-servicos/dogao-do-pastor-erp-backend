@@ -91,16 +91,21 @@ export class CustomersService extends BaseCrudService<
   ): Promise<IPaginatedResponse<CustomerEntity>> {
     const { search } = query;
 
+    const baseWhere: any = {
+      firstRegister: false,
+    };
+
     return this.paginate(query, {
       where: search
         ? {
-          OR: [
-            { name: { contains: search, mode: 'insensitive' } },
-            { phone: { contains: search } },
-            { cpf: { contains: search } },
-          ],
-        }
-        : undefined,
+            ...baseWhere,
+            OR: [
+              { name: { contains: search, mode: 'insensitive' } },
+              { phone: { contains: search } },
+              { cpf: { contains: search } },
+            ],
+          }
+        : baseWhere,
       orderBy: { name: 'asc' },
     });
   }

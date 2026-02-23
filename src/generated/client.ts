@@ -167,3 +167,18 @@ export type Partner = Prisma.PartnerModel
  * 
  */
 export type OtpVerification = Prisma.OtpVerificationModel
+/**
+ * Model DonationEntry
+ * 
+ */
+export type DonationEntry = Prisma.DonationEntryModel
+/**
+ * Model Withdrawal
+ * 
+ */
+export type Withdrawal = Prisma.WithdrawalModel
+/**
+ * Model WithdrawalItem
+ * 
+ */
+export type WithdrawalItem = Prisma.WithdrawalItemModel

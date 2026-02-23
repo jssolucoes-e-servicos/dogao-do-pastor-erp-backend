@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PaymentEntity } from 'src/common/entities';
 import { PaymentMethodEnum, PaymentOriginEnum, PaymentProviderEnum, PaymentStatusEnum } from 'src/common/enums';
 import {
@@ -11,6 +11,7 @@ import {
 } from 'src/common/helpers/importer.helper';
 import { IPaginatedResponse } from 'src/common/interfaces';
 import { CreatePaymentDTO } from '../dto/create-payment.dto';
+import { GenerateOrderCardDTO } from '../dto/generate-order-card.dto';
 import { GenerateOrderPixDTO } from '../dto/generate-order-pix.dto';
 import { UpdatePaymentDTO } from '../dto/update-payment.dto';
 import { MpPaymentsService } from './mercadopago/mp-payments.service';
@@ -103,7 +104,6 @@ export class PaymentsService extends BaseCrudService<
         cardToken: null,
       });
     }
-    console.log(paymentExists);
 
     const pix = await this.mpPaymentsService.processPixPayment(
       {
@@ -114,8 +114,6 @@ export class PaymentsService extends BaseCrudService<
       order.id,
       order.totalValue,
     );
-
-    console.log(pix);
 
     const paymentPayload = {
       orderId: dto.orderId,
@@ -128,6 +126,73 @@ export class PaymentsService extends BaseCrudService<
       pixQrcode: pix.payment.pix?.qrCodeBase64,
       pixCopyPaste: pix.payment.pix?.qrCode,
       rawPayload: JSON.stringify(pix),
+    };
+
+    if (paymentExists) {
+      await super.update(paymentExists.id, paymentPayload);
+    } else {
+      await super.create(paymentPayload);
+    }
+    const paymentResponse = await this.findByOrder(dto.orderId);
+    console.log(paymentResponse);
+    return paymentResponse;
+  }
+
+  async CreateOrderCard(dto: GenerateOrderCardDTO): Promise<PaymentEntity> {
+    if (!dto.token) {
+      throw new BadRequestException('Token do cartão não fornecido');
+    }
+
+    console.log('iniciando api pagamento');
+    const order = await this.prisma.order.findUnique({
+      where: {
+        id: dto.orderId,
+      },
+      include: {
+        customer: true,
+      },
+    });
+
+    if (!order) {
+      throw new NotFoundException('Pedido não encontrado!');
+    }
+
+    const paymentExists = await this.findByOrder(dto.orderId);
+    if (paymentExists) {
+      if (paymentExists.method === PaymentMethodEnum.CARD) {
+        return paymentExists;
+      }
+      await super.update(dto.orderId, {
+        pixCopyPaste: null,
+        pixQrcode: null,
+        providerPaymentId: null,
+        paymentUrl: null,
+        rawPayload: null,
+        status: PaymentStatusEnum.PENDING,
+        cardToken: null,
+      });
+    }
+
+    const card = await this.mpPaymentsService.processCardPayment(
+      dto,
+      order.customer,
+      order.totalValue,
+    );
+
+    console.log(card);
+
+    const paymentPayload = {
+      orderId: dto.orderId,
+      origin: PaymentOriginEnum.ORDER,
+      value: order.totalValue,
+      status: PaymentStatusEnum.PENDING,
+      provider: PaymentProviderEnum.MERCADOPAGO,
+      providerPaymentId: card.payment.id,
+      method: PaymentMethodEnum.CARD,
+      pixQrcode: null,
+      pixCopyPaste: null,
+      rawPayload: JSON.stringify(card),
+      cardToken: dto.token,
     };
 
     if (paymentExists) {

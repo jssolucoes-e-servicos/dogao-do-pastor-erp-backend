@@ -162,3 +162,21 @@ export const DeliveryStopStatusEnum = {
 } as const
 
 export type DeliveryStopStatusEnum = (typeof DeliveryStopStatusEnum)[keyof typeof DeliveryStopStatusEnum]
+
+
+export const DonationEntryType = {
+  CREDIT: 'CREDIT',
+  DEBIT: 'DEBIT'
+} as const
+
+export type DonationEntryType = (typeof DonationEntryType)[keyof typeof DonationEntryType]
+
+
+export const WithdrawalStatusEnum = {
+  PENDING: 'PENDING',
+  CONFIRMED: 'CONFIRMED',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type WithdrawalStatusEnum = (typeof WithdrawalStatusEnum)[keyof typeof WithdrawalStatusEnum]

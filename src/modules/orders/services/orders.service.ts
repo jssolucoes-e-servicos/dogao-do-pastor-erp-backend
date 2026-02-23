@@ -54,6 +54,16 @@ export class OrdersService extends BaseCrudService<
     [SiteOrderStepEnum.DELIVERY]: SiteOrderStepEnum.PAYMENT,
   };
 
+  private readonly STEP_DOWNFLOW: Partial<
+    Record<SiteOrderStepEnum, SiteOrderStepEnum>
+  > = {
+    [SiteOrderStepEnum.ORDER]: SiteOrderStepEnum.CUSTOMER,
+    [SiteOrderStepEnum.DELIVERY]: SiteOrderStepEnum.ORDER,
+    [SiteOrderStepEnum.PAYMENT]: SiteOrderStepEnum.DELIVERY,
+    [SiteOrderStepEnum.PIX]: SiteOrderStepEnum.PAYMENT,
+    [SiteOrderStepEnum.CARD]: SiteOrderStepEnum.PAYMENT,
+  };
+
   private readonly STEP_PAYMENT_FLOW: Partial<
   Record<PaymentMethodEnum, SiteOrderStepEnum>
   > = {
@@ -216,6 +226,27 @@ export class OrdersService extends BaseCrudService<
     return this.findById(orderId);
   }
 
+  async downstep(orderId: string): Promise<OrderEntity> {
+    const orderOr = await this.model.findUnique({
+      where: { id: orderId },
+      select: { siteStep: true },
+    });
+
+    if (!orderOr) {
+      throw new NotFoundException('Pedido não encontrado');
+    }
+    const actualStep = orderOr.siteStep as unknown as SiteOrderStepEnum;
+    // Se existir no mapa, pega o próximo, senão mantém o atual
+    const newStep = this.STEP_DOWNFLOW[actualStep] || actualStep;
+    if (newStep !== actualStep) {
+      await this.model.update({
+        where: { id: orderId },
+        data: { siteStep: newStep },
+      });
+    }
+    return this.findById(orderId);
+  }
+
   async definePayment(dto: DefinePaymetnDTO): Promise<OrderEntity> {
     const order = await this.model.findUnique({
       where: {
@@ -259,24 +290,40 @@ export class OrdersService extends BaseCrudService<
     const order = await this.model.findUnique({
       where: { id: dto.orderId },
     });
+
     if (!order) {
       throw new NotFoundException('Pedido não encontrado');
     }
 
-    const partner = await this.prisma.partner.findUnique({
-      where: { id: dto.partnerId, approved: true, active: true },
-    });
-    if (!partner) {
-      throw new NotFoundException('Parceiro não identificado');
+    let finalPartnerId: string | null = null;
+
+    if (dto.partnerId !== 'IVC_INTERNAL') {
+      const partner = await this.prisma.partner.findUnique({
+        where: { id: dto.partnerId, approved: true, active: true },
+      });
+
+      if (!partner) {
+        throw new NotFoundException('Parceiro não identificado ou inativo');
+      }
+
+      finalPartnerId = partner.id;
+    }
+
+    // LÓGICA DE PRESERVAÇÃO DAS OBSERVAÇÕES
+    let updatedObservations = order.observations || '';
+    if (dto.observations) {
+      const separator = updatedObservations.length > 0 ? '\n\n' : '';
+      updatedObservations = `${updatedObservations}${separator}${dto.observations}`;
     }
 
     await this.model.update({
       where: { id: dto.orderId },
       data: {
-        partnerId: dto.partnerId,
+        partnerId: finalPartnerId,
         deliveryOption: DeliveryOptionEnum.DONATE,
         status: OrderStatusEnum.DIGITATION,
         siteStep: SiteOrderStepEnum.PAYMENT,
+        observations: updatedObservations, // Agora com o conteúdo acumulado
       },
     });
     return this.findById(dto.orderId);

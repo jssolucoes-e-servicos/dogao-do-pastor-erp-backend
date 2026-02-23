@@ -1,3 +1,4 @@
+// src/modules/orders-items/dto/order-items-many-create.dto.ts
 import { NestedValidator, NumberValidator, StringValidator } from 'src/common/validators';
 import { ArrayValidator } from 'src/common/validators/array.validator';
 
@@ -12,7 +13,7 @@ class OrderItemDTO {
     fieldName: 'removedIngredients',
     label: 'Ingredientes removidos',
     optional: true,
-    exemple: ['Cebola', 'Ervilha'],
+    exemple: ['Mostarda', 'Batata Palha'],
   })
   removedIngredients?: string[];
 }
