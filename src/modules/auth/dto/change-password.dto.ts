@@ -1,5 +1,6 @@
+// src/modules/auth/dto/change-password.dto.ts
 import { UserTypesEnum } from 'src/common/enums';
-import { CuidValidator, StringValidator } from 'src/common/validators';
+import { StringValidator } from 'src/common/validators';
 
 export class ChangePasswordDto {
   @StringValidator({

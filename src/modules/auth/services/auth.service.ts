@@ -30,18 +30,45 @@ export class AuthService extends BaseService {
     }
 
     const hashedPassword = await bcrypt.hash(data.password, 10);
-
     if (data.type === UserTypesEnum.PARTNER) {
-      await this.prisma.partner.update({ where: { id: data.userId }, data: { password: hashedPassword } });
+      const user = await this.prisma.partner.findUnique({
+        where: { id: data.userId, active: true },
+      });
+      if (!user) {
+        throw new NotFoundException('Parceiro não encontrado');
+      }
+      await this.prisma.partner.update({
+        where: { id: user.id },
+        data: { password: hashedPassword },
+      });
     } else if (data.type === UserTypesEnum.CUSTOMER) {
-      await this.prisma.customer.update({ where: { id: data.userId }, data: { password: hashedPassword } });
+      const user = await this.prisma.customer.findUnique({
+        where: { id: data.userId },
+      });
+      if (!user) {
+        throw new NotFoundException('Cliente não encontrado');
+      }
+      await this.prisma.customer.update({
+        where: { id: user.id },
+        data: { password: hashedPassword },
+      });
     } else if (data.type === UserTypesEnum.CONTRIBUTOR) {
-      await this.prisma.partner.update({ where: { id: data.userId }, data: { password: hashedPassword } });
+      const user = await this.prisma.contributor.findUnique({
+        where: { id: data.userId, active: true },
+      });
+      if (!user) {
+        throw new NotFoundException('Colaborador não encontrado');
+      }
+      console.log(user);
+      await this.prisma.contributor.update({
+        where: { id: user.id },
+        data: { password: hashedPassword },
+      });
     } else {
       throw new NotFoundException('Tipo de usuário inválido.');
     }
 
-    await this.prisma.otpVerification.delete({ where: { id: data.token } });
+    await this.prisma.otpVerification.delete({ where: { id: validToken.id } });
 
     return { success: true };
   }

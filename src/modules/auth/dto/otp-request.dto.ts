@@ -1,5 +1,6 @@
+// src/modules/auth/dto/otp-request.dto.ts
 import { UserTypesEnum } from 'src/common/enums';
-import { CuidValidator, StringValidator } from 'src/common/validators';
+import { StringValidator } from 'src/common/validators';
 
 export class OtpRequestDto {
   @StringValidator({
