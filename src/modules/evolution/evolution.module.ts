@@ -6,6 +6,7 @@ import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { EvolutionController } from './controllers/evolution.controller';
 import { OrdersNotificationsService } from './services/notifications/orders-notifications.service';
 import { PartnersNotificationsService } from './services/notifications/partners-notifications.service';
+import { SellersNotificationsService } from './services/notifications/sellers-notifications.service';
 
 @Module({
   controllers: [EvolutionController],
@@ -15,8 +16,13 @@ import { PartnersNotificationsService } from './services/notifications/partners-
     EvolutionService,
     OrdersNotificationsService,
     PartnersNotificationsService,
+    SellersNotificationsService,
   ],
-  exports: [EvolutionService, OrdersNotificationsService],
+  exports: [
+    EvolutionService,
+    OrdersNotificationsService,
+    SellersNotificationsService,
+  ],
 })
 export class EvolutionModule {
   /* void */

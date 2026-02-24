@@ -7,6 +7,7 @@ import {
 } from 'src/common/helpers/importer.helper';
 import { paginate } from 'src/common/helpers/paginate.helper';
 import { IPaginatedResponse } from 'src/common/interfaces';
+import { LogMethodsType } from '../types/log-methods.type';
 
 export abstract class BaseCrudService<
   Entity,
@@ -21,14 +22,25 @@ export abstract class BaseCrudService<
     count: Function;
   },
 > {
+  protected readonly _name: string = this.constructor.name;
   protected abstract model: Delegate;
+  protected readonly logger: LogMethodsType;
+  protected readonly prisma: PrismaService;
+  protected readonly configs: ConfigService;
 
   constructor(
-    protected readonly configService: ConfigService,
-    protected readonly logger: LoggerService,
-    protected readonly prisma: PrismaService,
+    configService: ConfigService,
+    loggerService: LoggerService,
+    prismaService: PrismaService,
   ) {
-    /* void */
+    this.logger = {
+      log: (message: string) => loggerService.setLog(this._name, message),
+      warn: (message: string) => loggerService.setWarn(this._name, message),
+      error: (message: string) => loggerService.setError(this._name, message),
+    } as LogMethodsType;
+
+    this.prisma = prismaService;
+    this.configs = configService;
   }
 
   /* ======================================================

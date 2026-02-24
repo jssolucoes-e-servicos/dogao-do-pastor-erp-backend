@@ -1,6 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { FormDataRequest } from 'nestjs-form-data';
+import { PaginatedQuery } from 'src/common/decorators';
 import { IdParamDto } from 'src/common/dto/id.param.dto';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { inviteSendWhatsappDTO } from '../dto/invite-sendwhatsapp.dto';
 import { RegisterPartnerDto } from '../dto/register-partner.dto';
 import { UpdatePartnerDto } from '../dto/update-partner.dto';
@@ -48,9 +50,9 @@ export class PartnersController {
     return await this.service.listForOrders();
   }
 
-  @Get('all')
-  async listAll() {
-    return await this.service.listAll();
+  @PaginatedQuery({ route: 'all' })
+  async list(@Query() query: PaginationQueryDto) {
+    return await this.service.list(query);
   }
 
   @Post('invite/generate')

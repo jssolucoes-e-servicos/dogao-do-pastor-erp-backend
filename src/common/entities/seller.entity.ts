@@ -9,7 +9,7 @@ import {
 export class SellerEntity {
   id: string;
   name: string;
-  cell: CellEntity;
+  cell?: CellEntity;
   cellId: string;
   contributor: ContributorEntity;
   contributorId: string;
@@ -18,7 +18,7 @@ export class SellerEntity {
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date | null;
-  tickets: TicketEntity[];
-  orders: OrderEntity[];
-  settlements: SellerSettlementEntity[];
+  tickets?: TicketEntity[];
+  orders?: OrderEntity[];
+  settlements?: SellerSettlementEntity[];
 }

@@ -1,8 +1,9 @@
 // src/modules/sellers/services/sellers.services.ts
 
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { SellerEntity } from 'src/common/entities';
+import { PaymentStatusEnum } from 'src/common/enums';
 import {
   BaseCrudService,
   ConfigService,
@@ -11,6 +12,7 @@ import {
   PrismaService,
 } from 'src/common/helpers/importer.helper';
 import { IPaginatedResponse } from 'src/common/interfaces';
+import { SellersNotificationsService } from '../../evolution/services/notifications/sellers-notifications.service';
 import { CreateSellerDto } from '../dto/create-seller.dto';
 import { UpdateSellerDto } from '../dto/update-seller.dto';
 
@@ -27,6 +29,7 @@ export class SellersService extends BaseCrudService<
     configService: ConfigService,
     loggerService: LoggerService,
     prismaService: PrismaService,
+    private readonly notifications: SellersNotificationsService,
   ) {
     super(configService, loggerService, prismaService);
     this.model = this.prisma.seller;
@@ -69,6 +72,17 @@ export class SellersService extends BaseCrudService<
     query: PaginationQueryDto,
   ): Promise<IPaginatedResponse<SellerEntity>> {
     return this.paginate(query, {
+      include: {
+        contributor: true,
+        cell: {
+          include: {
+            leader: true, // Corrigido: precisa estar dentro de um objeto include
+          },
+        },
+        orders: true,
+        settlements: true,
+        tickets: true,
+      },
       orderBy: {
         contributor: {
           name: 'asc',
@@ -77,8 +91,34 @@ export class SellersService extends BaseCrudService<
     });
   }
 
-  async findById(id: string): Promise<SellerEntity> {
-    return super.findById(id);
+  async findByIdWithStats(id: string): Promise<{
+    seller: SellerEntity;
+    stats: {
+      paidItems: number;
+      pendingItems: number;
+      totalValue: number;
+    };
+  }> {
+    const seller = await super.findById(id, {
+      include: {
+        contributor: true,
+        cell: {
+          include: {
+            leader: true, // Corrigido: precisa estar dentro de um objeto include
+          },
+        },
+        orders: true,
+        settlements: true,
+        tickets: true,
+      },
+    });
+
+    const stats = await this.getSellerStats(id);
+
+    return {
+      seller,
+      stats,
+    };
   }
 
   async findByTag(tag: string): Promise<SellerEntity> {
@@ -106,5 +146,136 @@ export class SellersService extends BaseCrudService<
 
   async restore(id: string): Promise<SellerEntity> {
     return super.restoreData({ id });
+  }
+
+  async sendLinksAll() {
+    const sellers = await this.model.findMany({
+      include: {
+        contributor: true,
+      },
+    });
+
+    this.logger.log(`Iniciando disparo para ${sellers.length} vendedores...`);
+
+    let successCount = 0;
+    let errorCount = 0;
+
+    for (const seller of sellers) {
+      try {
+        // Espera cada um terminar antes de ir para o próximo
+        await this.notifications.welcomeSeller(seller);
+        successCount++;
+        // Opcional: pequeno delay de 500ms para evitar spam filters
+        await new Promise( resolve => setTimeout(resolve, 500) );
+      } catch (error) {
+        errorCount++;
+        this.logger.error(
+          `Falha ao enviar para ${seller.contributor.name}: ${error.message}`,
+        );
+      }
+    }
+
+    return {
+      total: sellers.length,
+      success: successCount,
+      errors: errorCount,
+    };
+  }
+
+  async sendLinksFor(number: string) {
+    let successCount = 0;
+    let errorCount = 0;
+    const seller = await this.model.findUnique({
+      where: {
+        id: number,
+      },
+      include: {
+        contributor: true,
+      },
+    });
+
+    if (!seller) {
+      throw new NotFoundException('Nao encontrado vendedor para este id');
+    }
+    try {
+      this.logger.log(`Iniciando disparo para 1 vendedore...`);
+
+      // Espera cada um terminar antes de ir para o próximo
+      await this.notifications.welcomeSeller(seller);
+      successCount++;
+      // Opcional: pequeno delay de 500ms para evitar spam filters
+      await new Promise( resolve => setTimeout(resolve, 500) );
+    } catch (error) {
+      errorCount++;
+      this.logger.error(
+        `Falha ao enviar para ${seller.contributor.name}: ${error.message}`,
+      );
+    }
+
+    return {
+      total: 1,
+      success: successCount,
+      errors: errorCount,
+    };
+  }
+
+  async getSellerStats(sellerId: string) {
+    // Buscamos os itens agrupados pelo status do pedido pai
+    const stats = await this.prisma.orderItem.groupBy({
+      by: ['orderId'],
+      where: {
+        order: {
+          sellerId: sellerId,
+          active: true,
+        },
+      },
+      _count: {
+        id: true, // Conta quantos dogões (itens)
+      },
+      // Precisamos incluir o status do pedido na lógica,
+      // então faremos um findMany com agregação manual ou queries paralelas para precisão
+    });
+
+    // Query para Dogões Confirmados (Pagos)
+    const paidItems = await this.prisma.orderItem.count({
+      where: {
+        order: {
+          sellerId: sellerId,
+          paymentStatus: PaymentStatusEnum.PAID, // Ajuste para seu Enum de status pago
+          active: true,
+        },
+      },
+    });
+
+    // Query para Dogões Pendentes (Aguardando Pagamento)
+    const pendingItems = await this.prisma.orderItem.count({
+      where: {
+        order: {
+          sellerId: sellerId,
+          paymentStatus: PaymentStatusEnum.PENDING, // Ajuste para seu Enum
+          active: true,
+        },
+      },
+    });
+
+    // Valor total arrecadado (Soma dos unitPrice dos itens pagos)
+    const totalValue = await this.prisma.orderItem.aggregate({
+      where: {
+        order: {
+          sellerId: sellerId,
+          paymentStatus: PaymentStatusEnum.PAID,
+          active: true,
+        },
+      },
+      _sum: {
+        unitPrice: true,
+      },
+    });
+
+    return {
+      paidItems,
+      pendingItems,
+      totalValue: totalValue._sum.unitPrice || 0,
+    };
   }
 }

@@ -10,9 +10,11 @@ import {
   BaseCrudService,
   ConfigService,
   LoggerService,
+  PaginationQueryDto,
   PrismaBase,
   PrismaService,
 } from 'src/common/helpers/importer.helper';
+import { IPaginatedResponse } from 'src/common/interfaces';
 import { EvolutionService } from 'src/modules/evolution/services/evolution.service';
 import { PartnersNotificationsService } from 'src/modules/evolution/services/notifications/partners-notifications.service';
 import { UploadsService } from 'src/modules/uploads/services/uploads.service';
@@ -151,14 +153,21 @@ export class PartnersService extends BaseCrudService<
     return partners;
   }
 
-  async listAll(): Promise<PartnerEntity[]> {
-    const partners = await this.model.findMany({
-      orderBy: {
-        name: 'asc',
-      },
-    });
+  async list(
+    query: PaginationQueryDto,
+  ): Promise<IPaginatedResponse<PartnerEntity>> {
+    const { search } = query;
 
-    return partners;
+    return this.paginate(query, {
+      where: search
+        ? {
+          OR: [
+            { name: { contains: search, mode: 'insensitive' } },
+            ],
+          }
+        : undefined,
+      orderBy: { name: 'asc' },
+    });
   }
 
   async inviteGenerate(): Promise<PartnerEntity> {

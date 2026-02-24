@@ -38,8 +38,8 @@ export class SellersController {
   }
 
   @Get(':id')
-  async findById(@Param() { id }: IdParamDto) {
-    return await this.service.findById(id);
+  async findByIdWithStats(@Param() { id }: IdParamDto) {
+    return await this.service.findByIdWithStats(id);
   }
 
   @Post('by-cell/:id')
@@ -71,4 +71,14 @@ export class SellersController {
   async restore(@Param() { id }: IdParamDto) {
     return await this.service.restore(id);
   }
+
+  /* @Post('send-links-all')
+  async sendLinksAll() {
+    return await this.service.sendLinksAll();
+  } */
+
+  /* @Post('send-links-for')
+  async sendLinksFor(@Param() { id }: IdParamDto) {
+    return await this.service.sendLinksFor(id);
+  } */
 }
