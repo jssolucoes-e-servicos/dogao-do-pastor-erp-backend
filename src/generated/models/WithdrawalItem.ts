@@ -249,6 +249,7 @@ export type WithdrawalItemOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   withdrawal?: Prisma.WithdrawalOrderByWithRelationInput
+  _relevance?: Prisma.WithdrawalItemOrderByRelevanceInput
 }
 
 export type WithdrawalItemWhereUniqueInput = Prisma.AtLeast<{
@@ -380,6 +381,12 @@ export type WithdrawalItemListRelationFilter = {
 
 export type WithdrawalItemOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type WithdrawalItemOrderByRelevanceInput = {
+  fields: Prisma.WithdrawalItemOrderByRelevanceFieldEnum | Prisma.WithdrawalItemOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type WithdrawalItemCountOrderByAggregateInput = {

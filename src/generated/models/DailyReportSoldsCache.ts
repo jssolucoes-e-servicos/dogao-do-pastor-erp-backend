@@ -304,6 +304,7 @@ export type DailyReportSoldsCacheOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  _relevance?: Prisma.DailyReportSoldsCacheOrderByRelevanceInput
 }
 
 export type DailyReportSoldsCacheWhereUniqueInput = Prisma.AtLeast<{
@@ -475,6 +476,12 @@ export type DailyReportSoldsCacheUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type DailyReportSoldsCacheOrderByRelevanceInput = {
+  fields: Prisma.DailyReportSoldsCacheOrderByRelevanceFieldEnum | Prisma.DailyReportSoldsCacheOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type DailyReportSoldsCacheCountOrderByAggregateInput = {

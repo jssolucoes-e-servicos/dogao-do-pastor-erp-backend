@@ -15,7 +15,6 @@ import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { UsernameParamDto } from 'src/common/dto/username.dto';
 import { ContributorEntity } from 'src/common/entities';
 import { IPaginatedResponse } from 'src/common/interfaces';
-import { Contributor } from 'src/generated/client';
 import { CreateContributorDto } from 'src/modules/contributors/dto/create-contributor.dto';
 import { UpdateContributorDto } from 'src/modules/contributors/dto/update-contributor.dto';
 import { ContributorsService } from 'src/modules/contributors/services/contributors.service';
@@ -42,7 +41,7 @@ export class ContributorsController {
     };
   }
 
-  @Get(':id')
+  @Get('show/:id')
   async findById(@Param() { id }: IdParamDto) {
     return await this.service.findById(id);
   }

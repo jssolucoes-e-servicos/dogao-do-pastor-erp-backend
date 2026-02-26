@@ -410,6 +410,7 @@ export type OrderOrderByWithRelationInput = {
   commands?: Prisma.CommandOrderByRelationAggregateInput
   deliveryStops?: Prisma.DeliveryStopOrderByRelationAggregateInput
   donationsEntries?: Prisma.DonationEntryOrderByRelationAggregateInput
+  _relevance?: Prisma.OrderOrderByRelevanceInput
 }
 
 export type OrderWhereUniqueInput = Prisma.AtLeast<{
@@ -726,6 +727,12 @@ export type OrderListRelationFilter = {
 
 export type OrderOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type OrderOrderByRelevanceInput = {
+  fields: Prisma.OrderOrderByRelevanceFieldEnum | Prisma.OrderOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type OrderCountOrderByAggregateInput = {

@@ -336,6 +336,7 @@ export type PaymentOrderByWithRelationInput = {
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   order?: Prisma.OrderOrderByWithRelationInput
   events?: Prisma.PaymentEventOrderByRelationAggregateInput
+  _relevance?: Prisma.PaymentOrderByRelevanceInput
 }
 
 export type PaymentWhereUniqueInput = Prisma.AtLeast<{
@@ -562,6 +563,12 @@ export type PaymentListRelationFilter = {
 
 export type PaymentOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type PaymentOrderByRelevanceInput = {
+  fields: Prisma.PaymentOrderByRelevanceFieldEnum | Prisma.PaymentOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type PaymentCountOrderByAggregateInput = {

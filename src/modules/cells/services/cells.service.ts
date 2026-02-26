@@ -62,17 +62,86 @@ export class CellsService extends BaseCrudService<
   async list(
     query: PaginationQueryDto,
   ): Promise<IPaginatedResponse<CellEntity>> {
+    const { search } = query;
+
+    let where = {};
+
+    if (search) {
+      where = {
+        OR: [
+          { name: { contains: search, mode: 'insensitive' } },
+          {
+            leader: {
+              name: { contains: search, mode: 'insensitive' },
+            },
+          },
+          {
+            network: {
+              name: { contains: search, mode: 'insensitive' },
+            },
+          },
+        ],
+      };
+    }
+
     return this.paginate(query, {
+      where,
+      include: {
+        leader: true,
+        network: {
+          include: {
+            supervisor: true,
+          },
+        },
+        sellers: true,
+      },
       orderBy: { name: 'asc' },
     });
   }
 
+  async listAll(): Promise<object[]> {
+    return await this.model.findMany({
+      include: {
+        leader: true,
+        network: {
+          include: {
+            supervisor: true,
+          },
+        },
+        sellers: true,
+      },
+    });
+  }
+
   async findById(id: string): Promise<CellEntity> {
-    return super.findById(id);
+    return super.findById(id, {
+      include: {
+        leader: true,
+        network: {
+          include: {
+            supervisor: true,
+          },
+        },
+        sellers: true,
+      },
+    });
   }
 
   async fyndByLeaderId(leaderId: string): Promise<CellEntity> {
-    const network = await super.findOne({ leaderId: leaderId });
+    const network = await super.findOne(
+      { leaderId: leaderId },
+      {
+        include: {
+          leader: true,
+          network: {
+            include: {
+              supervisor: true,
+            },
+          },
+          sellers: true,
+        },
+      },
+    );
     return network;
   }
 

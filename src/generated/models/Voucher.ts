@@ -281,6 +281,7 @@ export type VoucherOrderByWithRelationInput = {
   redeemedEdition?: Prisma.EditionOrderByWithRelationInput
   order?: Prisma.OrderOrderByWithRelationInput
   orderItem?: Prisma.OrderItemOrderByWithRelationInput
+  _relevance?: Prisma.VoucherOrderByRelevanceInput
 }
 
 export type VoucherWhereUniqueInput = Prisma.AtLeast<{
@@ -470,6 +471,12 @@ export type VoucherListRelationFilter = {
 
 export type VoucherOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type VoucherOrderByRelevanceInput = {
+  fields: Prisma.VoucherOrderByRelevanceFieldEnum | Prisma.VoucherOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type VoucherCountOrderByAggregateInput = {

@@ -158,14 +158,22 @@ export class PartnersService extends BaseCrudService<
   ): Promise<IPaginatedResponse<PartnerEntity>> {
     const { search } = query;
 
+    let where = {};
+
+    if (search) {
+      where = {
+        OR: [
+          { name: { contains: search, mode: 'insensitive' } },
+          { cnpj: { contains: search } },
+          { phone: { contains: search } },
+          { responsibleName: { contains: search, mode: 'insensitive' } },
+          { responsiblePhone: { contains: search } },
+        ],
+      };
+    }
+
     return this.paginate(query, {
-      where: search
-        ? {
-          OR: [
-            { name: { contains: search, mode: 'insensitive' } },
-            ],
-          }
-        : undefined,
+      where,
       orderBy: { name: 'asc' },
     });
   }

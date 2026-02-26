@@ -226,6 +226,7 @@ export type DeliveryPersonOrderByWithRelationInput = {
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   contributor?: Prisma.ContributorOrderByWithRelationInput
   routes?: Prisma.DeliveryRouteOrderByRelationAggregateInput
+  _relevance?: Prisma.DeliveryPersonOrderByRelevanceInput
 }
 
 export type DeliveryPersonWhereUniqueInput = Prisma.AtLeast<{
@@ -370,6 +371,12 @@ export type DeliveryPersonListRelationFilter = {
 
 export type DeliveryPersonOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type DeliveryPersonOrderByRelevanceInput = {
+  fields: Prisma.DeliveryPersonOrderByRelevanceFieldEnum | Prisma.DeliveryPersonOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type DeliveryPersonCountOrderByAggregateInput = {

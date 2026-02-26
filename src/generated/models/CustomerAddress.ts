@@ -266,6 +266,7 @@ export type CustomerAddressOrderByWithRelationInput = {
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   customer?: Prisma.CustomerOrderByWithRelationInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
+  _relevance?: Prisma.CustomerAddressOrderByRelevanceInput
 }
 
 export type CustomerAddressWhereUniqueInput = Prisma.AtLeast<{
@@ -450,6 +451,12 @@ export type CustomerAddressListRelationFilter = {
 
 export type CustomerAddressOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type CustomerAddressOrderByRelevanceInput = {
+  fields: Prisma.CustomerAddressOrderByRelevanceFieldEnum | Prisma.CustomerAddressOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type CustomerAddressCountOrderByAggregateInput = {

@@ -247,6 +247,7 @@ export type ContributorOrderByWithRelationInput = {
   deliveryPersons?: Prisma.DeliveryPersonOrderByRelationAggregateInput
   userRoles?: Prisma.UserRoleOrderByRelationAggregateInput
   permissions?: Prisma.PermissionOrderByRelationAggregateInput
+  _relevance?: Prisma.ContributorOrderByRelevanceInput
 }
 
 export type ContributorWhereUniqueInput = Prisma.AtLeast<{
@@ -416,6 +417,12 @@ export type ContributorUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type ContributorOrderByRelevanceInput = {
+  fields: Prisma.ContributorOrderByRelevanceFieldEnum | Prisma.ContributorOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type ContributorCountOrderByAggregateInput = {

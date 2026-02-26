@@ -70,17 +70,63 @@ export class CellsNetworksService extends BaseCrudService<
   async list(
     query: PaginationQueryDto,
   ): Promise<IPaginatedResponse<CellNetworkEntity>> {
+    const { search } = query;
+
+    let where = {};
+
+    if (search) {
+      where = {
+        OR: [
+          { name: { contains: search, mode: 'insensitive' } },
+          {
+            supervisor: {
+              name: { contains: search, mode: 'insensitive' },
+            },
+          },
+        ],
+      };
+    }
     return this.paginate(query, {
+      where,
+      include: {
+        cells: {
+          include: {
+            leader: true,
+          },
+        },
+        supervisor: true,
+      },
       orderBy: { name: 'asc' },
     });
   }
 
   async findById(id: string): Promise<CellNetworkEntity> {
-    return super.findById(id);
+    return super.findById(id, {
+      include: {
+        cells: {
+          include: {
+            leader: true,
+          },
+        },
+        supervisor: true,
+      },
+    });
   }
 
   async fyndBySupervisorId(supervisorId: string): Promise<CellNetworkEntity> {
-    const network = await super.findOne({ supervisorId: supervisorId });
+    const network = await super.findOne(
+      { supervisorId: supervisorId },
+      {
+        include: {
+          cells: {
+            include: {
+              leader: true,
+            },
+          },
+          supervisor: true,
+        },
+      },
+    );
     return network;
   }
 

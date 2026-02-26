@@ -1,4 +1,4 @@
-export enum CommandStatusEnum {
+/* export enum CommandStatusEnum {
   PENDING = 'PENDING',
   IN_PRODUCTION = 'IN_PRODUCTION',
   PRODUCED = 'PRODUCED',
@@ -6,4 +6,16 @@ export enum CommandStatusEnum {
   QUEUED_FOR_DELIVERY = 'QUEUED_FOR_DELIVERY',
   OUT_FOR_DELIVERY = 'OUT_FOR_DELIVERY',
   DELIVERED = 'DELIVERED',
-}
+} */
+export const CommandStatusEnum = {
+  PENDING: 'PENDING',
+  IN_PRODUCTION: 'IN_PRODUCTION',
+  PRODUCED: 'PRODUCED',
+  EXPEDITION: 'EXPEDITION',
+  QUEUED_FOR_DELIVERY: 'QUEUED_FOR_DELIVERY',
+  OUT_FOR_DELIVERY: 'OUT_FOR_DELIVERY',
+  DELIVERED: 'DELIVERED',
+} as const;
+
+export type CommandStatusEnum =
+  (typeof CommandStatusEnum)[keyof typeof CommandStatusEnum];

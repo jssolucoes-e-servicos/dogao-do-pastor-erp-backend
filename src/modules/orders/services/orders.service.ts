@@ -18,6 +18,7 @@ import {
 } from 'src/common/helpers/importer.helper';
 import { IPaginatedResponse } from 'src/common/interfaces';
 import { CustomersService } from 'src/modules/customers/services/customers.service';
+import { OrdersNotificationsService } from 'src/modules/evolution/services/notifications/orders-notifications.service';
 import { SellersService } from 'src/modules/sellers/services/sellers.service';
 import { DefinePaymetnDTO } from '../dto/define-payment.dto';
 import { ForDeliveryDTO } from '../dto/for-delivery.dto';
@@ -41,6 +42,7 @@ export class OrdersService extends BaseCrudService<
     prismaService: PrismaService,
     private readonly customersService: CustomersService,
     private readonly sellersService: SellersService,
+    private readonly notifications: OrdersNotificationsService,
   ) {
     super(configService, loggerService, prismaService);
     this.model = this.prisma.order;
@@ -156,10 +158,56 @@ export class OrdersService extends BaseCrudService<
   async list(
     query: PaginationQueryDto,
   ): Promise<IPaginatedResponse<OrderEntity>> {
+    const { search } = query;
+
+    let where = {};
+
+    const activeEdition = await getActiveEdition(this.prisma);
+    if (!activeEdition) {
+      throw new NotFoundException('Sem edição ativa');
+    }
+
+    if (search) {
+      where = {
+        editionId: activeEdition.id,
+        OR: [
+          {
+            customerName: { contains: search, mode: 'insensitive' },
+          },
+          {
+            customerCPF: { contains: search },
+          },
+          {
+            customerPhone: { contains: search },
+          },
+          {
+            customer: {
+              name: { contains: search, mode: 'insensitive' },
+            },
+          },
+          {
+            customer: {
+              cpf: { contains: search },
+            },
+          },
+          {
+            customer: {
+              phone: { contains: search },
+            },
+          },
+        ],
+      };
+    }
+
     return this.paginate(query, {
+      where,
       include: {
         customer: true,
-        seller: true,
+        seller: {
+          include: {
+            contributor: true,
+          },
+        },
         items: true,
         commands: true,
         deliveryStops: true,
@@ -392,5 +440,33 @@ export class OrdersService extends BaseCrudService<
       siteStep: SiteOrderStepEnum.PAYMENT,
     });
     return this.findById(id);
+  }
+
+  async sendPaymentReceive(id: string): Promise<boolean> {
+    const order = await this.model.findUnique({
+      where: { id },
+      include: {
+        items: true,
+        edition: true,
+        customer: true,
+        seller: {
+          include: {
+            contributor: true,
+          },
+        },
+      },
+    });
+    if (!order) {
+      throw new NotFoundException('Pedido não encontrado');
+    }
+    await this.notifications.paymentReceived(
+      order,
+      order.customerPhone,
+      order.customerName,
+      order.items?.length,
+      order.totalValue,
+      order.paymentType,
+    );
+    return true;
   }
 }

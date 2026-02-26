@@ -104,17 +104,67 @@ export class ContributorsService extends BaseCrudService<
   async list(
     query: PaginationQueryDto,
   ): Promise<IPaginatedResponse<ContributorEntity>> {
+    const { search } = query;
+    const where = search
+      ? {
+          OR: [
+            { name: { contains: search, mode: 'insensitive' } },
+            { username: { contains: search, mode: 'insensitive' } },
+            { phone: { contains: search } },
+            {
+              cells: {
+                some: {
+                  name: { contains: search, mode: 'insensitive' },
+                },
+              },
+            },
+            {
+              cellNetworks: {
+                some: {
+                  name: { contains: search, mode: 'insensitive' },
+                },
+              },
+            },
+          ],
+        }
+      : {};
+
     return this.paginate(query, {
-      orderBy: { createdAt: 'desc' },
+      where,
+      include: {
+        cells: true,
+        cellNetworks: true,
+        deliveryPersons: true,
+      },
+      orderBy: { name: 'asc' },
     });
   }
 
   async findById(id: string): Promise<ContributorEntity> {
-    return super.findById(id);
+    return super.findById(id, {
+      include: {
+        cells: true,
+        cellNetworks: true,
+        deliveryPersons: true,
+      },
+    });
   }
 
   async findByUsername(username: string): Promise<ContributorEntity> {
-    const contributor = await super.findOne({ username: username });
+    const contributor = await super.findOne(
+      {
+        username: username,
+      },
+      {
+        include: {
+          cells: true,
+          cellNetworks: true,
+          deliveryPersons: true,
+          userRoles: true,
+          permissions: true,
+        },
+      },
+    );
     return contributor;
   }
 

@@ -5,14 +5,14 @@ import { CellNetworkEntity, ContributorEntity, SellerEntity } from '.';
 export class CellEntity {
   id: string;
   name: string;
-  network: CellNetworkEntity;
+  network?: CellNetworkEntity;
   networkId: string;
-  leader: ContributorEntity;
+  leader?: ContributorEntity;
   leaderId?: string;
   active: boolean;
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date;
 
-  sellers: SellerEntity[];
+  sellers?: SellerEntity[];
 }

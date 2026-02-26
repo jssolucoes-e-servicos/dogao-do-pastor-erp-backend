@@ -221,6 +221,7 @@ export type CellNetworkOrderByWithRelationInput = {
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   supervisor?: Prisma.ContributorOrderByWithRelationInput
   cells?: Prisma.CellOrderByRelationAggregateInput
+  _relevance?: Prisma.CellNetworkOrderByRelevanceInput
 }
 
 export type CellNetworkWhereUniqueInput = Prisma.AtLeast<{
@@ -355,6 +356,12 @@ export type CellNetworkListRelationFilter = {
 
 export type CellNetworkOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type CellNetworkOrderByRelevanceInput = {
+  fields: Prisma.CellNetworkOrderByRelevanceFieldEnum | Prisma.CellNetworkOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type CellNetworkCountOrderByAggregateInput = {

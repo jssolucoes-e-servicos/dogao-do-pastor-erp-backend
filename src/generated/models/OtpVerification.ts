@@ -244,6 +244,7 @@ export type OtpVerificationOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  _relevance?: Prisma.OtpVerificationOrderByRelevanceInput
 }
 
 export type OtpVerificationWhereUniqueInput = Prisma.AtLeast<{
@@ -393,6 +394,12 @@ export type OtpVerificationUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type OtpVerificationOrderByRelevanceInput = {
+  fields: Prisma.OtpVerificationOrderByRelevanceFieldEnum | Prisma.OtpVerificationOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type OtpVerificationCountOrderByAggregateInput = {

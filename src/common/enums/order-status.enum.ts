@@ -1,4 +1,4 @@
-export enum OrderStatusEnum {
+/* export enum OrderStatusEnum {
   DIGITATION = 'DIGITATION',
   PENDING_PAYMENT = 'PENDING_PAYMENT',
   PAID = 'PAID', // Pagamento aprovado
@@ -10,3 +10,20 @@ export enum OrderStatusEnum {
   CANCELLED = 'CANCELLED', // Cancelado
   REJECTED = 'REJECTED', // Rejeitado (não pago ou falha)
 }
+ */
+
+export const OrderStatusEnum = {
+  DIGITATION: 'DIGITATION',
+  PENDING_PAYMENT: 'PENDING_PAYMENT',
+  PAID: 'PAID',
+  QUEUE: 'QUEUE',
+  PRODUCTION: 'PRODUCTION',
+  EXPEDITION: 'EXPEDITION',
+  DELIVERING: 'DELIVERING',
+  DELIVERED: 'DELIVERED',
+  CANCELLED: 'CANCELLED',
+  REJECTED: 'REJECTED',
+} as const;
+
+export type OrderStatusEnum =
+  (typeof OrderStatusEnum)[keyof typeof OrderStatusEnum];

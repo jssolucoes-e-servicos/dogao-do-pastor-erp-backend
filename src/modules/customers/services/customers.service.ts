@@ -91,27 +91,45 @@ export class CustomersService extends BaseCrudService<
   ): Promise<IPaginatedResponse<CustomerEntity>> {
     const { search } = query;
 
-    const baseWhere: any = {
+    const baseWhere = {
       firstRegister: false,
     };
 
+    let where = {};
+
+    if (search) {
+      where = {
+        ...baseWhere,
+        OR: [
+          { name: { contains: search, mode: 'insensitive' } },
+          { phone: { contains: search } },
+          { cpf: { contains: search } },
+        ],
+      };
+    } else {
+      where = {
+        ...baseWhere,
+      };
+    }
+
     return this.paginate(query, {
-      where: search
-        ? {
-            ...baseWhere,
-            OR: [
-              { name: { contains: search, mode: 'insensitive' } },
-              { phone: { contains: search } },
-              { cpf: { contains: search } },
-            ],
-          }
-        : baseWhere,
+      where,
       orderBy: { name: 'asc' },
     });
   }
 
   async findById(id: string): Promise<CustomerEntity> {
-    return super.findById(id);
+    return super.findById(id, {
+      include: {
+        addresses: true,
+        orders: {
+          include: {
+            seller: true,
+            items: true,
+          },
+        },
+      },
+    });
   }
 
   async findByCPF(data: FindCpfCustomerDto): Promise<CustomerEntity> {
@@ -120,9 +138,12 @@ export class CustomersService extends BaseCrudService<
   }
 
   async update(id: string, dto: UpdateCustomerDto): Promise<CustomerEntity> {
-    return super.update(id, {
-      firstRegister: false,
-      ...dto,
+    return this.model.update({
+      where: { id: id },
+      data: {
+        firstRegister: false,
+        ...dto,
+      },
     });
   }
 

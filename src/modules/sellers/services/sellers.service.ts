@@ -71,12 +71,29 @@ export class SellersService extends BaseCrudService<
   async list(
     query: PaginationQueryDto,
   ): Promise<IPaginatedResponse<SellerEntity>> {
+    const { search } = query;
+
+    let where = {};
+
+    if (search) {
+      where = {
+        OR: [
+          { name: { contains: search, mode: 'insensitive' } },
+          {
+            contributor: {
+              name: { contains: search, mode: 'insensitive' },
+            },
+          },
+        ],
+      };
+    }
+
     return this.paginate(query, {
       include: {
         contributor: true,
         cell: {
           include: {
-            leader: true, // Corrigido: precisa estar dentro de um objeto include
+            leader: true,
           },
         },
         orders: true,
@@ -182,12 +199,12 @@ export class SellersService extends BaseCrudService<
     };
   }
 
-  async sendLinksFor(number: string) {
+  async sendLinksFor(id: string) {
     let successCount = 0;
     let errorCount = 0;
     const seller = await this.model.findUnique({
       where: {
-        id: number,
+        id: id,
       },
       include: {
         contributor: true,

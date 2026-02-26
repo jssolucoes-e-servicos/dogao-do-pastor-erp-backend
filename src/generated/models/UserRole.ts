@@ -212,6 +212,7 @@ export type UserRoleOrderByWithRelationInput = {
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   contributor?: Prisma.ContributorOrderByWithRelationInput
   role?: Prisma.RoleOrderByWithRelationInput
+  _relevance?: Prisma.UserRoleOrderByRelevanceInput
 }
 
 export type UserRoleWhereUniqueInput = Prisma.AtLeast<{
@@ -332,6 +333,12 @@ export type UserRoleListRelationFilter = {
 
 export type UserRoleOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type UserRoleOrderByRelevanceInput = {
+  fields: Prisma.UserRoleOrderByRelevanceFieldEnum | Prisma.UserRoleOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type UserRoleContributorIdRoleIdCompoundUniqueInput = {

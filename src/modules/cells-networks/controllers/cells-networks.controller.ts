@@ -36,12 +36,12 @@ export class CellsNetworksController {
     return created;
   }
 
-  @Get(':id')
+  @Get('show/:id')
   async findById(@Param() { id }: IdParamDto) {
     return await this.service.findById(id);
   }
 
-  @Post('by-supervisor/:id')
+  @Get('by-supervisor/:id')
   async fyndBySupervisorId(@Param() { id }: IdParamDto) {
     return await this.service.fyndBySupervisorId(id);
   }

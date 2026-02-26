@@ -281,6 +281,7 @@ export type SellerSettlementOrderByWithRelationInput = {
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   edition?: Prisma.EditionOrderByWithRelationInput
   seller?: Prisma.SellerOrderByWithRelationInput
+  _relevance?: Prisma.SellerSettlementOrderByRelevanceInput
 }
 
 export type SellerSettlementWhereUniqueInput = Prisma.AtLeast<{
@@ -432,6 +433,12 @@ export type SellerSettlementListRelationFilter = {
 
 export type SellerSettlementOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type SellerSettlementOrderByRelevanceInput = {
+  fields: Prisma.SellerSettlementOrderByRelevanceFieldEnum | Prisma.SellerSettlementOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type SellerSettlementCountOrderByAggregateInput = {

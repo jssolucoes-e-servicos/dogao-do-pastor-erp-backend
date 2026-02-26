@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -49,6 +50,14 @@ export class CustomersController {
 
   @Put(':id')
   async update(@Param() { id }: IdParamDto, @Body() dto: UpdateCustomerDto) {
+    return await this.service.update(id, dto);
+  }
+
+  @Patch(':id')
+  async updatePatch(
+    @Param() { id }: IdParamDto,
+    @Body() dto: UpdateCustomerDto,
+  ) {
     return await this.service.update(id, dto);
   }
 

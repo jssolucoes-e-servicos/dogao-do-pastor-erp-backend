@@ -62,7 +62,31 @@ export class DeliveryPersonsService extends BaseCrudService<
   async list(
     query: PaginationQueryDto,
   ): Promise<IPaginatedResponse<DeliveryPersonEntity>> {
+    const { search } = query;
+
+    let where = {};
+
+    if (search) {
+      where = {
+        OR: [
+          {
+            contributor: {
+              name: { contains: search, mode: 'insensitive' },
+            },
+          },
+        ],
+      };
+    }
     return this.paginate(query, {
+      where,
+      include: {
+        contributor: true,
+        routes: {
+          include: {
+            stops: true,
+          },
+        },
+      },
       orderBy: {
         contributor: {
           name: 'asc',

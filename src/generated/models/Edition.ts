@@ -334,6 +334,7 @@ export type EditionOrderByWithRelationInput = {
   orders?: Prisma.OrderOrderByRelationAggregateInput
   settlements?: Prisma.SellerSettlementOrderByRelationAggregateInput
   commands?: Prisma.CommandOrderByRelationAggregateInput
+  _relevance?: Prisma.EditionOrderByRelevanceInput
 }
 
 export type EditionWhereUniqueInput = Prisma.AtLeast<{
@@ -555,6 +556,12 @@ export type EditionUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type EditionOrderByRelevanceInput = {
+  fields: Prisma.EditionOrderByRelevanceFieldEnum | Prisma.EditionOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type EditionCountOrderByAggregateInput = {

@@ -241,6 +241,7 @@ export type TicketOrderByWithRelationInput = {
   edition?: Prisma.EditionOrderByWithRelationInput
   seller?: Prisma.SellerOrderByWithRelationInput
   order?: Prisma.OrderOrderByWithRelationInput
+  _relevance?: Prisma.TicketOrderByRelevanceInput
 }
 
 export type TicketWhereUniqueInput = Prisma.AtLeast<{
@@ -390,6 +391,12 @@ export type TicketListRelationFilter = {
 
 export type TicketOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type TicketOrderByRelevanceInput = {
+  fields: Prisma.TicketOrderByRelevanceFieldEnum | Prisma.TicketOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type TicketCountOrderByAggregateInput = {

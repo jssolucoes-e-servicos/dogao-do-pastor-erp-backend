@@ -333,6 +333,7 @@ export type CommandOrderByWithRelationInput = {
   order?: Prisma.OrderOrderByWithRelationInput
   withdrawal?: Prisma.WithdrawalOrderByWithRelationInput
   edition?: Prisma.EditionOrderByWithRelationInput
+  _relevance?: Prisma.CommandOrderByRelevanceInput
 }
 
 export type CommandWhereUniqueInput = Prisma.AtLeast<{
@@ -544,6 +545,12 @@ export type CommandListRelationFilter = {
 
 export type CommandOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type CommandOrderByRelevanceInput = {
+  fields: Prisma.CommandOrderByRelevanceFieldEnum | Prisma.CommandOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type CommandCountOrderByAggregateInput = {

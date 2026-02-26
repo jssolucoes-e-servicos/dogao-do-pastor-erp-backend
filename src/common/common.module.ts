@@ -48,8 +48,8 @@ import { PrismaModule } from 'src/modules/prisma/prisma.module';
     ThrottlerModule.forRoot({
       throttlers: [
         {
-          ttl: 60000,
-          limit: 10,
+          ttl: 10000, // Janela de 10 segundos (mais curta é melhor)
+          limit: 50, // 50 requisições a cada 10 segundos
         },
       ],
     }),

@@ -269,6 +269,7 @@ export type FileOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  _relevance?: Prisma.FileOrderByRelevanceInput
 }
 
 export type FileWhereUniqueInput = Prisma.AtLeast<{
@@ -410,6 +411,12 @@ export type FileUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type FileOrderByRelevanceInput = {
+  fields: Prisma.FileOrderByRelevanceFieldEnum | Prisma.FileOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type FileCountOrderByAggregateInput = {

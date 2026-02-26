@@ -236,6 +236,7 @@ export type SellerOrderByWithRelationInput = {
   tickets?: Prisma.TicketOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
   settlements?: Prisma.SellerSettlementOrderByRelationAggregateInput
+  _relevance?: Prisma.SellerOrderByRelevanceInput
 }
 
 export type SellerWhereUniqueInput = Prisma.AtLeast<{
@@ -390,6 +391,12 @@ export type SellerListRelationFilter = {
 
 export type SellerOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type SellerOrderByRelevanceInput = {
+  fields: Prisma.SellerOrderByRelevanceFieldEnum | Prisma.SellerOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type SellerCountOrderByAggregateInput = {

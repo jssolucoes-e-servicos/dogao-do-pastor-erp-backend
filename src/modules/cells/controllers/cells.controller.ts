@@ -30,18 +30,23 @@ export class CellsController {
     return this.service.list(query);
   }
 
+  @Get('list-all')
+  async listAll() {
+    return await this.service.listAll();
+  }
+
   @Post()
   async create(@Body() dto: CreateCellDto) {
     const created = await this.service.create(dto);
     return created;
   }
 
-  @Get(':id')
+  @Get('show/:id')
   async findById(@Param() { id }: IdParamDto) {
     return await this.service.findById(id);
   }
 
-  @Post('by-leader/:id')
+  @Get('by-leader/:id')
   async fyndByLeaderId(@Param() { id }: IdParamDto) {
     return await this.service.fyndByLeaderId(id);
   }

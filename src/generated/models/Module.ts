@@ -228,6 +228,7 @@ export type ModuleOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   permissions?: Prisma.PermissionOrderByRelationAggregateInput
+  _relevance?: Prisma.ModuleOrderByRelevanceInput
 }
 
 export type ModuleWhereUniqueInput = Prisma.AtLeast<{
@@ -362,6 +363,12 @@ export type ModuleUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type ModuleOrderByRelevanceInput = {
+  fields: Prisma.ModuleOrderByRelevanceFieldEnum | Prisma.ModuleOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type ModuleCountOrderByAggregateInput = {

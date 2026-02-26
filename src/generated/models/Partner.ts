@@ -376,6 +376,7 @@ export type PartnerOrderByWithRelationInput = {
   donations?: Prisma.OrderOrderByRelationAggregateInput
   withdrawals?: Prisma.WithdrawalOrderByRelationAggregateInput
   donationEntry?: Prisma.DonationEntryOrderByRelationAggregateInput
+  _relevance?: Prisma.PartnerOrderByRelevanceInput
 }
 
 export type PartnerWhereUniqueInput = Prisma.AtLeast<{
@@ -685,6 +686,12 @@ export type PartnerUncheckedUpdateManyInput = {
 export type PartnerNullableScalarRelationFilter = {
   is?: Prisma.PartnerWhereInput | null
   isNot?: Prisma.PartnerWhereInput | null
+}
+
+export type PartnerOrderByRelevanceInput = {
+  fields: Prisma.PartnerOrderByRelevanceFieldEnum | Prisma.PartnerOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type PartnerCountOrderByAggregateInput = {

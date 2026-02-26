@@ -1,6 +1,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { OrderEntity } from 'src/common/entities';
+import { PaymentMethodEnum } from 'src/common/enums';
 import {
   BaseService,
   ConfigService,
@@ -13,6 +14,7 @@ import {
   MW_OrderDeliverySkiped,
   MW_OrderNewSite,
   MW_OrderNextDelivery,
+  MW_OrderPaymentReceive,
   MW_OrderRecoveryAbandoned,
   MW_OrderSendAnalisys,
   validateContact,
@@ -109,6 +111,28 @@ export class OrdersNotificationsService extends BaseService {
       );
       const message = MW_OrderSendAnalisys(order, distance, addressInline);
       await this.evolutionService.sendText(order.customer.phone, message);
+    }
+  }
+
+  async paymentReceived(
+    order: OrderEntity,
+    phone: string,
+    name: string,
+    count: number,
+    totalValue: number,
+    paymentType: PaymentMethodEnum,
+  ) {
+    if (validateContact(order)) {
+      this.logger.log(
+        `Enviando confirmacao de pagamento para ${phone}`,
+      );
+      const message = MW_OrderPaymentReceive(
+        name,
+        count,
+        totalValue,
+        paymentType,
+      );
+      await this.evolutionService.sendText(order.customerPhone, message);
     }
   }
 }

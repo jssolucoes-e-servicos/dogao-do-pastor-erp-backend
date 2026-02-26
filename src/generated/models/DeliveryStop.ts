@@ -308,6 +308,7 @@ export type DeliveryStopOrderByWithRelationInput = {
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   route?: Prisma.DeliveryRouteOrderByWithRelationInput
   order?: Prisma.OrderOrderByWithRelationInput
+  _relevance?: Prisma.DeliveryStopOrderByRelevanceInput
 }
 
 export type DeliveryStopWhereUniqueInput = Prisma.AtLeast<{
@@ -489,6 +490,12 @@ export type DeliveryStopListRelationFilter = {
 
 export type DeliveryStopOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type DeliveryStopOrderByRelevanceInput = {
+  fields: Prisma.DeliveryStopOrderByRelevanceFieldEnum | Prisma.DeliveryStopOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type DeliveryStopCountOrderByAggregateInput = {

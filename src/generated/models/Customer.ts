@@ -268,6 +268,7 @@ export type CustomerOrderByWithRelationInput = {
   vouchers?: Prisma.VoucherOrderByRelationAggregateInput
   addresses?: Prisma.CustomerAddressOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
+  _relevance?: Prisma.CustomerOrderByRelevanceInput
 }
 
 export type CustomerWhereUniqueInput = Prisma.AtLeast<{
@@ -452,6 +453,12 @@ export type CustomerUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type CustomerOrderByRelevanceInput = {
+  fields: Prisma.CustomerOrderByRelevanceFieldEnum | Prisma.CustomerOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type CustomerCountOrderByAggregateInput = {

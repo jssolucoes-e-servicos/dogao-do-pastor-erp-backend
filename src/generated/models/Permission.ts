@@ -268,6 +268,7 @@ export type PermissionOrderByWithRelationInput = {
   contributor?: Prisma.ContributorOrderByWithRelationInput
   role?: Prisma.RoleOrderByWithRelationInput
   module?: Prisma.ModuleOrderByWithRelationInput
+  _relevance?: Prisma.PermissionOrderByRelevanceInput
 }
 
 export type PermissionWhereUniqueInput = Prisma.AtLeast<{
@@ -447,6 +448,12 @@ export type PermissionListRelationFilter = {
 
 export type PermissionOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type PermissionOrderByRelevanceInput = {
+  fields: Prisma.PermissionOrderByRelevanceFieldEnum | Prisma.PermissionOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type PermissionCountOrderByAggregateInput = {

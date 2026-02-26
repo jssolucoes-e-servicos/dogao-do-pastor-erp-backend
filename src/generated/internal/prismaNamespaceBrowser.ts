@@ -648,6 +648,108 @@ export const NullsOrder = {
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
+export const ContributorOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  phone: 'phone',
+  photo: 'photo',
+  username: 'username',
+  password: 'password'
+} as const
+
+export type ContributorOrderByRelevanceFieldEnum = (typeof ContributorOrderByRelevanceFieldEnum)[keyof typeof ContributorOrderByRelevanceFieldEnum]
+
+
+export const RoleOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description'
+} as const
+
+export type RoleOrderByRelevanceFieldEnum = (typeof RoleOrderByRelevanceFieldEnum)[keyof typeof RoleOrderByRelevanceFieldEnum]
+
+
+export const UserRoleOrderByRelevanceFieldEnum = {
+  id: 'id',
+  contributorId: 'contributorId',
+  roleId: 'roleId'
+} as const
+
+export type UserRoleOrderByRelevanceFieldEnum = (typeof UserRoleOrderByRelevanceFieldEnum)[keyof typeof UserRoleOrderByRelevanceFieldEnum]
+
+
+export const ModuleOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  ctrl: 'ctrl',
+  page: 'page'
+} as const
+
+export type ModuleOrderByRelevanceFieldEnum = (typeof ModuleOrderByRelevanceFieldEnum)[keyof typeof ModuleOrderByRelevanceFieldEnum]
+
+
+export const PermissionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  contributorId: 'contributorId',
+  roleId: 'roleId',
+  moduleId: 'moduleId'
+} as const
+
+export type PermissionOrderByRelevanceFieldEnum = (typeof PermissionOrderByRelevanceFieldEnum)[keyof typeof PermissionOrderByRelevanceFieldEnum]
+
+
+export const FileOrderByRelevanceFieldEnum = {
+  id: 'id',
+  path: 'path',
+  fileName: 'fileName',
+  mimeType: 'mimeType',
+  uploadedBy: 'uploadedBy'
+} as const
+
+export type FileOrderByRelevanceFieldEnum = (typeof FileOrderByRelevanceFieldEnum)[keyof typeof FileOrderByRelevanceFieldEnum]
+
+
+export const EditionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code'
+} as const
+
+export type EditionOrderByRelevanceFieldEnum = (typeof EditionOrderByRelevanceFieldEnum)[keyof typeof EditionOrderByRelevanceFieldEnum]
+
+
+export const CellNetworkOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  supervisorId: 'supervisorId',
+  phone: 'phone'
+} as const
+
+export type CellNetworkOrderByRelevanceFieldEnum = (typeof CellNetworkOrderByRelevanceFieldEnum)[keyof typeof CellNetworkOrderByRelevanceFieldEnum]
+
+
+export const CellOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  networkId: 'networkId',
+  leaderId: 'leaderId'
+} as const
+
+export type CellOrderByRelevanceFieldEnum = (typeof CellOrderByRelevanceFieldEnum)[keyof typeof CellOrderByRelevanceFieldEnum]
+
+
+export const SellerOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  cellId: 'cellId',
+  contributorId: 'contributorId',
+  tag: 'tag'
+} as const
+
+export type SellerOrderByRelevanceFieldEnum = (typeof SellerOrderByRelevanceFieldEnum)[keyof typeof SellerOrderByRelevanceFieldEnum]
+
+
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -655,4 +757,228 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const DeliveryPersonOrderByRelevanceFieldEnum = {
+  id: 'id',
+  contributorId: 'contributorId'
+} as const
+
+export type DeliveryPersonOrderByRelevanceFieldEnum = (typeof DeliveryPersonOrderByRelevanceFieldEnum)[keyof typeof DeliveryPersonOrderByRelevanceFieldEnum]
+
+
+export const CustomerOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  cpf: 'cpf',
+  password: 'password'
+} as const
+
+export type CustomerOrderByRelevanceFieldEnum = (typeof CustomerOrderByRelevanceFieldEnum)[keyof typeof CustomerOrderByRelevanceFieldEnum]
+
+
+export const CustomerAddressOrderByRelevanceFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  street: 'street',
+  number: 'number',
+  neighborhood: 'neighborhood',
+  city: 'city',
+  state: 'state',
+  zipCode: 'zipCode',
+  complement: 'complement'
+} as const
+
+export type CustomerAddressOrderByRelevanceFieldEnum = (typeof CustomerAddressOrderByRelevanceFieldEnum)[keyof typeof CustomerAddressOrderByRelevanceFieldEnum]
+
+
+export const OrderOrderByRelevanceFieldEnum = {
+  id: 'id',
+  editionId: 'editionId',
+  customerId: 'customerId',
+  customerName: 'customerName',
+  customerPhone: 'customerPhone',
+  customerCPF: 'customerCPF',
+  sellerId: 'sellerId',
+  sellerTag: 'sellerTag',
+  deliveryTime: 'deliveryTime',
+  partnerId: 'partnerId',
+  addressId: 'addressId',
+  observations: 'observations'
+} as const
+
+export type OrderOrderByRelevanceFieldEnum = (typeof OrderOrderByRelevanceFieldEnum)[keyof typeof OrderOrderByRelevanceFieldEnum]
+
+
+export const OrderItemOrderByRelevanceFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  removedIngredients: 'removedIngredients'
+} as const
+
+export type OrderItemOrderByRelevanceFieldEnum = (typeof OrderItemOrderByRelevanceFieldEnum)[keyof typeof OrderItemOrderByRelevanceFieldEnum]
+
+
+export const TicketOrderByRelevanceFieldEnum = {
+  id: 'id',
+  editionId: 'editionId',
+  number: 'number',
+  sellerId: 'sellerId',
+  orderId: 'orderId'
+} as const
+
+export type TicketOrderByRelevanceFieldEnum = (typeof TicketOrderByRelevanceFieldEnum)[keyof typeof TicketOrderByRelevanceFieldEnum]
+
+
+export const VoucherOrderByRelevanceFieldEnum = {
+  id: 'id',
+  code: 'code',
+  issuedEditionId: 'issuedEditionId',
+  customerId: 'customerId',
+  redeemedEditionId: 'redeemedEditionId',
+  orderId: 'orderId',
+  orderItemId: 'orderItemId'
+} as const
+
+export type VoucherOrderByRelevanceFieldEnum = (typeof VoucherOrderByRelevanceFieldEnum)[keyof typeof VoucherOrderByRelevanceFieldEnum]
+
+
+export const PaymentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  providerPaymentId: 'providerPaymentId',
+  pixQrcode: 'pixQrcode',
+  pixCopyPaste: 'pixCopyPaste',
+  paymentUrl: 'paymentUrl',
+  cardToken: 'cardToken',
+  rawPayload: 'rawPayload'
+} as const
+
+export type PaymentOrderByRelevanceFieldEnum = (typeof PaymentOrderByRelevanceFieldEnum)[keyof typeof PaymentOrderByRelevanceFieldEnum]
+
+
+export const PaymentEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  paymentId: 'paymentId',
+  providerEventId: 'providerEventId',
+  type: 'type'
+} as const
+
+export type PaymentEventOrderByRelevanceFieldEnum = (typeof PaymentEventOrderByRelevanceFieldEnum)[keyof typeof PaymentEventOrderByRelevanceFieldEnum]
+
+
+export const CommandOrderByRelevanceFieldEnum = {
+  id: 'id',
+  sequentialId: 'sequentialId',
+  orderId: 'orderId',
+  withdrawalId: 'withdrawalId',
+  editionId: 'editionId',
+  pdfUrl: 'pdfUrl'
+} as const
+
+export type CommandOrderByRelevanceFieldEnum = (typeof CommandOrderByRelevanceFieldEnum)[keyof typeof CommandOrderByRelevanceFieldEnum]
+
+
+export const DailyReportSoldsCacheOrderByRelevanceFieldEnum = {
+  id: 'id',
+  type: 'type',
+  refId: 'refId',
+  seller: 'seller',
+  cell: 'cell',
+  network: 'network'
+} as const
+
+export type DailyReportSoldsCacheOrderByRelevanceFieldEnum = (typeof DailyReportSoldsCacheOrderByRelevanceFieldEnum)[keyof typeof DailyReportSoldsCacheOrderByRelevanceFieldEnum]
+
+
+export const DeliveryRouteOrderByRelevanceFieldEnum = {
+  id: 'id',
+  deliveryPersonId: 'deliveryPersonId'
+} as const
+
+export type DeliveryRouteOrderByRelevanceFieldEnum = (typeof DeliveryRouteOrderByRelevanceFieldEnum)[keyof typeof DeliveryRouteOrderByRelevanceFieldEnum]
+
+
+export const DeliveryStopOrderByRelevanceFieldEnum = {
+  id: 'id',
+  routeId: 'routeId',
+  orderId: 'orderId'
+} as const
+
+export type DeliveryStopOrderByRelevanceFieldEnum = (typeof DeliveryStopOrderByRelevanceFieldEnum)[keyof typeof DeliveryStopOrderByRelevanceFieldEnum]
+
+
+export const SellerSettlementOrderByRelevanceFieldEnum = {
+  id: 'id',
+  editionId: 'editionId',
+  sellerId: 'sellerId',
+  status: 'status'
+} as const
+
+export type SellerSettlementOrderByRelevanceFieldEnum = (typeof SellerSettlementOrderByRelevanceFieldEnum)[keyof typeof SellerSettlementOrderByRelevanceFieldEnum]
+
+
+export const PartnerOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  cnpj: 'cnpj',
+  phone: 'phone',
+  description: 'description',
+  website: 'website',
+  facebook: 'facebook',
+  instagram: 'instagram',
+  addressInLine: 'addressInLine',
+  street: 'street',
+  number: 'number',
+  neighborhood: 'neighborhood',
+  city: 'city',
+  state: 'state',
+  zipCode: 'zipCode',
+  complement: 'complement',
+  responsibleName: 'responsibleName',
+  responsiblePhone: 'responsiblePhone',
+  logo: 'logo',
+  password: 'password'
+} as const
+
+export type PartnerOrderByRelevanceFieldEnum = (typeof PartnerOrderByRelevanceFieldEnum)[keyof typeof PartnerOrderByRelevanceFieldEnum]
+
+
+export const OtpVerificationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  code: 'code',
+  phone: 'phone'
+} as const
+
+export type OtpVerificationOrderByRelevanceFieldEnum = (typeof OtpVerificationOrderByRelevanceFieldEnum)[keyof typeof OtpVerificationOrderByRelevanceFieldEnum]
+
+
+export const DonationEntryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  partnerId: 'partnerId',
+  orderId: 'orderId',
+  withdrawalId: 'withdrawalId'
+} as const
+
+export type DonationEntryOrderByRelevanceFieldEnum = (typeof DonationEntryOrderByRelevanceFieldEnum)[keyof typeof DonationEntryOrderByRelevanceFieldEnum]
+
+
+export const WithdrawalOrderByRelevanceFieldEnum = {
+  id: 'id',
+  partnerId: 'partnerId'
+} as const
+
+export type WithdrawalOrderByRelevanceFieldEnum = (typeof WithdrawalOrderByRelevanceFieldEnum)[keyof typeof WithdrawalOrderByRelevanceFieldEnum]
+
+
+export const WithdrawalItemOrderByRelevanceFieldEnum = {
+  id: 'id',
+  withdrawalId: 'withdrawalId',
+  removedIngredients: 'removedIngredients'
+} as const
+
+export type WithdrawalItemOrderByRelevanceFieldEnum = (typeof WithdrawalItemOrderByRelevanceFieldEnum)[keyof typeof WithdrawalItemOrderByRelevanceFieldEnum]
 
