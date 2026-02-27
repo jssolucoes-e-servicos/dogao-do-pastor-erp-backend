@@ -114,6 +114,18 @@ export class CustomersService extends BaseCrudService<
 
     return this.paginate(query, {
       where,
+      include: {
+        addresses: true,
+        vouchers: true,
+        orders: {
+          include: {
+            edition: true,
+            seller: true,
+            items: true,
+            payments: true,
+          },
+        },
+      },
       orderBy: { name: 'asc' },
     });
   }
@@ -122,10 +134,13 @@ export class CustomersService extends BaseCrudService<
     return super.findById(id, {
       include: {
         addresses: true,
+        vouchers: true,
         orders: {
           include: {
+            edition: true,
             seller: true,
             items: true,
+            payments: true,
           },
         },
       },
@@ -133,7 +148,23 @@ export class CustomersService extends BaseCrudService<
   }
 
   async findByCPF(data: FindCpfCustomerDto): Promise<CustomerEntity> {
-    const customer = await super.findOne({ cpf: data.cpf });
+    const customer = await super.findOne(
+      { cpf: data.cpf },
+      {
+        include: {
+          addresses: true,
+          vouchers: true,
+          orders: {
+            include: {
+              edition: true,
+              seller: true,
+              items: true,
+              payments: true,
+            },
+          },
+        },
+      },
+    );
     return customer;
   }
 

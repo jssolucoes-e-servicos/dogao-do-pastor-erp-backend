@@ -126,4 +126,9 @@ export class OrdersController {
   async downstep(@Body() dto: OrderIdOnly) {
     return this.service.downstep(dto.orderId);
   }
+
+  @Get('send-wpp-payment-received/:id')
+  async sendPaymentReceive(@Param() { id }: IdParamDto) {
+    return this.service.sendPaymentReceive(id);
+  }
 }

@@ -135,6 +135,9 @@ export class ContributorsService extends BaseCrudService<
         cells: true,
         cellNetworks: true,
         deliveryPersons: true,
+        sellers: true,
+        userRoles: true,
+        permissions: true,
       },
       orderBy: { name: 'asc' },
     });
@@ -146,6 +149,9 @@ export class ContributorsService extends BaseCrudService<
         cells: true,
         cellNetworks: true,
         deliveryPersons: true,
+        sellers: true,
+        userRoles: true,
+        permissions: true,
       },
     });
   }
@@ -160,6 +166,7 @@ export class ContributorsService extends BaseCrudService<
           cells: true,
           cellNetworks: true,
           deliveryPersons: true,
+          sellers: true,
           userRoles: true,
           permissions: true,
         },

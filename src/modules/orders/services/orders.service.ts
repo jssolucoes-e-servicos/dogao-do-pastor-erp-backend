@@ -76,7 +76,7 @@ export class OrdersService extends BaseCrudService<
     [PaymentMethodEnum.MONEY]: SiteOrderStepEnum.PAYMENT,
     [PaymentMethodEnum.POS]: SiteOrderStepEnum.PAYMENT,
     [PaymentMethodEnum.UNDEFINED]: SiteOrderStepEnum.PAYMENT,
-  }
+  };
 
   async initOrder(dto: InitOrderDto) {
     /** 1️⃣ Cliente */
