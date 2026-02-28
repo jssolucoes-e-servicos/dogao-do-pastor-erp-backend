@@ -1,5 +1,6 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import bcrypt from 'bcrypt';
+import { MemoryStoredFile } from 'nestjs-form-data';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { ContributorEntity } from 'src/common/entities';
 import {
@@ -12,6 +13,7 @@ import {
 import { IPaginatedResponse } from 'src/common/interfaces';
 import { CreateContributorDto } from 'src/modules/contributors/dto/create-contributor.dto';
 import { UpdateContributorDto } from 'src/modules/contributors/dto/update-contributor.dto';
+import { UploadsService } from 'src/modules/uploads/services/uploads.service';
 
 @Injectable()
 export class ContributorsService extends BaseCrudService<
@@ -33,6 +35,7 @@ export class ContributorsService extends BaseCrudService<
     configService: ConfigService,
     loggerService: LoggerService,
     prismaService: PrismaService,
+    private readonly uploadsService: UploadsService,
   ) {
     super(configService, loggerService, prismaService);
     this.model = this.prisma.contributor;
@@ -205,5 +208,26 @@ export class ContributorsService extends BaseCrudService<
 
   async restore(id: string): Promise<ContributorEntity> {
     return super.restoreData({ id });
+  }
+
+  async uploadPhoto(id: string, file: MemoryStoredFile) {
+    const contributor = await this.model.findUnique({
+      where: { id: id },
+    });
+    if (!contributor) throw new NotFoundException('Colaborador não encontrado');
+    const [uploadResult] = await this.uploadsService.uploadFiles(
+      [file],
+      'contributors',
+      id,
+    );
+    const updated = await this.model.update({
+      where: { id: id },
+      data: { photo: uploadResult.url },
+    });
+
+    return {
+      logo: updated.photo,
+      message: 'Foto atualizada com sucesso',
+    };
   }
 }

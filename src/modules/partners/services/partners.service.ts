@@ -127,7 +127,11 @@ export class PartnersService extends BaseCrudService<
       where: { id: partnerId },
     });
     if (!partner) throw new NotFoundException('Parceiro não encontrado');
-    const [uploadResult] = await this.uploadsService.uploadFiles([file]);
+    const [uploadResult] = await this.uploadsService.uploadFiles(
+      [file],
+      'partners',
+      partnerId,
+    );
     const updatedPartner = await this.prisma.partner.update({
       where: { id: partnerId },
       data: { logo: uploadResult.url },

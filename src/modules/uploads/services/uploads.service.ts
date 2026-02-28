@@ -29,27 +29,29 @@ export class UploadsService extends BaseService {
    */
   async uploadFiles(
     files: MemoryStoredFile[],
+    model = 'image',
+    id = '',
   ): Promise<IGenericUploadResult[]> {
     const fileArray = Array.isArray(files) ? files : [files];
     this.logger.log(`Recebidos ${fileArray.length} arquivos para upload.`);
     const uploadPromises = fileArray.map(async (file) => {
+      const fileName = `${model}-${id.length > 0 && `${id}`}${file.originalName}`;
       const uploadInfo = await this.minioService.uploadFile(
         file.buffer,
-        file.originalName,
+        fileName,
         file.mimeType,
       );
-
       return {
-        originalName: file.originalName,
+        originalName: fileName,
         path: uploadInfo.path,
         url: this.minioService.getFileUrl(uploadInfo.path),
         mimeType: file.mimeType,
         size: file.size,
+        userId: id,
       } as IGenericUploadResult;
     });
 
     const results = await Promise.all(uploadPromises);
-
     this.logger.log(`Uploads concluídos. Resultados: ${results.length}`);
     return results;
   }

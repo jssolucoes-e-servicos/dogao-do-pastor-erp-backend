@@ -8,6 +8,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
+import { FormDataRequest } from 'nestjs-form-data';
 
 import { PaginatedQuery } from 'src/common/decorators';
 import { IdParamDto } from 'src/common/dto/id.param.dto';
@@ -18,6 +19,7 @@ import { IPaginatedResponse } from 'src/common/interfaces';
 import { CreateContributorDto } from 'src/modules/contributors/dto/create-contributor.dto';
 import { UpdateContributorDto } from 'src/modules/contributors/dto/update-contributor.dto';
 import { ContributorsService } from 'src/modules/contributors/services/contributors.service';
+import { UploadPhotoDto } from '../dto/upload-photo.dto';
 
 @Controller('contributors')
 export class ContributorsController {
@@ -64,5 +66,14 @@ export class ContributorsController {
   @Post('restore/:id')
   async restore(@Param() { id }: IdParamDto) {
     return await this.service.restore(id);
+  }
+
+  @Post(':id/photo')
+  @FormDataRequest() // Necessário para processar multipart/form-data
+  async uploadPhoto(
+    @Param() { id }: IdParamDto,
+    @Body() { photo }: UploadPhotoDto,
+  ) {
+    return await this.service.uploadPhoto(id, photo);
   }
 }
