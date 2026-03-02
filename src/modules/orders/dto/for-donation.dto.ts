@@ -16,6 +16,7 @@ export class ForDonationDTO {
   @StringValidator({
     fieldName: 'observations',
     label: 'Observações',
+    optional: true,
   })
   observations?: string;
 }

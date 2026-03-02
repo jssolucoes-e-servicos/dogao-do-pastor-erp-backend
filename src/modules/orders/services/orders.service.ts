@@ -256,7 +256,7 @@ export class OrdersService extends BaseCrudService<
   async upStep(orderId: string): Promise<OrderEntity> {
     const orderOr = await this.model.findUnique({
       where: { id: orderId },
-      select: { siteStep: true },
+      select: { siteStep: true, customerId: true },
     });
 
     if (!orderOr) {
@@ -271,13 +271,19 @@ export class OrdersService extends BaseCrudService<
         data: { siteStep: newStep },
       });
     }
+    await this.prisma.customer.update({
+      where: { id: orderOr.customerId },
+      data: {
+        firstRegister: false,
+      },
+    });
     return this.findById(orderId);
   }
 
   async downstep(orderId: string): Promise<OrderEntity> {
     const orderOr = await this.model.findUnique({
       where: { id: orderId },
-      select: { siteStep: true },
+      select: { siteStep: true, customerId: true, },
     });
 
     if (!orderOr) {
@@ -292,6 +298,12 @@ export class OrdersService extends BaseCrudService<
         data: { siteStep: newStep },
       });
     }
+    await this.prisma.customer.update({
+      where: { id: orderOr.customerId },
+      data: {
+        firstRegister: false,
+      },
+    });
     return this.findById(orderId);
   }
 
@@ -304,6 +316,12 @@ export class OrdersService extends BaseCrudService<
     if (!order) {
       throw new NotFoundException('Pedido não encontrado!');
     }
+    await this.prisma.customer.update({
+      where: { id: order.customerId },
+      data: {
+        firstRegister: false,
+      },
+    });
     const newStep = this.STEP_PAYMENT_FLOW[dto.method];
     await this.model.update({
       where: { id: dto.orderId },
@@ -322,6 +340,12 @@ export class OrdersService extends BaseCrudService<
     if (!order) {
       throw new NotFoundException('Pedido não encontrado');
     }
+    await this.prisma.customer.update({
+      where: { id: order.customerId },
+      data: {
+        firstRegister: false,
+      },
+    });
     await this.model.update({
       where: { id: dto.orderId },
       data: {
@@ -343,6 +367,13 @@ export class OrdersService extends BaseCrudService<
       throw new NotFoundException('Pedido não encontrado');
     }
 
+    await this.prisma.customer.update({
+      where: { id: order.customerId },
+      data: {
+        firstRegister: false,
+      },
+    });
+
     let finalPartnerId: string | null = null;
 
     if (dto.partnerId !== 'IVC_INTERNAL') {
@@ -359,9 +390,9 @@ export class OrdersService extends BaseCrudService<
 
     // LÓGICA DE PRESERVAÇÃO DAS OBSERVAÇÕES
     let updatedObservations = order.observations || '';
-    if (dto.observations) {
+    if (dto.observations && dto.observations.trim().length > 0) {
       const separator = updatedObservations.length > 0 ? '\n\n' : '';
-      updatedObservations = `${updatedObservations}${separator}${dto.observations}`;
+      updatedObservations = `${updatedObservations}${separator}${dto.observations.trim()}`;
     }
 
     await this.model.update({
@@ -385,6 +416,14 @@ export class OrdersService extends BaseCrudService<
       throw new NotFoundException('Pedido não encontrado');
     }
 
+
+    await this.prisma.customer.update({
+      where: { id: order.customerId },
+      data: {
+        firstRegister: false,
+      },
+    });
+    
     const address = await this.prisma.customerAddress.findUnique({
       where: { id: dto.addressId },
     });
