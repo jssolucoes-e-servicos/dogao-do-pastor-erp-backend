@@ -19,6 +19,7 @@ import { ForDeliveryDTO } from '../dto/for-delivery.dto';
 import { ForDonationDTO } from '../dto/for-donation.dto';
 import { InitOrderDto } from '../dto/init-order.dto';
 import { OrderIdOnly } from '../dto/order-id-only.dto';
+import { ResultForAnalysisDTO } from '../dto/result-for-analysis.dto';
 import { SendToAnalysisDTO } from '../dto/send-to-analysis.dto';
 import { SyncCustomerDTO } from '../dto/sync-customer.dto';
 import { OrdersService } from '../services/orders.service';
@@ -34,6 +35,13 @@ export class OrdersController {
     @Query() query: PaginationQueryDto,
   ): Promise<IPaginatedResponse<OrderEntity>> {
     return this.service.list(query);
+  }
+
+  @PaginatedQuery({ route: 'pending-analysis' })
+  async pendingAnalysis(
+    @Query() query: PaginationQueryDto,
+  ): Promise<IPaginatedResponse<OrderEntity>> {
+    return this.service.pendingAnalysis(query);
   }
 
   @Post('init')
@@ -115,6 +123,11 @@ export class OrdersController {
   @Post('send-to-analysis')
   async sendToAnalysis(@Body() dto: SendToAnalysisDTO) {
     return this.service.setAnalysisStatus(dto);
+  }
+
+  @Post('result-analysis')
+  async resultAnalysis(@Body() dto: ResultForAnalysisDTO) {
+    return this.service.resultAnalysis(dto);
   }
 
   @Post('change-payment-method')

@@ -25,6 +25,7 @@ import { ForDeliveryDTO } from '../dto/for-delivery.dto';
 import { ForDonationDTO } from '../dto/for-donation.dto';
 import { InitOrderDto } from '../dto/init-order.dto';
 import { OrderIdOnly } from '../dto/order-id-only.dto';
+import { ResultForAnalysisDTO } from '../dto/result-for-analysis.dto';
 import { SendToAnalysisDTO } from '../dto/send-to-analysis.dto';
 
 @Injectable()
@@ -67,7 +68,7 @@ export class OrdersService extends BaseCrudService<
   };
 
   private readonly STEP_PAYMENT_FLOW: Partial<
-  Record<PaymentMethodEnum, SiteOrderStepEnum>
+    Record<PaymentMethodEnum, SiteOrderStepEnum>
   > = {
     [PaymentMethodEnum.PIX]: SiteOrderStepEnum.PIX,
     [PaymentMethodEnum.CARD]: SiteOrderStepEnum.CARD,
@@ -253,6 +254,74 @@ export class OrdersService extends BaseCrudService<
     return super.restoreData({ id });
   }
 
+  async pendingAnalysis(
+    query: PaginationQueryDto,
+  ): Promise<IPaginatedResponse<OrderEntity>> {
+    const { search } = query;
+
+    let where = {};
+
+    const activeEdition = await getActiveEdition(this.prisma);
+    if (!activeEdition) {
+      throw new NotFoundException('Sem edição ativa');
+    }
+
+    if (search) {
+      where = {
+        editionId: activeEdition.id,
+        siteStep: SiteOrderStepEnum.ANALYSIS,
+        OR: [
+          {
+            customerName: { contains: search, mode: 'insensitive' },
+          },
+          {
+            customerCPF: { contains: search },
+          },
+          {
+            customerPhone: { contains: search },
+          },
+          {
+            customer: {
+              name: { contains: search, mode: 'insensitive' },
+            },
+          },
+          {
+            customer: {
+              cpf: { contains: search },
+            },
+          },
+          {
+            customer: {
+              phone: { contains: search },
+            },
+          },
+        ],
+      };
+    } else {
+      where = {
+        editionId: activeEdition.id,
+        siteStep: SiteOrderStepEnum.ANALYSIS,
+      };
+    }
+
+    return this.paginate(query, {
+      where,
+      include: {
+        customer: true,
+        seller: {
+          include: {
+            contributor: true,
+          },
+        },
+        items: true,
+        address: true,
+        commands: true,
+        deliveryStops: true,
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+  }
+
   async upStep(orderId: string): Promise<OrderEntity> {
     const orderOr = await this.model.findUnique({
       where: { id: orderId },
@@ -336,6 +405,9 @@ export class OrdersService extends BaseCrudService<
   async setAnalysisStatus(dto: SendToAnalysisDTO): Promise<OrderEntity> {
     const order = await this.model.findUnique({
       where: { id: dto.orderId },
+      include: {
+        customer: true,
+      }
     });
     if (!order) {
       throw new NotFoundException('Pedido não encontrado');
@@ -355,6 +427,49 @@ export class OrdersService extends BaseCrudService<
         siteStep: SiteOrderStepEnum.ANALYSIS,
       },
     });
+    await this.notifications.sendAnalisys(
+      order.id,
+      order.customer?.phone,
+      order.customerName,
+      order.customerCPF,
+      dto.distance.toString(),
+    );
+    return this.findById(dto.orderId);
+  }
+
+  async resultAnalysis(dto: ResultForAnalysisDTO): Promise<OrderEntity> {
+    const order = await this.model.findUnique({
+      where: { id: dto.orderId },
+      include: {
+        customer: true,
+      },
+    });
+    if (!order) {
+      throw new NotFoundException('Pedido não encontrado');
+    }
+    await this.prisma.customer.update({
+      where: { id: order.customerId },
+      data: {
+        firstRegister: false,
+      },
+    });
+    await this.model.update({
+      where: { id: dto.orderId },
+      data: {
+        observations: `${order.observations} \n\n RESPOSTA: ${dto.observations}`,
+        status: dto.approved
+          ? OrderStatusEnum.PENDING_PAYMENT
+          : OrderStatusEnum.DIGITATION,
+        siteStep: dto.approved
+          ? SiteOrderStepEnum.PAYMENT
+          : SiteOrderStepEnum.DELIVERY,
+      },
+    });
+    await this.notifications.responseAnalisys(
+      order.customer.phone,
+      order.id,
+      dto.approved,
+    );
     return this.findById(dto.orderId);
   }
 
@@ -416,14 +531,13 @@ export class OrdersService extends BaseCrudService<
       throw new NotFoundException('Pedido não encontrado');
     }
 
-
     await this.prisma.customer.update({
       where: { id: order.customerId },
       data: {
         firstRegister: false,
       },
     });
-    
+
     const address = await this.prisma.customerAddress.findUnique({
       where: { id: dto.addressId },
     });

@@ -16,6 +16,7 @@ import {
   MW_OrderNextDelivery,
   MW_OrderPaymentReceive,
   MW_OrderRecoveryAbandoned,
+  MW_OrderResponseAnalisys,
   MW_OrderSendAnalisys,
   validateContact,
 } from 'src/common/messages';
@@ -101,16 +102,29 @@ export class OrdersNotificationsService extends BaseService {
   }
 
   async sendAnalisys(
-    order: OrderEntity,
+    orderId: string,
+    phone: string,
+    customerName: string,
+    customerCPF: string,
     distance: string,
-    addressInline: string,
   ) {
-    if (validateContact(order)) {
-      this.logger.log(
-        `Enviando aviso de proxima parada para ${order.customer.phone}`,
+    if (phone) {
+      this.logger.log(`Enviando aviso de nova analise em fila para: ${phone}`);
+      const message = MW_OrderSendAnalisys(
+        orderId,
+        customerName,
+        customerCPF,
+        distance,
       );
-      const message = MW_OrderSendAnalisys(order, distance, addressInline);
-      await this.evolutionService.sendText(order.customer.phone, message);
+      await this.evolutionService.sendText(phone, message);
+    }
+  }
+
+  async responseAnalisys(phone: string, orderId: string, approved: boolean) {
+    if (phone) {
+      this.logger.log(`Enviando resultado de analise para ${phone}`);
+      const message = MW_OrderResponseAnalisys(orderId, approved);
+      await this.evolutionService.sendText(phone, message);
     }
   }
 
