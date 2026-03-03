@@ -7,6 +7,7 @@ import { CellsModule } from './cells/cells.module';
 import { ContributorsModule } from './contributors/contributors.module';
 import { CustomersAddressesModule } from './customers-addresses/customers-addresses.module';
 import { CustomersModule } from './customers/customers.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 import { DeliveryPersonsModule } from './delivery-persons/delivery-persons.module';
 import { EditionsModule } from './editions/editions.module';
 import { OrdersItemsModule } from './orders-items/orders-items.module';
@@ -41,6 +42,7 @@ import { UploadsModule } from './uploads/uploads.module';
     OrdersModule,
     OrdersItemsModule,
     PaymentsModule,
+    DashboardModule,
   ],
   providers: [],
 })
