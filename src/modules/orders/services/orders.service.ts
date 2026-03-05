@@ -6,6 +6,7 @@ import {
   OrderOriginEnum,
   OrderStatusEnum,
   PaymentMethodEnum,
+  PaymentStatusEnum,
   SiteOrderStepEnum,
 } from 'src/common/enums';
 import { getActiveEdition } from 'src/common/helpers/edition-helper';
@@ -322,6 +323,80 @@ export class OrdersService extends BaseCrudService<
     });
   }
 
+  async donationsForAnalysis(
+    query: PaginationQueryDto,
+  ): Promise<IPaginatedResponse<OrderEntity>> {
+    const { search } = query;
+
+    let where = {};
+
+    const activeEdition = await getActiveEdition(this.prisma);
+    if (!activeEdition) {
+      throw new NotFoundException('Sem edição ativa');
+    }
+
+    if (search) {
+      where = {
+        editionId: activeEdition.id,
+        paymentStatus: PaymentStatusEnum.PAID,
+        partnerId: null,
+        deliveryOption: DeliveryOptionEnum.DONATE,
+        OR: [
+          {
+            customerName: { contains: search, mode: 'insensitive' },
+          },
+          {
+            customerCPF: { contains: search },
+          },
+          {
+            customerPhone: { contains: search },
+          },
+          {
+            customer: {
+              name: { contains: search, mode: 'insensitive' },
+            },
+          },
+          {
+            customer: {
+              cpf: { contains: search },
+            },
+          },
+          {
+            customer: {
+              phone: { contains: search },
+            },
+          },
+        ],
+      };
+    } else {
+      where = {
+        editionId: activeEdition.id,
+        paymentStatus: PaymentStatusEnum.PAID,
+        partnerId: null,
+        deliveryOption: DeliveryOptionEnum.DONATE,
+      };
+    }
+
+    return this.paginate(query, {
+      where,
+      include: {
+        customer: true,
+        seller: {
+          include: {
+            contributor: true,
+          },
+        },
+        items: true,
+        address: true,
+        commands: true,
+        deliveryStops: true,
+        payments: true,
+        donationsEntries: true,
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+  }
+
   async upStep(orderId: string): Promise<OrderEntity> {
     const orderOr = await this.model.findUnique({
       where: { id: orderId },
@@ -407,7 +482,7 @@ export class OrdersService extends BaseCrudService<
       where: { id: dto.orderId },
       include: {
         customer: true,
-      }
+      },
     });
     if (!order) {
       throw new NotFoundException('Pedido não encontrado');

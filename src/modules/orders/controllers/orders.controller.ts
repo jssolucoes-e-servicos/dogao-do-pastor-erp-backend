@@ -44,6 +44,13 @@ export class OrdersController {
     return this.service.pendingAnalysis(query);
   }
 
+  @PaginatedQuery({ route: 'donations-analysis' })
+  async donationsForAnalysis(
+    @Query() query: PaginationQueryDto,
+  ): Promise<IPaginatedResponse<OrderEntity>> {
+    return this.service.donationsForAnalysis(query);
+  }
+
   @Post('init')
   async initOrder(@Body() dto: InitOrderDto) {
     return await this.service.initOrder(dto);
