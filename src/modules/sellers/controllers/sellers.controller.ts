@@ -77,7 +77,7 @@ export class SellersController {
     return await this.service.sendLinksAll();
   } */
 
-  @Post('send-link-for/:id')
+  @Post('send-link/:id')
   async sendLinksFor(@Param() { id }: IdParamDto) {
     return await this.service.sendLinksFor(id);
   }
