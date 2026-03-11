@@ -1,0 +1,109 @@
+{
+  "name": "MercadoPago Webhook & Jobs",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "mercadopago-dogao",
+        "options": {}
+      },
+      "id": "webhook-mp-node",
+      "name": "Recebe MP Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        100,
+        200
+      ],
+      "webhookId": "dogao-mp-webhook-uuid"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend-dogao.igrejavivaemcelulas.com.br/v1/payments/webhook",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"data\": {\n     \"id\": \"{{ $json.body.data.id || $json.body.id }}\"\n  }\n}",
+        "options": {}
+      },
+      "id": "repassa-nestjs-node",
+      "name": "Repassa para NestJS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        400,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      },
+      "id": "cron-node",
+      "name": "A cada 5 Minutos (Cron)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend-dogao.igrejavivaemcelulas.com.br/v1/payments/process-pending",
+        "options": {}
+      },
+      "id": "trigger-process-pending-node",
+      "name": "Dispara Varredura no NestJS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        400,
+        450
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Recebe MP Webhook": {
+      "main": [
+        [
+          {
+            "node": "Repassa para NestJS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "A cada 5 Minutos (Cron)": {
+      "main": [
+        [
+          {
+            "node": "Dispara Varredura no NestJS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "bb235a92-124b-481e-8e4d-7b0037f00c73",
+  "id": "mp-flow-01",
+  "meta": {
+    "instanceId": "random-uuid"
+  },
+  "tags": []
+}
