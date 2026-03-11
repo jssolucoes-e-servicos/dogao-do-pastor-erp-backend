@@ -10,6 +10,7 @@ import { CustomersModule } from './customers/customers.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { DeliveryPersonsModule } from './delivery-persons/delivery-persons.module';
 import { EditionsModule } from './editions/editions.module';
+import { N8nModule } from './n8n/n8n.module';
 import { OrdersItemsModule } from './orders-items/orders-items.module';
 import { OrdersModule } from './orders/orders.module';
 import { PartnersModule } from './partners/partners.module';
@@ -28,6 +29,7 @@ import { UploadsModule } from './uploads/uploads.module';
         fileSize: 10 * 1024 * 1024, // 10MB
       },
     }),
+    N8nModule,
     UploadsModule,
     AuthModule,
     EditionsModule,

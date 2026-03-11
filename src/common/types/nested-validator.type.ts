@@ -3,5 +3,6 @@ export type NestedValidatorType = {
   label: string;
   optional?: boolean;
   description?: string;
+  isArray?: boolean;
   dto: any;
 };

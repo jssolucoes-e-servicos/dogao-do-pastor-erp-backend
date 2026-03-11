@@ -18,6 +18,7 @@ import {
   TicketEntity,
   VoucherEntity,
 } from './';
+import { PartnerEntity } from './partner.entity';
 
 export class OrderEntity {
   id: string;
@@ -42,6 +43,8 @@ export class OrderEntity {
   observations?: string | null;
   paymentStatus: PaymentStatusEnum;
   paymentType: PaymentMethodEnum;
+  partner?: PartnerEntity | null;
+  partnerId?: string | null | undefined;
   active: boolean;
   createdAt: Date;
   updatedAt: Date;

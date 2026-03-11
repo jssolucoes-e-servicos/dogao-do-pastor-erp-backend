@@ -1,3 +1,4 @@
+// src/modules/payments/services/payments.service.ts
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PaymentEntity } from 'src/common/entities';
 import { PaymentMethodEnum, PaymentOriginEnum, PaymentProviderEnum, PaymentStatusEnum } from 'src/common/enums';
@@ -14,6 +15,7 @@ import { CreatePaymentDTO } from '../dto/create-payment.dto';
 import { GenerateOrderCardDTO } from '../dto/generate-order-card.dto';
 import { GenerateOrderPixDTO } from '../dto/generate-order-pix.dto';
 import { UpdatePaymentDTO } from '../dto/update-payment.dto';
+import { OrdersNotificationsService } from 'src/modules/evolution/services/notifications/orders-notifications.service';
 import { MpPaymentsService } from './mercadopago/mp-payments.service';
 
 @Injectable()
@@ -30,6 +32,7 @@ export class PaymentsService extends BaseCrudService<
     loggerService: LoggerService,
     prismaService: PrismaService,
     private readonly mpPaymentsService: MpPaymentsService,
+    private readonly ordersNotificationsService: OrdersNotificationsService,
   ) {
     super(configService, loggerService, prismaService);
     this.model = this.prisma.payment;
@@ -133,6 +136,17 @@ export class PaymentsService extends BaseCrudService<
     } else {
       await super.create(paymentPayload);
     }
+
+    try {
+      await this.ordersNotificationsService.pixGenerated(
+        order as any,
+        pix.payment.pix?.qrCode || '',
+        pix.payment.pix?.qrCodeBase64 || '',
+      );
+    } catch (e) {
+      this.logger.error(`Error sending PIX generated notification: ${e}`);
+    }
+
     const paymentResponse = await this.findByOrder(dto.orderId);
     console.log(paymentResponse);
     return paymentResponse;
@@ -158,7 +172,7 @@ export class PaymentsService extends BaseCrudService<
     }
 
     const paymentExists = await this.findByOrder(dto.orderId);
-    if (paymentExists) {
+    if (paymentExists && paymentExists.status === PaymentStatusEnum.PENDING) {
       if (paymentExists.method === PaymentMethodEnum.CARD) {
         return paymentExists;
       }
@@ -200,6 +214,17 @@ export class PaymentsService extends BaseCrudService<
     } else {
       await super.create(paymentPayload);
     }
+
+    try {
+      // Usando uma URL fictícia ou front-end de fallback para o link de pagamento do cartão
+      // No MercadoPago há a init_point ou ticket_url, ou você pode gerar um link do seu próprio front
+      const cardPay: any = card.payment;
+      const paymentLink = cardPay?.point_of_interaction?.transaction_data?.ticket_url || cardPay?.init_point || `https://voce-pagou.com/${card.payment.id}`;
+      await this.ordersNotificationsService.cardGenerated(order as any, paymentLink);
+    } catch (e) {
+      this.logger.error(`Error sending Card generated notification: ${e}`);
+    }
+
     const paymentResponse = await this.findByOrder(dto.orderId);
     console.log(paymentResponse);
     return paymentResponse;

@@ -1,5 +1,5 @@
 import { PaymentStatusEnum } from 'src/common/enums';
-import { IMPPix } from '../payment.interface';
+import { IMPPix } from './payment.interface';
 
 export interface IMPPayment {
   id: string;

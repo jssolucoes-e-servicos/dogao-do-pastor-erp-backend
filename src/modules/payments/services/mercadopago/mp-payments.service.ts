@@ -1,3 +1,4 @@
+// src/modules/payments/services/mercadopago/mp-payments.service.ts
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import MercadoPagoConfig, { Payment } from 'mercadopago';
@@ -9,15 +10,26 @@ import {
 } from 'src/common/helpers/importer.helper';
 import { NumbersHelper } from 'src/common/helpers/number.helper';
 import { StringsHelper } from 'src/common/helpers/strings.helper';
+import {
+  IMercadoPagoPaymentResponse,
+  IMercadopagoPix,
+  IMPPayment,
+  IPaymentResponse,
+} from 'src/common/interfaces';
 import { BaseService } from 'src/common/services/base.service';
 import { GenerateOrderCardDTO } from '../../dto/generate-order-card.dto';
-import { IMercadopagoPix } from '../../interfaces/mercadopago/mercadopago-pix.interface';
-import { IMPPayment, IPaymentResponse } from '../../interfaces/payment.interface';
 
+const mpStatusMap: Record<string, PaymentStatusEnum> = {
+  'approved': PaymentStatusEnum.PAID,
+  'pending': PaymentStatusEnum.PENDING,
+  'in_process': PaymentStatusEnum.PENDING,
+  'rejected': PaymentStatusEnum.FAILED,
+  // ... adicione os outros
+};
 @Injectable()
 export class MpPaymentsService extends BaseService {
   private readonly mpClient: Payment;
-  private readonly mercadoPagoSecretKey = process.env.MERCADOPAGO_SECRET_KEY!;
+  private mercadoPagoSecretKey: string; // = process.env.MERCADOPAGO_SECRET_KEY!;
 
   constructor(
     configService: ConfigService,
@@ -25,7 +37,10 @@ export class MpPaymentsService extends BaseService {
     prismaService: PrismaService,
   ) {
     super(configService, loggerService, prismaService);
-    const accessToken = this.configs.get('MERCADOPAGO_ACCESS_TOKEN')!;
+    const accessToken = this.configs.get('MERCADOPAGO_ACCESS_TOKEN') as string;
+    this.mercadoPagoSecretKey = this.configs.get(
+      'MERCADOPAGO_SECRET_KEY',
+    ) as string;
     const client = new MercadoPagoConfig({
       accessToken: accessToken,
       options: { timeout: 5000 },
@@ -73,7 +88,7 @@ export class MpPaymentsService extends BaseService {
 
       const response: IMPPayment = {
         id: String(payment.id),
-        status: payment.status ?? 'pending',
+        status: mpStatusMap[payment.status!] ?? PaymentStatusEnum.PENDING,
         detail: payment.status_detail ?? '',
         pix,
       };
@@ -125,6 +140,31 @@ export class MpPaymentsService extends BaseService {
       throw new BadRequestException(
         msg || 'Erro ao processar pagamento com cartão',
       );
+    }
+  }
+
+  async getPaymentStatus(
+    paymentId: string,
+  ): Promise<IMercadoPagoPaymentResponse | null> {
+    try {
+      this.logger.log(
+        `Consultando status do pagamento ${paymentId} no Mercado Pago...`,
+      );
+      const response = await this.mpClient.get({ id: paymentId });
+      return response as IMercadoPagoPaymentResponse;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        this.logger.error(
+          `Erro ao consultar pagamento ${paymentId} no Mercado Pago: ${error.message}`,
+        );
+      } else {
+        // Se não for um objeto Error, trata como uma string ou outro tipo
+        this.logger.error(
+          `Erro desconhecido ao consultar pagamento ${paymentId} no Mercado Pago: ${JSON.stringify(error)}`,
+        );
+      }
+      console.error(error);
+      return null;
     }
   }
 }

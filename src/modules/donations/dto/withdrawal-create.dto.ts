@@ -36,6 +36,7 @@ export class WithdrawalCreateDTO {
   @NestedValidator({
     fieldName: 'items',
     label: 'Itens da Retirada',
+    isArray: true,
     dto: WithdrawalItemDTO,
   })
   items: WithdrawalItemDTO[];

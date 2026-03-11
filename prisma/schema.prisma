@@ -431,6 +431,7 @@ model Order {
   observations     String?
 
   active    Boolean   @default(true)
+  paymentReminderSent Boolean @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
@@ -546,27 +547,10 @@ model Payment {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  events PaymentEvent[]
-
   @@index([providerPaymentId, orderId, status, provider])
   @@map("payments")
 }
 
-model PaymentEvent {
-  id              String    @id @default(cuid())
-  payment         Payment   @relation(fields: [paymentId], references: [id])
-  paymentId       String
-  providerEventId String? // id do evento no MP
-  type            String? // tipo do evento
-  rawPayload      Json
-  processedAt     DateTime?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
-
-  @@index([paymentId])
-  @@map("payments_events")
-}
 
 //// COMANDOS / IMPRESSÃO ////
 

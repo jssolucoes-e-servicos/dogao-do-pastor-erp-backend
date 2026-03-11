@@ -28,6 +28,7 @@ export class OrderItemsManyCreateDTO {
   @NestedValidator({
     fieldName: 'orderItems',
     label: 'Itens',
+    isArray: true,
     dto: OrderItemDTO,
   })
   orderItems: OrderItemDTO[];
