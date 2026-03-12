@@ -8,6 +8,7 @@ import {
 } from 'src/common/helpers/importer.helper';
 import { EvolutionModule } from 'src/modules/evolution/evolution.module';
 import { EvolutionService } from 'src/modules/evolution/services/evolution.service';
+import { N8nModule } from 'src/modules/n8n/n8n.module';
 import { AuthController } from './controllers/auth.controller';
 import { AuthOtpService } from './services/auth-otp.service';
 import { AuthPartnerService } from './services/auth-partner.service';
@@ -27,6 +28,7 @@ import { AuthCustomerService } from './services/auth-customer.service';
       }),
     }),
     EvolutionModule,
+    N8nModule,
   ],
   controllers: [AuthController],
   providers: [
@@ -37,7 +39,6 @@ import { AuthCustomerService } from './services/auth-customer.service';
     AuthPartnerService,
     AuthContributorService,
     AuthCustomerService,
-    EvolutionService,
   ],
   exports: [AuthService],
 })

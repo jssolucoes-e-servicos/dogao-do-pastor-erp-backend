@@ -8,12 +8,16 @@ import {
   PrismaService,
 } from 'src/common/helpers/importer.helper';
 import {
+  MW_OrderCardGenerated,
   MW_OrderDelivered,
   MW_OrderDeliveryFailed,
   MW_OrderDeliverySkiped,
   MW_OrderNewSite,
   MW_OrderNextDelivery,
+  MW_OrderPaymentExpired22h,
   MW_OrderPaymentReceive,
+  MW_OrderPaymentReminder6h,
+  MW_OrderPixGenerated,
   MW_OrderRecoveryAbandoned,
   MW_OrderResponseAnalisys,
   MW_OrderSendAnalisys,
@@ -180,16 +184,18 @@ export class OrdersNotificationsService extends BaseService {
     }
   }
 
-  async pixGenerated(order: OrderEntity, pixCopyPaste: string, qrCode: string) {
+  async pixGenerated(order: OrderEntity, pixCopyPaste: string, qrCodeBase64: string) {
     if (validateContact(order)) {
       this.logger.log(`Registrando notificação: PIX Gerado para ${order.customerPhone}`);
+      const message = MW_OrderPixGenerated(order.customerName, order.totalValue, pixCopyPaste);
       await this.n8nService.dispatchEvent('ORDER_PIX_GENERATED', {
         orderId: order.id,
         phone: order.customerPhone,
         customerName: order.customerName,
         totalValue: order.totalValue,
         pixCopyPaste,
-        qrCode,
+        qrCodeBase64,
+        message, // ← enviando o texto pré-formatado
       });
     }
   }
@@ -197,12 +203,14 @@ export class OrdersNotificationsService extends BaseService {
   async cardGenerated(order: OrderEntity, paymentLink: string) {
     if (validateContact(order)) {
       this.logger.log(`Registrando notificação: Cartão Gerado para ${order.customerPhone}`);
+      const message = MW_OrderCardGenerated(order.customerName, order.totalValue, paymentLink);
       await this.n8nService.dispatchEvent('ORDER_CARD_LINK', {
         orderId: order.id,
         phone: order.customerPhone,
         customerName: order.customerName,
         totalValue: order.totalValue,
         paymentLink,
+        message, // ← enviando o texto pré-formatado
       });
     }
   }
@@ -210,11 +218,13 @@ export class OrdersNotificationsService extends BaseService {
   async paymentReminder(order: OrderEntity) {
     if (validateContact(order)) {
       this.logger.log(`Registrando notificação: Lembrete de Pagamento 6h para ${order.customerPhone}`);
+      const message = MW_OrderPaymentReminder6h(order.customerName);
       await this.n8nService.dispatchEvent('ORDER_PAYMENT_REMINDER_6H', {
         orderId: order.id,
         phone: order.customerPhone,
         customerName: order.customerName,
         totalValue: order.totalValue,
+        message, // ← enviando o texto pré-formatado
       });
     }
   }
@@ -222,10 +232,12 @@ export class OrdersNotificationsService extends BaseService {
   async paymentExpired(order: OrderEntity) {
     if (validateContact(order)) {
       this.logger.log(`Registrando notificação: Pagamento Expirado 22h para ${order.customerPhone}`);
+      const message = MW_OrderPaymentExpired22h(order.customerName, order.id);
       await this.n8nService.dispatchEvent('ORDER_PAYMENT_EXPIRED_22H', {
         orderId: order.id,
         phone: order.customerPhone,
         customerName: order.customerName,
+        message, // ← enviando o texto pré-formatado
       });
     }
   }

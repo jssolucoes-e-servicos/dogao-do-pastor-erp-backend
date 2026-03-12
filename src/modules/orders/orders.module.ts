@@ -14,9 +14,10 @@ import { OrdersService } from 'src/modules/orders/services/orders.service';
 import { SellersModule } from 'src/modules/sellers/sellers.module';
 import { SellersService } from 'src/modules/sellers/services/sellers.service';
 import { OrdersNotificationsService } from '../evolution/services/notifications/orders-notifications.service';
+import { N8nModule } from 'src/modules/n8n/n8n.module';
 
 @Module({
-  imports: [CustomersModule, SellersModule, EvolutionModule],
+  imports: [CustomersModule, SellersModule, EvolutionModule, N8nModule],
   controllers: [OrdersController],
   providers: [
     PrismaService,
@@ -24,8 +25,6 @@ import { OrdersNotificationsService } from '../evolution/services/notifications/
     OrdersService,
     CustomersService,
     SellersService,
-    EvolutionService,
-    OrdersNotificationsService,
   ],
   exports: [OrdersService],
 })

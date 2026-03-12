@@ -225,11 +225,8 @@ export class PaymentsTasksService extends BaseService {
 
         const edition = (await getActiveEdition(tx as any)) as EditionEntity;
 
-        // 3. Cria Comanda se for Entrega ou Balcão (Pickup)
-        if (
-          order.deliveryOption === DeliveryOptionEnum.DELIVERY ||
-          order.deliveryOption === DeliveryOptionEnum.PICKUP
-        ) {
+        // 3. Cria Comanda se for Entrega
+        if (order.deliveryOption === DeliveryOptionEnum.DELIVERY) {
           const sequence =
             (await tx.command.count({ where: { editionId: edition.id } })) + 1;
           await tx.command.create({

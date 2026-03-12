@@ -12,7 +12,7 @@ export const validationSchema = Joi.object({
     .uri()
     .required()
     .description('URL de conexão com o Postgres'),
-  
+
   // SECURITY
   JWT_SECRET: Joi.string().required().description('Chave secreta para JWT'),
 
@@ -49,11 +49,13 @@ export const validationSchema = Joi.object({
   MERCADOPAGO_ACCESS_TOKEN: Joi.string().required(),
   MERCADOPAGO_SECRET_KEY: Joi.string().required(),
   // WHATSWAPP
-  EVOLUTION_API_URL: Joi.string().uri().required(),
+  //EVOLUTION_API_URL: Joi.string().uri().required(),
   EVOLUTION_API_TOKEN: Joi.string().required(),
   EVOLUTION_API_INSTANCE: Joi.string().required(),
 
   //FRONTENDS
   FRONTEND_PORTALS_URL: Joi.string().uri().required(),
   FRONTEND_ERP_URL: Joi.string().uri().required(),
+  REVALIDATION_SECRET: Joi.string().required(),
+  N8N_WEBHOOK_URL: Joi.string().uri().required(),
 });

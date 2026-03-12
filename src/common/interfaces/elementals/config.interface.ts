@@ -36,10 +36,12 @@ export interface IConfig {
   MERCADOPAGO_ACCESS_TOKEN: string;
   MERCADOPAGO_SECRET_KEY: string;
   // WHATSWAPP
-  EVOLUTION_API_URL: string;
+  //EVOLUTION_API_URL: string;
   EVOLUTION_API_TOKEN: string;
   EVOLUTION_API_INSTANCE: string;
   //FRONTENDS
   FRONTEND_PORTALS_URL: string;
   FRONTEND_ERP_URL: string;
+  REVALIDATION_SECRET: string;
+  N8N_WEBHOOK_URL: string;
 }

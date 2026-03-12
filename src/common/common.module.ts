@@ -14,6 +14,7 @@ import { DiscordModule } from 'src/modules/discord/discord.module';
 import { EvolutionModule } from 'src/modules/evolution/evolution.module';
 import { LoggerModule } from 'src/modules/logger/logger.module';
 import { PrismaModule } from 'src/modules/prisma/prisma.module';
+import { ErrorNotificationService } from './services/error-notification.service';
 
 @Global()
 @Module({
@@ -66,7 +67,9 @@ import { PrismaModule } from 'src/modules/prisma/prisma.module';
       provide: APP_GUARD,
       useClass: HttpThrottlerGuard,
     },
+    ErrorNotificationService,
   ],
+  exports: [ErrorNotificationService],
 })
 export class CommonModule {
   /* void */

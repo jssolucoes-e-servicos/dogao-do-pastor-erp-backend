@@ -17,7 +17,6 @@ import { SellersService } from './services/sellers.service';
     PrismaService,
     LoggerService,
     SellersService,
-    SellersNotificationsService,
   ],
   exports: [SellersService],
 })

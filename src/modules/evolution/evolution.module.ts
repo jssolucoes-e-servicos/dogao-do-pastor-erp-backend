@@ -22,6 +22,7 @@ import { N8nModule } from 'src/modules/n8n/n8n.module';
   exports: [
     EvolutionService,
     OrdersNotificationsService,
+    PartnersNotificationsService,
     SellersNotificationsService,
   ],
 })

@@ -93,7 +93,7 @@ export class PaymentsService extends BaseCrudService<
     }
 
     const paymentExists = await this.findByOrder(dto.orderId);
-    if (paymentExists) {
+    if (paymentExists && paymentExists.status === PaymentStatusEnum.PENDING) {
       if (paymentExists.method === PaymentMethodEnum.PIX) {
         return paymentExists;
       }

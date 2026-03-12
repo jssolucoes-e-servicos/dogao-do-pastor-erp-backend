@@ -1,0 +1,23 @@
+import { Global, Module } from '@nestjs/common';
+import { ConfigService, LoggerService, PrismaService } from 'src/common/helpers/importer.helper';
+import { OrdersReportService } from './services/orders-report.service';
+import { RankingReportService } from './services/ranking-report.service';
+import { ReportsController } from './controllers/reports.controller';
+import { OrdersModule } from 'src/modules/orders/orders.module';
+import { N8nModule } from 'src/modules/n8n/n8n.module';
+import { CommonModule } from 'src/common/common.module';
+
+@Global()
+@Module({
+  imports: [OrdersModule, N8nModule, CommonModule],
+  controllers: [ReportsController],
+  providers: [
+    PrismaService,
+    LoggerService,
+    ConfigService,
+    OrdersReportService,
+    RankingReportService,
+  ],
+  exports: [OrdersReportService, RankingReportService],
+})
+export class ReportsModule {}

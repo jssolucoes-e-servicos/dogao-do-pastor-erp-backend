@@ -1,0 +1,190 @@
+{
+  "name": "[N8N] Evolution API - Proxy Dinâmico",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "evolution-webhook-proxy",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "e221d600-b6c8-47bc-ad98-webhook-proxy",
+      "name": "Webhook Notificacoes",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        200,
+        300
+      ],
+      "webhookId": "evolution-webhook-proxy"
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.body.data.messageType }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "TEXT",
+              "output": 0
+            },
+            {
+              "value2": "MEDIA",
+              "output": 1
+            },
+            {
+              "value2": "VALIDATE",
+              "output": 2
+            }
+          ]
+        },
+        "fallbackOutput": 0
+      },
+      "id": "switch-node-1234",
+      "name": "Switch Message Type",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://smartchat-api.jssolucoeseservicos.com.br/message/sendText/{{ $json.body.evoInstance }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $json.body.evoToken }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { number: $json.body.data.phone, text: $json.body.data.message } }}",
+        "options": {}
+      },
+      "id": "22fd2dd9-0941-4770-96b1-4bbcc267e74d",
+      "name": "Enviar Texto (Evolution)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        700,
+        150
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://smartchat-api.jssolucoeseservicos.com.br/message/sendMedia/{{ $json.body.evoInstance }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $json.body.evoToken }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { number: $json.body.data.phone, mediatype: 'image', mimetype: 'image/jpeg', caption: $json.body.data.message, media: $json.body.data.media, fileName: $json.body.data.fileName } }}",
+        "options": {}
+      },
+      "id": "node-media-send",
+      "name": "Enviar Mídia (Evolution)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        700,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://smartchat-api.jssolucoeseservicos.com.br/chat/whatsappNumbers/{{ $json.body.evoInstance }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $json.body.evoToken }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { numbers: [ $json.body.data.phone ] } }}",
+        "options": {}
+      },
+      "id": "node-validate-number",
+      "name": "Validar Número (Evolution)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        700,
+        450
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook Notificacoes": {
+      "main": [
+        [
+          {
+            "node": "Switch Message Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Message Type": {
+      "main": [
+        [
+          {
+            "node": "Enviar Texto (Evolution)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar Mídia (Evolution)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validar Número (Evolution)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "v1-0-evo-proxy"
+}

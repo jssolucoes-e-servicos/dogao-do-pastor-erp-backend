@@ -15,6 +15,7 @@ import { OrdersItemsModule } from './orders-items/orders-items.module';
 import { OrdersModule } from './orders/orders.module';
 import { PartnersModule } from './partners/partners.module';
 import { PaymentsModule } from './payments/payments.modules';
+import { ReportsModule } from './reports/reports.module';
 import { SellersModule } from './sellers/sellers.module';
 import { UploadsModule } from './uploads/uploads.module';
 
@@ -41,6 +42,7 @@ import { UploadsModule } from './uploads/uploads.module';
     CellsNetworksModule,
     CellsModule,
     SellersModule,
+    ReportsModule,
     OrdersModule,
     OrdersItemsModule,
     PaymentsModule,

@@ -16,8 +16,6 @@ import { PartnersService } from './services/partners.service';
     LoggerService,
     PrismaService,
     PartnersService,
-    EvolutionService,
-    PartnersNotificationsService,
     UploadsService,
   ],
   exports: [PartnersService],

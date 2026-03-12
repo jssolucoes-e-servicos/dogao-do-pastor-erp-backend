@@ -1,0 +1,150 @@
+{{!-- src/modules/reports/templates/order-individual.hbs --}}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      width: 100mm;
+      height: 140mm;
+      margin: 0;
+      overflow: hidden;
+      box-sizing: border-box;
+      font-size: 9pt;
+      background: #FFF;
+      color: #2c2c2c;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      align-content: center;
+      margin-bottom: 6pt;
+      border-bottom: 2px solid #e1bb57;
+      padding-bottom: 4pt;
+    }
+    .logo {
+      width: 38pt;
+      height: 38pt;
+      margin-right: 12pt;
+      object-fit: contain;
+    }
+    .title {
+      font-size: 14pt;
+      font-weight: bold;
+      text-align: center;
+      color: #cc8e13;
+      letter-spacing: 1px;
+    }
+    .section {
+      margin-top: 6pt;
+      font-size: 10pt;
+      font-weight: bold;
+      color: #b07114;
+      border-bottom: 1.2px solid #e1bb5722;
+      padding-bottom: 2pt;
+      margin-bottom: 5pt;
+      text-align: center;
+    }
+    .field {
+      display: flex;
+      margin-bottom: 1.5pt;
+      font-size: 11pt;
+    }
+    .scheduled {
+      font-size: 12pt;
+      font-weight: bold;
+      color: #444;
+      padding: 0 6pt;
+      text-align: right;
+    }
+
+    .label {
+      font-weight: bold;
+      color: #444;
+    }
+    .field_content {
+      padding-left: 6pt;
+      min-width:65pt
+    }
+    .item {
+      font-size: 11pt;
+      margin-bottom: 2pt;
+      padding-left: 6pt;
+      display: flex;
+      align-items: flex-start;
+    }
+    .qty {
+      width:30pt;
+      font-weight: bold;
+      text-align: center;
+      color: #b07114;
+      flex-shrink: 0;
+    }
+    .id {
+      align-items: center;
+      font-size: 6pt;
+      color: #888;
+      text-align: center;
+    }
+    .footer {
+      font-size: 6pt;
+      color: #888;
+      text-align: center;
+      align-items: center;
+      align-content: center;
+      margin-top: 4pt;
+    }
+
+    .hr {
+      border: 0;
+      border-top: 1.5px dashed #e1bb57;
+      background: none;
+      height: 1.5px;
+      margin: 4pt 0;
+    }
+    .notesBlock {
+      background: #ffe9ad70;
+      padding: 5pt 8pt;
+      border-radius: 2pt;
+      font-size: 9pt;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="{{logo}}" class="logo"/>
+    <div class="title">Comanda de Pedido</div>
+  </div>
+  <div><span class="scheduled">Horário:</span><span class="scheduled">{{scheduled}}</span></div>
+
+  <div class="section">Dados do Cliente</div>
+  <div class="field"><span class="label">Nome:</span><span class="field_content">{{customer.name}}</span></div>
+  <div class="field"><span class="label">Telefone:</span><span class="field_content">{{customer.phone}}</span></div>
+  <div class="field"><span class="label">Endereço:</span><span class="field_content">{{customer.address}}</span></div>
+  <div class="field"><span class="label">Referência:</span><span class="field_content">{{customer.reference}}</span></div>
+
+  <div class="section">Dados do Vendedor</div>
+  <div class="field">
+    <span class="label">Nome:</span><span class="field_content">{{seller.name}}</span>
+    <span class="label" >Telefone:</span><span class="field_content">{{seller.phone}}</span>
+  </div>
+  <div class="field">
+    <span class="label">Célula:</span><span class="field_content">{{seller.cellGroup}}</span>
+    <span class="label" >Líder:</span><span class="field_content">{{seller.leader}}</span>
+  </div>
+
+  <div class="section">Itens do Pedido</div>
+  {{#each items}}
+    <div class="item"><span class="qty">{{qty}}x</span> <span>{{name}}</span></div>
+  {{/each}}
+
+  <div class="section">Observações</div>
+  <div class="notesBlock">{{notes}}</div>
+  <hr class="hr" />
+  <div class="footer">
+  <img src="{{qrCode}}" alt="QR Code para abrir a comanda" style="display:block; width:50pt; height:50pt; margin: auto;">
+  <div class="id">ID: {{id}}</div>
+</div>
+</body>
+</html>
