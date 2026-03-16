@@ -159,6 +159,7 @@ export class OrdersService extends BaseCrudService<
 
   async list(
     query: PaginationQueryDto,
+    user?: any,
   ): Promise<IPaginatedResponse<OrderEntity>> {
     const { search } = query;
 
@@ -199,6 +200,27 @@ export class OrdersService extends BaseCrudService<
           },
         ],
       };
+    } else {
+      where = {
+        editionId: activeEdition.id,
+      };
+    }
+
+    // Aplica filtros de segurança baseados no vínculo do usuário
+    if (user && !user.roles?.includes('IT') && !user.roles?.includes('ADMIN') && !user.roles?.includes('FINANCE')) {
+      if (user.sellerId) {
+        where = { ...where, sellerId: user.sellerId };
+      } else if (user.deliveryPersonId) {
+        // Para o entregador, mostramos o que ele entregou ou está para entregar na edição atual
+        where = { 
+          ...where, 
+          deliveryStops: { some: { route: { deliveryPersonId: user.deliveryPersonId } } }
+        };
+      } else if (user.leaderCellId) {
+        where = { ...where, seller: { cellId: user.leaderCellId } };
+      } else if (user.supervisorNetworkId) {
+        where = { ...where, seller: { cell: { networkId: user.supervisorNetworkId } } };
+      }
     }
 
     return this.paginate(query, {

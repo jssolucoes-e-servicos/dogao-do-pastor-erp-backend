@@ -7,7 +7,13 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../auth/guards/roles.guard';
+import { Roles } from '../../auth/decorators/roles.decorator';
+import { Public } from '../../auth/decorators/public.decorator';
+import { User } from 'src/common/decorators/user.decorator';
 
 import { PaginatedQuery } from 'src/common/decorators/paginated-query.decorator';
 import { IdParamDto } from 'src/common/dto/id.param.dto';
@@ -21,19 +27,23 @@ import { UpdateCustomerAddressDto } from 'src/modules/customers-addresses/dto/up
 import { CustomersAddressesService } from 'src/modules/customers-addresses/services/customers-addresses.service';
 
 @Controller('customers-addresses')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class CustomersAddressesController {
   constructor(private readonly service: CustomersAddressesService) {
     /* void */
   }
 
   @PaginatedQuery()
+  @Roles('IT', 'ADMIN', 'FINANCE')
   async list(
     @Query() query: PaginationQueryDto,
+    @User() user: any,
   ): Promise<IPaginatedResponse<CustomerAddressEntity>> {
-    return this.service.list(query);
+    return this.service.list(query, user);
   }
 
   @Post()
+  @Public()
   async create(@Body() dto: CreateCustomerAddressDto) {
     const created = await this.service.create(dto);
     return created;
@@ -45,11 +55,13 @@ export class CustomersAddressesController {
   }
 
   @Post('by-cep')
+  @Public()
   async findByCep(@Body() data: FindByCepDto) {
     return await this.service.findByCEP(data);
   }
 
   @Post('by-customer')
+  @Public()
   async findByCustomer(@Body() data: FindByCustomerDto) {
     return await this.service.findByCustomer(data);
   }

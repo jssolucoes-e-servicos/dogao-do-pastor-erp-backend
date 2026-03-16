@@ -1,7 +1,7 @@
 // src/modules/payments/services/payments.service.ts
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PaymentEntity } from 'src/common/entities';
-import { PaymentMethodEnum, PaymentOriginEnum, PaymentProviderEnum, PaymentStatusEnum } from 'src/common/enums';
+import { OrderStatusEnum, PaymentMethodEnum, PaymentOriginEnum, PaymentProviderEnum, PaymentStatusEnum } from 'src/common/enums';
 import {
   BaseCrudService,
   ConfigService,
@@ -93,18 +93,23 @@ export class PaymentsService extends BaseCrudService<
     }
 
     const paymentExists = await this.findByOrder(dto.orderId);
+
+    // Se já estiver pago, não permite gerar novo PIX
+    if (order.status === OrderStatusEnum.PAID || order.paymentStatus === PaymentStatusEnum.PAID) {
+      if (paymentExists) return paymentExists;
+      throw new BadRequestException('Este pedido já foi pago!');
+    }
+
+    // Se existe um pagamento PENDENTE e é PIX, apenas retorna ele. 
+    // Se for outro método, limpa para atualizar para PIX.
     if (paymentExists && paymentExists.status === PaymentStatusEnum.PENDING) {
       if (paymentExists.method === PaymentMethodEnum.PIX) {
         return paymentExists;
       }
-      await super.update(dto.orderId, {
-        pixCopyPaste: null,
-        pixQrcode: null,
-        providerPaymentId: null,
-        paymentUrl: null,
-        rawPayload: null,
-        status: PaymentStatusEnum.PENDING,
+      // Limpa dados do cartão se for mudar pra PIX
+      await super.update(paymentExists.id, {
         cardToken: null,
+        method: PaymentMethodEnum.PIX,
       });
     }
 
@@ -131,7 +136,8 @@ export class PaymentsService extends BaseCrudService<
       rawPayload: JSON.stringify(pix),
     };
 
-    if (paymentExists) {
+    // Se existe um pagamento PENDENTE, atualiza. Senão cria um NOVO (histórico de tentativas)
+    if (paymentExists && paymentExists.status === PaymentStatusEnum.PENDING) {
       await super.update(paymentExists.id, paymentPayload);
     } else {
       await super.create(paymentPayload);
@@ -172,18 +178,22 @@ export class PaymentsService extends BaseCrudService<
     }
 
     const paymentExists = await this.findByOrder(dto.orderId);
+
+    // Se já estiver pago, não permite gerar novo pagamento
+    if (order.status === OrderStatusEnum.PAID || order.paymentStatus === PaymentStatusEnum.PAID) {
+      if (paymentExists) return paymentExists;
+      throw new BadRequestException('Este pedido já foi pago!');
+    }
+
     if (paymentExists && paymentExists.status === PaymentStatusEnum.PENDING) {
       if (paymentExists.method === PaymentMethodEnum.CARD) {
         return paymentExists;
       }
-      await super.update(dto.orderId, {
+      // Limpa dados de PIX se for mudar pra CARD
+      await super.update(paymentExists.id, {
         pixCopyPaste: null,
         pixQrcode: null,
-        providerPaymentId: null,
-        paymentUrl: null,
-        rawPayload: null,
-        status: PaymentStatusEnum.PENDING,
-        cardToken: null,
+        method: PaymentMethodEnum.CARD,
       });
     }
 
@@ -209,7 +219,8 @@ export class PaymentsService extends BaseCrudService<
       cardToken: dto.token,
     };
 
-    if (paymentExists) {
+    // Se existe um pagamento PENDENTE, atualiza. Senão cria um NOVO (histórico de tentativas)
+    if (paymentExists && paymentExists.status === PaymentStatusEnum.PENDING) {
       await super.update(paymentExists.id, paymentPayload);
     } else {
       await super.create(paymentPayload);

@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PaginatedQuery } from 'src/common/decorators/paginated-query.decorator';
 import { IdParamDto } from 'src/common/dto/id.param.dto';
@@ -17,18 +18,25 @@ import { CreateSellerDto } from '../dto/create-seller.dto';
 import { ParamTagSellerDto } from '../dto/param-tag-seller.dto';
 import { UpdateSellerDto } from '../dto/update-seller.dto';
 import { SellersService } from '../services/sellers.service';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../auth/guards/roles.guard';
+import { Roles } from '../../auth/decorators/roles.decorator';
+import { User } from 'src/common/decorators/user.decorator';
 
 @Controller('sellers')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class SellersController {
   constructor(private readonly service: SellersService) {
     /* void */
   }
 
   @PaginatedQuery()
+  @Roles('IT', 'ADMIN', 'FINANCE', 'MANAGER', 'LEADER')
   async list(
     @Query() query: PaginationQueryDto,
+    @User() user: any,
   ): Promise<IPaginatedResponse<SellerEntity>> {
-    return this.service.list(query);
+    return this.service.list(query, user);
   }
 
   @Post()

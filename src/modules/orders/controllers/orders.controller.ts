@@ -8,12 +8,19 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PaginatedQuery } from 'src/common/decorators/paginated-query.decorator';
 import { IdParamDto } from 'src/common/dto/id.param.dto';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { OrderEntity } from 'src/common/entities';
 import { IPaginatedResponse } from 'src/common/interfaces';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../auth/guards/roles.guard';
+import { Roles } from '../../auth/decorators/roles.decorator';
+import { User } from 'src/common/decorators/user.decorator';
+import { Public } from '../../auth/decorators/public.decorator';
+import { AccessLinkGuard } from '../../auth/guards/access-link.guard';
 import { DefinePaymetnDTO } from '../dto/define-payment.dto';
 import { ForDeliveryDTO } from '../dto/for-delivery.dto';
 import { ForDonationDTO } from '../dto/for-donation.dto';
@@ -25,19 +32,23 @@ import { SyncCustomerDTO } from '../dto/sync-customer.dto';
 import { OrdersService } from '../services/orders.service';
 
 @Controller('orders')
+@UseGuards(JwtAuthGuard, RolesGuard, AccessLinkGuard)
 export class OrdersController {
   constructor(private readonly service: OrdersService) {
     /* void */
   }
 
   @PaginatedQuery()
+  @Roles('IT', 'ADMIN', 'FINANCE', 'SELLER', 'LEADER', 'MANAGER')
   async list(
     @Query() query: PaginationQueryDto,
+    @User() user: any,
   ): Promise<IPaginatedResponse<OrderEntity>> {
-    return this.service.list(query);
+    return this.service.list(query, user);
   }
 
   @PaginatedQuery({ route: 'pending-analysis' })
+  @Roles('IT', 'ADMIN', 'FINANCE', 'RECEPTION')
   async pendingAnalysis(
     @Query() query: PaginationQueryDto,
   ): Promise<IPaginatedResponse<OrderEntity>> {
@@ -45,6 +56,7 @@ export class OrdersController {
   }
 
   @PaginatedQuery({ route: 'donations-analysis' })
+  @Roles('IT', 'ADMIN', 'FINANCE')
   async donationsForAnalysis(
     @Query() query: PaginationQueryDto,
   ): Promise<IPaginatedResponse<OrderEntity>> {
@@ -52,11 +64,13 @@ export class OrdersController {
   }
 
   @Post('init')
+  @Public()
   async initOrder(@Body() dto: InitOrderDto) {
     return await this.service.initOrder(dto);
   }
 
   @Get(':id')
+  @Public()
   async findById(@Param() { id }: IdParamDto) {
     return await this.service.findById(id);
   }
@@ -92,11 +106,13 @@ export class OrdersController {
   }
 
   @Post('up-step/:id')
+  @Public()
   async upStep(@Param() { id }: IdParamDto): Promise<OrderEntity> {
     return this.service.upStep(id);
   }
 
   @Patch(':id/sync-customer')
+  @Public()
   async syncCustomer(
     @Param() { id }: IdParamDto,
     @Body() dto: SyncCustomerDTO,
@@ -108,21 +124,25 @@ export class OrdersController {
   }
 
   @Post('define-payment')
+  @Public()
   async definePayment(@Body() dto: DefinePaymetnDTO) {
     return this.service.definePayment(dto);
   }
 
   @Post('set-donation')
+  @Public()
   async setDonation(@Body() dto: ForDonationDTO) {
     return await this.service.setDonation(dto);
   }
 
   @Post('set-delivery')
+  @Public()
   async setDelivery(@Body() dto: ForDeliveryDTO) {
     return await this.service.setDelivery(dto);
   }
 
   @Post('set-pickup')
+  @Public()
   async setPickup(@Body() dto: OrderIdOnly) {
     return await this.service.setPickup(dto);
   }
@@ -138,11 +158,13 @@ export class OrdersController {
   }
 
   @Post('change-payment-method')
+  @Public()
   async changePaymentMethod(@Body() dto: OrderIdOnly) {
     return this.service.changePaymentMethod(dto.orderId);
   }
 
   @Post('downstep')
+  @Public()
   async downstep(@Body() dto: OrderIdOnly) {
     return this.service.downstep(dto.orderId);
   }

@@ -106,6 +106,7 @@ export class ContributorsService extends BaseCrudService<
 
   async list(
     query: PaginationQueryDto,
+    user?: any,
   ): Promise<IPaginatedResponse<ContributorEntity>> {
     const { search } = query;
     const where = search
@@ -139,8 +140,8 @@ export class ContributorsService extends BaseCrudService<
         cellNetworks: true,
         deliveryPersons: true,
         sellers: true,
-        userRoles: true,
-        permissions: true,
+        userRoles: { include: { role: true } },
+        permissions: { include: { module: true } },
       },
       orderBy: { name: 'asc' },
     });
@@ -153,8 +154,8 @@ export class ContributorsService extends BaseCrudService<
         cellNetworks: true,
         deliveryPersons: true,
         sellers: true,
-        userRoles: true,
-        permissions: true,
+        userRoles: { include: { role: true } },
+        permissions: { include: { module: true } },
       },
     });
   }
@@ -170,8 +171,8 @@ export class ContributorsService extends BaseCrudService<
           cellNetworks: true,
           deliveryPersons: true,
           sellers: true,
-          userRoles: true,
-          permissions: true,
+          userRoles: { include: { role: true } },
+          permissions: { include: { module: true } },
         },
       },
     );
@@ -188,8 +189,8 @@ export class ContributorsService extends BaseCrudService<
         cells: true,
         cellNetworks: true,
         deliveryPersons: true,
-        userRoles: true,
-        permissions: true,
+        userRoles: { include: { role: true } },
+        permissions: { include: { module: true } },
       },
     });
     return contributor;

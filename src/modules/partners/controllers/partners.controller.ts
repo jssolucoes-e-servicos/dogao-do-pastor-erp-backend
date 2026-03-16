@@ -1,4 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../auth/guards/roles.guard';
+import { Roles } from '../../auth/decorators/roles.decorator';
+import { User } from 'src/common/decorators/user.decorator';
+import { Public } from '../../auth/decorators/public.decorator';
 import { FormDataRequest } from 'nestjs-form-data';
 import { PaginatedQuery } from 'src/common/decorators';
 import { IdParamDto } from 'src/common/dto/id.param.dto';
@@ -10,6 +15,7 @@ import { UploadLogoDto } from '../dto/upload-logo.dto';
 import { PartnersService } from '../services/partners.service';
 
 @Controller('partners')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class PartnersController {
   constructor(private readonly service: PartnersService) {}
 
@@ -24,6 +30,7 @@ export class PartnersController {
   }
 
   @Post('register/:id')
+  @Public()
   async register(
     @Param() { id }: IdParamDto,
     @Body() data: RegisterPartnerDto,
@@ -32,6 +39,7 @@ export class PartnersController {
   }
 
   @Get('verify-link/:id')
+  @Public()
   async verifyLink(@Param() { id }: IdParamDto) {
     return this.service.verifyLink(id);
   }
@@ -46,13 +54,18 @@ export class PartnersController {
   }
 
   @Get('for-orders')
+  @Public()
   async listForOrders() {
     return await this.service.listForOrders();
   }
 
   @PaginatedQuery({ route: 'all' })
-  async list(@Query() query: PaginationQueryDto) {
-    return await this.service.list(query);
+  @Roles('IT', 'ADMIN', 'FINANCE')
+  async list(
+    @Query() query: PaginationQueryDto,
+    @User() user: any,
+  ) {
+    return await this.service.list(query, user);
   }
 
   @Post('invite/generate')

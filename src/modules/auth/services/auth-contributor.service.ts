@@ -27,6 +27,13 @@ export class AuthContributorService extends BaseService {
         active: true,
         deletedAt: null,
       },
+      include: {
+        userRoles: { include: { role: true } },
+        sellers: { select: { id: true }, where: { active: true } },
+        deliveryPersons: { select: { id: true }, where: { active: true } },
+        cells: { select: { id: true }, where: { active: true } },
+        cellNetworks: { select: { id: true }, where: { active: true } },
+      },
     });
 
     if (!contributor) {
@@ -44,19 +51,28 @@ export class AuthContributorService extends BaseService {
       throw new UnauthorizedException('Credenciais inválidas.');
     }
 
+    const roles = contributor.userRoles.flatMap((ur) => [
+      ur.role.name.toUpperCase(),
+      ur.roleId,
+    ]);
+
     // 3. Gera o Payload do JWT
     const payload = {
       sub: contributor.id,
       username: contributor.username,
       type: 'CONTRIBUTOR',
       name: contributor.name,
+      roles, // Inclui roles no JWT para o Guard
     };
+
+    const { password, ...userWithoutPassword } = contributor;
 
     return {
       access_token: await this.jwtService.signAsync(payload),
       user: {
-        ...contributor,
+        ...userWithoutPassword,
         type: 'CONTRIBUTOR',
+        roles,
       },
     };
   }

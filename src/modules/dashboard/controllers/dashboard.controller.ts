@@ -1,9 +1,13 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { DashboardStatsEntity } from 'src/common/entities'; // Ajuste o path
 import { DashboardService } from '../services/dashboard.service';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../auth/guards/roles.guard';
+import { Roles } from '../../auth/decorators/roles.decorator';
 
 @Controller('dashboard')
-// @UseGuards(ErpAuthGuard) // Ative se quiser proteger a rota
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('IT', 'ADMIN', 'FINANCE', 'RECEPTION', 'MANAGER', 'LEADER')
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 

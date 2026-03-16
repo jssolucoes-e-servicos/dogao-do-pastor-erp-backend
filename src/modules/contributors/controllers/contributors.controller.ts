@@ -7,7 +7,12 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../auth/guards/roles.guard';
+import { Roles } from '../../auth/decorators/roles.decorator';
+import { User } from 'src/common/decorators/user.decorator';
 import { FormDataRequest } from 'nestjs-form-data';
 
 import { PaginatedQuery } from 'src/common/decorators';
@@ -22,6 +27,8 @@ import { ContributorsService } from 'src/modules/contributors/services/contribut
 import { UploadPhotoDto } from '../dto/upload-photo.dto';
 
 @Controller('contributors')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('IT', 'ADMIN')
 export class ContributorsController {
   constructor(private readonly service: ContributorsService) {
     /* void */
@@ -30,8 +37,9 @@ export class ContributorsController {
   @PaginatedQuery()
   async list(
     @Query() query: PaginationQueryDto,
+    @User() user: any,
   ): Promise<IPaginatedResponse<ContributorEntity>> {
-    return this.service.list(query);
+    return this.service.list(query, user);
   }
 
   @Post()

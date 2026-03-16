@@ -29,7 +29,12 @@ async function bootstrap() {
   app.use(compression());
   app.use(helmet());
   app.enableCors({
-    origin: '*',
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://localhost:3002',
+      'https://dogao.igrejavivaemcelulas.com.br'
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
@@ -48,6 +53,7 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
 
+  console.log('--- BACKEND DDP RESTARTED - PORT:', process.env.PORT ?? 3010, '---');
   await app.listen(process.env.PORT ?? 3010);
 }
 bootstrap();

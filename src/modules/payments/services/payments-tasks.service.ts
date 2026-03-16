@@ -1,6 +1,5 @@
-// src/modules/payment/services/payments-tasks.service.ts
-
 import { Injectable } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import {
   BaseService,
   ConfigService,
@@ -18,8 +17,8 @@ import {
   SiteOrderStepEnum,
 } from 'src/common/enums';
 import { getActiveEdition } from 'src/common/helpers/edition-helper';
-import { OrdersService } from 'src/modules/orders/services/orders.service';
 import { OrdersNotificationsService } from 'src/modules/evolution/services/notifications/orders-notifications.service';
+import { OrdersService } from 'src/modules/orders/services/orders.service';
 import { MpPaymentsService } from './mercadopago/mp-payments.service';
 
 @Injectable()
@@ -85,30 +84,38 @@ export class PaymentsTasksService extends BaseService {
     }
 
     const now = new Date();
-    // A data de createdAt já vem no objeto do Prisma, por segurança usamos fallback
     const createdAt = payment.createdAt ? new Date(payment.createdAt) : new Date();
     const paymentAgeHours = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
-
-    // 22h Expiration Check (Prioridade Absoluta)
-    if (paymentAgeHours >= 22) {
-      this.logger.log(`Pagamento ${payment.id} expirou (22h+). Cancelando...`);
-      await this.registerExpiredPayment(payment);
-      return;
-    }
 
     try {
       const mpPayment =
         await this.mpPaymentsService.getPaymentStatus(providerId);
-      if (!mpPayment) return;
+      
+      if (!mpPayment) {
+        // Se falhar a consulta ao MP e tiver mais de 22h, aí sim cancelamos
+        if (paymentAgeHours >= 22) {
+          this.logger.log(`Pagamento ${payment.id} expirou (22h+) e não pôde ser consultado. Cancelando...`);
+          await this.registerExpiredPayment(payment);
+        }
+        return;
+      }
 
       const statusMp = mpPayment.status as string;
-      // Importante: mpPayment.status vem do Mercado Pago (string)
+      
       switch (statusMp) {
         case 'approved':
+          // Se está aprovado no MP, aprovamos aqui independente da idade
           await this.registerApprovedPayment(payment);
           break;
         case 'pending':
         case 'in_process':
+          // Se ainda está pendente no MP, verificamos se já expirou aqui (22h)
+          if (paymentAgeHours >= 22) {
+            this.logger.log(`Pagamento ${payment.id} expirou no MP (22h+). Cancelando...`);
+            await this.registerExpiredPayment(payment);
+            return;
+          }
+
           if (paymentAgeHours >= 6 && !(payment.order as any)?.paymentReminderSent) {
             await this.registerPaymentReminder(payment);
           }
@@ -116,7 +123,6 @@ export class PaymentsTasksService extends BaseService {
           break;
         case 'rejected':
         case 'cancelled':
-          //case 'refunded':
           await this.registerFailedPayment(payment);
           break;
         default:
@@ -124,6 +130,12 @@ export class PaymentsTasksService extends BaseService {
       }
     } catch (error) {
       this.logger.error(`Erro ao processar pagamento ${payment.id}: ${error}`);
+      
+      // Fallback: se der erro na rede/MP e já tiver passado de 22h, cancelamos por precaução
+      if (paymentAgeHours >= 22) {
+        this.logger.warn(`Erro ao consultar MP e pagamento tem ${paymentAgeHours}h. Cancelando por expiração.`);
+        await this.registerExpiredPayment(payment);
+      }
     }
   }
 
@@ -133,7 +145,7 @@ export class PaymentsTasksService extends BaseService {
         this.prisma.order.update({
           where: { id: payment.orderId },
           data: {
-            status: OrderStatusEnum.REJECTED,
+            status: OrderStatusEnum.PENDING_PAYMENT,
             paymentStatus: PaymentStatusEnum.FAILED,
           },
         }),
@@ -225,66 +237,27 @@ export class PaymentsTasksService extends BaseService {
 
         const edition = (await getActiveEdition(tx as any)) as EditionEntity;
 
-        // 3. Cria Comanda se for Entrega
+        // 3. Cria Comanda se for Entrega (Automatica apenas para DELIVERY)
         if (order.deliveryOption === DeliveryOptionEnum.DELIVERY) {
-          const sequence =
-            (await tx.command.count({ where: { editionId: edition.id } })) + 1;
-          await tx.command.create({
-            data: {
-              sequentialId: sequence.toString(),
-              orderId: order.id,
-              editionId: edition.id,
-              editionCode: Number(edition.code),
-              sequence: sequence,
-            },
+          // Verifica se já não existe comando para este pedido (evita duplicidade em re-processamento)
+          const commandExists = await tx.command.findFirst({
+            where: { orderId: order.id },
           });
+
+          if (!commandExists) {
+            await this.createCommandForOrder(tx, order as any, edition);
+          }
         }
 
         // 4. Se for Doação, gera o crédito para o parceiro
         if (order.deliveryOption === DeliveryOptionEnum.DONATE) {
-          let finalPartnerId = order.partnerId;
+          // Verifica se já existe entrada de doação (evita duplicidade)
+          const donationExists = await tx.donationEntry.findFirst({
+            where: { orderId: order.id },
+          });
 
-          // Se for doação e não tiver parceiro definido (ou for IVC_INTERNAL), criamos/usamos um parceiro padrão.
-          if (!finalPartnerId || finalPartnerId === 'IVC_INTERNAL') {
-            const INTERNAL_PARTNER_CNPJ = '00000000000000'; // Um CNPJ fictício para garantir unicidade do parceiro interno
-            let internalPartner = await tx.partner.findUnique({
-              where: { cnpj: INTERNAL_PARTNER_CNPJ },
-            });
-
-            if (!internalPartner) {
-              internalPartner = await tx.partner.create({
-                data: {
-                  id: 'IVC_INTERNAL',
-                  name: 'Dogão do Pastor / Doação Interna',
-                  cnpj: INTERNAL_PARTNER_CNPJ,
-                  phone: '00000000000',
-                  addressInLine: 'Igreja Vida Cristã',
-                  street: 'Rua Interna',
-                  number: 'S/N',
-                  neighborhood: 'Centro',
-                  city: 'Local',
-                  state: 'SP',
-                  zipCode: '00000000',
-                  responsibleName: 'Sistema',
-                  responsiblePhone: '00000000000',
-                  password: 'internal_system_partner',
-                  approved: false, // Fica false para não listar no portal de parceiros conforme solicitado
-                },
-              });
-            }
-
-            finalPartnerId = internalPartner.id;
-          }
-
-          if (finalPartnerId) {
-            await tx.donationEntry.create({
-              data: {
-                partnerId: finalPartnerId,
-                orderId: order.id,
-                quantity: order.items?.length || 0,
-                type: DonationEntryTypeEnum.CREDIT,
-              },
-            });
+          if (!donationExists) {
+            await this.createDonationEntryForOrder(tx, order as any);
           }
         }
       });
@@ -294,5 +267,195 @@ export class PaymentsTasksService extends BaseService {
     } catch (error) {
       this.logger.error(`Erro registerApprovedPayment: ${error}`);
     }
+  }
+
+  private async createCommandForOrder(
+    tx: any,
+    order: OrderEntity,
+    edition: EditionEntity,
+  ) {
+    // Busca a última sequência da edição para garantir continuidade
+    const lastCommand = await tx.command.findFirst({
+      where: { editionId: edition.id },
+      orderBy: { sequence: 'desc' },
+    });
+
+    const nextSequence = (lastCommand?.sequence || 0) + 1;
+    // Formato robusto: Código da Edição + Sequência com padding de 4 (ex: 2610001)
+    const seqId = `${edition.code}${String(nextSequence).padStart(4, '0')}`;
+
+    this.logger.log(`Gerando Comanda ${seqId} para Pedido ${order.id}`);
+
+    return tx.command.create({
+      data: {
+        sequentialId: seqId,
+        orderId: order.id,
+        editionId: edition.id,
+        editionCode: Number(edition.code),
+        sequence: nextSequence,
+      },
+    });
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_3AM)
+  async auditMissingCommandsCron() {
+    if (this.configs.get('NODE_ENV') === 'development') return;
+
+    this.logger.log('Iniciando Cron de Auditoria de Comandas Faltantes.');
+    await this.auditMissingCommands();
+  }
+
+  async auditMissingCommands() {
+    try {
+      const edition = await getActiveEdition(this.prisma);
+      if (!edition) return;
+
+      // Busca pedidos pagos de DELIVERY que não têm comanda
+      const missingOrders = await this.prisma.order.findMany({
+        where: {
+          status: OrderStatusEnum.PAID,
+          deliveryOption: DeliveryOptionEnum.DELIVERY,
+          commands: {
+            none: {},
+          },
+          active: true,
+          editionId: edition.id,
+        },
+      });
+
+      if (missingOrders.length === 0) {
+        this.logger.log('Auditoria: Nenhuma comanda faltante encontrada.');
+        return;
+      }
+
+      this.logger.warn(
+        `Auditoria: Encontrados ${missingOrders.length} pedidos pagos sem comanda. Corrigindo...`,
+      );
+
+      for (const order of missingOrders) {
+        try {
+          // Criamos em transação individual para não travar o loop se um falhar
+          await this.prisma.$transaction(async (tx) => {
+            await this.createCommandForOrder(tx, order as any, edition as any);
+          });
+        } catch (err) {
+          this.logger.error(
+            `Erro ao criar comanda auditada para pedido ${order.id}: ${err}`,
+          );
+        }
+      }
+
+      this.logger.log('Auditoria de comandas finalizada.');
+      return { fixed: missingOrders.length };
+    } catch (error) {
+      this.logger.error(`Erro na auditoria de comandas: ${error}`);
+      throw error;
+    }
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_4AM)
+  async auditMissingDonationsCron() {
+    if (this.configs.get('NODE_ENV') === 'development') return;
+
+    this.logger.log('Iniciando Cron de Auditoria de Doações Faltantes.');
+    await this.auditMissingDonations();
+  }
+
+  async auditMissingDonations() {
+    try {
+      const edition = await getActiveEdition(this.prisma);
+      if (!edition) return;
+
+      // Busca pedidos pagos de DONATE que não têm entrada de doação
+      const missingOrders = await this.prisma.order.findMany({
+        where: {
+          status: OrderStatusEnum.PAID,
+          deliveryOption: DeliveryOptionEnum.DONATE,
+          donationsEntries: {
+            none: {},
+          },
+          active: true,
+          editionId: edition.id,
+        },
+      });
+
+      if (missingOrders.length === 0) {
+        this.logger.log('Auditoria: Nenhuma doação faltante encontrada.');
+        return { fixed: 0 };
+      }
+
+      this.logger.warn(
+        `Auditoria: Encontrados ${missingOrders.length} pedidos de doação sem registro. Corrigindo...`,
+      );
+
+      for (const order of missingOrders) {
+        try {
+          await this.prisma.$transaction(async (tx) => {
+            await this.createDonationEntryForOrder(tx, order as any);
+          });
+        } catch (err) {
+          this.logger.error(
+            `Erro ao criar doação auditada para pedido ${order.id}: ${err}`,
+          );
+        }
+      }
+
+      this.logger.log('Auditoria de doações finalizada.');
+      return { fixed: missingOrders.length };
+    } catch (error) {
+      this.logger.error(`Erro na auditoria de doações: ${error}`);
+      throw error;
+    }
+  }
+
+  private async findOrCreateInternalPartner(tx: any) {
+    const INTERNAL_PARTNER_CNPJ = '00000000000000';
+    let internalPartner = await tx.partner.findUnique({
+      where: { id: 'IVC_INTERNAL' },
+    });
+
+    if (!internalPartner) {
+      internalPartner = await tx.partner.create({
+        data: {
+          id: 'IVC_INTERNAL',
+          name: 'Dogão do Pastor / Doação Interna',
+          cnpj: INTERNAL_PARTNER_CNPJ,
+          phone: '00000000000',
+          addressInLine:
+            'Doutor João Dentice, 261, Restinga, Porto Alegre, RS',
+          street: 'Doutor João Dentice',
+          number: '261',
+          neighborhood: 'Restinga',
+          city: 'Porto Alegre',
+          state: 'RS',
+          zipCode: '91790530',
+          responsibleName: 'Sistema',
+          responsiblePhone: '00000000000',
+          password: 'internal_system_partner',
+          approved: false,
+        },
+      });
+    }
+    return internalPartner;
+  }
+
+  private async createDonationEntryForOrder(tx: any, order: OrderEntity) {
+    let finalPartnerId = order.partnerId;
+
+    if (!finalPartnerId || finalPartnerId === 'IVC_INTERNAL') {
+      const internalPartner = await this.findOrCreateInternalPartner(tx);
+      finalPartnerId = internalPartner.id;
+    }
+
+    if (!finalPartnerId) return;
+
+    return tx.donationEntry.create({
+      data: {
+        partnerId: finalPartnerId,
+        orderId: order.id,
+        quantity: order.items?.length || 0,
+        type: DonationEntryTypeEnum.CREDIT,
+      },
+    });
   }
 }

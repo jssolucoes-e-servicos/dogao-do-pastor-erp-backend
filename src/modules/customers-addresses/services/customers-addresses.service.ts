@@ -38,6 +38,7 @@ export class CustomersAddressesService extends BaseCrudService<
 
   async list(
     query: PaginationQueryDto,
+    user?: any,
   ): Promise<IPaginatedResponse<CustomerAddressEntity>> {
     return this.paginate(query, {
       orderBy: { neighborhood: 'asc' },

@@ -61,6 +61,7 @@ export class DeliveryPersonsService extends BaseCrudService<
 
   async list(
     query: PaginationQueryDto,
+    user?: any,
   ): Promise<IPaginatedResponse<DeliveryPersonEntity>> {
     const { search } = query;
 

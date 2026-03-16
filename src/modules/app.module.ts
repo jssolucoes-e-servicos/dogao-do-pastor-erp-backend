@@ -4,6 +4,7 @@ import { CommonModule } from 'src/common/common.module';
 import { AuthModule } from './auth/auth.module';
 import { CellsNetworksModule } from './cells-networks/cells-networks.module';
 import { CellsModule } from './cells/cells.module';
+import { CommandsModule } from './commands/commands.module';
 import { ContributorsModule } from './contributors/contributors.module';
 import { CustomersAddressesModule } from './customers-addresses/customers-addresses.module';
 import { CustomersModule } from './customers/customers.module';
@@ -18,6 +19,7 @@ import { PaymentsModule } from './payments/payments.modules';
 import { ReportsModule } from './reports/reports.module';
 import { SellersModule } from './sellers/sellers.module';
 import { UploadsModule } from './uploads/uploads.module';
+import { SystemModule } from './system/system.module';
 
 @Module({
   imports: [
@@ -42,11 +44,13 @@ import { UploadsModule } from './uploads/uploads.module';
     CellsNetworksModule,
     CellsModule,
     SellersModule,
+    CommandsModule,
     ReportsModule,
     OrdersModule,
     OrdersItemsModule,
     PaymentsModule,
     DashboardModule,
+    SystemModule,
   ],
   providers: [],
 })

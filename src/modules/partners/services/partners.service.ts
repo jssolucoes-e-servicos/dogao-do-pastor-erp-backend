@@ -159,6 +159,7 @@ export class PartnersService extends BaseCrudService<
 
   async list(
     query: PaginationQueryDto,
+    user?: any,
   ): Promise<IPaginatedResponse<PartnerEntity>> {
     const { search } = query;
 

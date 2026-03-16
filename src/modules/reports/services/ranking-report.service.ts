@@ -379,6 +379,8 @@ export class RankingReportService extends BaseService {
    */
   @Cron('0 9 * * *', { timeZone: 'America/Sao_Paulo' })
   async sendDailyReportsIfChanged() {
+    if (this.configs.get('NODE_ENV') === 'development') return;
+
     this.logger.log('Iniciando rotina de verificação de Relatórios Diários.');
     const isDev = this.configs.get<string>('NODE_ENV') === 'development';
 

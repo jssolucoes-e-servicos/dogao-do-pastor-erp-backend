@@ -15,6 +15,11 @@ import { AuthPartnerService } from './services/auth-partner.service';
 import { AuthService } from './services/auth.service';
 import { AuthContributorService } from './services/auth-contributor.service';
 import { AuthCustomerService } from './services/auth-customer.service';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { RolesGuard } from './guards/roles.guard';
+import { AccessLinkGuard } from './guards/access-link.guard';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
@@ -29,6 +34,7 @@ import { AuthCustomerService } from './services/auth-customer.service';
     }),
     EvolutionModule,
     N8nModule,
+    PassportModule,
   ],
   controllers: [AuthController],
   providers: [
@@ -39,8 +45,12 @@ import { AuthCustomerService } from './services/auth-customer.service';
     AuthPartnerService,
     AuthContributorService,
     AuthCustomerService,
+    JwtStrategy,
+    JwtAuthGuard,
+    RolesGuard,
+    AccessLinkGuard,
   ],
-  exports: [AuthService],
+  exports: [AuthService, JwtAuthGuard, RolesGuard, AccessLinkGuard],
 })
 export class AuthModule {
   /* void */

@@ -70,6 +70,7 @@ export class SellersService extends BaseCrudService<
 
   async list(
     query: PaginationQueryDto,
+    user?: any,
   ): Promise<IPaginatedResponse<SellerEntity>> {
     const { search } = query;
 
@@ -86,6 +87,15 @@ export class SellersService extends BaseCrudService<
           },
         ],
       };
+    }
+
+    // Aplica filtros de segurança baseados no vínculo do usuário
+    if (user && !user.roles?.includes('IT') && !user.roles?.includes('ADMIN') && !user.roles?.includes('FINANCE')) {
+      if (user.leaderCellId) {
+        where = { ...where, cellId: user.leaderCellId };
+      } else if (user.supervisorNetworkId) {
+        where = { ...where, cell: { networkId: user.supervisorNetworkId } };
+      }
     }
 
     return this.paginate(query, {

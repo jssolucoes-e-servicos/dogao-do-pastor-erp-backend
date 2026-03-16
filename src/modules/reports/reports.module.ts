@@ -7,9 +7,11 @@ import { OrdersModule } from 'src/modules/orders/orders.module';
 import { N8nModule } from 'src/modules/n8n/n8n.module';
 import { CommonModule } from 'src/common/common.module';
 
+import { PaymentsModule } from 'src/modules/payments/payments.modules';
+
 @Global()
 @Module({
-  imports: [OrdersModule, N8nModule, CommonModule],
+  imports: [OrdersModule, N8nModule, CommonModule, PaymentsModule],
   controllers: [ReportsController],
   providers: [
     PrismaService,
