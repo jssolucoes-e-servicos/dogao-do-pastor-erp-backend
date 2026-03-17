@@ -20,6 +20,9 @@ import { ReportsModule } from './reports/reports.module';
 import { SellersModule } from './sellers/sellers.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { SystemModule } from './system/system.module';
+import { RolesModule } from './roles/roles.module';
+import { PermissionsModule } from './permissions/permissions.module';
+import { ModulesModule } from './modules/modules.module';
 
 @Module({
   imports: [
@@ -51,6 +54,9 @@ import { SystemModule } from './system/system.module';
     PaymentsModule,
     DashboardModule,
     SystemModule,
+    RolesModule,
+    PermissionsModule,
+    ModulesModule,
   ],
   providers: [],
 })

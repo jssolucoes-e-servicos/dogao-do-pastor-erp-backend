@@ -38,7 +38,7 @@ export class OrderEntity {
   siteStep: SiteOrderStepEnum;
   deliveryOption: DeliveryOptionEnum;
   deliveryTime?: string | null;
-  address?: CustomerAddressEntity;
+  address?: CustomerAddressEntity | null;
   addressId?: string | null;
   observations?: string | null;
   paymentStatus: PaymentStatusEnum;

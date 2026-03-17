@@ -13,7 +13,7 @@ import { PaginatedQuery } from 'src/common/decorators/paginated-query.decorator'
 import { IdParamDto } from 'src/common/dto/id.param.dto';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { SellerEntity } from 'src/common/entities';
-import { IPaginatedResponse } from 'src/common/interfaces';
+import type { IPaginatedResponse, IUser } from 'src/common/interfaces';
 import { CreateSellerDto } from '../dto/create-seller.dto';
 import { ParamTagSellerDto } from '../dto/param-tag-seller.dto';
 import { UpdateSellerDto } from '../dto/update-seller.dto';
@@ -34,7 +34,7 @@ export class SellersController {
   @Roles('IT', 'ADMIN', 'FINANCE', 'MANAGER', 'LEADER')
   async list(
     @Query() query: PaginationQueryDto,
-    @User() user: any,
+    @User() user: IUser,
   ): Promise<IPaginatedResponse<SellerEntity>> {
     return this.service.list(query, user);
   }

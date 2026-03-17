@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { DonationEntryEntity } from 'src/common/entities';
 import { CommandStatusEnum, DonationEntryTypeEnum, WithdrawalStatusEnum } from 'src/common/enums';
 import { getActiveEdition } from 'src/common/helpers/edition-helper';
@@ -40,6 +41,72 @@ export class DonationsEntryService extends BaseCrudService<
     });
 
     return result._sum.quantity || 0;
+  }
+
+  async listPartnersWithBalances() {
+    // 1. Pegar todos os parceiros ativos e aprovados
+    const partners = await this.prisma.partner.findMany({
+      where: {
+        active: true,
+        approved: true,
+        deletedAt: null,
+      },
+      select: {
+        id: true,
+        name: true,
+        responsibleName: true,
+        phone: true,
+        logo: true,
+      }
+    });
+
+    // 2. Para cada parceiro, calcular o saldo atual
+    // Nota: Em uma base muito grande, o ideal seria usar um groupBy ou campo calculado,
+    // mas para a escala atual, percorrer os parceiros é seguro e simples.
+    const partnersWithBalance = await Promise.all(
+      partners.map(async (partner) => {
+        const balance = await this.getPartnerBalance(partner.id);
+        return {
+          ...partner,
+          balance,
+        };
+      })
+    );
+
+    return partnersWithBalance;
+  }
+
+  async listEntriesByPartner(partnerId: string, query: PaginationQueryDto) {
+    const { page, perPage } = query;
+    const skip = (page - 1) * perPage;
+
+    const [data, total] = await Promise.all([
+      this.prisma.donationEntry.findMany({
+        where: { partnerId, deletedAt: null },
+        include: {
+          order: true,
+          withdrawal: {
+            include: { items: true }
+          }
+        },
+        orderBy: { createdAt: 'desc' },
+        take: perPage,
+        skip,
+      }),
+      this.prisma.donationEntry.count({
+        where: { partnerId, deletedAt: null },
+      }),
+    ]);
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        perPage,
+        totalPages: Math.ceil(total / perPage),
+      },
+    };
   }
 
   async createWithdrawal(dto: WithdrawalCreateDTO) {

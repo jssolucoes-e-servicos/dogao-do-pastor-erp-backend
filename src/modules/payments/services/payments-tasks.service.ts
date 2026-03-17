@@ -20,6 +20,8 @@ import { getActiveEdition } from 'src/common/helpers/edition-helper';
 import { OrdersNotificationsService } from 'src/modules/evolution/services/notifications/orders-notifications.service';
 import { OrdersService } from 'src/modules/orders/services/orders.service';
 import { MpPaymentsService } from './mercadopago/mp-payments.service';
+import { CommandsGateway } from '../../commands/gateways/commands.gateway';
+import { CommandsService } from '../../commands/services/commands.service';
 
 @Injectable()
 export class PaymentsTasksService extends BaseService {
@@ -30,6 +32,8 @@ export class PaymentsTasksService extends BaseService {
     private readonly mpPaymentsService: MpPaymentsService,
     private readonly ordersService: OrdersService,
     private readonly ordersNotificationsService: OrdersNotificationsService,
+    private readonly commandsGateway: CommandsGateway,
+    private readonly commandsService: CommandsService,
   ) {
     super(configService, loggerService, prismaService);
   }
@@ -237,7 +241,8 @@ export class PaymentsTasksService extends BaseService {
 
         const edition = (await getActiveEdition(tx as any)) as EditionEntity;
 
-        // 3. Cria Comanda se for Entrega (Automatica apenas para DELIVERY)
+        // 3. Cria Comanda apenas para Entrega (DELIVERY)
+        // PICKUP agora é manual via Check-In no PDV
         if (order.deliveryOption === DeliveryOptionEnum.DELIVERY) {
           // Verifica se já não existe comando para este pedido (evita duplicidade em re-processamento)
           const commandExists = await tx.command.findFirst({
@@ -245,7 +250,7 @@ export class PaymentsTasksService extends BaseService {
           });
 
           if (!commandExists) {
-            await this.createCommandForOrder(tx, order as any, edition);
+            await this.commandsService.createCommandForOrder(tx, order as any, edition as any);
           }
         }
 
@@ -269,34 +274,6 @@ export class PaymentsTasksService extends BaseService {
     }
   }
 
-  private async createCommandForOrder(
-    tx: any,
-    order: OrderEntity,
-    edition: EditionEntity,
-  ) {
-    // Busca a última sequência da edição para garantir continuidade
-    const lastCommand = await tx.command.findFirst({
-      where: { editionId: edition.id },
-      orderBy: { sequence: 'desc' },
-    });
-
-    const nextSequence = (lastCommand?.sequence || 0) + 1;
-    // Formato robusto: Código da Edição + Sequência com padding de 4 (ex: 2610001)
-    const seqId = `${edition.code}${String(nextSequence).padStart(4, '0')}`;
-
-    this.logger.log(`Gerando Comanda ${seqId} para Pedido ${order.id}`);
-
-    return tx.command.create({
-      data: {
-        sequentialId: seqId,
-        orderId: order.id,
-        editionId: edition.id,
-        editionCode: Number(edition.code),
-        sequence: nextSequence,
-      },
-    });
-  }
-
   @Cron(CronExpression.EVERY_DAY_AT_3AM)
   async auditMissingCommandsCron() {
     if (this.configs.get('NODE_ENV') === 'development') return;
@@ -310,7 +287,7 @@ export class PaymentsTasksService extends BaseService {
       const edition = await getActiveEdition(this.prisma);
       if (!edition) return;
 
-      // Busca pedidos pagos de DELIVERY que não têm comanda
+      // Busca pedidos pagos de DELIVERY ou PICKUP que não têm comanda
       const missingOrders = await this.prisma.order.findMany({
         where: {
           status: OrderStatusEnum.PAID,
@@ -325,7 +302,7 @@ export class PaymentsTasksService extends BaseService {
 
       if (missingOrders.length === 0) {
         this.logger.log('Auditoria: Nenhuma comanda faltante encontrada.');
-        return;
+        return { fixed: 0 };
       }
 
       this.logger.warn(
@@ -336,7 +313,7 @@ export class PaymentsTasksService extends BaseService {
         try {
           // Criamos em transação individual para não travar o loop se um falhar
           await this.prisma.$transaction(async (tx) => {
-            await this.createCommandForOrder(tx, order as any, edition as any);
+            await this.commandsService.createCommandForOrder(tx, order as any, edition as any);
           });
         } catch (err) {
           this.logger.error(

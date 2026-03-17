@@ -23,7 +23,9 @@ export async function paginate<
       take,
       skip,
     }),
-    model.count(),
+    model.count({
+      where: args.where,
+    }),
   ]);
 
   return {

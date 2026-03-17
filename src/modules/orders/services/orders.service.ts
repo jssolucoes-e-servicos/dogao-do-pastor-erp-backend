@@ -17,7 +17,8 @@ import {
   PrismaBase,
   PrismaService,
 } from 'src/common/helpers/importer.helper';
-import { IPaginatedResponse } from 'src/common/interfaces';
+import { CreatePdvOrderDto } from '../dto/create-pdv-order.dto';
+import type { IPaginatedResponse } from 'src/common/interfaces';
 import { CustomersService } from 'src/modules/customers/services/customers.service';
 import { OrdersNotificationsService } from 'src/modules/evolution/services/notifications/orders-notifications.service';
 import { SellersService } from 'src/modules/sellers/services/sellers.service';
@@ -161,66 +162,123 @@ export class OrdersService extends BaseCrudService<
     query: PaginationQueryDto,
     user?: any,
   ): Promise<IPaginatedResponse<OrderEntity>> {
-    const { search } = query;
-
-    let where = {};
+    const { search, status, deliveryOption, paymentStatus } = query;
 
     const activeEdition = await getActiveEdition(this.prisma);
     if (!activeEdition) {
       throw new NotFoundException('Sem edição ativa');
     }
 
-    if (search) {
-      where = {
-        editionId: activeEdition.id,
-        OR: [
-          {
-            customerName: { contains: search, mode: 'insensitive' },
-          },
-          {
-            customerCPF: { contains: search },
-          },
-          {
-            customerPhone: { contains: search },
-          },
-          {
-            customer: {
-              name: { contains: search, mode: 'insensitive' },
-            },
-          },
-          {
-            customer: {
-              cpf: { contains: search },
-            },
-          },
-          {
-            customer: {
-              phone: { contains: search },
-            },
-          },
-        ],
-      };
-    } else {
-      where = {
-        editionId: activeEdition.id,
-      };
+    const where: any = {
+      editionId: activeEdition.id,
+    };
+
+    // Filtros Diretos
+    if (status) {
+      if (typeof status === 'string' && status.includes(',')) {
+        where.status = { in: status.split(',') };
+      } else if (Array.isArray(status)) {
+        where.status = { in: status };
+      } else {
+        where.status = status;
+      }
     }
 
-    // Aplica filtros de segurança baseados no vínculo do usuário
-    if (user && !user.roles?.includes('IT') && !user.roles?.includes('ADMIN') && !user.roles?.includes('FINANCE')) {
-      if (user.sellerId) {
-        where = { ...where, sellerId: user.sellerId };
-      } else if (user.deliveryPersonId) {
-        // Para o entregador, mostramos o que ele entregou ou está para entregar na edição atual
-        where = { 
-          ...where, 
-          deliveryStops: { some: { route: { deliveryPersonId: user.deliveryPersonId } } }
-        };
-      } else if (user.leaderCellId) {
-        where = { ...where, seller: { cellId: user.leaderCellId } };
-      } else if (user.supervisorNetworkId) {
-        where = { ...where, seller: { cell: { networkId: user.supervisorNetworkId } } };
+    if (deliveryOption) {
+      if (typeof deliveryOption === 'string' && deliveryOption.includes(',')) {
+        where.deliveryOption = { in: deliveryOption.split(',') };
+      } else if (Array.isArray(deliveryOption)) {
+        where.deliveryOption = { in: deliveryOption };
+      } else {
+        where.deliveryOption = deliveryOption;
       }
+    }
+
+    if (paymentStatus) {
+      if (typeof paymentStatus === 'string' && paymentStatus.includes(',')) {
+        where.paymentStatus = { in: paymentStatus.split(',') };
+      } else if (Array.isArray(paymentStatus)) {
+        where.paymentStatus = { in: paymentStatus };
+      } else {
+        where.paymentStatus = paymentStatus;
+      }
+    }
+
+    if (query.hasCommand === 'true') {
+      where.commands = { some: { active: true } };
+    } else if (query.hasCommand === 'false') {
+      where.commands = { none: {} };
+    }
+
+    if (query.commandStatus) {
+      if (typeof query.commandStatus === 'string' && query.commandStatus.includes(',')) {
+        where.commands = { 
+          some: { 
+            status: { in: query.commandStatus.split(',') },
+            active: true 
+          } 
+        };
+      } else {
+        where.commands = { 
+          some: { 
+            status: query.commandStatus,
+            active: true 
+          } 
+        };
+      }
+    }
+
+    const andFilters: any[] = [];
+
+    // Filtro de Busca (Search)
+    if (search) {
+      andFilters.push({
+        OR: [
+          { customerName: { contains: search, mode: 'insensitive' } },
+          { customerCPF: { contains: search } },
+          { customerPhone: { contains: search } },
+          { customer: { name: { contains: search, mode: 'insensitive' } } },
+          { customer: { cpf: { contains: search } } },
+          { customer: { phone: { contains: search } } },
+        ],
+      });
+    }
+
+    // Filtros de Segurança (RBAC)
+    const isPrivileged = user?.roles?.some((r: string) => 
+      ['IT', 'ADMIN', 'FINANCE'].includes(r)
+    );
+
+    if (user && !isPrivileged) {
+      const securityOR: any[] = [];
+
+      if (user.sellerId) {
+        securityOR.push({ sellerId: user.sellerId });
+      }
+
+      if (user.leaderCellId) {
+        securityOR.push({ seller: { cellId: user.leaderCellId } });
+      }
+
+      if (user.supervisorNetworkId) {
+        securityOR.push({ seller: { cell: { networkId: user.supervisorNetworkId } } });
+      }
+
+      if (user.deliveryPersonId) {
+        securityOR.push({
+          deliveryStops: { 
+            some: { route: { deliveryPersonId: user.deliveryPersonId } } 
+          }
+        });
+      }
+
+      if (securityOR.length > 0) {
+        andFilters.push({ OR: securityOR });
+      }
+    }
+
+    if (andFilters.length > 0) {
+      where.AND = andFilters;
     }
 
     return this.paginate(query, {
@@ -357,65 +415,42 @@ export class OrdersService extends BaseCrudService<
       throw new NotFoundException('Sem edição ativa');
     }
 
+    const baseWhere: any = {
+      editionId: activeEdition.id,
+      paymentStatus: PaymentStatusEnum.PAID,
+      deliveryOption: DeliveryOptionEnum.DONATE,
+    };
+
+    if (query.includeAssigned !== 'true') {
+      baseWhere.partnerId = null;
+    }
+
     if (search) {
       where = {
-        editionId: activeEdition.id,
-        paymentStatus: PaymentStatusEnum.PAID,
-        partnerId: null,
-        deliveryOption: DeliveryOptionEnum.DONATE,
+        ...baseWhere,
         OR: [
-          {
-            customerName: { contains: search, mode: 'insensitive' },
-          },
-          {
-            customerCPF: { contains: search },
-          },
-          {
-            customerPhone: { contains: search },
-          },
-          {
-            customer: {
-              name: { contains: search, mode: 'insensitive' },
-            },
-          },
-          {
-            customer: {
-              cpf: { contains: search },
-            },
-          },
-          {
-            customer: {
-              phone: { contains: search },
-            },
-          },
+          { customerName: { contains: search, mode: 'insensitive' } },
+          { customerCPF: { contains: search } },
+          { customerPhone: { contains: search } },
+          { customer: { name: { contains: search, mode: 'insensitive' } } },
+          { customer: { cpf: { contains: search } } },
+          { customer: { phone: { contains: search } } },
+          { partner: { name: { contains: search, mode: 'insensitive' } } },
         ],
       };
     } else {
-      where = {
-        editionId: activeEdition.id,
-        paymentStatus: PaymentStatusEnum.PAID,
-        partnerId: null,
-        deliveryOption: DeliveryOptionEnum.DONATE,
-      };
+      where = baseWhere;
     }
 
     return this.paginate(query, {
       where,
       include: {
         customer: true,
-        seller: {
-          include: {
-            contributor: true,
-          },
-        },
+        partner: true,
         items: true,
-        address: true,
-        commands: true,
-        deliveryStops: true,
-        payments: true,
-        donationsEntries: true,
+        seller: { include: { contributor: true } },
       },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { createdAt: 'desc' },
     });
   }
 
@@ -718,5 +753,82 @@ export class OrdersService extends BaseCrudService<
       order.paymentType,
     );
     return true;
+  }
+
+  async createPDV(dto: CreatePdvOrderDto, user: any) {
+    const edition = await getActiveEdition(this.prisma);
+    if (!edition) {
+      throw new NotFoundException('Nenhuma edição ativa encontrada');
+    }
+
+    // 1. Upsert Customer
+    const customer = await this.customersService.autoCreate({
+      cpf: dto.customerCpf || dto.customerPhone,
+    });
+
+    // 2. Criar Pedido
+    const order = await this.prisma.order.create({
+      data: {
+        editionId: edition.id,
+        customerId: customer.id,
+        customerName: dto.customerName,
+        customerPhone: dto.customerPhone,
+        customerCPF: dto.customerCpf || '',
+        sellerId: 'pdv-default', // Necessário definir um seller padrão ou vir do DTO
+        sellerTag: 'PDV',
+        origin: OrderOriginEnum.PDV,
+        status: OrderStatusEnum.PAID,
+        paymentStatus: PaymentStatusEnum.PAID,
+        paymentType: dto.paymentMethod,
+        totalValue: dto.totalValue,
+        observations: dto.observations,
+        deliveryOption: dto.deliveryOption || DeliveryOptionEnum.PICKUP,
+        deliveryTime: dto.scheduledTime,
+        siteStep: SiteOrderStepEnum.THANKS,
+        // contributorId não existe no modelo Order
+        items: {
+          create: dto.items.map((item) => ({
+            quantity: item.quantity,
+            unitPrice: dto.totalValue / (dto.items.length || 1), // Aproximação ou preço real
+            removedIngredients: item.removedIngredients || [],
+          })),
+        },
+      },
+      include: {
+        items: true,
+        customer: true,
+      },
+    });
+
+    // 3. Registrar Pagamento (TICKET não existe mais no PaymentMethodEnum)
+    if (dto.paymentMethod !== (PaymentMethodEnum as any).TICKET) {
+      await this.prisma.payment.create({
+        data: {
+          orderId: order.id,
+          method: dto.paymentMethod,
+          value: dto.totalValue,
+          status: PaymentStatusEnum.PAID,
+        },
+      });
+    }
+
+    // 4. Se houver tickets, vincular
+    if (dto.ticketNumbers && dto.ticketNumbers.length > 0) {
+      for (const ticketNumber of dto.ticketNumbers) {
+        await this.prisma.ticket.updateMany({
+          where: {
+            number: ticketNumber,
+            active: true,
+            ordered: false,
+          },
+          data: {
+            ordered: true,
+            orderId: order.id,
+          },
+        });
+      }
+    }
+
+    return order;
   }
 }

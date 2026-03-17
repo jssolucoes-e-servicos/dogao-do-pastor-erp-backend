@@ -1,4 +1,5 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
+import { Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { IdParamDto } from 'src/common/dto/id.param.dto';
 import { WithdrawalCreateDTO } from '../dto/withdrawal-create.dto';
 import { DonationsEntryService } from '../services/donations-entry.service';
@@ -17,5 +18,18 @@ export class DonationsController {
   @Post('create-withdrawal')
   async createWithdrawal(dto: WithdrawalCreateDTO) {
     return await this.donationsEntryService.createWithdrawal(dto);
+  }
+
+  @Get('partners-balances')
+  async listPartnersWithBalances() {
+    return this.donationsEntryService.listPartnersWithBalances();
+  }
+
+  @Get('partner-entries/:id')
+  async listEntriesByPartner(
+    @Param() { id }: IdParamDto,
+    @Query() query: PaginationQueryDto,
+  ) {
+    return this.donationsEntryService.listEntriesByPartner(id, query);
   }
 }

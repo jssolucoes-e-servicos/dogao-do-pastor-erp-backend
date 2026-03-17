@@ -210,7 +210,6 @@ export class ContributorsService extends BaseCrudService<
   async restore(id: string): Promise<ContributorEntity> {
     return super.restoreData({ id });
   }
-
   async uploadPhoto(id: string, file: MemoryStoredFile) {
     const contributor = await this.model.findUnique({
       where: { id: id },
@@ -230,5 +229,69 @@ export class ContributorsService extends BaseCrudService<
       logo: updated.photo,
       message: 'Foto atualizada com sucesso',
     };
+  }
+
+  /* ======================================================
+   * Roles & Permissions
+   * ====================================================== */
+
+  async linkRole(contributorId: string, roleId: string) {
+    return this.prisma.userRole.upsert({
+      where: {
+        contributorId_roleId: {
+          contributorId,
+          roleId,
+        },
+      },
+      update: { active: true, deletedAt: null },
+      create: {
+        contributorId,
+        roleId,
+      },
+    });
+  }
+
+  async unlinkRole(contributorId: string, roleId: string) {
+    return this.prisma.userRole.update({
+      where: {
+        contributorId_roleId: {
+          contributorId,
+          roleId,
+        },
+      },
+      data: {
+        active: false,
+        deletedAt: new Date(),
+      },
+    });
+  }
+
+  async setIndividualPermission(
+    contributorId: string,
+    moduleId: string,
+    permissions: {
+      access?: boolean;
+      create?: boolean;
+      update?: boolean;
+      delete?: boolean;
+      report?: boolean;
+    },
+  ) {
+    return this.prisma.permission.upsert({
+      where: {
+        id:
+          (
+            await this.prisma.permission.findFirst({
+              where: { contributorId, moduleId },
+            })
+          )?.id || 'new-id',
+      },
+      update: { ...permissions },
+      create: {
+        contributorId,
+        moduleId,
+        ...permissions,
+      },
+    });
   }
 }

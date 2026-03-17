@@ -31,4 +31,46 @@ export class PaginationQueryDto {
   @IsOptional()
   @IsString()
   search?: string;
+
+  @ApiPropertyOptional({
+    description: 'Status para filtragem',
+  })
+  @IsOptional()
+  @IsString({ each: true })
+  status?: string | string[];
+
+  @ApiPropertyOptional({
+    description: 'Opção de entrega para filtragem',
+  })
+  @IsOptional()
+  @IsString()
+  deliveryOption?: string;
+
+  @ApiPropertyOptional({
+    description: 'Status de pagamento para filtragem',
+  })
+  @IsOptional()
+  @IsString()
+  paymentStatus?: string;
+
+  @ApiPropertyOptional({
+    description: 'Filtrar por existência de comanda',
+  })
+  @IsOptional()
+  @IsString()
+  hasCommand?: 'true' | 'false';
+
+  @ApiPropertyOptional({
+    description: 'Filtrar por status da comanda',
+  })
+  @IsOptional()
+  @IsString()
+  commandStatus?: string;
+
+  @ApiPropertyOptional({
+    description: 'Incluir doações já vinculadas a parceiros',
+  })
+  @IsOptional()
+  @IsString()
+  includeAssigned?: 'true' | 'false';
 }

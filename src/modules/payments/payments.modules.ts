@@ -13,8 +13,10 @@ import { MpPaymentsService } from './services/mercadopago/mp-payments.service';
 import { PaymentsService } from './services/payments.service';
 import { PaymentsTasksService } from './services/payments-tasks.service';
 
+import { CommandsModule } from '../commands/commands.module';
+
 @Module({
-  imports: [EvolutionModule, OrdersModule],
+  imports: [EvolutionModule, OrdersModule, CommandsModule],
   controllers: [PaymentsController],
   providers: [
     PrismaService,

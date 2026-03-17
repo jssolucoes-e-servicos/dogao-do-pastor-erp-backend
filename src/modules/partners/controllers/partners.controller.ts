@@ -24,6 +24,11 @@ export class PartnersController {
     return this.service.findOne(id);
   }
 
+  @Get(':id/stats')
+  async getStats(@Param() { id }: IdParamDto) {
+    return this.service.getStats(id);
+  }
+
   @Patch(':id')
   async update(@Param() { id }: IdParamDto, @Body() data: UpdatePartnerDto) {
     return this.service.update(id, data);

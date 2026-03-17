@@ -234,6 +234,35 @@ export class PartnersService extends BaseCrudService<
     return true;
   }
 
+  async getStats(partnerId: string) {
+    const partner = await this.model.findUnique({
+      where: { id: partnerId },
+      include: {
+        withdrawals: {
+          include: {
+            items: true
+          }
+        }
+      }
+    });
+
+    if (!partner) throw new NotFoundException('Parceiro não encontrado');
+
+    const totalRecebido = partner.withdrawals.reduce((acc, w) => {
+      const itemsSum = w.items.reduce((sum, i) => sum + i.quantity, 0);
+      return acc + itemsSum;
+    }, 0);
+
+    // Por enquanto, consideramos que o parceiro começa com um saldo baseado nas Withdrawals criadas
+    // No futuro, isso pode ser integrado com Donations diretas.
+    
+    return {
+      totalRecebido,
+      jaRetirados: 0, // Implementar lógica de retirada real se houver tabela separada
+      disponiveis: totalRecebido,
+    };
+  }
+
   async delete(id: string) {
     await this.model.delete({
       where: {

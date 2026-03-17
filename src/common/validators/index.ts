@@ -1,5 +1,6 @@
 // src/common/validators/index.ts
 
+import { ArrayValidator } from 'src/common/validators/array.validator';
 import { BooleanValidator } from 'src/common/validators/boolean.validator';
 import { CepValidator } from 'src/common/validators/cep.validator';
 import { CuidValidator } from 'src/common/validators/cuid.validator';
@@ -14,6 +15,7 @@ import { StringValidator } from 'src/common/validators/string.validator';
 import { NestedValidator } from './nested.validator';
 
 export {
+  ArrayValidator,
   BooleanValidator,
   NestedValidator,
   CepValidator,
@@ -25,6 +27,5 @@ export {
   MongoIdValidator,
   NumberValidator,
   PhoneValidator,
-  StringValidator
+  StringValidator,
 };
-

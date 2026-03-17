@@ -14,7 +14,7 @@ import { PaginatedQuery } from 'src/common/decorators/paginated-query.decorator'
 import { IdParamDto } from 'src/common/dto/id.param.dto';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { OrderEntity } from 'src/common/entities';
-import { IPaginatedResponse } from 'src/common/interfaces';
+import type { IPaginatedResponse, IUser } from 'src/common/interfaces';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
@@ -29,6 +29,7 @@ import { OrderIdOnly } from '../dto/order-id-only.dto';
 import { ResultForAnalysisDTO } from '../dto/result-for-analysis.dto';
 import { SendToAnalysisDTO } from '../dto/send-to-analysis.dto';
 import { SyncCustomerDTO } from '../dto/sync-customer.dto';
+import { CreatePdvOrderDto } from '../dto/create-pdv-order.dto';
 import { OrdersService } from '../services/orders.service';
 
 @Controller('orders')
@@ -42,7 +43,7 @@ export class OrdersController {
   @Roles('IT', 'ADMIN', 'FINANCE', 'SELLER', 'LEADER', 'MANAGER')
   async list(
     @Query() query: PaginationQueryDto,
-    @User() user: any,
+    @User() user: IUser,
   ): Promise<IPaginatedResponse<OrderEntity>> {
     return this.service.list(query, user);
   }
@@ -172,5 +173,11 @@ export class OrdersController {
   @Get('send-wpp-payment-received/:id')
   async sendPaymentReceive(@Param() { id }: IdParamDto) {
     return this.service.sendPaymentReceive(id);
+  }
+
+  @Post('create-pdv')
+  @Roles('IT', 'ADMIN', 'FINANCE', 'RECEPTION')
+  async createPDV(@Body() dto: CreatePdvOrderDto, @User() user: IUser) {
+    return this.service.createPDV(dto, user);
   }
 }
