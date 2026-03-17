@@ -254,7 +254,7 @@ export class CommandsService extends BaseCrudService<
       });
 
       // 5. Criar Comanda
-      return this.createCommandForOrder(tx, order as OrderEntity, edition);
+      return this.createCommandForOrder(tx, order as unknown as OrderEntity, edition);
     });
   }
 
