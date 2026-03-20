@@ -27,4 +27,41 @@ export class RolesService extends BaseCrudService<
     super(configService, loggerService, prismaService);
     this.model = this.prisma.role;
   }
+
+  async setRolePermission(
+    roleId: string,
+    moduleId: string,
+    permissions: {
+      access?: boolean;
+      create?: boolean;
+      update?: boolean;
+      delete?: boolean;
+      report?: boolean;
+    },
+  ) {
+    // Busca permissão existente ou cria nova
+    const existing = await this.prisma.permission.findFirst({
+      where: {
+        roleId,
+        moduleId,
+      },
+    });
+
+    if (existing) {
+      return await this.prisma.permission.update({
+        where: { id: existing.id },
+        data: {
+          ...permissions,
+        },
+      });
+    }
+
+    return await this.prisma.permission.create({
+      data: {
+        roleId,
+        moduleId,
+        ...permissions,
+      },
+    });
+  }
 }

@@ -7,6 +7,7 @@ import {
 import { EvolutionModule } from 'src/modules/evolution/evolution.module';
 import { PaymentsController } from 'src/modules/payments/controllers/payments.controller';
 import { OrdersNotificationsService } from '../evolution/services/notifications/orders-notifications.service';
+import { forwardRef } from '@nestjs/common';
 import { OrdersModule } from '../orders/orders.module';
 import { OrdersService } from '../orders/services/orders.service';
 import { MpPaymentsService } from './services/mercadopago/mp-payments.service';
@@ -16,7 +17,11 @@ import { PaymentsTasksService } from './services/payments-tasks.service';
 import { CommandsModule } from '../commands/commands.module';
 
 @Module({
-  imports: [EvolutionModule, OrdersModule, CommandsModule],
+  imports: [
+    EvolutionModule,
+    forwardRef(() => OrdersModule),
+    forwardRef(() => CommandsModule),
+  ],
   controllers: [PaymentsController],
   providers: [
     PrismaService,
@@ -25,7 +30,7 @@ import { CommandsModule } from '../commands/commands.module';
     PaymentsService,
     PaymentsTasksService,
   ],
-  exports: [PaymentsService, PaymentsTasksService],
+  exports: [PaymentsService, PaymentsTasksService, MpPaymentsService],
 })
 export class PaymentsModule {
   /* void */

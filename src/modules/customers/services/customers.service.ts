@@ -90,27 +90,26 @@ export class CustomersService extends BaseCrudService<
     query: PaginationQueryDto,
     user?: any,
   ): Promise<IPaginatedResponse<CustomerEntity>> {
-    const { search } = query;
+    const { search, cpf, phone } = query;
 
-    const baseWhere = {
-      firstRegister: false,
-    };
-
-    let where = {};
+    const where: PrismaBase.CustomerWhereInput = {};
 
     if (search) {
-      where = {
-        ...baseWhere,
-        OR: [
-          { name: { contains: search, mode: 'insensitive' } },
-          { phone: { contains: search } },
-          { cpf: { contains: search } },
-        ],
-      };
-    } else {
-      where = {
-        ...baseWhere,
-      };
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { phone: { contains: search } },
+        { cpf: { contains: search } },
+      ];
+    }
+
+    if (cpf) {
+      const cleanCpf = cpf.replace(/\D/g, '');
+      where.cpf = { contains: cleanCpf };
+    }
+
+    if (phone) {
+      const cleanPhone = phone.replace(/\D/g, '');
+      where.phone = { contains: cleanPhone };
     }
 
     return this.paginate(query, {
@@ -118,14 +117,6 @@ export class CustomersService extends BaseCrudService<
       include: {
         addresses: true,
         vouchers: true,
-        orders: {
-          include: {
-            edition: true,
-            seller: true,
-            items: true,
-            payments: true,
-          },
-        },
       },
       orderBy: { name: 'asc' },
     });

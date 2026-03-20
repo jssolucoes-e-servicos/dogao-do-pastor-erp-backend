@@ -12,19 +12,19 @@ export async function paginate<
   prisma: PrismaClient,
   model: ModelDelegate,
   query: PaginationQueryDto,
-  args: any,
+  args: any = {},
 ) {
   const { page, perPage } = query;
   const { take, skip } = getPaginationParams(page, perPage);
 
-  const [data, total] = await prisma.$transaction([
+  const [data, total] = await Promise.all([
     model.findMany({
       ...args,
       take,
       skip,
     }),
     model.count({
-      where: args.where,
+      where: args?.where,
     }),
   ]);
 

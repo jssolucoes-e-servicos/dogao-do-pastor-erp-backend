@@ -33,6 +33,20 @@ export class PaginationQueryDto {
   search?: string;
 
   @ApiPropertyOptional({
+    description: 'CPF para busca específica',
+  })
+  @IsOptional()
+  @IsString()
+  cpf?: string;
+
+  @ApiPropertyOptional({
+    description: 'Telefone para busca específica',
+  })
+  @IsOptional()
+  @IsString()
+  phone?: string;
+
+  @ApiPropertyOptional({
     description: 'Status para filtragem',
   })
   @IsOptional()

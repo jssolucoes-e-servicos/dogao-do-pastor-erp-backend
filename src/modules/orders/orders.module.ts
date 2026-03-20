@@ -13,11 +13,21 @@ import { OrdersController } from 'src/modules/orders/controllers/orders.controll
 import { OrdersService } from 'src/modules/orders/services/orders.service';
 import { SellersModule } from 'src/modules/sellers/sellers.module';
 import { SellersService } from 'src/modules/sellers/services/sellers.service';
-import { OrdersNotificationsService } from '../evolution/services/notifications/orders-notifications.service';
+import { forwardRef } from '@nestjs/common';
+import { PaymentsModule } from '../payments/payments.modules';
 import { N8nModule } from 'src/modules/n8n/n8n.module';
+import { TicketsModule } from '../tickets/tickets.module';
+import { OrdersNotificationsService } from '../evolution/services/notifications/orders-notifications.service';
 
 @Module({
-  imports: [CustomersModule, SellersModule, EvolutionModule, N8nModule],
+  imports: [
+    CustomersModule,
+    SellersModule,
+    EvolutionModule,
+    N8nModule,
+    TicketsModule,
+    forwardRef(() => PaymentsModule),
+  ],
   controllers: [OrdersController],
   providers: [
     PrismaService,

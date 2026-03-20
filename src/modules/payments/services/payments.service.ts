@@ -124,7 +124,6 @@ export class PaymentsService extends BaseCrudService<
     );
 
     const paymentPayload = {
-      orderId: dto.orderId,
       origin: PaymentOriginEnum.ORDER,
       value: order.totalValue,
       status: PaymentStatusEnum.PENDING,
@@ -136,11 +135,19 @@ export class PaymentsService extends BaseCrudService<
       rawPayload: JSON.stringify(pix),
     };
 
-    // Se existe um pagamento PENDENTE, atualiza. Senão cria um NOVO (histórico de tentativas)
+    // Se existe um pagamento PENDENTE, atualiza. Senão cria um NOVO
     if (paymentExists && paymentExists.status === PaymentStatusEnum.PENDING) {
-      await super.update(paymentExists.id, paymentPayload);
+      await this.model.update({
+        where: { id: paymentExists.id },
+        data: paymentPayload,
+      });
     } else {
-      await super.create(paymentPayload);
+      await this.model.create({
+        data: {
+          ...paymentPayload,
+          orderId: dto.orderId,
+        },
+      });
     }
 
     try {
@@ -206,7 +213,6 @@ export class PaymentsService extends BaseCrudService<
     console.log(card);
 
     const paymentPayload = {
-      orderId: dto.orderId,
       origin: PaymentOriginEnum.ORDER,
       value: order.totalValue,
       status: PaymentStatusEnum.PENDING,
@@ -219,11 +225,19 @@ export class PaymentsService extends BaseCrudService<
       cardToken: dto.token,
     };
 
-    // Se existe um pagamento PENDENTE, atualiza. Senão cria um NOVO (histórico de tentativas)
+    // Se existe um pagamento PENDENTE, atualiza. Senão cria um NOVO
     if (paymentExists && paymentExists.status === PaymentStatusEnum.PENDING) {
-      await super.update(paymentExists.id, paymentPayload);
+      await this.model.update({
+        where: { id: paymentExists.id },
+        data: paymentPayload,
+      });
     } else {
-      await super.create(paymentPayload);
+      await this.model.create({
+        data: {
+          ...paymentPayload,
+          orderId: dto.orderId,
+        },
+      });
     }
 
     try {

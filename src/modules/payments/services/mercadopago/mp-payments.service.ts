@@ -63,10 +63,14 @@ export class MpPaymentsService extends BaseService {
       const email = StringsHelper.emailFallback(orderId, customer.email);
       const transaction_amount = Math.floor(totalValue * 100) / 100;
 
+      const expirationDate = new Date();
+      expirationDate.setMinutes(expirationDate.getMinutes() + 20);
+
       const bodyMP = {
         transaction_amount: transaction_amount,
         description: `Compra Online Dogão: ${orderId}`,
         payment_method_id: 'pix',
+        date_of_expiration: expirationDate.toISOString(),
         payer: {
           first_name,
           last_name,

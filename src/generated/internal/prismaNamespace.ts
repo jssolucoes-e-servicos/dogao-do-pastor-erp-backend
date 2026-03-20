@@ -402,7 +402,6 @@ export const ModelName = {
   Ticket: 'Ticket',
   Voucher: 'Voucher',
   Payment: 'Payment',
-  PaymentEvent: 'PaymentEvent',
   Command: 'Command',
   DailyReportSoldsCache: 'DailyReportSoldsCache',
   DeliveryRoute: 'DeliveryRoute',
@@ -428,7 +427,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "contributor" | "role" | "userRole" | "module" | "permission" | "file" | "edition" | "cellNetwork" | "cell" | "seller" | "deliveryPerson" | "customer" | "customerAddress" | "order" | "orderItem" | "ticket" | "voucher" | "payment" | "paymentEvent" | "command" | "dailyReportSoldsCache" | "deliveryRoute" | "deliveryStop" | "sellerSettlement" | "partner" | "otpVerification" | "donationEntry" | "withdrawal" | "withdrawalItem"
+    modelProps: "contributor" | "role" | "userRole" | "module" | "permission" | "file" | "edition" | "cellNetwork" | "cell" | "seller" | "deliveryPerson" | "customer" | "customerAddress" | "order" | "orderItem" | "ticket" | "voucher" | "payment" | "command" | "dailyReportSoldsCache" | "deliveryRoute" | "deliveryStop" | "sellerSettlement" | "partner" | "otpVerification" | "donationEntry" | "withdrawal" | "withdrawalItem"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1764,80 +1763,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    PaymentEvent: {
-      payload: Prisma.$PaymentEventPayload<ExtArgs>
-      fields: Prisma.PaymentEventFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.PaymentEventFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentEventPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.PaymentEventFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentEventPayload>
-        }
-        findFirst: {
-          args: Prisma.PaymentEventFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentEventPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.PaymentEventFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentEventPayload>
-        }
-        findMany: {
-          args: Prisma.PaymentEventFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentEventPayload>[]
-        }
-        create: {
-          args: Prisma.PaymentEventCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentEventPayload>
-        }
-        createMany: {
-          args: Prisma.PaymentEventCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.PaymentEventCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentEventPayload>[]
-        }
-        delete: {
-          args: Prisma.PaymentEventDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentEventPayload>
-        }
-        update: {
-          args: Prisma.PaymentEventUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentEventPayload>
-        }
-        deleteMany: {
-          args: Prisma.PaymentEventDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.PaymentEventUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.PaymentEventUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentEventPayload>[]
-        }
-        upsert: {
-          args: Prisma.PaymentEventUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentEventPayload>
-        }
-        aggregate: {
-          args: Prisma.PaymentEventAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregatePaymentEvent>
-        }
-        groupBy: {
-          args: Prisma.PaymentEventGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PaymentEventGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.PaymentEventCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PaymentEventCountAggregateOutputType> | number
-        }
-      }
-    }
     Command: {
       payload: Prisma.$CommandPayload<ExtArgs>
       fields: Prisma.CommandFieldRefs
@@ -2847,6 +2772,7 @@ export const OrderScalarFieldEnum = {
   addressId: 'addressId',
   observations: 'observations',
   active: 'active',
+  paymentReminderSent: 'paymentReminderSent',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -2858,6 +2784,7 @@ export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof Or
 export const OrderItemScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
+  quantity: 'quantity',
   unitPrice: 'unitPrice',
   removedIngredients: 'removedIngredients',
   active: 'active',
@@ -2926,21 +2853,6 @@ export const PaymentScalarFieldEnum = {
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
-
-
-export const PaymentEventScalarFieldEnum = {
-  id: 'id',
-  paymentId: 'paymentId',
-  providerEventId: 'providerEventId',
-  type: 'type',
-  rawPayload: 'rawPayload',
-  processedAt: 'processedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
-} as const
-
-export type PaymentEventScalarFieldEnum = (typeof PaymentEventScalarFieldEnum)[keyof typeof PaymentEventScalarFieldEnum]
 
 
 export const CommandScalarFieldEnum = {
@@ -3142,13 +3054,6 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
-
-
-export const JsonNullValueInput = {
-  JsonNull: JsonNull
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -3376,16 +3281,6 @@ export const PaymentOrderByRelevanceFieldEnum = {
 } as const
 
 export type PaymentOrderByRelevanceFieldEnum = (typeof PaymentOrderByRelevanceFieldEnum)[keyof typeof PaymentOrderByRelevanceFieldEnum]
-
-
-export const PaymentEventOrderByRelevanceFieldEnum = {
-  id: 'id',
-  paymentId: 'paymentId',
-  providerEventId: 'providerEventId',
-  type: 'type'
-} as const
-
-export type PaymentEventOrderByRelevanceFieldEnum = (typeof PaymentEventOrderByRelevanceFieldEnum)[keyof typeof PaymentEventOrderByRelevanceFieldEnum]
 
 
 export const CommandOrderByRelevanceFieldEnum = {
@@ -3907,7 +3802,6 @@ export type GlobalOmitConfig = {
   ticket?: Prisma.TicketOmit
   voucher?: Prisma.VoucherOmit
   payment?: Prisma.PaymentOmit
-  paymentEvent?: Prisma.PaymentEventOmit
   command?: Prisma.CommandOmit
   dailyReportSoldsCache?: Prisma.DailyReportSoldsCacheOmit
   deliveryRoute?: Prisma.DeliveryRouteOmit

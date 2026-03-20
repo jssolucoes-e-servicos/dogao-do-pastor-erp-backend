@@ -69,7 +69,6 @@ export const ModelName = {
   Ticket: 'Ticket',
   Voucher: 'Voucher',
   Payment: 'Payment',
-  PaymentEvent: 'PaymentEvent',
   Command: 'Command',
   DailyReportSoldsCache: 'DailyReportSoldsCache',
   DeliveryRoute: 'DeliveryRoute',
@@ -328,6 +327,7 @@ export const OrderScalarFieldEnum = {
   addressId: 'addressId',
   observations: 'observations',
   active: 'active',
+  paymentReminderSent: 'paymentReminderSent',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -339,6 +339,7 @@ export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof Or
 export const OrderItemScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
+  quantity: 'quantity',
   unitPrice: 'unitPrice',
   removedIngredients: 'removedIngredients',
   active: 'active',
@@ -407,21 +408,6 @@ export const PaymentScalarFieldEnum = {
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
-
-
-export const PaymentEventScalarFieldEnum = {
-  id: 'id',
-  paymentId: 'paymentId',
-  providerEventId: 'providerEventId',
-  type: 'type',
-  rawPayload: 'rawPayload',
-  processedAt: 'processedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
-} as const
-
-export type PaymentEventScalarFieldEnum = (typeof PaymentEventScalarFieldEnum)[keyof typeof PaymentEventScalarFieldEnum]
 
 
 export const CommandScalarFieldEnum = {
@@ -623,13 +609,6 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
-
-
-export const JsonNullValueInput = {
-  JsonNull: JsonNull
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -857,16 +836,6 @@ export const PaymentOrderByRelevanceFieldEnum = {
 } as const
 
 export type PaymentOrderByRelevanceFieldEnum = (typeof PaymentOrderByRelevanceFieldEnum)[keyof typeof PaymentOrderByRelevanceFieldEnum]
-
-
-export const PaymentEventOrderByRelevanceFieldEnum = {
-  id: 'id',
-  paymentId: 'paymentId',
-  providerEventId: 'providerEventId',
-  type: 'type'
-} as const
-
-export type PaymentEventOrderByRelevanceFieldEnum = (typeof PaymentEventOrderByRelevanceFieldEnum)[keyof typeof PaymentEventOrderByRelevanceFieldEnum]
 
 
 export const CommandOrderByRelevanceFieldEnum = {

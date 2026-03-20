@@ -53,4 +53,21 @@ export class RolesController {
   async remove(@Param() { id }: IdParamDto) {
     return this.service.softDelete({ id });
   }
+
+  @Post(':id/permissions/:moduleId')
+  @Roles('IT', 'ADMIN')
+  async setRolePermission(
+    @Param('id') id: string,
+    @Param('moduleId') moduleId: string,
+    @Body()
+    permissions: {
+      access?: boolean;
+      create?: boolean;
+      update?: boolean;
+      delete?: boolean;
+      report?: boolean;
+    },
+  ) {
+    return await this.service.setRolePermission(id, moduleId, permissions);
+  }
 }

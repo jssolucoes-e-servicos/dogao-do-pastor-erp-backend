@@ -1,4 +1,6 @@
-import { Body, Controller, HttpCode, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { IdParamDto } from 'src/common/dto/id.param.dto';
+
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Public } from '../../auth/decorators/public.decorator';
@@ -22,6 +24,16 @@ export class PaymentsController {
   @Public()
   async CreateOrderPIX(@Body() dto: GenerateOrderPixDTO) {
     return this.service.CreateOrderPIX(dto);
+  }
+
+  @Get(':id')
+  async findById(@Param() { id }: IdParamDto) {
+    return await this.service.findById(id);
+  }
+
+  @Get('order/:id')
+  async findByOrder(@Param('id') id: string) {
+    return await this.service.findByOrder(id);
   }
 
   @Post('create-order-card')

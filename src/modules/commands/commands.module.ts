@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import {
   ConfigService,
   LoggerService,
@@ -13,7 +13,7 @@ import { SellersModule } from 'src/modules/sellers/sellers.module';
 import { OrdersModule } from 'src/modules/orders/orders.module';
 
 @Module({
-  imports: [CustomersModule, SellersModule, OrdersModule],
+  imports: [CustomersModule, SellersModule, forwardRef(() => OrdersModule)],
   controllers: [CommandsController],
   providers: [PrismaService, LoggerService, CommandsService, CommandsGateway],
   exports: [CommandsService, CommandsGateway],

@@ -23,6 +23,8 @@ import { SystemModule } from './system/system.module';
 import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { ModulesModule } from './modules/modules.module';
+import { TicketsModule } from './tickets/tickets.module';
+
 
 @Module({
   imports: [
@@ -57,7 +59,9 @@ import { ModulesModule } from './modules/modules.module';
     RolesModule,
     PermissionsModule,
     ModulesModule,
+    TicketsModule,
   ],
+
   providers: [],
 })
 export class AppModule {

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { OrderEntity } from 'src/common/entities';
 import {
@@ -6,6 +6,8 @@ import {
   OrderOriginEnum,
   OrderStatusEnum,
   PaymentMethodEnum,
+  PaymentOriginEnum,
+  PaymentProviderEnum,
   PaymentStatusEnum,
   SiteOrderStepEnum,
 } from 'src/common/enums';
@@ -22,6 +24,9 @@ import type { IPaginatedResponse } from 'src/common/interfaces';
 import { CustomersService } from 'src/modules/customers/services/customers.service';
 import { OrdersNotificationsService } from 'src/modules/evolution/services/notifications/orders-notifications.service';
 import { SellersService } from 'src/modules/sellers/services/sellers.service';
+import { TicketsService } from 'src/modules/tickets/services/tickets.service';
+import { MpPaymentsService } from 'src/modules/payments/services/mercadopago/mp-payments.service';
+
 import { DefinePaymetnDTO } from '../dto/define-payment.dto';
 import { ForDeliveryDTO } from '../dto/for-delivery.dto';
 import { ForDonationDTO } from '../dto/for-donation.dto';
@@ -45,7 +50,11 @@ export class OrdersService extends BaseCrudService<
     prismaService: PrismaService,
     private readonly customersService: CustomersService,
     private readonly sellersService: SellersService,
+    private readonly ticketsService: TicketsService,
     private readonly notifications: OrdersNotificationsService,
+    @Inject(forwardRef(() => MpPaymentsService))
+    private readonly mpPaymentsService: MpPaymentsService,
+
   ) {
     super(configService, loggerService, prismaService);
     this.model = this.prisma.order;
@@ -307,6 +316,7 @@ export class OrdersService extends BaseCrudService<
         items: true,
         commands: true,
         deliveryStops: true,
+        payments: true,
       },
     });
   }
@@ -687,6 +697,7 @@ export class OrdersService extends BaseCrudService<
       data: {
         addressId: dto.addressId,
         deliveryOption: DeliveryOptionEnum.DELIVERY,
+        deliveryTime: dto.scheduledTime,
         status: OrderStatusEnum.DIGITATION,
         siteStep: SiteOrderStepEnum.PAYMENT,
       },
@@ -766,53 +777,185 @@ export class OrdersService extends BaseCrudService<
       cpf: dto.customerCpf || dto.customerPhone,
     });
 
+    // 1b. Validar Tickets se houver
+    if (dto.ticketNumbers && dto.ticketNumbers.length > 0) {
+      for (const ticketNumber of dto.ticketNumbers) {
+        await this.ticketsService.validateTicket(ticketNumber, edition.id);
+      }
+    }
+
     // 2. Criar Pedido
-    const order = await this.prisma.order.create({
-      data: {
-        editionId: edition.id,
+    let finalSeller: any = null;
+
+    // Tenta primeiro o vendedor vinculado ao usuário logado
+    if (user?.sellerId) {
+      finalSeller = await this.sellersService.findById(user.sellerId);
+    }
+
+    // Se não tiver usuário com vendedor, tenta o ID vindo no DTO (se for um ID válido/existente)
+    if (!finalSeller && dto.sellerId && dto.sellerId !== 'pdv-default') {
+      finalSeller = await this.sellersService.findById(dto.sellerId);
+    }
+
+    // Se ainda não encontrou (ou se o ID do DTO era inválido/pdv-default), usa o fallback pela tag 'dogao'
+    if (!finalSeller) {
+      finalSeller = await this.sellersService.findByTag('dogao');
+    }
+
+    if (!finalSeller) {
+      throw new NotFoundException('Vendedor (Seller) padrão não encontrado no sistema');
+    }
+
+    const finalSellerId = finalSeller.id;
+    const finalSellerTag = finalSeller.tag || 'PDV';
+    const isOnlinePayment = ['PIX', 'CARD_CREDIT'].includes(dto.paymentMethod);
+    const orderStatus = isOnlinePayment
+      ? OrderStatusEnum.PENDING_PAYMENT
+      : OrderStatusEnum.PAID;
+    const paymentStatus = isOnlinePayment
+      ? PaymentStatusEnum.PENDING
+      : PaymentStatusEnum.PAID;
+
+    // 2. Procurar pedido pendente existente para o mesmo cliente na edição ativa
+    const existingOrder = await this.model.findFirst({
+      where: {
         customerId: customer.id,
-        customerName: dto.customerName,
-        customerPhone: dto.customerPhone,
-        customerCPF: dto.customerCpf || '',
-        sellerId: 'pdv-default', // Necessário definir um seller padrão ou vir do DTO
-        sellerTag: 'PDV',
-        origin: OrderOriginEnum.PDV,
-        status: OrderStatusEnum.PAID,
-        paymentStatus: PaymentStatusEnum.PAID,
-        paymentType: dto.paymentMethod,
-        totalValue: dto.totalValue,
-        observations: dto.observations,
-        deliveryOption: dto.deliveryOption || DeliveryOptionEnum.PICKUP,
-        deliveryTime: dto.scheduledTime,
-        siteStep: SiteOrderStepEnum.THANKS,
-        // contributorId não existe no modelo Order
-        items: {
-          create: dto.items.map((item) => ({
-            quantity: item.quantity,
-            unitPrice: dto.totalValue / (dto.items.length || 1), // Aproximação ou preço real
-            removedIngredients: item.removedIngredients || [],
-          })),
+        editionId: edition.id,
+        status: {
+          in: [OrderStatusEnum.DIGITATION, OrderStatusEnum.PENDING_PAYMENT],
         },
-      },
-      include: {
-        items: true,
-        customer: true,
+        active: true,
       },
     });
 
-    // 3. Registrar Pagamento (TICKET não existe mais no PaymentMethodEnum)
-    if (dto.paymentMethod !== (PaymentMethodEnum as any).TICKET) {
-      await this.prisma.payment.create({
+    let order;
+    if (existingOrder) {
+      // Limpar itens anteriores e pagamentos pendentes para atualizar o pedido
+      await this.prisma.orderItem.deleteMany({
+        where: { orderId: existingOrder.id },
+      });
+      await this.prisma.payment.deleteMany({
+        where: { orderId: existingOrder.id, status: PaymentStatusEnum.PENDING },
+      });
+
+      order = await this.model.update({
+        where: { id: existingOrder.id },
         data: {
-          orderId: order.id,
-          method: dto.paymentMethod,
-          value: dto.totalValue,
-          status: PaymentStatusEnum.PAID,
+          customerName: dto.customerName,
+          customerPhone: dto.customerPhone,
+          customerCPF: dto.customerCpf || '',
+          sellerId: finalSellerId,
+          sellerTag: finalSellerTag,
+          origin: OrderOriginEnum.PDV,
+          status: orderStatus,
+          paymentStatus: paymentStatus,
+          paymentType: dto.paymentMethod,
+          totalValue: dto.totalValue,
+          observations: dto.observations,
+          deliveryOption: dto.deliveryOption || DeliveryOptionEnum.PICKUP,
+          deliveryTime: dto.scheduledTime,
+          siteStep: SiteOrderStepEnum.THANKS,
+          items: {
+            create: dto.items.map((item) => ({
+              quantity: item.quantity,
+              unitPrice: dto.totalValue / (dto.items.length || 1),
+              removedIngredients: item.removedIngredients || [],
+            })),
+          },
+        },
+        include: {
+          items: true,
+          customer: true,
+        },
+      });
+    } else {
+      order = await this.model.create({
+        data: {
+          editionId: edition.id,
+          customerId: customer.id,
+          customerName: dto.customerName,
+          customerPhone: dto.customerPhone,
+          customerCPF: dto.customerCpf || '',
+          sellerId: finalSellerId,
+          sellerTag: finalSellerTag,
+          origin: OrderOriginEnum.PDV,
+          status: orderStatus,
+          paymentStatus: paymentStatus,
+          paymentType: dto.paymentMethod,
+          totalValue: dto.totalValue,
+          observations: dto.observations,
+          deliveryOption: dto.deliveryOption || DeliveryOptionEnum.PICKUP,
+          deliveryTime: dto.scheduledTime,
+          siteStep: SiteOrderStepEnum.THANKS,
+          items: {
+            create: dto.items.map((item) => ({
+              quantity: item.quantity,
+              unitPrice: dto.totalValue / (dto.items.length || 1),
+              removedIngredients: item.removedIngredients || [],
+            })),
+          },
+        },
+        include: {
+          items: true,
+          customer: true,
         },
       });
     }
 
-    // 4. Se houver tickets, vincular
+    // 3. Registrar Pagamento (TICKET não existe mais no PaymentMethodEnum)
+    if (dto.paymentMethod !== (PaymentMethodEnum as any).TICKET) {
+      const paymentData: any = {
+        orderId: order.id,
+        method: dto.paymentMethod,
+        value: dto.totalValue,
+        status: paymentStatus,
+        origin: PaymentOriginEnum.PDV,
+        provider: PaymentProviderEnum.MANUAL, // Padrão para PDV
+      };
+
+      if (dto.paymentMethod === PaymentMethodEnum.PIX) {
+        try {
+          const pixResponse = await this.mpPaymentsService.processPixPayment(
+            {
+              name: dto.customerName,
+              phone: dto.customerPhone,
+              email: null, // O serviço de MP já trata o fallback de email
+            },
+            order.id,
+            dto.totalValue,
+          );
+
+          if (pixResponse.success && pixResponse.payment) {
+            paymentData.provider = PaymentProviderEnum.MERCADOPAGO;
+            paymentData.providerPaymentId = pixResponse.payment.id;
+            paymentData.pixQrcode = pixResponse.payment.pix?.qrCodeBase64;
+            paymentData.pixCopyPaste = pixResponse.payment.pix?.qrCode;
+            paymentData.rawPayload = JSON.stringify(pixResponse);
+          }
+        } catch (error) {
+          this.logger.error(
+            `Erro ao gerar PIX para pedido PDV ${order.id}: ${error}`,
+          );
+        }
+      }
+
+      await this.prisma.payment.create({
+        data: paymentData,
+      });
+    }
+
+    if (orderStatus === OrderStatusEnum.PAID) {
+      const totalDogsInOrder = order.items?.length || 0;
+
+      if (totalDogsInOrder > 0) {
+        await this.prisma.edition.update({
+          where: { id: edition.id },
+          data: { dogsSold: { increment: totalDogsInOrder } },
+        });
+      }
+    }
+
+    // 4. Vincular Tickets
     if (dto.ticketNumbers && dto.ticketNumbers.length > 0) {
       for (const ticketNumber of dto.ticketNumbers) {
         await this.prisma.ticket.updateMany({
@@ -829,6 +972,7 @@ export class OrdersService extends BaseCrudService<
       }
     }
 
-    return order;
+
+    return this.findById(order.id);
   }
 }

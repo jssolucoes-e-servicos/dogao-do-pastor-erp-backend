@@ -108,11 +108,6 @@ export type Voucher = Prisma.VoucherModel
  */
 export type Payment = Prisma.PaymentModel
 /**
- * Model PaymentEvent
- * 
- */
-export type PaymentEvent = Prisma.PaymentEventModel
-/**
  * Model Command
  * 
  */

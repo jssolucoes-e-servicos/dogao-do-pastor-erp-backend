@@ -55,6 +55,7 @@ export type OrderMinAggregateOutputType = {
   addressId: string | null
   observations: string | null
   active: boolean | null
+  paymentReminderSent: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -81,6 +82,7 @@ export type OrderMaxAggregateOutputType = {
   addressId: string | null
   observations: string | null
   active: boolean | null
+  paymentReminderSent: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -107,6 +109,7 @@ export type OrderCountAggregateOutputType = {
   addressId: number
   observations: number
   active: number
+  paymentReminderSent: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -143,6 +146,7 @@ export type OrderMinAggregateInputType = {
   addressId?: true
   observations?: true
   active?: true
+  paymentReminderSent?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -169,6 +173,7 @@ export type OrderMaxAggregateInputType = {
   addressId?: true
   observations?: true
   active?: true
+  paymentReminderSent?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -195,6 +200,7 @@ export type OrderCountAggregateInputType = {
   addressId?: true
   observations?: true
   active?: true
+  paymentReminderSent?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -308,6 +314,7 @@ export type OrderGroupByOutputType = {
   addressId: string | null
   observations: string | null
   active: boolean
+  paymentReminderSent: boolean
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -357,6 +364,7 @@ export type OrderWhereInput = {
   addressId?: Prisma.StringNullableFilter<"Order"> | string | null
   observations?: Prisma.StringNullableFilter<"Order"> | string | null
   active?: Prisma.BoolFilter<"Order"> | boolean
+  paymentReminderSent?: Prisma.BoolFilter<"Order"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
@@ -395,6 +403,7 @@ export type OrderOrderByWithRelationInput = {
   addressId?: Prisma.SortOrderInput | Prisma.SortOrder
   observations?: Prisma.SortOrderInput | Prisma.SortOrder
   active?: Prisma.SortOrder
+  paymentReminderSent?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -437,6 +446,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   addressId?: Prisma.StringNullableFilter<"Order"> | string | null
   observations?: Prisma.StringNullableFilter<"Order"> | string | null
   active?: Prisma.BoolFilter<"Order"> | boolean
+  paymentReminderSent?: Prisma.BoolFilter<"Order"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
@@ -475,6 +485,7 @@ export type OrderOrderByWithAggregationInput = {
   addressId?: Prisma.SortOrderInput | Prisma.SortOrder
   observations?: Prisma.SortOrderInput | Prisma.SortOrder
   active?: Prisma.SortOrder
+  paymentReminderSent?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -509,6 +520,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   addressId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   observations?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   active?: Prisma.BoolWithAggregatesFilter<"Order"> | boolean
+  paymentReminderSent?: Prisma.BoolWithAggregatesFilter<"Order"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
@@ -530,6 +542,7 @@ export type OrderCreateInput = {
   deliveryTime?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -568,6 +581,7 @@ export type OrderUncheckedCreateInput = {
   addressId?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -596,6 +610,7 @@ export type OrderUpdateInput = {
   deliveryTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -634,6 +649,7 @@ export type OrderUncheckedUpdateInput = {
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -667,6 +683,7 @@ export type OrderCreateManyInput = {
   addressId?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -688,6 +705,7 @@ export type OrderUpdateManyMutationInput = {
   deliveryTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -714,6 +732,7 @@ export type OrderUncheckedUpdateManyInput = {
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -756,6 +775,7 @@ export type OrderCountOrderByAggregateInput = {
   addressId?: Prisma.SortOrder
   observations?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  paymentReminderSent?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -786,6 +806,7 @@ export type OrderMaxOrderByAggregateInput = {
   addressId?: Prisma.SortOrder
   observations?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  paymentReminderSent?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -812,6 +833,7 @@ export type OrderMinOrderByAggregateInput = {
   addressId?: Prisma.SortOrder
   observations?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  paymentReminderSent?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -1187,6 +1209,7 @@ export type OrderCreateWithoutEditionInput = {
   deliveryTime?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1223,6 +1246,7 @@ export type OrderUncheckedCreateWithoutEditionInput = {
   addressId?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1285,6 +1309,7 @@ export type OrderScalarWhereInput = {
   addressId?: Prisma.StringNullableFilter<"Order"> | string | null
   observations?: Prisma.StringNullableFilter<"Order"> | string | null
   active?: Prisma.BoolFilter<"Order"> | boolean
+  paymentReminderSent?: Prisma.BoolFilter<"Order"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
@@ -1306,6 +1331,7 @@ export type OrderCreateWithoutSellerInput = {
   deliveryTime?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1342,6 +1368,7 @@ export type OrderUncheckedCreateWithoutSellerInput = {
   addressId?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1396,6 +1423,7 @@ export type OrderCreateWithoutCustomerInput = {
   deliveryTime?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1432,6 +1460,7 @@ export type OrderUncheckedCreateWithoutCustomerInput = {
   addressId?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1486,6 +1515,7 @@ export type OrderCreateWithoutAddressInput = {
   deliveryTime?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1522,6 +1552,7 @@ export type OrderUncheckedCreateWithoutAddressInput = {
   partnerId?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1576,6 +1607,7 @@ export type OrderCreateWithoutItemsInput = {
   deliveryTime?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1613,6 +1645,7 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   addressId?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1656,6 +1689,7 @@ export type OrderUpdateWithoutItemsInput = {
   deliveryTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1693,6 +1727,7 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1720,6 +1755,7 @@ export type OrderCreateWithoutTicketsInput = {
   deliveryTime?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1757,6 +1793,7 @@ export type OrderUncheckedCreateWithoutTicketsInput = {
   addressId?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1800,6 +1837,7 @@ export type OrderUpdateWithoutTicketsInput = {
   deliveryTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1837,6 +1875,7 @@ export type OrderUncheckedUpdateWithoutTicketsInput = {
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1864,6 +1903,7 @@ export type OrderCreateWithoutVouchersInput = {
   deliveryTime?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1901,6 +1941,7 @@ export type OrderUncheckedCreateWithoutVouchersInput = {
   addressId?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1944,6 +1985,7 @@ export type OrderUpdateWithoutVouchersInput = {
   deliveryTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1981,6 +2023,7 @@ export type OrderUncheckedUpdateWithoutVouchersInput = {
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2008,6 +2051,7 @@ export type OrderCreateWithoutPaymentsInput = {
   deliveryTime?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2045,6 +2089,7 @@ export type OrderUncheckedCreateWithoutPaymentsInput = {
   addressId?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2088,6 +2133,7 @@ export type OrderUpdateWithoutPaymentsInput = {
   deliveryTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2125,6 +2171,7 @@ export type OrderUncheckedUpdateWithoutPaymentsInput = {
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2152,6 +2199,7 @@ export type OrderCreateWithoutCommandsInput = {
   deliveryTime?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2189,6 +2237,7 @@ export type OrderUncheckedCreateWithoutCommandsInput = {
   addressId?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2232,6 +2281,7 @@ export type OrderUpdateWithoutCommandsInput = {
   deliveryTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2269,6 +2319,7 @@ export type OrderUncheckedUpdateWithoutCommandsInput = {
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2296,6 +2347,7 @@ export type OrderCreateWithoutDeliveryStopsInput = {
   deliveryTime?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2333,6 +2385,7 @@ export type OrderUncheckedCreateWithoutDeliveryStopsInput = {
   addressId?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2376,6 +2429,7 @@ export type OrderUpdateWithoutDeliveryStopsInput = {
   deliveryTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2413,6 +2467,7 @@ export type OrderUncheckedUpdateWithoutDeliveryStopsInput = {
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2440,6 +2495,7 @@ export type OrderCreateWithoutPartnerInput = {
   deliveryTime?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2476,6 +2532,7 @@ export type OrderUncheckedCreateWithoutPartnerInput = {
   addressId?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2530,6 +2587,7 @@ export type OrderCreateWithoutDonationsEntriesInput = {
   deliveryTime?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2567,6 +2625,7 @@ export type OrderUncheckedCreateWithoutDonationsEntriesInput = {
   addressId?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2610,6 +2669,7 @@ export type OrderUpdateWithoutDonationsEntriesInput = {
   deliveryTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2647,6 +2707,7 @@ export type OrderUncheckedUpdateWithoutDonationsEntriesInput = {
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2678,6 +2739,7 @@ export type OrderCreateManyEditionInput = {
   addressId?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2699,6 +2761,7 @@ export type OrderUpdateWithoutEditionInput = {
   deliveryTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2735,6 +2798,7 @@ export type OrderUncheckedUpdateWithoutEditionInput = {
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2767,6 +2831,7 @@ export type OrderUncheckedUpdateManyWithoutEditionInput = {
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2792,6 +2857,7 @@ export type OrderCreateManySellerInput = {
   addressId?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2813,6 +2879,7 @@ export type OrderUpdateWithoutSellerInput = {
   deliveryTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2849,6 +2916,7 @@ export type OrderUncheckedUpdateWithoutSellerInput = {
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2881,6 +2949,7 @@ export type OrderUncheckedUpdateManyWithoutSellerInput = {
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2906,6 +2975,7 @@ export type OrderCreateManyCustomerInput = {
   addressId?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -2927,6 +2997,7 @@ export type OrderUpdateWithoutCustomerInput = {
   deliveryTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2963,6 +3034,7 @@ export type OrderUncheckedUpdateWithoutCustomerInput = {
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2995,6 +3067,7 @@ export type OrderUncheckedUpdateManyWithoutCustomerInput = {
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3020,6 +3093,7 @@ export type OrderCreateManyAddressInput = {
   partnerId?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -3041,6 +3115,7 @@ export type OrderUpdateWithoutAddressInput = {
   deliveryTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3077,6 +3152,7 @@ export type OrderUncheckedUpdateWithoutAddressInput = {
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3109,6 +3185,7 @@ export type OrderUncheckedUpdateManyWithoutAddressInput = {
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3134,6 +3211,7 @@ export type OrderCreateManyPartnerInput = {
   addressId?: string | null
   observations?: string | null
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -3155,6 +3233,7 @@ export type OrderUpdateWithoutPartnerInput = {
   deliveryTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3191,6 +3270,7 @@ export type OrderUncheckedUpdateWithoutPartnerInput = {
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3223,6 +3303,7 @@ export type OrderUncheckedUpdateManyWithoutPartnerInput = {
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3334,6 +3415,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   addressId?: boolean
   observations?: boolean
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -3373,6 +3455,7 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   addressId?: boolean
   observations?: boolean
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -3404,6 +3487,7 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   addressId?: boolean
   observations?: boolean
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -3435,12 +3519,13 @@ export type OrderSelectScalar = {
   addressId?: boolean
   observations?: boolean
   active?: boolean
+  paymentReminderSent?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "editionId" | "customerId" | "customerName" | "customerPhone" | "customerCPF" | "sellerId" | "sellerTag" | "origin" | "totalValue" | "status" | "siteStep" | "paymentStatus" | "paymentType" | "deliveryOption" | "deliveryTime" | "partnerId" | "addressId" | "observations" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "editionId" | "customerId" | "customerName" | "customerPhone" | "customerCPF" | "sellerId" | "sellerTag" | "origin" | "totalValue" | "status" | "siteStep" | "paymentStatus" | "paymentType" | "deliveryOption" | "deliveryTime" | "partnerId" | "addressId" | "observations" | "active" | "paymentReminderSent" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   edition?: boolean | Prisma.EditionDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
@@ -3508,6 +3593,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     addressId: string | null
     observations: string | null
     active: boolean
+    paymentReminderSent: boolean
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -3966,6 +4052,7 @@ export interface OrderFieldRefs {
   readonly addressId: Prisma.FieldRef<"Order", 'String'>
   readonly observations: Prisma.FieldRef<"Order", 'String'>
   readonly active: Prisma.FieldRef<"Order", 'Boolean'>
+  readonly paymentReminderSent: Prisma.FieldRef<"Order", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Order", 'DateTime'>

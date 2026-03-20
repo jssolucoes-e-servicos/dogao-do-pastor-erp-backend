@@ -12,4 +12,11 @@ export class ForDeliveryDTO {
     label: 'ID do Endereço',
   })
   addressId: string;
+
+  @StringValidator({
+    fieldName: 'scheduledTime',
+    label: 'Horário de Entrega',
+    optional: true,
+  })
+  scheduledTime?: string;
 }

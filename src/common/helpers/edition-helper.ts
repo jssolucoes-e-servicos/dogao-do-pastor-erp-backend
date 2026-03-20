@@ -18,11 +18,28 @@ export async function getActiveEdition(
     orderBy: { saleStartDate: 'desc' },
   });
 
-  if (active) return active as unknown as EditionEntity;
+  if (active) {
+    // Regra de segurança: Se faltarem menos de 30 dogs para o limite, considera encerrado
+    const margin = 30;
+    if (active.dogsSold >= (active.limitSale - margin)) {
+      return null;
+    }
+    return active as unknown as EditionEntity;
+  }
 
   // 2. Fallback: Se não houver estritamente ativa, pega a última que foi marcada como ativa
-  return (await prisma.edition.findFirst({
+  const fallback = (await prisma.edition.findFirst({
     where: { active: true },
     orderBy: { saleStartDate: 'desc' },
   })) as unknown as EditionEntity;
+
+  if (fallback) {
+    const margin = 30;
+    if (fallback.dogsSold >= (fallback.limitSale - margin)) {
+      return null;
+    }
+    return fallback;
+  }
+
+  return null;
 }

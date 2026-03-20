@@ -111,4 +111,11 @@ export class CreatePdvOrderDto {
   @IsArray()
   @IsString({ each: true })
   ticketNumbers?: string[];
+
+  @StringValidator({
+    fieldName: 'sellerId',
+    label: 'ID do Vendedor',
+    optional: true,
+  })
+  sellerId?: string;
 }

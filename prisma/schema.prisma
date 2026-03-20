@@ -87,8 +87,10 @@ enum PaymentMethodEnum {
   CARD
   CARD_CREDIT
   CARD_DEBIT
+  PIX_OFFLINE
   POS
   MONEY
+  TICKET
 }
 
 enum EmailStatusEnum {
@@ -452,6 +454,7 @@ model OrderItem {
   id                 String    @id @default(cuid())
   order              Order     @relation(fields: [orderId], references: [id])
   orderId            String
+  quantity           Int       @default(1)
   unitPrice          Float
   removedIngredients String[]
   active             Boolean   @default(true)

@@ -87,6 +87,31 @@ export class PaymentsTasksService extends BaseService {
       return;
     }
 
+    // Se o pagamento veio via webhook, pode não ter o order e items incluídos.
+    // Buscamos o pagamento completo para garantir que temos os dados necessários para o incremento e notificações.
+    let fullPayment = payment;
+    if (!payment.order) {
+      fullPayment = (await this.prisma.payment.findUnique({
+        where: { id: payment.id },
+        include: {
+          order: {
+            include: {
+              items: true,
+              customer: true,
+              edition: true,
+              seller: { include: { contributor: true } },
+            },
+          },
+        },
+      })) as any;
+
+      if (!fullPayment) {
+        this.logger.error(`Pagamento ${payment.id} não encontrado ao re-buscar.`);
+        return;
+      }
+    }
+    payment = fullPayment;
+
     const now = new Date();
     const createdAt = payment.createdAt ? new Date(payment.createdAt) : new Date();
     const paymentAgeHours = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
@@ -239,7 +264,21 @@ export class PaymentsTasksService extends BaseService {
           data: { status: PaymentStatusEnum.PAID },
         });
 
-        const edition = (await getActiveEdition(tx as any)) as EditionEntity;
+        // 2.1 Incrementa contador de dogs vendidos na edição
+        const edition =
+          (order.edition as EditionEntity) ||
+          ((await getActiveEdition(tx as any)) as EditionEntity);
+
+        if (edition) {
+          const totalDogsInOrder = order.items?.length || 0;
+
+          if (totalDogsInOrder > 0) {
+            await tx.edition.update({
+              where: { id: edition.id },
+              data: { dogsSold: { increment: totalDogsInOrder } },
+            });
+          }
+        }
 
         // 3. Cria Comanda apenas para Entrega (DELIVERY)
         // PICKUP agora é manual via Check-In no PDV
