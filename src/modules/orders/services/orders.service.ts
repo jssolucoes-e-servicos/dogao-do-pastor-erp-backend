@@ -857,7 +857,6 @@ export class OrdersService extends BaseCrudService<
           siteStep: SiteOrderStepEnum.THANKS,
           items: {
             create: dto.items.map((item) => ({
-              quantity: item.quantity,
               unitPrice: dto.totalValue / (dto.items.length || 1),
               removedIngredients: item.removedIngredients || [],
             })),
@@ -889,7 +888,6 @@ export class OrdersService extends BaseCrudService<
           siteStep: SiteOrderStepEnum.THANKS,
           items: {
             create: dto.items.map((item) => ({
-              quantity: item.quantity,
               unitPrice: dto.totalValue / (dto.items.length || 1),
               removedIngredients: item.removedIngredients || [],
             })),

@@ -16,11 +16,6 @@ export class PdvOrderItemDto {
   })
   productId: string;
 
-  @NumberValidator({
-    fieldName: 'quantity',
-    label: 'Quantidade',
-  })
-  quantity: number;
 
   @StringValidator({
     fieldName: 'observations',
