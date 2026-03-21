@@ -66,7 +66,12 @@ export class CommandsService extends BaseCrudService<
     }
 
     if (query.deliveryOption) {
-      where.order = { deliveryOption: query.deliveryOption };
+      where.order = { ...where.order, deliveryOption: query.deliveryOption };
+    }
+
+    if (query.status) {
+      const statuses = Array.isArray(query.status) ? query.status : [query.status];
+      where.status = { in: statuses };
     }
 
     return this.paginate(query, {
