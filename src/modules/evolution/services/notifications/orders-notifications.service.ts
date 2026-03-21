@@ -187,15 +187,23 @@ export class OrdersNotificationsService extends BaseService {
   async pixGenerated(order: OrderEntity, pixCopyPaste: string, qrCodeBase64: string) {
     if (validateContact(order)) {
       this.logger.log(`Registrando notificação: PIX Gerado para ${order.customerPhone}`);
-      const message = MW_OrderPixGenerated(order.customerName, order.totalValue, pixCopyPaste);
+      const message = MW_OrderPixGenerated(order.customerName, order.totalValue);
+
+      // 1ª mensagem: texto explicativo
       await this.n8nService.dispatchEvent('ORDER_PIX_GENERATED', {
         orderId: order.id,
         phone: order.customerPhone,
         customerName: order.customerName,
         totalValue: order.totalValue,
-        pixCopyPaste,
         qrCodeBase64,
-        message, // ← enviando o texto pré-formatado
+        message,
+      });
+
+      // 2ª mensagem: copia e cola separado para o cliente conseguir copiar
+      await this.n8nService.dispatchEvent('ORDER_PIX_GENERATED', {
+        orderId: order.id,
+        phone: order.customerPhone,
+        message: pixCopyPaste,
       });
     }
   }
