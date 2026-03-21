@@ -73,6 +73,13 @@ export class CreatePdvOrderDto {
   address?: string;
 
   @StringValidator({
+    fieldName: 'addressId',
+    label: 'ID do Endereço Salvo',
+    optional: true,
+  })
+  addressId?: string;
+
+  @StringValidator({
     fieldName: 'scheduledTime',
     label: 'Horário Agendado',
     optional: true,

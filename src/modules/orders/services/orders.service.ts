@@ -828,6 +828,28 @@ export class OrdersService extends BaseCrudService<
       },
     });
 
+    // 2b. Criar/upsert endereço se for entrega
+    let addressId: string | undefined;
+    if (dto.deliveryOption === DeliveryOptionEnum.DELIVERY) {
+      if (dto.addressId) {
+        // Use existing saved address
+        addressId = dto.addressId;
+      } else if (dto.address) {
+        const newAddr = await this.prisma.customerAddress.create({
+          data: {
+            customerId: customer.id,
+            street: dto.address,
+            number: '-',
+            neighborhood: '-',
+            city: '-',
+            state: '-',
+            zipCode: '-',
+          },
+        });
+        addressId = newAddr.id;
+      }
+    }
+
     let order;
     if (existingOrder) {
       // Limpar itens anteriores e pagamentos pendentes para atualizar o pedido
@@ -854,6 +876,7 @@ export class OrdersService extends BaseCrudService<
           observations: dto.observations,
           deliveryOption: dto.deliveryOption || DeliveryOptionEnum.PICKUP,
           deliveryTime: dto.scheduledTime,
+          addressId: addressId,
           siteStep: SiteOrderStepEnum.THANKS,
           items: {
             create: dto.items.map((item) => ({
@@ -885,6 +908,7 @@ export class OrdersService extends BaseCrudService<
           observations: dto.observations,
           deliveryOption: dto.deliveryOption || DeliveryOptionEnum.PICKUP,
           deliveryTime: dto.scheduledTime,
+          addressId: addressId,
           siteStep: SiteOrderStepEnum.THANKS,
           items: {
             create: dto.items.map((item) => ({
@@ -917,7 +941,7 @@ export class OrdersService extends BaseCrudService<
             {
               name: dto.customerName,
               phone: dto.customerPhone,
-              email: null, // O serviço de MP já trata o fallback de email
+              email: null,
             },
             order.id,
             dto.totalValue,
@@ -929,10 +953,43 @@ export class OrdersService extends BaseCrudService<
             paymentData.pixQrcode = pixResponse.payment.pix?.qrCodeBase64;
             paymentData.pixCopyPaste = pixResponse.payment.pix?.qrCode;
             paymentData.rawPayload = JSON.stringify(pixResponse);
+
+            // Envia WhatsApp com copia e cola para o cliente
+            try {
+              await this.notifications.pixGenerated(
+                order as any,
+                pixResponse.payment.pix?.qrCode || '',
+                pixResponse.payment.pix?.qrCodeBase64 || '',
+              );
+            } catch (notifError) {
+              this.logger.error(`Erro ao enviar WhatsApp PIX PDV ${order.id}: ${notifError}`);
+            }
           }
         } catch (error) {
           this.logger.error(
             `Erro ao gerar PIX para pedido PDV ${order.id}: ${error}`,
+          );
+        }
+      }
+
+      if (dto.paymentMethod === PaymentMethodEnum.CARD_CREDIT) {
+        try {
+          const paymentLink = await this.mpPaymentsService.createPaymentLink(
+            order.id,
+            dto.customerName,
+            dto.totalValue,
+          );
+          paymentData.paymentUrl = paymentLink;
+
+          // Envia WhatsApp com link de pagamento para o cliente
+          try {
+            await this.notifications.cardGenerated(order as any, paymentLink);
+          } catch (notifError) {
+            this.logger.error(`Erro ao enviar WhatsApp cartão PDV ${order.id}: ${notifError}`);
+          }
+        } catch (error) {
+          this.logger.error(
+            `Erro ao gerar link de pagamento para pedido PDV ${order.id}: ${error}`,
           );
         }
       }

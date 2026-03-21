@@ -1,7 +1,7 @@
 // src/modules/payments/services/mercadopago/mp-payments.service.ts
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import MercadoPagoConfig, { Payment } from 'mercadopago';
+import MercadoPagoConfig, { Payment, Preference } from 'mercadopago';
 import { CustomerEntity } from 'src/common/entities';
 import { PaymentStatusEnum } from 'src/common/enums';
 import {
@@ -29,7 +29,8 @@ const mpStatusMap: Record<string, PaymentStatusEnum> = {
 @Injectable()
 export class MpPaymentsService extends BaseService {
   private readonly mpClient: Payment;
-  private mercadoPagoSecretKey: string; // = process.env.MERCADOPAGO_SECRET_KEY!;
+  private readonly mpPreference: Preference;
+  private mercadoPagoSecretKey: string;
 
   constructor(
     configService: ConfigService,
@@ -46,6 +47,7 @@ export class MpPaymentsService extends BaseService {
       options: { timeout: 5000 },
     });
     this.mpClient = new Payment(client);
+    this.mpPreference = new Preference(client);
   }
 
   async processPixPayment(
@@ -162,13 +164,43 @@ export class MpPaymentsService extends BaseService {
           `Erro ao consultar pagamento ${paymentId} no Mercado Pago: ${error.message}`,
         );
       } else {
-        // Se não for um objeto Error, trata como uma string ou outro tipo
         this.logger.error(
           `Erro desconhecido ao consultar pagamento ${paymentId} no Mercado Pago: ${JSON.stringify(error)}`,
         );
       }
       console.error(error);
       return null;
+    }
+  }
+
+  async createPaymentLink(
+    orderId: string,
+    customerName: string,
+    totalValue: number,
+  ): Promise<string> {
+    try {
+      const preference = await this.mpPreference.create({
+        body: {
+          items: [
+            {
+              id: orderId,
+              title: `Dogão do Pastor - Pedido ${orderId.slice(-6).toUpperCase()}`,
+              quantity: 1,
+              unit_price: totalValue,
+              currency_id: 'BRL',
+            },
+          ],
+          payer: { name: customerName },
+          external_reference: orderId,
+          expires: true,
+          expiration_date_from: new Date().toISOString(),
+          expiration_date_to: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        },
+      });
+      return preference.init_point as string;
+    } catch (error) {
+      this.logger.error(`Erro ao criar preference MP para pedido ${orderId}: ${error}`);
+      throw new BadRequestException('Erro ao gerar link de pagamento');
     }
   }
 }
