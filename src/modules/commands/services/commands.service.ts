@@ -131,7 +131,13 @@ export class CommandsService extends BaseCrudService<
       }
     }
 
-    return super.update(id, dto);
+    // Verifica existência sem args extras (findUnique não aceita orderBy)
+    const exists = await this.model.findUnique({ where: { id } });
+    if (!exists || exists.deletedAt) {
+      throw new NotFoundException('Comanda não encontrada');
+    }
+
+    return this.model.update({ where: { id }, data: dto });
   }
 
   async getPendingPrint(): Promise<CommandEntity[]> {

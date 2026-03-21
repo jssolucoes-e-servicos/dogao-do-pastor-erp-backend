@@ -19,12 +19,34 @@ import { CommandsService } from '../services/commands.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
+import { Public } from '../../auth/decorators/public.decorator';
 
 @Controller('commands')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('IT', 'ADMIN', 'FINANCE', 'RECEPTION', 'EXPEDITION')
 export class CommandsController {
   constructor(private readonly service: CommandsService) {}
+
+  // ── Rotas públicas (print-app) — sem JWT ─────────────────────────────────
+
+  @Get('pending-print')
+  @Public()
+  @ApiOperation({ summary: 'Busca comandas que ainda não foram impressas' })
+  async getPendingPrint(): Promise<CommandEntity[]> {
+    return this.service.getPendingPrint();
+  }
+
+  @Patch(':id/mark-printed')
+  @Public()
+  @ApiOperation({ summary: 'Marca uma comanda como impressa e muda status para IN_PRODUCTION' })
+  async markAsPrinted(@Param() { id }: IdParamDto): Promise<CommandEntity> {
+    const dto = new UpdateCommandDto();
+    dto.printed = true;
+    dto.status = 'IN_PRODUCTION' as any;
+    return this.service.update(id, dto);
+  }
+
+  // ── Rotas autenticadas ────────────────────────────────────────────────────
 
   @Get()
   @ApiOperation({ summary: 'Lista comandas da edição ativa' })
@@ -49,20 +71,6 @@ export class CommandsController {
     @Param() { id }: IdParamDto,
     @Body() dto: UpdateCommandDto,
   ): Promise<CommandEntity> {
-    return this.service.update(id, dto);
-  }
-
-  @Get('pending-print')
-  @ApiOperation({ summary: 'Busca comandas que ainda não foram impressas' })
-  async getPendingPrint(): Promise<CommandEntity[]> {
-    return this.service.getPendingPrint();
-  }
-
-  @Patch(':id/mark-printed')
-  @ApiOperation({ summary: 'Marca uma comanda como impressa' })
-  async markAsPrinted(@Param() { id }: IdParamDto): Promise<CommandEntity> {
-    const dto = new UpdateCommandDto();
-    dto.printed = true;
     return this.service.update(id, dto);
   }
 
