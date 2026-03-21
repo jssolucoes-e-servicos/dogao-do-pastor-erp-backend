@@ -72,4 +72,13 @@ export class PaymentsController {
     await this.tasksService.processPendingPayments();
     return { success: true };
   }
+
+  @Post('auto-generate')
+  @HttpCode(200)
+  @Public()
+  async autoGenerateCommands() {
+    console.log('[Manual/Cron -> NestJS] Iniciando geração automática de comandas de delivery...');
+    const result = await this.tasksService.auditMissingCommands();
+    return { success: true, ...result };
+  }
 }
