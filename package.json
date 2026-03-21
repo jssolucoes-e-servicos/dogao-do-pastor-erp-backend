@@ -26,7 +26,8 @@
     "prisma:seed": "npx prisma db seed",
     "prisma:dev": "npm run prisma:reset && npm run prisma:seed",
     "prisma:migrate:dev": "npx prisma migrate dev",
-    "prisma:migrate:prod": "npx prisma migrate deploy"
+    "prisma:migrate:prod": "npx prisma migrate deploy",
+    "close-ports": "lsof -ti:3001 | xargs kill -9 2>/dev/null || true"
   },
   "dependencies": {
     "@nestjs/axios": "^4.0.1",

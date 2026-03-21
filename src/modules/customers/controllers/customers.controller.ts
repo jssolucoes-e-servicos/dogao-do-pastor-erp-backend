@@ -60,11 +60,13 @@ export class CustomersController {
   }
 
   @Put(':id')
+  @Public()
   async update(@Param() { id }: IdParamDto, @Body() dto: UpdateCustomerDto) {
     return await this.service.update(id, dto);
   }
 
   @Patch(':id')
+  @Public()
   async updatePatch(
     @Param() { id }: IdParamDto,
     @Body() dto: UpdateCustomerDto,
