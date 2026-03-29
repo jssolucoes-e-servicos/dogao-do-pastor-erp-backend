@@ -27,20 +27,18 @@ export type AggregateOrderItem = {
 }
 
 export type OrderItemAvgAggregateOutputType = {
-  quantity: number | null
   unitPrice: number | null
 }
 
 export type OrderItemSumAggregateOutputType = {
-  quantity: number | null
   unitPrice: number | null
 }
 
 export type OrderItemMinAggregateOutputType = {
   id: string | null
   orderId: string | null
-  quantity: number | null
   unitPrice: number | null
+  commanded: boolean | null
   active: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -50,8 +48,8 @@ export type OrderItemMinAggregateOutputType = {
 export type OrderItemMaxAggregateOutputType = {
   id: string | null
   orderId: string | null
-  quantity: number | null
   unitPrice: number | null
+  commanded: boolean | null
   active: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -61,9 +59,9 @@ export type OrderItemMaxAggregateOutputType = {
 export type OrderItemCountAggregateOutputType = {
   id: number
   orderId: number
-  quantity: number
   unitPrice: number
   removedIngredients: number
+  commanded: number
   active: number
   createdAt: number
   updatedAt: number
@@ -73,20 +71,18 @@ export type OrderItemCountAggregateOutputType = {
 
 
 export type OrderItemAvgAggregateInputType = {
-  quantity?: true
   unitPrice?: true
 }
 
 export type OrderItemSumAggregateInputType = {
-  quantity?: true
   unitPrice?: true
 }
 
 export type OrderItemMinAggregateInputType = {
   id?: true
   orderId?: true
-  quantity?: true
   unitPrice?: true
+  commanded?: true
   active?: true
   createdAt?: true
   updatedAt?: true
@@ -96,8 +92,8 @@ export type OrderItemMinAggregateInputType = {
 export type OrderItemMaxAggregateInputType = {
   id?: true
   orderId?: true
-  quantity?: true
   unitPrice?: true
+  commanded?: true
   active?: true
   createdAt?: true
   updatedAt?: true
@@ -107,9 +103,9 @@ export type OrderItemMaxAggregateInputType = {
 export type OrderItemCountAggregateInputType = {
   id?: true
   orderId?: true
-  quantity?: true
   unitPrice?: true
   removedIngredients?: true
+  commanded?: true
   active?: true
   createdAt?: true
   updatedAt?: true
@@ -206,9 +202,9 @@ export type OrderItemGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 export type OrderItemGroupByOutputType = {
   id: string
   orderId: string
-  quantity: number
   unitPrice: number
   removedIngredients: string[]
+  commanded: boolean
   active: boolean
   createdAt: Date
   updatedAt: Date
@@ -241,29 +237,31 @@ export type OrderItemWhereInput = {
   NOT?: Prisma.OrderItemWhereInput | Prisma.OrderItemWhereInput[]
   id?: Prisma.StringFilter<"OrderItem"> | string
   orderId?: Prisma.StringFilter<"OrderItem"> | string
-  quantity?: Prisma.IntFilter<"OrderItem"> | number
   unitPrice?: Prisma.FloatFilter<"OrderItem"> | number
   removedIngredients?: Prisma.StringNullableListFilter<"OrderItem">
+  commanded?: Prisma.BoolFilter<"OrderItem"> | boolean
   active?: Prisma.BoolFilter<"OrderItem"> | boolean
   createdAt?: Prisma.DateTimeFilter<"OrderItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OrderItem"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"OrderItem"> | Date | string | null
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
   vouchers?: Prisma.VoucherListRelationFilter
+  commandItems?: Prisma.CommandItemListRelationFilter
 }
 
 export type OrderItemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
-  quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
   removedIngredients?: Prisma.SortOrder
+  commanded?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   order?: Prisma.OrderOrderByWithRelationInput
   vouchers?: Prisma.VoucherOrderByRelationAggregateInput
+  commandItems?: Prisma.CommandItemOrderByRelationAggregateInput
   _relevance?: Prisma.OrderItemOrderByRelevanceInput
 }
 
@@ -273,23 +271,24 @@ export type OrderItemWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.OrderItemWhereInput[]
   NOT?: Prisma.OrderItemWhereInput | Prisma.OrderItemWhereInput[]
   orderId?: Prisma.StringFilter<"OrderItem"> | string
-  quantity?: Prisma.IntFilter<"OrderItem"> | number
   unitPrice?: Prisma.FloatFilter<"OrderItem"> | number
   removedIngredients?: Prisma.StringNullableListFilter<"OrderItem">
+  commanded?: Prisma.BoolFilter<"OrderItem"> | boolean
   active?: Prisma.BoolFilter<"OrderItem"> | boolean
   createdAt?: Prisma.DateTimeFilter<"OrderItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OrderItem"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"OrderItem"> | Date | string | null
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
   vouchers?: Prisma.VoucherListRelationFilter
+  commandItems?: Prisma.CommandItemListRelationFilter
 }, "id">
 
 export type OrderItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
-  quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
   removedIngredients?: Prisma.SortOrder
+  commanded?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -307,9 +306,9 @@ export type OrderItemScalarWhereWithAggregatesInput = {
   NOT?: Prisma.OrderItemScalarWhereWithAggregatesInput | Prisma.OrderItemScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"OrderItem"> | string
   orderId?: Prisma.StringWithAggregatesFilter<"OrderItem"> | string
-  quantity?: Prisma.IntWithAggregatesFilter<"OrderItem"> | number
   unitPrice?: Prisma.FloatWithAggregatesFilter<"OrderItem"> | number
   removedIngredients?: Prisma.StringNullableListFilter<"OrderItem">
+  commanded?: Prisma.BoolWithAggregatesFilter<"OrderItem"> | boolean
   active?: Prisma.BoolWithAggregatesFilter<"OrderItem"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"OrderItem"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"OrderItem"> | Date | string
@@ -318,62 +317,66 @@ export type OrderItemScalarWhereWithAggregatesInput = {
 
 export type OrderItemCreateInput = {
   id?: string
-  quantity?: number
   unitPrice: number
   removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
+  commanded?: boolean
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   order: Prisma.OrderCreateNestedOneWithoutItemsInput
   vouchers?: Prisma.VoucherCreateNestedManyWithoutOrderItemInput
+  commandItems?: Prisma.CommandItemCreateNestedManyWithoutItemInput
 }
 
 export type OrderItemUncheckedCreateInput = {
   id?: string
   orderId: string
-  quantity?: number
   unitPrice: number
   removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
+  commanded?: boolean
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   vouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutOrderItemInput
+  commandItems?: Prisma.CommandItemUncheckedCreateNestedManyWithoutItemInput
 }
 
 export type OrderItemUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
+  commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   order?: Prisma.OrderUpdateOneRequiredWithoutItemsNestedInput
   vouchers?: Prisma.VoucherUpdateManyWithoutOrderItemNestedInput
+  commandItems?: Prisma.CommandItemUpdateManyWithoutItemNestedInput
 }
 
 export type OrderItemUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
+  commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vouchers?: Prisma.VoucherUncheckedUpdateManyWithoutOrderItemNestedInput
+  commandItems?: Prisma.CommandItemUncheckedUpdateManyWithoutItemNestedInput
 }
 
 export type OrderItemCreateManyInput = {
   id?: string
   orderId: string
-  quantity?: number
   unitPrice: number
   removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
+  commanded?: boolean
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -382,9 +385,9 @@ export type OrderItemCreateManyInput = {
 
 export type OrderItemUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
+  commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -394,9 +397,9 @@ export type OrderItemUpdateManyMutationInput = {
 export type OrderItemUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
+  commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -430,9 +433,9 @@ export type OrderItemOrderByRelevanceInput = {
 export type OrderItemCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
-  quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
   removedIngredients?: Prisma.SortOrder
+  commanded?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -440,15 +443,14 @@ export type OrderItemCountOrderByAggregateInput = {
 }
 
 export type OrderItemAvgOrderByAggregateInput = {
-  quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
 }
 
 export type OrderItemMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
-  quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
+  commanded?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -458,8 +460,8 @@ export type OrderItemMaxOrderByAggregateInput = {
 export type OrderItemMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
-  quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
+  commanded?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -467,13 +469,17 @@ export type OrderItemMinOrderByAggregateInput = {
 }
 
 export type OrderItemSumOrderByAggregateInput = {
-  quantity?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
 }
 
 export type OrderItemNullableScalarRelationFilter = {
   is?: Prisma.OrderItemWhereInput | null
   isNot?: Prisma.OrderItemWhereInput | null
+}
+
+export type OrderItemScalarRelationFilter = {
+  is?: Prisma.OrderItemWhereInput
+  isNot?: Prisma.OrderItemWhereInput
 }
 
 export type OrderItemCreateNestedManyWithoutOrderInput = {
@@ -543,28 +549,44 @@ export type OrderItemUpdateOneWithoutVouchersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrderItemUpdateToOneWithWhereWithoutVouchersInput, Prisma.OrderItemUpdateWithoutVouchersInput>, Prisma.OrderItemUncheckedUpdateWithoutVouchersInput>
 }
 
+export type OrderItemCreateNestedOneWithoutCommandItemsInput = {
+  create?: Prisma.XOR<Prisma.OrderItemCreateWithoutCommandItemsInput, Prisma.OrderItemUncheckedCreateWithoutCommandItemsInput>
+  connectOrCreate?: Prisma.OrderItemCreateOrConnectWithoutCommandItemsInput
+  connect?: Prisma.OrderItemWhereUniqueInput
+}
+
+export type OrderItemUpdateOneRequiredWithoutCommandItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderItemCreateWithoutCommandItemsInput, Prisma.OrderItemUncheckedCreateWithoutCommandItemsInput>
+  connectOrCreate?: Prisma.OrderItemCreateOrConnectWithoutCommandItemsInput
+  upsert?: Prisma.OrderItemUpsertWithoutCommandItemsInput
+  connect?: Prisma.OrderItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderItemUpdateToOneWithWhereWithoutCommandItemsInput, Prisma.OrderItemUpdateWithoutCommandItemsInput>, Prisma.OrderItemUncheckedUpdateWithoutCommandItemsInput>
+}
+
 export type OrderItemCreateWithoutOrderInput = {
   id?: string
-  quantity?: number
   unitPrice: number
   removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
+  commanded?: boolean
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   vouchers?: Prisma.VoucherCreateNestedManyWithoutOrderItemInput
+  commandItems?: Prisma.CommandItemCreateNestedManyWithoutItemInput
 }
 
 export type OrderItemUncheckedCreateWithoutOrderInput = {
   id?: string
-  quantity?: number
   unitPrice: number
   removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
+  commanded?: boolean
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   vouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutOrderItemInput
+  commandItems?: Prisma.CommandItemUncheckedCreateNestedManyWithoutItemInput
 }
 
 export type OrderItemCreateOrConnectWithoutOrderInput = {
@@ -599,9 +621,9 @@ export type OrderItemScalarWhereInput = {
   NOT?: Prisma.OrderItemScalarWhereInput | Prisma.OrderItemScalarWhereInput[]
   id?: Prisma.StringFilter<"OrderItem"> | string
   orderId?: Prisma.StringFilter<"OrderItem"> | string
-  quantity?: Prisma.IntFilter<"OrderItem"> | number
   unitPrice?: Prisma.FloatFilter<"OrderItem"> | number
   removedIngredients?: Prisma.StringNullableListFilter<"OrderItem">
+  commanded?: Prisma.BoolFilter<"OrderItem"> | boolean
   active?: Prisma.BoolFilter<"OrderItem"> | boolean
   createdAt?: Prisma.DateTimeFilter<"OrderItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OrderItem"> | Date | string
@@ -610,26 +632,28 @@ export type OrderItemScalarWhereInput = {
 
 export type OrderItemCreateWithoutVouchersInput = {
   id?: string
-  quantity?: number
   unitPrice: number
   removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
+  commanded?: boolean
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   order: Prisma.OrderCreateNestedOneWithoutItemsInput
+  commandItems?: Prisma.CommandItemCreateNestedManyWithoutItemInput
 }
 
 export type OrderItemUncheckedCreateWithoutVouchersInput = {
   id?: string
   orderId: string
-  quantity?: number
   unitPrice: number
   removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
+  commanded?: boolean
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  commandItems?: Prisma.CommandItemUncheckedCreateNestedManyWithoutItemInput
 }
 
 export type OrderItemCreateOrConnectWithoutVouchersInput = {
@@ -650,33 +674,103 @@ export type OrderItemUpdateToOneWithWhereWithoutVouchersInput = {
 
 export type OrderItemUpdateWithoutVouchersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
+  commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   order?: Prisma.OrderUpdateOneRequiredWithoutItemsNestedInput
+  commandItems?: Prisma.CommandItemUpdateManyWithoutItemNestedInput
 }
 
 export type OrderItemUncheckedUpdateWithoutVouchersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
+  commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  commandItems?: Prisma.CommandItemUncheckedUpdateManyWithoutItemNestedInput
+}
+
+export type OrderItemCreateWithoutCommandItemsInput = {
+  id?: string
+  unitPrice: number
+  removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
+  commanded?: boolean
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  order: Prisma.OrderCreateNestedOneWithoutItemsInput
+  vouchers?: Prisma.VoucherCreateNestedManyWithoutOrderItemInput
+}
+
+export type OrderItemUncheckedCreateWithoutCommandItemsInput = {
+  id?: string
+  orderId: string
+  unitPrice: number
+  removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
+  commanded?: boolean
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  vouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutOrderItemInput
+}
+
+export type OrderItemCreateOrConnectWithoutCommandItemsInput = {
+  where: Prisma.OrderItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderItemCreateWithoutCommandItemsInput, Prisma.OrderItemUncheckedCreateWithoutCommandItemsInput>
+}
+
+export type OrderItemUpsertWithoutCommandItemsInput = {
+  update: Prisma.XOR<Prisma.OrderItemUpdateWithoutCommandItemsInput, Prisma.OrderItemUncheckedUpdateWithoutCommandItemsInput>
+  create: Prisma.XOR<Prisma.OrderItemCreateWithoutCommandItemsInput, Prisma.OrderItemUncheckedCreateWithoutCommandItemsInput>
+  where?: Prisma.OrderItemWhereInput
+}
+
+export type OrderItemUpdateToOneWithWhereWithoutCommandItemsInput = {
+  where?: Prisma.OrderItemWhereInput
+  data: Prisma.XOR<Prisma.OrderItemUpdateWithoutCommandItemsInput, Prisma.OrderItemUncheckedUpdateWithoutCommandItemsInput>
+}
+
+export type OrderItemUpdateWithoutCommandItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
+  commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  order?: Prisma.OrderUpdateOneRequiredWithoutItemsNestedInput
+  vouchers?: Prisma.VoucherUpdateManyWithoutOrderItemNestedInput
+}
+
+export type OrderItemUncheckedUpdateWithoutCommandItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
+  commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  vouchers?: Prisma.VoucherUncheckedUpdateManyWithoutOrderItemNestedInput
 }
 
 export type OrderItemCreateManyOrderInput = {
   id?: string
-  quantity?: number
   unitPrice: number
   removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
+  commanded?: boolean
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -685,33 +779,35 @@ export type OrderItemCreateManyOrderInput = {
 
 export type OrderItemUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
+  commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vouchers?: Prisma.VoucherUpdateManyWithoutOrderItemNestedInput
+  commandItems?: Prisma.CommandItemUpdateManyWithoutItemNestedInput
 }
 
 export type OrderItemUncheckedUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
+  commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vouchers?: Prisma.VoucherUncheckedUpdateManyWithoutOrderItemNestedInput
+  commandItems?: Prisma.CommandItemUncheckedUpdateManyWithoutItemNestedInput
 }
 
 export type OrderItemUncheckedUpdateManyWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
+  commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -725,10 +821,12 @@ export type OrderItemUncheckedUpdateManyWithoutOrderInput = {
 
 export type OrderItemCountOutputType = {
   vouchers: number
+  commandItems: number
 }
 
 export type OrderItemCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   vouchers?: boolean | OrderItemCountOutputTypeCountVouchersArgs
+  commandItems?: boolean | OrderItemCountOutputTypeCountCommandItemsArgs
 }
 
 /**
@@ -748,28 +846,36 @@ export type OrderItemCountOutputTypeCountVouchersArgs<ExtArgs extends runtime.Ty
   where?: Prisma.VoucherWhereInput
 }
 
+/**
+ * OrderItemCountOutputType without action
+ */
+export type OrderItemCountOutputTypeCountCommandItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CommandItemWhereInput
+}
+
 
 export type OrderItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   orderId?: boolean
-  quantity?: boolean
   unitPrice?: boolean
   removedIngredients?: boolean
+  commanded?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
   vouchers?: boolean | Prisma.OrderItem$vouchersArgs<ExtArgs>
+  commandItems?: boolean | Prisma.OrderItem$commandItemsArgs<ExtArgs>
   _count?: boolean | Prisma.OrderItemCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["orderItem"]>
 
 export type OrderItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   orderId?: boolean
-  quantity?: boolean
   unitPrice?: boolean
   removedIngredients?: boolean
+  commanded?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -780,9 +886,9 @@ export type OrderItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type OrderItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   orderId?: boolean
-  quantity?: boolean
   unitPrice?: boolean
   removedIngredients?: boolean
+  commanded?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -793,19 +899,20 @@ export type OrderItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type OrderItemSelectScalar = {
   id?: boolean
   orderId?: boolean
-  quantity?: boolean
   unitPrice?: boolean
   removedIngredients?: boolean
+  commanded?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type OrderItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "quantity" | "unitPrice" | "removedIngredients" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["orderItem"]>
+export type OrderItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "unitPrice" | "removedIngredients" | "commanded" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["orderItem"]>
 export type OrderItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
   vouchers?: boolean | Prisma.OrderItem$vouchersArgs<ExtArgs>
+  commandItems?: boolean | Prisma.OrderItem$commandItemsArgs<ExtArgs>
   _count?: boolean | Prisma.OrderItemCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrderItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -820,13 +927,14 @@ export type $OrderItemPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   objects: {
     order: Prisma.$OrderPayload<ExtArgs>
     vouchers: Prisma.$VoucherPayload<ExtArgs>[]
+    commandItems: Prisma.$CommandItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     orderId: string
-    quantity: number
     unitPrice: number
     removedIngredients: string[]
+    commanded: boolean
     active: boolean
     createdAt: Date
     updatedAt: Date
@@ -1227,6 +1335,7 @@ export interface Prisma__OrderItemClient<T, Null = never, ExtArgs extends runtim
   readonly [Symbol.toStringTag]: "PrismaPromise"
   order<T extends Prisma.OrderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderDefaultArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   vouchers<T extends Prisma.OrderItem$vouchersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderItem$vouchersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VoucherPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  commandItems<T extends Prisma.OrderItem$commandItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderItem$commandItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommandItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1258,9 +1367,9 @@ export interface Prisma__OrderItemClient<T, Null = never, ExtArgs extends runtim
 export interface OrderItemFieldRefs {
   readonly id: Prisma.FieldRef<"OrderItem", 'String'>
   readonly orderId: Prisma.FieldRef<"OrderItem", 'String'>
-  readonly quantity: Prisma.FieldRef<"OrderItem", 'Int'>
   readonly unitPrice: Prisma.FieldRef<"OrderItem", 'Float'>
   readonly removedIngredients: Prisma.FieldRef<"OrderItem", 'String[]'>
+  readonly commanded: Prisma.FieldRef<"OrderItem", 'Boolean'>
   readonly active: Prisma.FieldRef<"OrderItem", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"OrderItem", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"OrderItem", 'DateTime'>
@@ -1461,6 +1570,11 @@ export type OrderItemFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Skip the first `n` OrderItems.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of OrderItems.
+   */
   distinct?: Prisma.OrderItemScalarFieldEnum | Prisma.OrderItemScalarFieldEnum[]
 }
 
@@ -1682,6 +1796,30 @@ export type OrderItem$vouchersArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.VoucherScalarFieldEnum | Prisma.VoucherScalarFieldEnum[]
+}
+
+/**
+ * OrderItem.commandItems
+ */
+export type OrderItem$commandItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommandItem
+   */
+  select?: Prisma.CommandItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CommandItem
+   */
+  omit?: Prisma.CommandItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommandItemInclude<ExtArgs> | null
+  where?: Prisma.CommandItemWhereInput
+  orderBy?: Prisma.CommandItemOrderByWithRelationInput | Prisma.CommandItemOrderByWithRelationInput[]
+  cursor?: Prisma.CommandItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CommandItemScalarFieldEnum | Prisma.CommandItemScalarFieldEnum[]
 }
 
 /**

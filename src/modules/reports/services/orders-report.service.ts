@@ -12,6 +12,7 @@ import * as path from 'path';
 import * as QRCode from 'qrcode';
 import * as puppeteer from 'puppeteer';
 import { LogoInB64 } from '../base64/logo';
+import { N8nService } from 'src/modules/n8n/services/n8n.service';
 
 @Injectable()
 export class OrdersReportService extends BaseService {
@@ -20,6 +21,7 @@ export class OrdersReportService extends BaseService {
     prismaService: PrismaService,
     configService: ConfigService,
     private readonly ordersService: OrdersService,
+    private readonly n8nService: N8nService,
   ) {
     super(configService, loggerService, prismaService);
   }
@@ -275,5 +277,68 @@ export class OrdersReportService extends BaseService {
     });
     await browser.close();
     return Buffer.from(pdfBuffer);
+  }
+
+  async getFailedPendingOrdersData(editionId: string): Promise<any> {
+    const edition = await this.prisma.edition.findUnique({
+      where: { id: editionId },
+      select: { name: true },
+    });
+
+    if (!edition) {
+      throw new NotFoundException('Edição não encontrada');
+    }
+
+    const orders = await this.prisma.order.findMany({
+      where: {
+        editionId,
+        paymentStatus: { in: ['FAILED', 'PENDING'] },
+        active: true,
+      },
+      include: {
+        items: true,
+        payments: {
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const formattedOrders = orders.map((order) => ({
+      id: order.id,
+      customerName: order.customerName,
+      customerPhone: order.customerPhone,
+      customerCPF: order.customerCPF,
+      totalValue: order.totalValue,
+      totalValueFormatted: order.totalValue.toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }),
+      deliveryOption: order.deliveryOption,
+      paymentType: order.paymentType,
+      paymentStatus: order.paymentStatus,
+      itemsCount: order.items.length,
+      createdAt: order.createdAt,
+    }));
+
+    return {
+      editionName: edition.name,
+      generationDate: new Date().toLocaleString('pt-BR'),
+      orders: formattedOrders,
+      totalOrders: formattedOrders.length,
+    };
+  }
+
+  async dispatchReportToN8n(
+    editionId: string,
+    format: 'pdf' | 'excel',
+  ): Promise<any> {
+    const data = await this.getFailedPendingOrdersData(editionId);
+    return this.n8nService.dispatchEvent('REPORT_GENERATION', {
+      editionId,
+      format,
+      ...data,
+    }, 'failed-pending-orders-webhook');
   }
 }

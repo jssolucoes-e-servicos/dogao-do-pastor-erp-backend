@@ -1,0 +1,261 @@
+{
+  "name": "Failed/Pending Orders Report Generation (RUGGED - TOPOLOGY FIX)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "failed-pending-orders-webhook",
+        "options": {}
+      },
+      "id": "2d8f7e2c-3b9a-4c1d-8e5f-1a2b3c4d5e6f",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        0,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.body.data.format }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "excel"
+            },
+            {
+              "value2": "pdf"
+            }
+          ]
+        }
+      },
+      "id": "3e9f8a7b-4c1d-5e2f-6a7b-8c9d0e1f2a3b",
+      "name": "Switch Format",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "fileName",
+              "value": "={{ ($node[\"Webhook\"].json.body.data.editionName || 'report').replace(/ /g, '_') }}_{{ new Date().getTime() }}.xlsx"
+            }
+          ]
+        }
+      },
+      "id": "excel-set-node",
+      "name": "Excel FileName",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        450,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "fileName",
+              "value": "={{ ($node[\"Webhook\"].json.body.data.editionName || 'report').replace(/ /g, '_') }}_{{ new Date().getTime() }}.pdf"
+            }
+          ]
+        }
+      },
+      "id": "pdf-set-node",
+      "name": "PDF FileName",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        450,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "binaryPropertyName": "data",
+        "options": {
+          "fileName": "={{ $json.fileName }}"
+        }
+      },
+      "id": "4f0a9b8c-7d1e-2f3a-4b5c-6d7e8f9a0b1c",
+      "name": "Excel Node",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        700,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = items[0].json.body.data || items[0].json.data;\nconst orders = data.orders || [];\nconst editionName = data.editionName || 'Relatório';\nconst generationDate = data.generationDate || '';\nconst fileName = items[0].json.fileName || 'report.pdf';\n\nlet html = `<html><head><meta charset=\"UTF-8\"></head><body><h1>Relatório: ${editionName}</h1><p>Gerado em: ${generationDate}</p><table border=\"1\" style=\"width:100%\"><tr><th>ID</th><th>Cliente</th><th>Valor</th><th>Status</th></tr>`;\n\norders.forEach(o => {\n  html += `<tr><td>${o.id}</td><td>${o.customerName}</td><td>${o.totalValueFormatted}</td><td>${o.paymentStatus}</td></tr>`;\n});\n\nhtml += \"</table></body></html>\";\n\nreturn [{\n  json: { ...items[0].json, html },\n  binary: {\n    data: {\n      data: Buffer.from(html).toString('base64'),\n      fileName: fileName,\n      mimeType: 'text/html'\n    }\n  }\n}];"
+      },
+      "id": "5a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d",
+      "name": "HTML Builder",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        700,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "manual",
+        "protocol": "https",
+        "hostname": "minio-server.jssolucoeseservicos.com.br",
+        "accessKey": "smart-platform",
+        "secretKey": "spQ0eMtOnnkghUiRxmOX5l0gyU0IROCwrhLcnAh2",
+        "operation": "upload",
+        "bucketName": "dogao-do-pastor-documents",
+        "binaryPropertyName": "data",
+        "fileName": "={{ $json.fileName }}",
+        "options": {
+          "forcePathStyle": true
+        }
+      },
+      "id": "6b2c3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e",
+      "name": "Upload to MinIO",
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        950,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://smartchat-api.jssolucoeseservicos.com.br/message/sendText/smartChurches",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "E32A02450217-4CBD-A05F-C2E76FC2385F"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $node[\"Webhook\"].json.body.data.WHATSAPP_TEST_NUMBER || \"5551982488374\" }}"
+            },
+            {
+              "name": "text",
+              "value": "Olá! O seu relatório da edição *{{ $node[\"Webhook\"].json.body.data.editionName }}* está pronto: {{ $json.url }}"
+            }
+          ]
+        }
+      },
+      "id": "7c3d4e5f-6a7b-8c9d-0e1f-2a3b4c5d6e7f",
+      "name": "WhatsApp Node",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        1200,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch Format",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Format": {
+      "main": [
+        [
+          {
+            "node": "Excel FileName",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PDF FileName",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Excel FileName": {
+      "main": [
+        [
+          {
+            "node": "Excel Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF FileName": {
+      "main": [
+        [
+          {
+            "node": "HTML Builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Excel Node": {
+      "main": [
+        [
+          {
+            "node": "Upload to MinIO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML Builder": {
+      "main": [
+        [
+          {
+            "node": "Upload to MinIO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to MinIO": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

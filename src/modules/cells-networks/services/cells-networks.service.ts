@@ -121,6 +121,7 @@ export class CellsNetworksService extends BaseCrudService<
           cells: {
             include: {
               leader: true,
+              sellers: { select: { id: true, tag: true, name: true } },
             },
           },
           supervisor: true,

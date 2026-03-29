@@ -313,7 +313,7 @@ export class PaymentsTasksService extends BaseService {
     }
   }
 
-  @Cron(CronExpression.EVERY_5_MINUTES)
+  //@Cron(CronExpression.EVERY_5_MINUTES)
   async auditMissingCommandsCron() {
     this.logger.log('Iniciando Cron de Auditoria de Comandas Faltantes.');
     await this.auditMissingCommands();
@@ -367,7 +367,7 @@ export class PaymentsTasksService extends BaseService {
     }
   }
 
-  @Cron(CronExpression.EVERY_DAY_AT_4AM)
+  //@Cron(CronExpression.EVERY_DAY_AT_4AM)
   async auditMissingDonationsCron() {
     if (this.configs.get('NODE_ENV') === 'development') return;
 

@@ -288,8 +288,8 @@ export type DeliveryStopWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"DeliveryStop"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DeliveryStop"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"DeliveryStop"> | Date | string | null
-  route?: Prisma.XOR<Prisma.DeliveryRouteScalarRelationFilter, Prisma.DeliveryRouteWhereInput>
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
+  route?: Prisma.XOR<Prisma.DeliveryRouteScalarRelationFilter, Prisma.DeliveryRouteWhereInput>
 }
 
 export type DeliveryStopOrderByWithRelationInput = {
@@ -306,8 +306,8 @@ export type DeliveryStopOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  route?: Prisma.DeliveryRouteOrderByWithRelationInput
   order?: Prisma.OrderOrderByWithRelationInput
+  route?: Prisma.DeliveryRouteOrderByWithRelationInput
   _relevance?: Prisma.DeliveryStopOrderByRelevanceInput
 }
 
@@ -328,8 +328,8 @@ export type DeliveryStopWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"DeliveryStop"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DeliveryStop"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"DeliveryStop"> | Date | string | null
-  route?: Prisma.XOR<Prisma.DeliveryRouteScalarRelationFilter, Prisma.DeliveryRouteWhereInput>
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
+  route?: Prisma.XOR<Prisma.DeliveryRouteScalarRelationFilter, Prisma.DeliveryRouteWhereInput>
 }, "id">
 
 export type DeliveryStopOrderByWithAggregationInput = {
@@ -384,8 +384,8 @@ export type DeliveryStopCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  route: Prisma.DeliveryRouteCreateNestedOneWithoutStopsInput
   order: Prisma.OrderCreateNestedOneWithoutDeliveryStopsInput
+  route: Prisma.DeliveryRouteCreateNestedOneWithoutStopsInput
 }
 
 export type DeliveryStopUncheckedCreateInput = {
@@ -416,8 +416,8 @@ export type DeliveryStopUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  route?: Prisma.DeliveryRouteUpdateOneRequiredWithoutStopsNestedInput
   order?: Prisma.OrderUpdateOneRequiredWithoutDeliveryStopsNestedInput
+  route?: Prisma.DeliveryRouteUpdateOneRequiredWithoutStopsNestedInput
 }
 
 export type DeliveryStopUncheckedUpdateInput = {
@@ -921,8 +921,8 @@ export type DeliveryStopSelect<ExtArgs extends runtime.Types.Extensions.Internal
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  route?: boolean | Prisma.DeliveryRouteDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  route?: boolean | Prisma.DeliveryRouteDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["deliveryStop"]>
 
 export type DeliveryStopSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -939,8 +939,8 @@ export type DeliveryStopSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  route?: boolean | Prisma.DeliveryRouteDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  route?: boolean | Prisma.DeliveryRouteDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["deliveryStop"]>
 
 export type DeliveryStopSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -957,8 +957,8 @@ export type DeliveryStopSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  route?: boolean | Prisma.DeliveryRouteDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  route?: boolean | Prisma.DeliveryRouteDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["deliveryStop"]>
 
 export type DeliveryStopSelectScalar = {
@@ -979,23 +979,23 @@ export type DeliveryStopSelectScalar = {
 
 export type DeliveryStopOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "routeId" | "orderId" | "sequence" | "status" | "deliveredAt" | "skippedAt" | "failedAt" | "lat" | "lng" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["deliveryStop"]>
 export type DeliveryStopInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  route?: boolean | Prisma.DeliveryRouteDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  route?: boolean | Prisma.DeliveryRouteDefaultArgs<ExtArgs>
 }
 export type DeliveryStopIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  route?: boolean | Prisma.DeliveryRouteDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  route?: boolean | Prisma.DeliveryRouteDefaultArgs<ExtArgs>
 }
 export type DeliveryStopIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  route?: boolean | Prisma.DeliveryRouteDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  route?: boolean | Prisma.DeliveryRouteDefaultArgs<ExtArgs>
 }
 
 export type $DeliveryStopPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "DeliveryStop"
   objects: {
-    route: Prisma.$DeliveryRoutePayload<ExtArgs>
     order: Prisma.$OrderPayload<ExtArgs>
+    route: Prisma.$DeliveryRoutePayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1405,8 +1405,8 @@ readonly fields: DeliveryStopFieldRefs;
  */
 export interface Prisma__DeliveryStopClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  route<T extends Prisma.DeliveryRouteDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DeliveryRouteDefaultArgs<ExtArgs>>): Prisma.Prisma__DeliveryRouteClient<runtime.Types.Result.GetResult<Prisma.$DeliveryRoutePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   order<T extends Prisma.OrderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderDefaultArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  route<T extends Prisma.DeliveryRouteDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DeliveryRouteDefaultArgs<ExtArgs>>): Prisma.Prisma__DeliveryRouteClient<runtime.Types.Result.GetResult<Prisma.$DeliveryRoutePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1645,6 +1645,11 @@ export type DeliveryStopFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Skip the first `n` DeliveryStops.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of DeliveryStops.
+   */
   distinct?: Prisma.DeliveryStopScalarFieldEnum | Prisma.DeliveryStopScalarFieldEnum[]
 }
 

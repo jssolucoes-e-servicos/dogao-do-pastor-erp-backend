@@ -210,6 +210,18 @@ export class ContributorsService extends BaseCrudService<
   async restore(id: string): Promise<ContributorEntity> {
     return super.restoreData({ id });
   }
+
+  async changePassword(id: string, currentPassword: string, newPassword: string) {
+    const contributor = await this.model.findUnique({ where: { id } });
+    if (!contributor) throw new NotFoundException('Colaborador não encontrado');
+
+    const valid = await bcrypt.compare(currentPassword, contributor.password);
+    if (!valid) throw new ConflictException('Senha atual incorreta');
+
+    const hashed = await bcrypt.hash(newPassword, 10);
+    await this.model.update({ where: { id }, data: { password: hashed } });
+    return { message: 'Senha alterada com sucesso' };
+  }
   async uploadPhoto(id: string, file: MemoryStoredFile) {
     const contributor = await this.model.findUnique({
       where: { id: id },

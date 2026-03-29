@@ -59,6 +59,16 @@ export class CustomersController {
     return await this.service.findByCPF(data);
   }
 
+  @Get('by-phone/:phone')
+  @Public()
+  async findByPhone(@Param('phone') phone: string) {
+    const clean = phone.replace(/\D/g, '');
+    const result = await this.service.list(
+      { phone: clean, page: 1, limit: 1 } as any,
+    );
+    return result.data?.[0] ?? null;
+  }
+
   @Put(':id')
   @Public()
   async update(@Param() { id }: IdParamDto, @Body() dto: UpdateCustomerDto) {

@@ -1,10 +1,8 @@
-// prisma/schema.prisma
-
 generator client {
-  provider     = "prisma-client"
-  output       = "../src/generated"
-  moduleFormat = "cjs"
+  provider        = "prisma-client"
+  output          = "../src/generated"
   previewFeatures = ["fullTextSearchPostgres"]
+  moduleFormat    = "cjs"
 }
 
 generator seedClient {
@@ -14,8 +12,6 @@ generator seedClient {
 datasource db {
   provider = "postgresql"
 }
-
-//// ENUMS ////
 
 enum UserTypesEnum {
   PARTNER
@@ -31,16 +27,16 @@ enum VoucherStatusEnum {
 }
 
 enum OrderStatusEnum {
-  DIGITATION // Pedido em digitação no online
-  PENDING_PAYMENT // Finalizado mas sem pagamento
-  PAID // Pagamento aprovado
-  QUEUE // Fila aguardando produção
-  PRODUCTION // Em produção
-  EXPEDITION // Pronto no balcão
-  DELIVERING // Saiu para entrega
-  DELIVERED // Entregue
-  CANCELLED // Cancelado
-  REJECTED // Rejeitado (não pago ou falha)
+  DIGITATION
+  PENDING_PAYMENT
+  PAID
+  QUEUE
+  PRODUCTION
+  EXPEDITION
+  DELIVERING
+  DELIVERED
+  CANCELLED
+  REJECTED
 }
 
 enum SiteOrderStepEnum {
@@ -87,10 +83,10 @@ enum PaymentMethodEnum {
   CARD
   CARD_CREDIT
   CARD_DEBIT
-  PIX_OFFLINE
   POS
   MONEY
   TICKET
+  PIX_OFFLINE
 }
 
 enum EmailStatusEnum {
@@ -102,8 +98,9 @@ enum EmailStatusEnum {
 }
 
 enum OrderOriginEnum {
+  APP
+  MANUAL
   SITE
-  TICKET
   PDV
 }
 
@@ -144,71 +141,80 @@ enum WithdrawalStatusEnum {
   CANCELLED
 }
 
-//// BASE / AUTH / PERMISSÕES ////
+// ─── PUSH NOTIFICATIONS ───────────────────────────────────────
+
+enum NotificationTypeEnum {
+  SYSTEM // avisos de sistema — não pode desligar
+  SALES // nova venda, pagamento confirmado
+  ORDERS // atualização de pedido
+  RANKING // ranking atualizado
+  CELL // atividade da célula
+  NETWORK // atividade da rede
+}
 
 model Contributor {
-  id        String    @id @default(cuid())
-  name      String
-  phone     String?
-  photo     String?
-  username  String?   @unique
-  password  String // bcrypt("dogao@2026") como padrão ao criar
-  active    Boolean   @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-
-  sellers         Seller[]
-  cells           Cell[]
-  cellNetworks    CellNetwork[]
-  deliveryPersons DeliveryPerson[]
-  userRoles       UserRole[]
-  permissions     Permission[]
+  id                     String                  @id @default(cuid())
+  name                   String
+  phone                  String?
+  photo                  String?
+  username               String?                 @unique
+  password               String
+  active                 Boolean                 @default(true)
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  deletedAt              DateTime?
+  cells                  Cell[]
+  cellNetworks           CellNetwork[]
+  deliveryPersons        DeliveryPerson[]
+  permissions            Permission[]
+  sellers                Seller[]
+  userRoles              UserRole[]
+  pushTokens             PushToken[]
+  notificationPreference NotificationPreference?
+  cellsMember            ContributorCell[]
 
   @@map("contributors")
 }
 
 model Role {
-  id          String    @id @default(cuid())
-  name        String    @unique // 'Seller', 'DeliveryPerson', 'Backoffice', etc.
+  id          String       @id @default(cuid())
+  name        String       @unique
   description String?
-  active      Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  active      Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   deletedAt   DateTime?
-
-  users       UserRole[]
   permissions Permission[]
+  users       UserRole[]
 
   @@map("roles")
 }
 
 model UserRole {
   id            String      @id @default(cuid())
-  contributor   Contributor @relation(fields: [contributorId], references: [id])
   contributorId String
-  role          Role        @relation(fields: [roleId], references: [id])
   roleId        String
   active        Boolean     @default(true)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   deletedAt     DateTime?
+  contributor   Contributor @relation(fields: [contributorId], references: [id])
+  role          Role        @relation(fields: [roleId], references: [id])
 
   @@unique([contributorId, roleId])
   @@map("user_roles")
 }
 
 model Module {
-  id          String    @id @default(cuid())
+  id          String       @id @default(cuid())
   name        String
   description String
   ctrl        String
   page        String
-  active      Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  active      Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   deletedAt   DateTime?
-
   permissions Permission[]
 
   @@map("modules")
@@ -216,11 +222,8 @@ model Module {
 
 model Permission {
   id            String       @id @default(cuid())
-  contributor   Contributor? @relation(fields: [contributorId], references: [id])
   contributorId String?
-  role          Role?        @relation(fields: [roleId], references: [id])
   roleId        String?
-  module        Module       @relation(fields: [moduleId], references: [id])
   moduleId      String
   access        Boolean      @default(false)
   create        Boolean      @default(false)
@@ -231,55 +234,50 @@ model Permission {
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   deletedAt     DateTime?
+  contributor   Contributor? @relation(fields: [contributorId], references: [id])
+  module        Module       @relation(fields: [moduleId], references: [id])
+  role          Role?        @relation(fields: [roleId], references: [id])
 
   @@map("permissions")
 }
 
 model File {
-  id         String @id @default(cuid())
-  path       String @unique // caminho completo no storage
+  id         String    @id @default(cuid())
+  path       String    @unique
   fileName   String
   mimeType   String
   sizeBytes  Int
-  uploadedBy String // contributorId
-
-  active    Boolean   @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  uploadedBy String
+  active     Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
 
   @@map("files")
 }
 
-//// EDIÇÃO / ESTRUTURA DE REDE ////
-
 model Edition {
-  id             String   @id @default(cuid())
-  name           String   @unique
-  productionDate DateTime @unique
-  code           String   @unique // id da edicao no formado de 3 digitos numericos a exemplo 261 para enumeracao dos tickets e das comandas
-
-  saleStartDate   DateTime // início das vendas
-  saleEndDate     DateTime // fim das vendas
-  autoEnableDate  DateTime? // quando ativar active = true
-  autoDisableDate DateTime? // quando desativar active = false
-
-  limitSale Int // limite máximo de dogs
-  dogsSold  Int @default(0) // cache para dashboard
-
+  id               String             @id @default(cuid())
+  name             String             @unique
+  productionDate   DateTime           @unique
+  code             String             @unique
+  saleStartDate    DateTime
+  saleEndDate      DateTime
+  autoEnableDate   DateTime?
+  autoDisableDate  DateTime?
+  limitSale        Int
+  dogsSold         Int                @default(0)
   dogPrice         Float              @default(19.99)
   active           Boolean            @default(true)
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
   deletedAt        DateTime?
-  // Vouchers emitidos nesta edição
-  issuedVouchers   Voucher[]          @relation("VoucherIssuedEdition")
-  // Vouchers resgatados nesta edição
-  redeemedVouchers Voucher[]          @relation("VoucherRedeemedEdition")
-  tickets          Ticket[]
+  commands         Command[]
   orders           Order[]
   settlements      SellerSettlement[]
-  commands         Command[]
+  tickets          Ticket[]
+  issuedVouchers   Voucher[]          @relation("VoucherIssuedEdition")
+  redeemedVouchers Voucher[]          @relation("VoucherRedeemedEdition")
 
   @@index([saleEndDate, saleStartDate])
   @@map("editions")
@@ -288,101 +286,112 @@ model Edition {
 model CellNetwork {
   id           String       @id @default(cuid())
   name         String
-  supervisor   Contributor? @relation(fields: [supervisorId], references: [id])
   supervisorId String?
   phone        String
   active       Boolean      @default(true)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   deletedAt    DateTime?
-
-  cells Cell[]
+  cells        Cell[]
+  supervisor   Contributor? @relation(fields: [supervisorId], references: [id])
 
   @@map("cells_networks")
 }
 
 model Cell {
-  id        String       @id @default(cuid())
-  name      String
-  network   CellNetwork  @relation(fields: [networkId], references: [id])
-  networkId String
-  leader    Contributor? @relation(fields: [leaderId], references: [id])
-  leaderId  String?
-  active    Boolean      @default(true)
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  deletedAt DateTime?
-
-  sellers Seller[]
+  id           String            @id @default(cuid())
+  name         String
+  networkId    String
+  leaderId     String?
+  active       Boolean           @default(true)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  deletedAt    DateTime?
+  leader       Contributor?      @relation(fields: [leaderId], references: [id])
+  network      CellNetwork       @relation(fields: [networkId], references: [id])
+  sellers      Seller[]
+  contributors ContributorCell[]
 
   @@map("cells")
 }
 
 model Seller {
-  id            String      @id @default(cuid())
+  id            String             @id @default(cuid())
   name          String
-  cell          Cell        @relation(fields: [cellId], references: [id])
   cellId        String
-  contributor   Contributor @relation(fields: [contributorId], references: [id])
   contributorId String
-  tag           String      @unique
-  active        Boolean     @default(true)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  tag           String             @unique
+  active        Boolean            @default(true)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
   deletedAt     DateTime?
-
-  tickets     Ticket[]
-  orders      Order[]
-  settlements SellerSettlement[]
+  orders        Order[]
+  cell          Cell               @relation(fields: [cellId], references: [id])
+  contributor   Contributor        @relation(fields: [contributorId], references: [id])
+  settlements   SellerSettlement[]
+  tickets       Ticket[]
+  dependents    ContributorCell[]
 
   @@index([cellId])
   @@map("sellers")
 }
 
-model DeliveryPerson {
-  id               String      @id @default(cuid())
-  contributor      Contributor @relation(fields: [contributorId], references: [id])
-  contributorId    String
-  online           Boolean     @default(false)
-  inRoute          Boolean     @default(false)
-  pushSubscription Json?
-  active           Boolean     @default(true)
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
-  deletedAt        DateTime?
+model ContributorCell {
+  id            String      @id @default(cuid())
+  cellId        String
+  contributorId String
+  sellerId      String
+  active        Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  deletedAt     DateTime?
+  cell          Cell        @relation(fields: [cellId], references: [id])
+  contributor   Contributor @relation(fields: [contributorId], references: [id])
+  sellerDefault Seller      @relation(fields: [sellerId], references: [id])
 
-  routes DeliveryRoute[]
+  @@index([cellId, contributorId, sellerId])
+  @@map("contributors_cells")
+}
+
+model DeliveryPerson {
+  id               String          @id @default(cuid())
+  contributorId    String
+  online           Boolean         @default(false)
+  inRoute          Boolean         @default(false)
+  pushSubscription Json?
+  active           Boolean         @default(true)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  deletedAt        DateTime?
+  contributor      Contributor     @relation(fields: [contributorId], references: [id])
+  routes           DeliveryRoute[]
 
   @@map("delivery_persons")
 }
 
-//// CLIENTES ////
-
 model Customer {
-  id            String    @id @default(cuid())
+  id            String            @id @default(cuid())
   name          String
-  email         String?   @unique
+  email         String?           @unique
   phone         String
-  cpf           String?   @unique
+  cpf           String?           @unique
   password      String
-  knowsChurch   Boolean   @default(true)
-  allowsChurch  Boolean   @default(true)
-  firstRegister Boolean   @default(false)
-  active        Boolean   @default(true)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  knowsChurch   Boolean           @default(true)
+  allowsChurch  Boolean           @default(true)
+  firstRegister Boolean           @default(false)
+  active        Boolean           @default(true)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
   deletedAt     DateTime?
-
-  vouchers  Voucher[]
-  addresses CustomerAddress[]
-  orders    Order[]
+  addresses     CustomerAddress[]
+  orders        Order[]
+  vouchers      Voucher[]
 
   @@map("customers")
 }
 
 model CustomerAddress {
   id           String    @id @default(cuid())
-  customer     Customer  @relation(fields: [customerId], references: [id])
   customerId   String
   street       String
   number       String
@@ -395,197 +404,188 @@ model CustomerAddress {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   deletedAt    DateTime?
-
-  orders Order[]
+  customer     Customer  @relation(fields: [customerId], references: [id])
+  orders       Order[]
 
   @@index([customerId, neighborhood])
   @@map("customers_addresses")
 }
 
-//// PEDIDO UNIFICADO ////
-
 model Order {
-  id            String          @id @default(cuid())
-  edition       Edition         @relation(fields: [editionId], references: [id])
-  editionId     String
-  customer      Customer        @relation(fields: [customerId], references: [id])
-  customerId    String
-  customerName  String
-  customerPhone String
-  customerCPF   String
-  seller        Seller          @relation(fields: [sellerId], references: [id])
-  sellerId      String
-  sellerTag     String
-  origin        OrderOriginEnum @default(SITE)
-
-  totalValue Float
-  status     OrderStatusEnum   @default(DIGITATION)
-  siteStep   SiteOrderStepEnum @default(CUSTOMER)
-  paymentStatus PaymentStatusEnum @default(PENDING)
-  paymentType PaymentMethodEnum @default(UNDEFINED)
-  deliveryOption DeliveryOptionEnum @default(UNDEFINED)
-  deliveryTime   String?
-  partner       Partner?        @relation(fields: [partnerId], references: [id])
-  partnerId     String?
-  address        CustomerAddress?   @relation(fields: [addressId], references: [id])
-  addressId      String?
-
-  observations     String?
-
-  active    Boolean   @default(true)
-  paymentReminderSent Boolean @default(false)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-
-  items         OrderItem[]
-  vouchers      Voucher[]
-  tickets       Ticket[]
-  payments      Payment[]
-  commands      Command[]
-  deliveryStops DeliveryStop[]
-  donationsEntries DonationEntry[]
+  id                  String             @id @default(cuid())
+  editionId           String
+  customerId          String
+  customerName        String
+  customerPhone       String
+  customerCPF         String
+  sellerId            String
+  sellerTag           String
+  origin              OrderOriginEnum    @default(SITE)
+  totalValue          Float
+  status              OrderStatusEnum    @default(DIGITATION)
+  siteStep            SiteOrderStepEnum  @default(CUSTOMER)
+  paymentStatus       PaymentStatusEnum  @default(PENDING)
+  paymentType         PaymentMethodEnum  @default(UNDEFINED)
+  deliveryOption      DeliveryOptionEnum @default(UNDEFINED)
+  deliveryTime        String?
+  partnerId           String?
+  addressId           String?
+  observations        String?
+  active              Boolean            @default(true)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  deletedAt           DateTime?
+  paymentReminderSent Boolean            @default(false)
+  commands            Command[]
+  deliveryStops       DeliveryStop[]
+  donationsEntries    DonationEntry[]
+  address             CustomerAddress?   @relation(fields: [addressId], references: [id])
+  customer            Customer           @relation(fields: [customerId], references: [id])
+  edition             Edition            @relation(fields: [editionId], references: [id])
+  partner             Partner?           @relation(fields: [partnerId], references: [id])
+  seller              Seller             @relation(fields: [sellerId], references: [id])
+  items               OrderItem[]
+  payments            Payment[]
+  tickets             Ticket[]
+  vouchers            Voucher[]
 
   @@index([origin, editionId, status, sellerId])
   @@map("orders")
 }
 
 model OrderItem {
-  id                 String    @id @default(cuid())
-  order              Order     @relation(fields: [orderId], references: [id])
+  id                 String        @id @default(cuid())
   orderId            String
   unitPrice          Float
   removedIngredients String[]
-  active             Boolean   @default(true)
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
+  commanded          Boolean       @default(false)
+  active             Boolean       @default(true)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
   deletedAt          DateTime?
-
-  vouchers Voucher[]
+  order              Order         @relation(fields: [orderId], references: [id])
+  vouchers           Voucher[]
+  commandItems       CommandItem[]
 
   @@index([orderId])
   @@map("orders_items")
 }
 
-//// TICKETS & VOUCHERS ////
-
 model Ticket {
-  id        String  @id @default(cuid())
-  edition   Edition @relation(fields: [editionId], references: [id])
+  id        String    @id @default(cuid())
   editionId String
   number    String
-  ordered   Boolean @default(false)
-
-  seller   Seller @relation(fields: [sellerId], references: [id])
-  sellerId String
-
-  order   Order?  @relation(fields: [orderId], references: [id])
-  orderId String?
-
+  ordered   Boolean   @default(false)
+  sellerId  String
+  orderId   String?
   active    Boolean   @default(true)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
+  edition   Edition   @relation(fields: [editionId], references: [id])
+  order     Order?    @relation(fields: [orderId], references: [id])
+  seller    Seller    @relation(fields: [sellerId], references: [id])
 
   @@index([editionId, sellerId, orderId])
   @@map("tickets")
 }
 
 model Voucher {
-  id   String @id @default(cuid())
-  code String @unique
-
-  // Edição onde o voucher foi emitido
-  issuedEdition   Edition @relation("VoucherIssuedEdition", fields: [issuedEditionId], references: [id])
-  issuedEditionId String
-
-  customer   Customer? @relation(fields: [customerId], references: [id])
-  customerId String?
-
-  // Edição onde foi resgatado (geralmente outra edição)
-  redeemedEdition   Edition? @relation("VoucherRedeemedEdition", fields: [redeemedEditionId], references: [id])
+  id                String            @id @default(cuid())
+  code              String            @unique
+  issuedEditionId   String
+  customerId        String?
   redeemedEditionId String?
-
-  order       Order?     @relation(fields: [orderId], references: [id])
-  orderId     String?
-  orderItem   OrderItem? @relation(fields: [orderItemId], references: [id])
-  orderItemId String?
-
-  used      Boolean           @default(false)
-  usedAt    DateTime?
-  status    VoucherStatusEnum @default(NEW)
-  active    Boolean           @default(true)
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
-  deletedAt DateTime?
+  orderId           String?
+  orderItemId       String?
+  used              Boolean           @default(false)
+  usedAt            DateTime?
+  status            VoucherStatusEnum @default(NEW)
+  active            Boolean           @default(true)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  deletedAt         DateTime?
+  customer          Customer?         @relation(fields: [customerId], references: [id])
+  issuedEdition     Edition           @relation("VoucherIssuedEdition", fields: [issuedEditionId], references: [id])
+  order             Order?            @relation(fields: [orderId], references: [id])
+  orderItem         OrderItem?        @relation(fields: [orderItemId], references: [id])
+  redeemedEdition   Edition?          @relation("VoucherRedeemedEdition", fields: [redeemedEditionId], references: [id])
 
   @@index([customerId, redeemedEditionId, issuedEditionId])
   @@map("vouchers")
 }
 
-//// PAGAMENTOS ////
-
 model Payment {
-  id      String @id @default(cuid())
-  order   Order  @relation(fields: [orderId], references: [id])
-  orderId String
-
+  id                String              @id @default(cuid())
+  orderId           String
   origin            PaymentOriginEnum   @default(PREORDER)
   value             Float
   status            PaymentStatusEnum   @default(PENDING)
   provider          PaymentProviderEnum @default(MERCADOPAGO)
-  providerPaymentId String? // ID MP ou similar
+  providerPaymentId String?
   method            PaymentMethodEnum   @default(UNDEFINED)
-
-  pixQrcode    String?
-  pixCopyPaste String?
-  paymentUrl   String?
-  cardToken    String?
-
-  rawPayload String? // payload do provedor (init/webhook)
-
-  active    Boolean   @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  pixQrcode         String?
+  pixCopyPaste      String?
+  paymentUrl        String?
+  cardToken         String?
+  rawPayload        String?
+  active            Boolean             @default(true)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  deletedAt         DateTime?
+  order             Order               @relation(fields: [orderId], references: [id])
 
   @@index([providerPaymentId, orderId, status, provider])
   @@map("payments")
 }
 
-
-//// COMANDOS / IMPRESSÃO ////
-
 model Command {
-  id           String  @id @default(cuid())
-  sequentialId String  @unique 
-  order        Order?  @relation(fields: [orderId], references: [id])
+  id           String            @id @default(cuid())
+  sequentialId String            @unique
   orderId      String?
-  withdrawal   Withdrawal? @relation(fields: [withdrawalId], references: [id])
-  withdrawalId String?     @unique
-  edition      Edition @relation(fields: [editionId], references: [id])
   editionId    String
-  editionCode  Int 
-  sequence     Int 
+  editionCode  Int
+  sequence     Int
   printed      Boolean           @default(false)
   pdfUrl       String?
   sentWhatsApp Boolean           @default(false)
   sentAt       DateTime?
+  quantity     Int?
   status       CommandStatusEnum @default(PENDING)
-  active    Boolean   @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  active       Boolean           @default(true)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  deletedAt    DateTime?
+  withdrawalId String?           @unique
+  edition      Edition           @relation(fields: [editionId], references: [id])
+  order        Order?            @relation(fields: [orderId], references: [id])
+  withdrawal   Withdrawal?       @relation(fields: [withdrawalId], references: [id])
+  commandItems CommandItem[]
 
   @@map("commands")
 }
 
-//// RELATÓRIOS ////
+model CommandItem {
+  id                 String    @id @default(cuid())
+  command            Command   @relation(fields: [commandId], references: [id])
+  commandId          String
+  item               OrderItem @relation(fields: [itemId], references: [id])
+  itemId             String
+  removedIngredients String[]
+  producced          Boolean   @default(false)
+  active             Boolean   @default(true)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  deletedAt          DateTime?
+
+  @@index([commandId, itemId, producced])
+  @@map("commands_items")
+}
 
 model DailyReportSoldsCache {
   id        String    @id @default(cuid())
-  type      String // 'seller' ou 'cell'
-  refId     String // id do vendedor ou célula
+  type      String
+  refId     String
   seller    String
   cell      String
   network   String
@@ -600,11 +600,8 @@ model DailyReportSoldsCache {
   @@map("daily_report_sold_caches")
 }
 
-//// ROTAS DE ENTREGA ////
-
 model DeliveryRoute {
   id               String                  @id @default(cuid())
-  deliveryPerson   DeliveryPerson          @relation(fields: [deliveryPersonId], references: [id])
   deliveryPersonId String
   startedAt        DateTime?
   finishedAt       DateTime?
@@ -615,8 +612,8 @@ model DeliveryRoute {
   createdAt        DateTime                @default(now())
   updatedAt        DateTime                @updatedAt
   deletedAt        DateTime?
-
-  stops DeliveryStop[]
+  deliveryPerson   DeliveryPerson          @relation(fields: [deliveryPersonId], references: [id])
+  stops            DeliveryStop[]
 
   @@index([deliveryPersonId, status])
   @@map("delivery_routes")
@@ -624,9 +621,7 @@ model DeliveryRoute {
 
 model DeliveryStop {
   id          String                 @id @default(cuid())
-  route       DeliveryRoute          @relation(fields: [routeId], references: [id])
   routeId     String
-  order       Order                  @relation(fields: [orderId], references: [id])
   orderId     String
   sequence    Int
   status      DeliveryStopStatusEnum @default(PENDING)
@@ -638,41 +633,41 @@ model DeliveryStop {
   createdAt   DateTime               @default(now())
   updatedAt   DateTime               @updatedAt
   deletedAt   DateTime?
+  order       Order                  @relation(fields: [orderId], references: [id])
+  route       DeliveryRoute          @relation(fields: [routeId], references: [id])
 
   @@index([routeId, orderId])
   @@map("delivery_stops")
 }
 
-//// ACERTO COM VENDEDORES ////
-
 model SellerSettlement {
   id               String    @id @default(cuid())
-  edition          Edition   @relation(fields: [editionId], references: [id])
   editionId        String
-  seller           Seller    @relation(fields: [sellerId], references: [id])
   sellerId         String
   totalTicketsSold Int
   totalValue       Float
   totalReturned    Int
-  status           String    @default("PENDING") // PENDING | CLOSED | PAID
+  status           String    @default("PENDING")
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
   deletedAt        DateTime?
+  edition          Edition   @relation(fields: [editionId], references: [id])
+  seller           Seller    @relation(fields: [sellerId], references: [id])
 
   @@index([editionId, sellerId])
   @@map("sellers_settlements")
 }
 
 model Partner {
-  id               String    @id @default(cuid())
+  id               String          @id @default(cuid())
   name             String
-  cnpj             String   @unique
+  cnpj             String          @unique
   phone            String
   description      String?
   website          String?
   facebook         String?
   instagram        String?
-  addressInLine     String
+  addressInLine    String
   street           String
   number           String
   neighborhood     String
@@ -684,68 +679,67 @@ model Partner {
   responsiblePhone String
   logo             String?
   password         String
-  approved         Boolean   @default(false)
-  active           Boolean   @default(true)
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  approved         Boolean         @default(false)
+  active           Boolean         @default(true)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
   deletedAt        DateTime?
-
-  donations Order[]
-  withdrawals Withdrawal[]
-  donationEntry DonationEntry[]
+  donationEntry    DonationEntry[]
+  donations        Order[]
+  withdrawals      Withdrawal[]
 
   @@map("partners")
 }
 
 model OtpVerification {
-  id        String   @id @default(cuid())
-  userId    String   
-  userType  UserTypesEnum   // "PARTNER" | "CUSTOMER" | "CONTRIBUTOR"
-  code      String 
+  id        String        @id @default(cuid())
+  userId    String
+  userType  UserTypesEnum
+  code      String
   phone     String
   expiresAt DateTime
-  used      Boolean  @default(false)
-  active Boolean @default(true)
-  createdAt DateTime @default(now())
-  updatedAt        DateTime  @updatedAt
-  deletedAt        DateTime?
+  used      Boolean       @default(false)
+  active    Boolean       @default(true)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  deletedAt DateTime?
 
   @@index([userId, code])
   @@map("otp_verifications")
 }
+
 model DonationEntry {
-  id           String       @id @default(cuid())
-  partner      Partner @relation(fields: [partnerId], references: [id])
-  partnerId String
-  order        Order? @relation(fields: [orderId], references: [id])
-  orderId String?
-  withdrawal   Withdrawal? @relation(fields: [withdrawalId], references: [id])
+  id           String            @id @default(cuid())
+  partnerId    String
+  orderId      String?
   withdrawalId String?
-  quantity     Int          // Positivo para CREDIT, Negativo para DEBIT
+  quantity     Int
   type         DonationEntryType
-  active       Boolean      @default(true)
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  active       Boolean           @default(true)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
   deletedAt    DateTime?
+  order        Order?            @relation(fields: [orderId], references: [id])
+  partner      Partner           @relation(fields: [partnerId], references: [id])
+  withdrawal   Withdrawal?       @relation(fields: [withdrawalId], references: [id])
 
   @@index([partnerId, type, orderId, withdrawalId])
   @@map("donation_entries")
 }
 
 model Withdrawal {
-  id          String           @id @default(cuid())
-  partner     Partner @relation(fields: [partnerId], references: [id])
-  partnerId String
-  status      WithdrawalStatusEnum @default(PENDING)
-  scheduledAt DateTime         // Quando o parceiro virá buscar
-  active       Boolean         @default(true)
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
+  id           String               @id @default(cuid())
+  partnerId    String
+  status       WithdrawalStatusEnum @default(PENDING)
+  scheduledAt  DateTime
+  active       Boolean              @default(true)
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
   deletedAt    DateTime?
-
-  items       WithdrawalItem[]
+  commands     Command?
   donationLogs DonationEntry[]
-  commands Command[]
+  items        WithdrawalItem[]
+  partner      Partner              @relation(fields: [partnerId], references: [id])
 
   @@index([partnerId, status])
   @@map("withdrawals")
@@ -753,15 +747,59 @@ model Withdrawal {
 
 model WithdrawalItem {
   id                 String     @id @default(cuid())
-  withdrawal         Withdrawal @relation(fields: [withdrawalId], references: [id])
-  withdrawalId String
+  withdrawalId       String
   quantity           Int
   removedIngredients String[]
   active             Boolean    @default(true)
   createdAt          DateTime   @default(now())
   updatedAt          DateTime   @updatedAt
   deletedAt          DateTime?
+  withdrawal         Withdrawal @relation(fields: [withdrawalId], references: [id])
 
   @@index([withdrawalId])
   @@map("withdrawal_items")
+}
+
+model PushToken {
+  id            String      @id @default(cuid())
+  contributor   Contributor @relation(fields: [contributorId], references: [id])
+  contributorId String
+  token         String      @unique
+  platform      String // 'ios' | 'android'
+  active        Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([contributorId])
+  @@map("push_tokens")
+}
+
+model NotificationPreference {
+  id            String      @id @default(cuid())
+  contributor   Contributor @relation(fields: [contributorId], references: [id])
+  contributorId String      @unique
+  sales         Boolean     @default(true)
+  orders        Boolean     @default(true)
+  ranking       Boolean     @default(true)
+  cell          Boolean     @default(true)
+  network       Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@map("notification_preferences")
+}
+
+model NotificationLog {
+  id            String               @id @default(cuid())
+  contributorId String?
+  type          NotificationTypeEnum
+  title         String
+  body          String
+  data          Json?
+  sentAt        DateTime             @default(now())
+  success       Boolean              @default(true)
+  error         String?
+
+  @@index([contributorId, type])
+  @@map("notification_logs")
 }

@@ -206,10 +206,10 @@ export type WithdrawalWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Withdrawal"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Withdrawal"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Withdrawal"> | Date | string | null
-  partner?: Prisma.XOR<Prisma.PartnerScalarRelationFilter, Prisma.PartnerWhereInput>
-  items?: Prisma.WithdrawalItemListRelationFilter
+  commands?: Prisma.XOR<Prisma.CommandNullableScalarRelationFilter, Prisma.CommandWhereInput> | null
   donationLogs?: Prisma.DonationEntryListRelationFilter
-  commands?: Prisma.CommandListRelationFilter
+  items?: Prisma.WithdrawalItemListRelationFilter
+  partner?: Prisma.XOR<Prisma.PartnerScalarRelationFilter, Prisma.PartnerWhereInput>
 }
 
 export type WithdrawalOrderByWithRelationInput = {
@@ -221,10 +221,10 @@ export type WithdrawalOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  partner?: Prisma.PartnerOrderByWithRelationInput
-  items?: Prisma.WithdrawalItemOrderByRelationAggregateInput
+  commands?: Prisma.CommandOrderByWithRelationInput
   donationLogs?: Prisma.DonationEntryOrderByRelationAggregateInput
-  commands?: Prisma.CommandOrderByRelationAggregateInput
+  items?: Prisma.WithdrawalItemOrderByRelationAggregateInput
+  partner?: Prisma.PartnerOrderByWithRelationInput
   _relevance?: Prisma.WithdrawalOrderByRelevanceInput
 }
 
@@ -240,10 +240,10 @@ export type WithdrawalWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Withdrawal"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Withdrawal"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Withdrawal"> | Date | string | null
-  partner?: Prisma.XOR<Prisma.PartnerScalarRelationFilter, Prisma.PartnerWhereInput>
-  items?: Prisma.WithdrawalItemListRelationFilter
+  commands?: Prisma.XOR<Prisma.CommandNullableScalarRelationFilter, Prisma.CommandWhereInput> | null
   donationLogs?: Prisma.DonationEntryListRelationFilter
-  commands?: Prisma.CommandListRelationFilter
+  items?: Prisma.WithdrawalItemListRelationFilter
+  partner?: Prisma.XOR<Prisma.PartnerScalarRelationFilter, Prisma.PartnerWhereInput>
 }, "id">
 
 export type WithdrawalOrderByWithAggregationInput = {
@@ -282,10 +282,10 @@ export type WithdrawalCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  partner: Prisma.PartnerCreateNestedOneWithoutWithdrawalsInput
-  items?: Prisma.WithdrawalItemCreateNestedManyWithoutWithdrawalInput
+  commands?: Prisma.CommandCreateNestedOneWithoutWithdrawalInput
   donationLogs?: Prisma.DonationEntryCreateNestedManyWithoutWithdrawalInput
-  commands?: Prisma.CommandCreateNestedManyWithoutWithdrawalInput
+  items?: Prisma.WithdrawalItemCreateNestedManyWithoutWithdrawalInput
+  partner: Prisma.PartnerCreateNestedOneWithoutWithdrawalsInput
 }
 
 export type WithdrawalUncheckedCreateInput = {
@@ -297,9 +297,9 @@ export type WithdrawalUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  items?: Prisma.WithdrawalItemUncheckedCreateNestedManyWithoutWithdrawalInput
+  commands?: Prisma.CommandUncheckedCreateNestedOneWithoutWithdrawalInput
   donationLogs?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutWithdrawalInput
-  commands?: Prisma.CommandUncheckedCreateNestedManyWithoutWithdrawalInput
+  items?: Prisma.WithdrawalItemUncheckedCreateNestedManyWithoutWithdrawalInput
 }
 
 export type WithdrawalUpdateInput = {
@@ -310,10 +310,10 @@ export type WithdrawalUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  partner?: Prisma.PartnerUpdateOneRequiredWithoutWithdrawalsNestedInput
-  items?: Prisma.WithdrawalItemUpdateManyWithoutWithdrawalNestedInput
+  commands?: Prisma.CommandUpdateOneWithoutWithdrawalNestedInput
   donationLogs?: Prisma.DonationEntryUpdateManyWithoutWithdrawalNestedInput
-  commands?: Prisma.CommandUpdateManyWithoutWithdrawalNestedInput
+  items?: Prisma.WithdrawalItemUpdateManyWithoutWithdrawalNestedInput
+  partner?: Prisma.PartnerUpdateOneRequiredWithoutWithdrawalsNestedInput
 }
 
 export type WithdrawalUncheckedUpdateInput = {
@@ -325,9 +325,9 @@ export type WithdrawalUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  items?: Prisma.WithdrawalItemUncheckedUpdateManyWithoutWithdrawalNestedInput
+  commands?: Prisma.CommandUncheckedUpdateOneWithoutWithdrawalNestedInput
   donationLogs?: Prisma.DonationEntryUncheckedUpdateManyWithoutWithdrawalNestedInput
-  commands?: Prisma.CommandUncheckedUpdateManyWithoutWithdrawalNestedInput
+  items?: Prisma.WithdrawalItemUncheckedUpdateManyWithoutWithdrawalNestedInput
 }
 
 export type WithdrawalCreateManyInput = {
@@ -521,9 +521,9 @@ export type WithdrawalCreateWithoutCommandsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  partner: Prisma.PartnerCreateNestedOneWithoutWithdrawalsInput
-  items?: Prisma.WithdrawalItemCreateNestedManyWithoutWithdrawalInput
   donationLogs?: Prisma.DonationEntryCreateNestedManyWithoutWithdrawalInput
+  items?: Prisma.WithdrawalItemCreateNestedManyWithoutWithdrawalInput
+  partner: Prisma.PartnerCreateNestedOneWithoutWithdrawalsInput
 }
 
 export type WithdrawalUncheckedCreateWithoutCommandsInput = {
@@ -535,8 +535,8 @@ export type WithdrawalUncheckedCreateWithoutCommandsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  items?: Prisma.WithdrawalItemUncheckedCreateNestedManyWithoutWithdrawalInput
   donationLogs?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutWithdrawalInput
+  items?: Prisma.WithdrawalItemUncheckedCreateNestedManyWithoutWithdrawalInput
 }
 
 export type WithdrawalCreateOrConnectWithoutCommandsInput = {
@@ -563,9 +563,9 @@ export type WithdrawalUpdateWithoutCommandsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  partner?: Prisma.PartnerUpdateOneRequiredWithoutWithdrawalsNestedInput
-  items?: Prisma.WithdrawalItemUpdateManyWithoutWithdrawalNestedInput
   donationLogs?: Prisma.DonationEntryUpdateManyWithoutWithdrawalNestedInput
+  items?: Prisma.WithdrawalItemUpdateManyWithoutWithdrawalNestedInput
+  partner?: Prisma.PartnerUpdateOneRequiredWithoutWithdrawalsNestedInput
 }
 
 export type WithdrawalUncheckedUpdateWithoutCommandsInput = {
@@ -577,8 +577,8 @@ export type WithdrawalUncheckedUpdateWithoutCommandsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  items?: Prisma.WithdrawalItemUncheckedUpdateManyWithoutWithdrawalNestedInput
   donationLogs?: Prisma.DonationEntryUncheckedUpdateManyWithoutWithdrawalNestedInput
+  items?: Prisma.WithdrawalItemUncheckedUpdateManyWithoutWithdrawalNestedInput
 }
 
 export type WithdrawalCreateWithoutPartnerInput = {
@@ -589,9 +589,9 @@ export type WithdrawalCreateWithoutPartnerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  items?: Prisma.WithdrawalItemCreateNestedManyWithoutWithdrawalInput
+  commands?: Prisma.CommandCreateNestedOneWithoutWithdrawalInput
   donationLogs?: Prisma.DonationEntryCreateNestedManyWithoutWithdrawalInput
-  commands?: Prisma.CommandCreateNestedManyWithoutWithdrawalInput
+  items?: Prisma.WithdrawalItemCreateNestedManyWithoutWithdrawalInput
 }
 
 export type WithdrawalUncheckedCreateWithoutPartnerInput = {
@@ -602,9 +602,9 @@ export type WithdrawalUncheckedCreateWithoutPartnerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  items?: Prisma.WithdrawalItemUncheckedCreateNestedManyWithoutWithdrawalInput
+  commands?: Prisma.CommandUncheckedCreateNestedOneWithoutWithdrawalInput
   donationLogs?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutWithdrawalInput
-  commands?: Prisma.CommandUncheckedCreateNestedManyWithoutWithdrawalInput
+  items?: Prisma.WithdrawalItemUncheckedCreateNestedManyWithoutWithdrawalInput
 }
 
 export type WithdrawalCreateOrConnectWithoutPartnerInput = {
@@ -655,9 +655,9 @@ export type WithdrawalCreateWithoutDonationLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  partner: Prisma.PartnerCreateNestedOneWithoutWithdrawalsInput
+  commands?: Prisma.CommandCreateNestedOneWithoutWithdrawalInput
   items?: Prisma.WithdrawalItemCreateNestedManyWithoutWithdrawalInput
-  commands?: Prisma.CommandCreateNestedManyWithoutWithdrawalInput
+  partner: Prisma.PartnerCreateNestedOneWithoutWithdrawalsInput
 }
 
 export type WithdrawalUncheckedCreateWithoutDonationLogsInput = {
@@ -669,8 +669,8 @@ export type WithdrawalUncheckedCreateWithoutDonationLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  commands?: Prisma.CommandUncheckedCreateNestedOneWithoutWithdrawalInput
   items?: Prisma.WithdrawalItemUncheckedCreateNestedManyWithoutWithdrawalInput
-  commands?: Prisma.CommandUncheckedCreateNestedManyWithoutWithdrawalInput
 }
 
 export type WithdrawalCreateOrConnectWithoutDonationLogsInput = {
@@ -697,9 +697,9 @@ export type WithdrawalUpdateWithoutDonationLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  partner?: Prisma.PartnerUpdateOneRequiredWithoutWithdrawalsNestedInput
+  commands?: Prisma.CommandUpdateOneWithoutWithdrawalNestedInput
   items?: Prisma.WithdrawalItemUpdateManyWithoutWithdrawalNestedInput
-  commands?: Prisma.CommandUpdateManyWithoutWithdrawalNestedInput
+  partner?: Prisma.PartnerUpdateOneRequiredWithoutWithdrawalsNestedInput
 }
 
 export type WithdrawalUncheckedUpdateWithoutDonationLogsInput = {
@@ -711,8 +711,8 @@ export type WithdrawalUncheckedUpdateWithoutDonationLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  commands?: Prisma.CommandUncheckedUpdateOneWithoutWithdrawalNestedInput
   items?: Prisma.WithdrawalItemUncheckedUpdateManyWithoutWithdrawalNestedInput
-  commands?: Prisma.CommandUncheckedUpdateManyWithoutWithdrawalNestedInput
 }
 
 export type WithdrawalCreateWithoutItemsInput = {
@@ -723,9 +723,9 @@ export type WithdrawalCreateWithoutItemsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  partner: Prisma.PartnerCreateNestedOneWithoutWithdrawalsInput
+  commands?: Prisma.CommandCreateNestedOneWithoutWithdrawalInput
   donationLogs?: Prisma.DonationEntryCreateNestedManyWithoutWithdrawalInput
-  commands?: Prisma.CommandCreateNestedManyWithoutWithdrawalInput
+  partner: Prisma.PartnerCreateNestedOneWithoutWithdrawalsInput
 }
 
 export type WithdrawalUncheckedCreateWithoutItemsInput = {
@@ -737,8 +737,8 @@ export type WithdrawalUncheckedCreateWithoutItemsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  commands?: Prisma.CommandUncheckedCreateNestedOneWithoutWithdrawalInput
   donationLogs?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutWithdrawalInput
-  commands?: Prisma.CommandUncheckedCreateNestedManyWithoutWithdrawalInput
 }
 
 export type WithdrawalCreateOrConnectWithoutItemsInput = {
@@ -765,9 +765,9 @@ export type WithdrawalUpdateWithoutItemsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  partner?: Prisma.PartnerUpdateOneRequiredWithoutWithdrawalsNestedInput
+  commands?: Prisma.CommandUpdateOneWithoutWithdrawalNestedInput
   donationLogs?: Prisma.DonationEntryUpdateManyWithoutWithdrawalNestedInput
-  commands?: Prisma.CommandUpdateManyWithoutWithdrawalNestedInput
+  partner?: Prisma.PartnerUpdateOneRequiredWithoutWithdrawalsNestedInput
 }
 
 export type WithdrawalUncheckedUpdateWithoutItemsInput = {
@@ -779,8 +779,8 @@ export type WithdrawalUncheckedUpdateWithoutItemsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  commands?: Prisma.CommandUncheckedUpdateOneWithoutWithdrawalNestedInput
   donationLogs?: Prisma.DonationEntryUncheckedUpdateManyWithoutWithdrawalNestedInput
-  commands?: Prisma.CommandUncheckedUpdateManyWithoutWithdrawalNestedInput
 }
 
 export type WithdrawalCreateManyPartnerInput = {
@@ -801,9 +801,9 @@ export type WithdrawalUpdateWithoutPartnerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  items?: Prisma.WithdrawalItemUpdateManyWithoutWithdrawalNestedInput
+  commands?: Prisma.CommandUpdateOneWithoutWithdrawalNestedInput
   donationLogs?: Prisma.DonationEntryUpdateManyWithoutWithdrawalNestedInput
-  commands?: Prisma.CommandUpdateManyWithoutWithdrawalNestedInput
+  items?: Prisma.WithdrawalItemUpdateManyWithoutWithdrawalNestedInput
 }
 
 export type WithdrawalUncheckedUpdateWithoutPartnerInput = {
@@ -814,9 +814,9 @@ export type WithdrawalUncheckedUpdateWithoutPartnerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  items?: Prisma.WithdrawalItemUncheckedUpdateManyWithoutWithdrawalNestedInput
+  commands?: Prisma.CommandUncheckedUpdateOneWithoutWithdrawalNestedInput
   donationLogs?: Prisma.DonationEntryUncheckedUpdateManyWithoutWithdrawalNestedInput
-  commands?: Prisma.CommandUncheckedUpdateManyWithoutWithdrawalNestedInput
+  items?: Prisma.WithdrawalItemUncheckedUpdateManyWithoutWithdrawalNestedInput
 }
 
 export type WithdrawalUncheckedUpdateManyWithoutPartnerInput = {
@@ -835,15 +835,13 @@ export type WithdrawalUncheckedUpdateManyWithoutPartnerInput = {
  */
 
 export type WithdrawalCountOutputType = {
-  items: number
   donationLogs: number
-  commands: number
+  items: number
 }
 
 export type WithdrawalCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  items?: boolean | WithdrawalCountOutputTypeCountItemsArgs
   donationLogs?: boolean | WithdrawalCountOutputTypeCountDonationLogsArgs
-  commands?: boolean | WithdrawalCountOutputTypeCountCommandsArgs
+  items?: boolean | WithdrawalCountOutputTypeCountItemsArgs
 }
 
 /**
@@ -859,13 +857,6 @@ export type WithdrawalCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.E
 /**
  * WithdrawalCountOutputType without action
  */
-export type WithdrawalCountOutputTypeCountItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.WithdrawalItemWhereInput
-}
-
-/**
- * WithdrawalCountOutputType without action
- */
 export type WithdrawalCountOutputTypeCountDonationLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.DonationEntryWhereInput
 }
@@ -873,8 +864,8 @@ export type WithdrawalCountOutputTypeCountDonationLogsArgs<ExtArgs extends runti
 /**
  * WithdrawalCountOutputType without action
  */
-export type WithdrawalCountOutputTypeCountCommandsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.CommandWhereInput
+export type WithdrawalCountOutputTypeCountItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WithdrawalItemWhereInput
 }
 
 
@@ -887,10 +878,10 @@ export type WithdrawalSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
-  items?: boolean | Prisma.Withdrawal$itemsArgs<ExtArgs>
-  donationLogs?: boolean | Prisma.Withdrawal$donationLogsArgs<ExtArgs>
   commands?: boolean | Prisma.Withdrawal$commandsArgs<ExtArgs>
+  donationLogs?: boolean | Prisma.Withdrawal$donationLogsArgs<ExtArgs>
+  items?: boolean | Prisma.Withdrawal$itemsArgs<ExtArgs>
+  partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.WithdrawalCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["withdrawal"]>
 
@@ -931,10 +922,10 @@ export type WithdrawalSelectScalar = {
 
 export type WithdrawalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "partnerId" | "status" | "scheduledAt" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["withdrawal"]>
 export type WithdrawalInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
-  items?: boolean | Prisma.Withdrawal$itemsArgs<ExtArgs>
-  donationLogs?: boolean | Prisma.Withdrawal$donationLogsArgs<ExtArgs>
   commands?: boolean | Prisma.Withdrawal$commandsArgs<ExtArgs>
+  donationLogs?: boolean | Prisma.Withdrawal$donationLogsArgs<ExtArgs>
+  items?: boolean | Prisma.Withdrawal$itemsArgs<ExtArgs>
+  partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.WithdrawalCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type WithdrawalIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -947,10 +938,10 @@ export type WithdrawalIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.E
 export type $WithdrawalPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Withdrawal"
   objects: {
-    partner: Prisma.$PartnerPayload<ExtArgs>
-    items: Prisma.$WithdrawalItemPayload<ExtArgs>[]
+    commands: Prisma.$CommandPayload<ExtArgs> | null
     donationLogs: Prisma.$DonationEntryPayload<ExtArgs>[]
-    commands: Prisma.$CommandPayload<ExtArgs>[]
+    items: Prisma.$WithdrawalItemPayload<ExtArgs>[]
+    partner: Prisma.$PartnerPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1355,10 +1346,10 @@ readonly fields: WithdrawalFieldRefs;
  */
 export interface Prisma__WithdrawalClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  partner<T extends Prisma.PartnerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PartnerDefaultArgs<ExtArgs>>): Prisma.Prisma__PartnerClient<runtime.Types.Result.GetResult<Prisma.$PartnerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  items<T extends Prisma.Withdrawal$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Withdrawal$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WithdrawalItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  commands<T extends Prisma.Withdrawal$commandsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Withdrawal$commandsArgs<ExtArgs>>): Prisma.Prisma__CommandClient<runtime.Types.Result.GetResult<Prisma.$CommandPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   donationLogs<T extends Prisma.Withdrawal$donationLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Withdrawal$donationLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DonationEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  commands<T extends Prisma.Withdrawal$commandsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Withdrawal$commandsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommandPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  items<T extends Prisma.Withdrawal$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Withdrawal$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WithdrawalItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  partner<T extends Prisma.PartnerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PartnerDefaultArgs<ExtArgs>>): Prisma.Prisma__PartnerClient<runtime.Types.Result.GetResult<Prisma.$PartnerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1592,6 +1583,11 @@ export type WithdrawalFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Skip the first `n` Withdrawals.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Withdrawals.
+   */
   distinct?: Prisma.WithdrawalScalarFieldEnum | Prisma.WithdrawalScalarFieldEnum[]
 }
 
@@ -1792,27 +1788,22 @@ export type WithdrawalDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
 }
 
 /**
- * Withdrawal.items
+ * Withdrawal.commands
  */
-export type Withdrawal$itemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Withdrawal$commandsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the WithdrawalItem
+   * Select specific fields to fetch from the Command
    */
-  select?: Prisma.WithdrawalItemSelect<ExtArgs> | null
+  select?: Prisma.CommandSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the WithdrawalItem
+   * Omit specific fields from the Command
    */
-  omit?: Prisma.WithdrawalItemOmit<ExtArgs> | null
+  omit?: Prisma.CommandOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.WithdrawalItemInclude<ExtArgs> | null
-  where?: Prisma.WithdrawalItemWhereInput
-  orderBy?: Prisma.WithdrawalItemOrderByWithRelationInput | Prisma.WithdrawalItemOrderByWithRelationInput[]
-  cursor?: Prisma.WithdrawalItemWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.WithdrawalItemScalarFieldEnum | Prisma.WithdrawalItemScalarFieldEnum[]
+  include?: Prisma.CommandInclude<ExtArgs> | null
+  where?: Prisma.CommandWhereInput
 }
 
 /**
@@ -1840,27 +1831,27 @@ export type Withdrawal$donationLogsArgs<ExtArgs extends runtime.Types.Extensions
 }
 
 /**
- * Withdrawal.commands
+ * Withdrawal.items
  */
-export type Withdrawal$commandsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Withdrawal$itemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Command
+   * Select specific fields to fetch from the WithdrawalItem
    */
-  select?: Prisma.CommandSelect<ExtArgs> | null
+  select?: Prisma.WithdrawalItemSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Command
+   * Omit specific fields from the WithdrawalItem
    */
-  omit?: Prisma.CommandOmit<ExtArgs> | null
+  omit?: Prisma.WithdrawalItemOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.CommandInclude<ExtArgs> | null
-  where?: Prisma.CommandWhereInput
-  orderBy?: Prisma.CommandOrderByWithRelationInput | Prisma.CommandOrderByWithRelationInput[]
-  cursor?: Prisma.CommandWhereUniqueInput
+  include?: Prisma.WithdrawalItemInclude<ExtArgs> | null
+  where?: Prisma.WithdrawalItemWhereInput
+  orderBy?: Prisma.WithdrawalItemOrderByWithRelationInput | Prisma.WithdrawalItemOrderByWithRelationInput[]
+  cursor?: Prisma.WithdrawalItemWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.CommandScalarFieldEnum | Prisma.CommandScalarFieldEnum[]
+  distinct?: Prisma.WithdrawalItemScalarFieldEnum | Prisma.WithdrawalItemScalarFieldEnum[]
 }
 
 /**

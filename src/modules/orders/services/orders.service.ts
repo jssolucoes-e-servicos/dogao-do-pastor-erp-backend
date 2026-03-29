@@ -321,6 +321,28 @@ export class OrdersService extends BaseCrudService<
     });
   }
 
+  async findPendingPdvByCustomer(customerId: string): Promise<OrderEntity | null> {
+    const edition = await getActiveEdition(this.prisma);
+    if (!edition) return null;
+    const order = await this.model.findFirst({
+      where: {
+        customerId,
+        editionId: edition.id,
+        status: { in: [OrderStatusEnum.DIGITATION, OrderStatusEnum.PENDING_PAYMENT] },
+        active: true,
+      },
+      include: {
+        edition: true,
+        customer: true,
+        seller: true,
+        items: true,
+        payments: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    return order as OrderEntity | null;
+  }
+
   async findByCustomerId(id: string): Promise<OrderEntity> {
     return super.findOne({ customerId: id });
   }
@@ -766,6 +788,29 @@ export class OrdersService extends BaseCrudService<
     return true;
   }
 
+  async sendPixCode(id: string): Promise<boolean> {
+    const order = await this.model.findUnique({
+      where: { id },
+      include: { items: true, customer: true },
+    });
+    if (!order) throw new NotFoundException('Pedido não encontrado');
+
+    const payment = await this.prisma.payment.findFirst({
+      where: { orderId: id, method: PaymentMethodEnum.PIX },
+      orderBy: { createdAt: 'desc' },
+    });
+    if (!payment?.pixCopyPaste) {
+      throw new NotFoundException('Código PIX não encontrado para este pedido');
+    }
+
+    await this.notifications.pixGenerated(
+      order as any,
+      payment.pixCopyPaste,
+      payment.pixQrcode || '',
+    );
+    return true;
+  }
+
   async createPDV(dto: CreatePdvOrderDto, user: any) {
     const edition = await getActiveEdition(this.prisma);
     if (!edition) {
@@ -852,6 +897,22 @@ export class OrdersService extends BaseCrudService<
 
     let order;
     if (existingOrder) {
+      // Verificar se já existe pagamento PIX pendente com QR válido — reusar sem gerar novo
+      if (dto.paymentMethod === PaymentMethodEnum.PIX) {
+        const existingPix = await this.prisma.payment.findFirst({
+          where: {
+            orderId: existingOrder.id,
+            method: PaymentMethodEnum.PIX,
+            status: PaymentStatusEnum.PENDING,
+            pixCopyPaste: { not: null },
+          },
+        });
+        if (existingPix) {
+          // Retorna o pedido existente sem recriar nada
+          return this.findById(existingOrder.id);
+        }
+      }
+
       // Limpar itens anteriores e pagamentos pendentes para atualizar o pedido
       await this.prisma.orderItem.deleteMany({
         where: { orderId: existingOrder.id },
@@ -954,16 +1015,7 @@ export class OrdersService extends BaseCrudService<
             paymentData.pixCopyPaste = pixResponse.payment.pix?.qrCode;
             paymentData.rawPayload = JSON.stringify(pixResponse);
 
-            // Envia WhatsApp com copia e cola para o cliente
-            try {
-              await this.notifications.pixGenerated(
-                order as any,
-                pixResponse.payment.pix?.qrCode || '',
-                pixResponse.payment.pix?.qrCodeBase64 || '',
-              );
-            } catch (notifError) {
-              this.logger.error(`Erro ao enviar WhatsApp PIX PDV ${order.id}: ${notifError}`);
-            }
+            // PDV: não envia WhatsApp automaticamente — vendedor envia manualmente via botão
           }
         } catch (error) {
           this.logger.error(

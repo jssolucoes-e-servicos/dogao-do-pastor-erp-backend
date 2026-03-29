@@ -222,12 +222,15 @@ export type ContributorWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Contributor"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Contributor"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Contributor"> | Date | string | null
-  sellers?: Prisma.SellerListRelationFilter
   cells?: Prisma.CellListRelationFilter
   cellNetworks?: Prisma.CellNetworkListRelationFilter
   deliveryPersons?: Prisma.DeliveryPersonListRelationFilter
-  userRoles?: Prisma.UserRoleListRelationFilter
   permissions?: Prisma.PermissionListRelationFilter
+  sellers?: Prisma.SellerListRelationFilter
+  userRoles?: Prisma.UserRoleListRelationFilter
+  pushTokens?: Prisma.PushTokenListRelationFilter
+  notificationPreference?: Prisma.XOR<Prisma.NotificationPreferenceNullableScalarRelationFilter, Prisma.NotificationPreferenceWhereInput> | null
+  cellsMember?: Prisma.ContributorCellListRelationFilter
 }
 
 export type ContributorOrderByWithRelationInput = {
@@ -241,12 +244,15 @@ export type ContributorOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  sellers?: Prisma.SellerOrderByRelationAggregateInput
   cells?: Prisma.CellOrderByRelationAggregateInput
   cellNetworks?: Prisma.CellNetworkOrderByRelationAggregateInput
   deliveryPersons?: Prisma.DeliveryPersonOrderByRelationAggregateInput
-  userRoles?: Prisma.UserRoleOrderByRelationAggregateInput
   permissions?: Prisma.PermissionOrderByRelationAggregateInput
+  sellers?: Prisma.SellerOrderByRelationAggregateInput
+  userRoles?: Prisma.UserRoleOrderByRelationAggregateInput
+  pushTokens?: Prisma.PushTokenOrderByRelationAggregateInput
+  notificationPreference?: Prisma.NotificationPreferenceOrderByWithRelationInput
+  cellsMember?: Prisma.ContributorCellOrderByRelationAggregateInput
   _relevance?: Prisma.ContributorOrderByRelevanceInput
 }
 
@@ -264,12 +270,15 @@ export type ContributorWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Contributor"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Contributor"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Contributor"> | Date | string | null
-  sellers?: Prisma.SellerListRelationFilter
   cells?: Prisma.CellListRelationFilter
   cellNetworks?: Prisma.CellNetworkListRelationFilter
   deliveryPersons?: Prisma.DeliveryPersonListRelationFilter
-  userRoles?: Prisma.UserRoleListRelationFilter
   permissions?: Prisma.PermissionListRelationFilter
+  sellers?: Prisma.SellerListRelationFilter
+  userRoles?: Prisma.UserRoleListRelationFilter
+  pushTokens?: Prisma.PushTokenListRelationFilter
+  notificationPreference?: Prisma.XOR<Prisma.NotificationPreferenceNullableScalarRelationFilter, Prisma.NotificationPreferenceWhereInput> | null
+  cellsMember?: Prisma.ContributorCellListRelationFilter
 }, "id" | "username">
 
 export type ContributorOrderByWithAggregationInput = {
@@ -315,12 +324,15 @@ export type ContributorCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  sellers?: Prisma.SellerCreateNestedManyWithoutContributorInput
   cells?: Prisma.CellCreateNestedManyWithoutLeaderInput
   cellNetworks?: Prisma.CellNetworkCreateNestedManyWithoutSupervisorInput
   deliveryPersons?: Prisma.DeliveryPersonCreateNestedManyWithoutContributorInput
-  userRoles?: Prisma.UserRoleCreateNestedManyWithoutContributorInput
   permissions?: Prisma.PermissionCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerCreateNestedManyWithoutContributorInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUncheckedCreateInput = {
@@ -334,12 +346,15 @@ export type ContributorUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutContributorInput
   cells?: Prisma.CellUncheckedCreateNestedManyWithoutLeaderInput
   cellNetworks?: Prisma.CellNetworkUncheckedCreateNestedManyWithoutSupervisorInput
   deliveryPersons?: Prisma.DeliveryPersonUncheckedCreateNestedManyWithoutContributorInput
-  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutContributorInput
   permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutContributorInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUpdateInput = {
@@ -353,12 +368,15 @@ export type ContributorUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sellers?: Prisma.SellerUpdateManyWithoutContributorNestedInput
   cells?: Prisma.CellUpdateManyWithoutLeaderNestedInput
   cellNetworks?: Prisma.CellNetworkUpdateManyWithoutSupervisorNestedInput
   deliveryPersons?: Prisma.DeliveryPersonUpdateManyWithoutContributorNestedInput
-  userRoles?: Prisma.UserRoleUpdateManyWithoutContributorNestedInput
   permissions?: Prisma.PermissionUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUpdateManyWithoutContributorNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorUncheckedUpdateInput = {
@@ -372,12 +390,15 @@ export type ContributorUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sellers?: Prisma.SellerUncheckedUpdateManyWithoutContributorNestedInput
   cells?: Prisma.CellUncheckedUpdateManyWithoutLeaderNestedInput
   cellNetworks?: Prisma.CellNetworkUncheckedUpdateManyWithoutSupervisorNestedInput
   deliveryPersons?: Prisma.DeliveryPersonUncheckedUpdateManyWithoutContributorNestedInput
-  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutContributorNestedInput
   permissions?: Prisma.PermissionUncheckedUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUncheckedUpdateManyWithoutContributorNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorCreateManyInput = {
@@ -570,6 +591,20 @@ export type ContributorUpdateOneRequiredWithoutSellersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ContributorUpdateToOneWithWhereWithoutSellersInput, Prisma.ContributorUpdateWithoutSellersInput>, Prisma.ContributorUncheckedUpdateWithoutSellersInput>
 }
 
+export type ContributorCreateNestedOneWithoutCellsMemberInput = {
+  create?: Prisma.XOR<Prisma.ContributorCreateWithoutCellsMemberInput, Prisma.ContributorUncheckedCreateWithoutCellsMemberInput>
+  connectOrCreate?: Prisma.ContributorCreateOrConnectWithoutCellsMemberInput
+  connect?: Prisma.ContributorWhereUniqueInput
+}
+
+export type ContributorUpdateOneRequiredWithoutCellsMemberNestedInput = {
+  create?: Prisma.XOR<Prisma.ContributorCreateWithoutCellsMemberInput, Prisma.ContributorUncheckedCreateWithoutCellsMemberInput>
+  connectOrCreate?: Prisma.ContributorCreateOrConnectWithoutCellsMemberInput
+  upsert?: Prisma.ContributorUpsertWithoutCellsMemberInput
+  connect?: Prisma.ContributorWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ContributorUpdateToOneWithWhereWithoutCellsMemberInput, Prisma.ContributorUpdateWithoutCellsMemberInput>, Prisma.ContributorUncheckedUpdateWithoutCellsMemberInput>
+}
+
 export type ContributorCreateNestedOneWithoutDeliveryPersonsInput = {
   create?: Prisma.XOR<Prisma.ContributorCreateWithoutDeliveryPersonsInput, Prisma.ContributorUncheckedCreateWithoutDeliveryPersonsInput>
   connectOrCreate?: Prisma.ContributorCreateOrConnectWithoutDeliveryPersonsInput
@@ -584,6 +619,34 @@ export type ContributorUpdateOneRequiredWithoutDeliveryPersonsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ContributorUpdateToOneWithWhereWithoutDeliveryPersonsInput, Prisma.ContributorUpdateWithoutDeliveryPersonsInput>, Prisma.ContributorUncheckedUpdateWithoutDeliveryPersonsInput>
 }
 
+export type ContributorCreateNestedOneWithoutPushTokensInput = {
+  create?: Prisma.XOR<Prisma.ContributorCreateWithoutPushTokensInput, Prisma.ContributorUncheckedCreateWithoutPushTokensInput>
+  connectOrCreate?: Prisma.ContributorCreateOrConnectWithoutPushTokensInput
+  connect?: Prisma.ContributorWhereUniqueInput
+}
+
+export type ContributorUpdateOneRequiredWithoutPushTokensNestedInput = {
+  create?: Prisma.XOR<Prisma.ContributorCreateWithoutPushTokensInput, Prisma.ContributorUncheckedCreateWithoutPushTokensInput>
+  connectOrCreate?: Prisma.ContributorCreateOrConnectWithoutPushTokensInput
+  upsert?: Prisma.ContributorUpsertWithoutPushTokensInput
+  connect?: Prisma.ContributorWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ContributorUpdateToOneWithWhereWithoutPushTokensInput, Prisma.ContributorUpdateWithoutPushTokensInput>, Prisma.ContributorUncheckedUpdateWithoutPushTokensInput>
+}
+
+export type ContributorCreateNestedOneWithoutNotificationPreferenceInput = {
+  create?: Prisma.XOR<Prisma.ContributorCreateWithoutNotificationPreferenceInput, Prisma.ContributorUncheckedCreateWithoutNotificationPreferenceInput>
+  connectOrCreate?: Prisma.ContributorCreateOrConnectWithoutNotificationPreferenceInput
+  connect?: Prisma.ContributorWhereUniqueInput
+}
+
+export type ContributorUpdateOneRequiredWithoutNotificationPreferenceNestedInput = {
+  create?: Prisma.XOR<Prisma.ContributorCreateWithoutNotificationPreferenceInput, Prisma.ContributorUncheckedCreateWithoutNotificationPreferenceInput>
+  connectOrCreate?: Prisma.ContributorCreateOrConnectWithoutNotificationPreferenceInput
+  upsert?: Prisma.ContributorUpsertWithoutNotificationPreferenceInput
+  connect?: Prisma.ContributorWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ContributorUpdateToOneWithWhereWithoutNotificationPreferenceInput, Prisma.ContributorUpdateWithoutNotificationPreferenceInput>, Prisma.ContributorUncheckedUpdateWithoutNotificationPreferenceInput>
+}
+
 export type ContributorCreateWithoutUserRolesInput = {
   id?: string
   name: string
@@ -595,11 +658,14 @@ export type ContributorCreateWithoutUserRolesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  sellers?: Prisma.SellerCreateNestedManyWithoutContributorInput
   cells?: Prisma.CellCreateNestedManyWithoutLeaderInput
   cellNetworks?: Prisma.CellNetworkCreateNestedManyWithoutSupervisorInput
   deliveryPersons?: Prisma.DeliveryPersonCreateNestedManyWithoutContributorInput
   permissions?: Prisma.PermissionCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUncheckedCreateWithoutUserRolesInput = {
@@ -613,11 +679,14 @@ export type ContributorUncheckedCreateWithoutUserRolesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutContributorInput
   cells?: Prisma.CellUncheckedCreateNestedManyWithoutLeaderInput
   cellNetworks?: Prisma.CellNetworkUncheckedCreateNestedManyWithoutSupervisorInput
   deliveryPersons?: Prisma.DeliveryPersonUncheckedCreateNestedManyWithoutContributorInput
   permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorCreateOrConnectWithoutUserRolesInput = {
@@ -647,11 +716,14 @@ export type ContributorUpdateWithoutUserRolesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sellers?: Prisma.SellerUpdateManyWithoutContributorNestedInput
   cells?: Prisma.CellUpdateManyWithoutLeaderNestedInput
   cellNetworks?: Prisma.CellNetworkUpdateManyWithoutSupervisorNestedInput
   deliveryPersons?: Prisma.DeliveryPersonUpdateManyWithoutContributorNestedInput
   permissions?: Prisma.PermissionUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorUncheckedUpdateWithoutUserRolesInput = {
@@ -665,11 +737,14 @@ export type ContributorUncheckedUpdateWithoutUserRolesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sellers?: Prisma.SellerUncheckedUpdateManyWithoutContributorNestedInput
   cells?: Prisma.CellUncheckedUpdateManyWithoutLeaderNestedInput
   cellNetworks?: Prisma.CellNetworkUncheckedUpdateManyWithoutSupervisorNestedInput
   deliveryPersons?: Prisma.DeliveryPersonUncheckedUpdateManyWithoutContributorNestedInput
   permissions?: Prisma.PermissionUncheckedUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUncheckedUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorCreateWithoutPermissionsInput = {
@@ -683,11 +758,14 @@ export type ContributorCreateWithoutPermissionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  sellers?: Prisma.SellerCreateNestedManyWithoutContributorInput
   cells?: Prisma.CellCreateNestedManyWithoutLeaderInput
   cellNetworks?: Prisma.CellNetworkCreateNestedManyWithoutSupervisorInput
   deliveryPersons?: Prisma.DeliveryPersonCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerCreateNestedManyWithoutContributorInput
   userRoles?: Prisma.UserRoleCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUncheckedCreateWithoutPermissionsInput = {
@@ -701,11 +779,14 @@ export type ContributorUncheckedCreateWithoutPermissionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutContributorInput
   cells?: Prisma.CellUncheckedCreateNestedManyWithoutLeaderInput
   cellNetworks?: Prisma.CellNetworkUncheckedCreateNestedManyWithoutSupervisorInput
   deliveryPersons?: Prisma.DeliveryPersonUncheckedCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutContributorInput
   userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorCreateOrConnectWithoutPermissionsInput = {
@@ -735,11 +816,14 @@ export type ContributorUpdateWithoutPermissionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sellers?: Prisma.SellerUpdateManyWithoutContributorNestedInput
   cells?: Prisma.CellUpdateManyWithoutLeaderNestedInput
   cellNetworks?: Prisma.CellNetworkUpdateManyWithoutSupervisorNestedInput
   deliveryPersons?: Prisma.DeliveryPersonUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUpdateManyWithoutContributorNestedInput
   userRoles?: Prisma.UserRoleUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorUncheckedUpdateWithoutPermissionsInput = {
@@ -753,11 +837,14 @@ export type ContributorUncheckedUpdateWithoutPermissionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sellers?: Prisma.SellerUncheckedUpdateManyWithoutContributorNestedInput
   cells?: Prisma.CellUncheckedUpdateManyWithoutLeaderNestedInput
   cellNetworks?: Prisma.CellNetworkUncheckedUpdateManyWithoutSupervisorNestedInput
   deliveryPersons?: Prisma.DeliveryPersonUncheckedUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUncheckedUpdateManyWithoutContributorNestedInput
   userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorCreateWithoutCellNetworksInput = {
@@ -771,11 +858,14 @@ export type ContributorCreateWithoutCellNetworksInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  sellers?: Prisma.SellerCreateNestedManyWithoutContributorInput
   cells?: Prisma.CellCreateNestedManyWithoutLeaderInput
   deliveryPersons?: Prisma.DeliveryPersonCreateNestedManyWithoutContributorInput
-  userRoles?: Prisma.UserRoleCreateNestedManyWithoutContributorInput
   permissions?: Prisma.PermissionCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerCreateNestedManyWithoutContributorInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUncheckedCreateWithoutCellNetworksInput = {
@@ -789,11 +879,14 @@ export type ContributorUncheckedCreateWithoutCellNetworksInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutContributorInput
   cells?: Prisma.CellUncheckedCreateNestedManyWithoutLeaderInput
   deliveryPersons?: Prisma.DeliveryPersonUncheckedCreateNestedManyWithoutContributorInput
-  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutContributorInput
   permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutContributorInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorCreateOrConnectWithoutCellNetworksInput = {
@@ -823,11 +916,14 @@ export type ContributorUpdateWithoutCellNetworksInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sellers?: Prisma.SellerUpdateManyWithoutContributorNestedInput
   cells?: Prisma.CellUpdateManyWithoutLeaderNestedInput
   deliveryPersons?: Prisma.DeliveryPersonUpdateManyWithoutContributorNestedInput
-  userRoles?: Prisma.UserRoleUpdateManyWithoutContributorNestedInput
   permissions?: Prisma.PermissionUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUpdateManyWithoutContributorNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorUncheckedUpdateWithoutCellNetworksInput = {
@@ -841,11 +937,14 @@ export type ContributorUncheckedUpdateWithoutCellNetworksInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sellers?: Prisma.SellerUncheckedUpdateManyWithoutContributorNestedInput
   cells?: Prisma.CellUncheckedUpdateManyWithoutLeaderNestedInput
   deliveryPersons?: Prisma.DeliveryPersonUncheckedUpdateManyWithoutContributorNestedInput
-  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutContributorNestedInput
   permissions?: Prisma.PermissionUncheckedUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUncheckedUpdateManyWithoutContributorNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorCreateWithoutCellsInput = {
@@ -859,11 +958,14 @@ export type ContributorCreateWithoutCellsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  sellers?: Prisma.SellerCreateNestedManyWithoutContributorInput
   cellNetworks?: Prisma.CellNetworkCreateNestedManyWithoutSupervisorInput
   deliveryPersons?: Prisma.DeliveryPersonCreateNestedManyWithoutContributorInput
-  userRoles?: Prisma.UserRoleCreateNestedManyWithoutContributorInput
   permissions?: Prisma.PermissionCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerCreateNestedManyWithoutContributorInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUncheckedCreateWithoutCellsInput = {
@@ -877,11 +979,14 @@ export type ContributorUncheckedCreateWithoutCellsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutContributorInput
   cellNetworks?: Prisma.CellNetworkUncheckedCreateNestedManyWithoutSupervisorInput
   deliveryPersons?: Prisma.DeliveryPersonUncheckedCreateNestedManyWithoutContributorInput
-  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutContributorInput
   permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutContributorInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorCreateOrConnectWithoutCellsInput = {
@@ -911,11 +1016,14 @@ export type ContributorUpdateWithoutCellsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sellers?: Prisma.SellerUpdateManyWithoutContributorNestedInput
   cellNetworks?: Prisma.CellNetworkUpdateManyWithoutSupervisorNestedInput
   deliveryPersons?: Prisma.DeliveryPersonUpdateManyWithoutContributorNestedInput
-  userRoles?: Prisma.UserRoleUpdateManyWithoutContributorNestedInput
   permissions?: Prisma.PermissionUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUpdateManyWithoutContributorNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorUncheckedUpdateWithoutCellsInput = {
@@ -929,11 +1037,14 @@ export type ContributorUncheckedUpdateWithoutCellsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sellers?: Prisma.SellerUncheckedUpdateManyWithoutContributorNestedInput
   cellNetworks?: Prisma.CellNetworkUncheckedUpdateManyWithoutSupervisorNestedInput
   deliveryPersons?: Prisma.DeliveryPersonUncheckedUpdateManyWithoutContributorNestedInput
-  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutContributorNestedInput
   permissions?: Prisma.PermissionUncheckedUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUncheckedUpdateManyWithoutContributorNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorCreateWithoutSellersInput = {
@@ -950,8 +1061,11 @@ export type ContributorCreateWithoutSellersInput = {
   cells?: Prisma.CellCreateNestedManyWithoutLeaderInput
   cellNetworks?: Prisma.CellNetworkCreateNestedManyWithoutSupervisorInput
   deliveryPersons?: Prisma.DeliveryPersonCreateNestedManyWithoutContributorInput
-  userRoles?: Prisma.UserRoleCreateNestedManyWithoutContributorInput
   permissions?: Prisma.PermissionCreateNestedManyWithoutContributorInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUncheckedCreateWithoutSellersInput = {
@@ -968,8 +1082,11 @@ export type ContributorUncheckedCreateWithoutSellersInput = {
   cells?: Prisma.CellUncheckedCreateNestedManyWithoutLeaderInput
   cellNetworks?: Prisma.CellNetworkUncheckedCreateNestedManyWithoutSupervisorInput
   deliveryPersons?: Prisma.DeliveryPersonUncheckedCreateNestedManyWithoutContributorInput
-  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutContributorInput
   permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutContributorInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorCreateOrConnectWithoutSellersInput = {
@@ -1002,8 +1119,11 @@ export type ContributorUpdateWithoutSellersInput = {
   cells?: Prisma.CellUpdateManyWithoutLeaderNestedInput
   cellNetworks?: Prisma.CellNetworkUpdateManyWithoutSupervisorNestedInput
   deliveryPersons?: Prisma.DeliveryPersonUpdateManyWithoutContributorNestedInput
-  userRoles?: Prisma.UserRoleUpdateManyWithoutContributorNestedInput
   permissions?: Prisma.PermissionUpdateManyWithoutContributorNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorUncheckedUpdateWithoutSellersInput = {
@@ -1020,8 +1140,111 @@ export type ContributorUncheckedUpdateWithoutSellersInput = {
   cells?: Prisma.CellUncheckedUpdateManyWithoutLeaderNestedInput
   cellNetworks?: Prisma.CellNetworkUncheckedUpdateManyWithoutSupervisorNestedInput
   deliveryPersons?: Prisma.DeliveryPersonUncheckedUpdateManyWithoutContributorNestedInput
-  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutContributorNestedInput
   permissions?: Prisma.PermissionUncheckedUpdateManyWithoutContributorNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
+}
+
+export type ContributorCreateWithoutCellsMemberInput = {
+  id?: string
+  name: string
+  phone?: string | null
+  photo?: string | null
+  username?: string | null
+  password: string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  cells?: Prisma.CellCreateNestedManyWithoutLeaderInput
+  cellNetworks?: Prisma.CellNetworkCreateNestedManyWithoutSupervisorInput
+  deliveryPersons?: Prisma.DeliveryPersonCreateNestedManyWithoutContributorInput
+  permissions?: Prisma.PermissionCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerCreateNestedManyWithoutContributorInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
+}
+
+export type ContributorUncheckedCreateWithoutCellsMemberInput = {
+  id?: string
+  name: string
+  phone?: string | null
+  photo?: string | null
+  username?: string | null
+  password: string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  cells?: Prisma.CellUncheckedCreateNestedManyWithoutLeaderInput
+  cellNetworks?: Prisma.CellNetworkUncheckedCreateNestedManyWithoutSupervisorInput
+  deliveryPersons?: Prisma.DeliveryPersonUncheckedCreateNestedManyWithoutContributorInput
+  permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutContributorInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
+}
+
+export type ContributorCreateOrConnectWithoutCellsMemberInput = {
+  where: Prisma.ContributorWhereUniqueInput
+  create: Prisma.XOR<Prisma.ContributorCreateWithoutCellsMemberInput, Prisma.ContributorUncheckedCreateWithoutCellsMemberInput>
+}
+
+export type ContributorUpsertWithoutCellsMemberInput = {
+  update: Prisma.XOR<Prisma.ContributorUpdateWithoutCellsMemberInput, Prisma.ContributorUncheckedUpdateWithoutCellsMemberInput>
+  create: Prisma.XOR<Prisma.ContributorCreateWithoutCellsMemberInput, Prisma.ContributorUncheckedCreateWithoutCellsMemberInput>
+  where?: Prisma.ContributorWhereInput
+}
+
+export type ContributorUpdateToOneWithWhereWithoutCellsMemberInput = {
+  where?: Prisma.ContributorWhereInput
+  data: Prisma.XOR<Prisma.ContributorUpdateWithoutCellsMemberInput, Prisma.ContributorUncheckedUpdateWithoutCellsMemberInput>
+}
+
+export type ContributorUpdateWithoutCellsMemberInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cells?: Prisma.CellUpdateManyWithoutLeaderNestedInput
+  cellNetworks?: Prisma.CellNetworkUpdateManyWithoutSupervisorNestedInput
+  deliveryPersons?: Prisma.DeliveryPersonUpdateManyWithoutContributorNestedInput
+  permissions?: Prisma.PermissionUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUpdateManyWithoutContributorNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
+}
+
+export type ContributorUncheckedUpdateWithoutCellsMemberInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cells?: Prisma.CellUncheckedUpdateManyWithoutLeaderNestedInput
+  cellNetworks?: Prisma.CellNetworkUncheckedUpdateManyWithoutSupervisorNestedInput
+  deliveryPersons?: Prisma.DeliveryPersonUncheckedUpdateManyWithoutContributorNestedInput
+  permissions?: Prisma.PermissionUncheckedUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUncheckedUpdateManyWithoutContributorNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
 }
 
 export type ContributorCreateWithoutDeliveryPersonsInput = {
@@ -1035,11 +1258,14 @@ export type ContributorCreateWithoutDeliveryPersonsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  sellers?: Prisma.SellerCreateNestedManyWithoutContributorInput
   cells?: Prisma.CellCreateNestedManyWithoutLeaderInput
   cellNetworks?: Prisma.CellNetworkCreateNestedManyWithoutSupervisorInput
-  userRoles?: Prisma.UserRoleCreateNestedManyWithoutContributorInput
   permissions?: Prisma.PermissionCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerCreateNestedManyWithoutContributorInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUncheckedCreateWithoutDeliveryPersonsInput = {
@@ -1053,11 +1279,14 @@ export type ContributorUncheckedCreateWithoutDeliveryPersonsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutContributorInput
   cells?: Prisma.CellUncheckedCreateNestedManyWithoutLeaderInput
   cellNetworks?: Prisma.CellNetworkUncheckedCreateNestedManyWithoutSupervisorInput
-  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutContributorInput
   permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutContributorInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorCreateOrConnectWithoutDeliveryPersonsInput = {
@@ -1087,11 +1316,14 @@ export type ContributorUpdateWithoutDeliveryPersonsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sellers?: Prisma.SellerUpdateManyWithoutContributorNestedInput
   cells?: Prisma.CellUpdateManyWithoutLeaderNestedInput
   cellNetworks?: Prisma.CellNetworkUpdateManyWithoutSupervisorNestedInput
-  userRoles?: Prisma.UserRoleUpdateManyWithoutContributorNestedInput
   permissions?: Prisma.PermissionUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUpdateManyWithoutContributorNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorUncheckedUpdateWithoutDeliveryPersonsInput = {
@@ -1105,11 +1337,214 @@ export type ContributorUncheckedUpdateWithoutDeliveryPersonsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sellers?: Prisma.SellerUncheckedUpdateManyWithoutContributorNestedInput
   cells?: Prisma.CellUncheckedUpdateManyWithoutLeaderNestedInput
   cellNetworks?: Prisma.CellNetworkUncheckedUpdateManyWithoutSupervisorNestedInput
-  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutContributorNestedInput
   permissions?: Prisma.PermissionUncheckedUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUncheckedUpdateManyWithoutContributorNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
+}
+
+export type ContributorCreateWithoutPushTokensInput = {
+  id?: string
+  name: string
+  phone?: string | null
+  photo?: string | null
+  username?: string | null
+  password: string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  cells?: Prisma.CellCreateNestedManyWithoutLeaderInput
+  cellNetworks?: Prisma.CellNetworkCreateNestedManyWithoutSupervisorInput
+  deliveryPersons?: Prisma.DeliveryPersonCreateNestedManyWithoutContributorInput
+  permissions?: Prisma.PermissionCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerCreateNestedManyWithoutContributorInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
+}
+
+export type ContributorUncheckedCreateWithoutPushTokensInput = {
+  id?: string
+  name: string
+  phone?: string | null
+  photo?: string | null
+  username?: string | null
+  password: string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  cells?: Prisma.CellUncheckedCreateNestedManyWithoutLeaderInput
+  cellNetworks?: Prisma.CellNetworkUncheckedCreateNestedManyWithoutSupervisorInput
+  deliveryPersons?: Prisma.DeliveryPersonUncheckedCreateNestedManyWithoutContributorInput
+  permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutContributorInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
+}
+
+export type ContributorCreateOrConnectWithoutPushTokensInput = {
+  where: Prisma.ContributorWhereUniqueInput
+  create: Prisma.XOR<Prisma.ContributorCreateWithoutPushTokensInput, Prisma.ContributorUncheckedCreateWithoutPushTokensInput>
+}
+
+export type ContributorUpsertWithoutPushTokensInput = {
+  update: Prisma.XOR<Prisma.ContributorUpdateWithoutPushTokensInput, Prisma.ContributorUncheckedUpdateWithoutPushTokensInput>
+  create: Prisma.XOR<Prisma.ContributorCreateWithoutPushTokensInput, Prisma.ContributorUncheckedCreateWithoutPushTokensInput>
+  where?: Prisma.ContributorWhereInput
+}
+
+export type ContributorUpdateToOneWithWhereWithoutPushTokensInput = {
+  where?: Prisma.ContributorWhereInput
+  data: Prisma.XOR<Prisma.ContributorUpdateWithoutPushTokensInput, Prisma.ContributorUncheckedUpdateWithoutPushTokensInput>
+}
+
+export type ContributorUpdateWithoutPushTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cells?: Prisma.CellUpdateManyWithoutLeaderNestedInput
+  cellNetworks?: Prisma.CellNetworkUpdateManyWithoutSupervisorNestedInput
+  deliveryPersons?: Prisma.DeliveryPersonUpdateManyWithoutContributorNestedInput
+  permissions?: Prisma.PermissionUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUpdateManyWithoutContributorNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
+}
+
+export type ContributorUncheckedUpdateWithoutPushTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cells?: Prisma.CellUncheckedUpdateManyWithoutLeaderNestedInput
+  cellNetworks?: Prisma.CellNetworkUncheckedUpdateManyWithoutSupervisorNestedInput
+  deliveryPersons?: Prisma.DeliveryPersonUncheckedUpdateManyWithoutContributorNestedInput
+  permissions?: Prisma.PermissionUncheckedUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUncheckedUpdateManyWithoutContributorNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
+}
+
+export type ContributorCreateWithoutNotificationPreferenceInput = {
+  id?: string
+  name: string
+  phone?: string | null
+  photo?: string | null
+  username?: string | null
+  password: string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  cells?: Prisma.CellCreateNestedManyWithoutLeaderInput
+  cellNetworks?: Prisma.CellNetworkCreateNestedManyWithoutSupervisorInput
+  deliveryPersons?: Prisma.DeliveryPersonCreateNestedManyWithoutContributorInput
+  permissions?: Prisma.PermissionCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerCreateNestedManyWithoutContributorInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenCreateNestedManyWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
+}
+
+export type ContributorUncheckedCreateWithoutNotificationPreferenceInput = {
+  id?: string
+  name: string
+  phone?: string | null
+  photo?: string | null
+  username?: string | null
+  password: string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  cells?: Prisma.CellUncheckedCreateNestedManyWithoutLeaderInput
+  cellNetworks?: Prisma.CellNetworkUncheckedCreateNestedManyWithoutSupervisorInput
+  deliveryPersons?: Prisma.DeliveryPersonUncheckedCreateNestedManyWithoutContributorInput
+  permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutContributorInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
+}
+
+export type ContributorCreateOrConnectWithoutNotificationPreferenceInput = {
+  where: Prisma.ContributorWhereUniqueInput
+  create: Prisma.XOR<Prisma.ContributorCreateWithoutNotificationPreferenceInput, Prisma.ContributorUncheckedCreateWithoutNotificationPreferenceInput>
+}
+
+export type ContributorUpsertWithoutNotificationPreferenceInput = {
+  update: Prisma.XOR<Prisma.ContributorUpdateWithoutNotificationPreferenceInput, Prisma.ContributorUncheckedUpdateWithoutNotificationPreferenceInput>
+  create: Prisma.XOR<Prisma.ContributorCreateWithoutNotificationPreferenceInput, Prisma.ContributorUncheckedCreateWithoutNotificationPreferenceInput>
+  where?: Prisma.ContributorWhereInput
+}
+
+export type ContributorUpdateToOneWithWhereWithoutNotificationPreferenceInput = {
+  where?: Prisma.ContributorWhereInput
+  data: Prisma.XOR<Prisma.ContributorUpdateWithoutNotificationPreferenceInput, Prisma.ContributorUncheckedUpdateWithoutNotificationPreferenceInput>
+}
+
+export type ContributorUpdateWithoutNotificationPreferenceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cells?: Prisma.CellUpdateManyWithoutLeaderNestedInput
+  cellNetworks?: Prisma.CellNetworkUpdateManyWithoutSupervisorNestedInput
+  deliveryPersons?: Prisma.DeliveryPersonUpdateManyWithoutContributorNestedInput
+  permissions?: Prisma.PermissionUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUpdateManyWithoutContributorNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUpdateManyWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
+}
+
+export type ContributorUncheckedUpdateWithoutNotificationPreferenceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cells?: Prisma.CellUncheckedUpdateManyWithoutLeaderNestedInput
+  cellNetworks?: Prisma.CellNetworkUncheckedUpdateManyWithoutSupervisorNestedInput
+  deliveryPersons?: Prisma.DeliveryPersonUncheckedUpdateManyWithoutContributorNestedInput
+  permissions?: Prisma.PermissionUncheckedUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUncheckedUpdateManyWithoutContributorNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
 }
 
 
@@ -1118,21 +1553,25 @@ export type ContributorUncheckedUpdateWithoutDeliveryPersonsInput = {
  */
 
 export type ContributorCountOutputType = {
-  sellers: number
   cells: number
   cellNetworks: number
   deliveryPersons: number
-  userRoles: number
   permissions: number
+  sellers: number
+  userRoles: number
+  pushTokens: number
+  cellsMember: number
 }
 
 export type ContributorCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  sellers?: boolean | ContributorCountOutputTypeCountSellersArgs
   cells?: boolean | ContributorCountOutputTypeCountCellsArgs
   cellNetworks?: boolean | ContributorCountOutputTypeCountCellNetworksArgs
   deliveryPersons?: boolean | ContributorCountOutputTypeCountDeliveryPersonsArgs
-  userRoles?: boolean | ContributorCountOutputTypeCountUserRolesArgs
   permissions?: boolean | ContributorCountOutputTypeCountPermissionsArgs
+  sellers?: boolean | ContributorCountOutputTypeCountSellersArgs
+  userRoles?: boolean | ContributorCountOutputTypeCountUserRolesArgs
+  pushTokens?: boolean | ContributorCountOutputTypeCountPushTokensArgs
+  cellsMember?: boolean | ContributorCountOutputTypeCountCellsMemberArgs
 }
 
 /**
@@ -1143,13 +1582,6 @@ export type ContributorCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.
    * Select specific fields to fetch from the ContributorCountOutputType
    */
   select?: Prisma.ContributorCountOutputTypeSelect<ExtArgs> | null
-}
-
-/**
- * ContributorCountOutputType without action
- */
-export type ContributorCountOutputTypeCountSellersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.SellerWhereInput
 }
 
 /**
@@ -1176,6 +1608,20 @@ export type ContributorCountOutputTypeCountDeliveryPersonsArgs<ExtArgs extends r
 /**
  * ContributorCountOutputType without action
  */
+export type ContributorCountOutputTypeCountPermissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PermissionWhereInput
+}
+
+/**
+ * ContributorCountOutputType without action
+ */
+export type ContributorCountOutputTypeCountSellersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SellerWhereInput
+}
+
+/**
+ * ContributorCountOutputType without action
+ */
 export type ContributorCountOutputTypeCountUserRolesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.UserRoleWhereInput
 }
@@ -1183,8 +1629,15 @@ export type ContributorCountOutputTypeCountUserRolesArgs<ExtArgs extends runtime
 /**
  * ContributorCountOutputType without action
  */
-export type ContributorCountOutputTypeCountPermissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PermissionWhereInput
+export type ContributorCountOutputTypeCountPushTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PushTokenWhereInput
+}
+
+/**
+ * ContributorCountOutputType without action
+ */
+export type ContributorCountOutputTypeCountCellsMemberArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ContributorCellWhereInput
 }
 
 
@@ -1199,12 +1652,15 @@ export type ContributorSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  sellers?: boolean | Prisma.Contributor$sellersArgs<ExtArgs>
   cells?: boolean | Prisma.Contributor$cellsArgs<ExtArgs>
   cellNetworks?: boolean | Prisma.Contributor$cellNetworksArgs<ExtArgs>
   deliveryPersons?: boolean | Prisma.Contributor$deliveryPersonsArgs<ExtArgs>
-  userRoles?: boolean | Prisma.Contributor$userRolesArgs<ExtArgs>
   permissions?: boolean | Prisma.Contributor$permissionsArgs<ExtArgs>
+  sellers?: boolean | Prisma.Contributor$sellersArgs<ExtArgs>
+  userRoles?: boolean | Prisma.Contributor$userRolesArgs<ExtArgs>
+  pushTokens?: boolean | Prisma.Contributor$pushTokensArgs<ExtArgs>
+  notificationPreference?: boolean | Prisma.Contributor$notificationPreferenceArgs<ExtArgs>
+  cellsMember?: boolean | Prisma.Contributor$cellsMemberArgs<ExtArgs>
   _count?: boolean | Prisma.ContributorCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["contributor"]>
 
@@ -1249,12 +1705,15 @@ export type ContributorSelectScalar = {
 
 export type ContributorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "phone" | "photo" | "username" | "password" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["contributor"]>
 export type ContributorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  sellers?: boolean | Prisma.Contributor$sellersArgs<ExtArgs>
   cells?: boolean | Prisma.Contributor$cellsArgs<ExtArgs>
   cellNetworks?: boolean | Prisma.Contributor$cellNetworksArgs<ExtArgs>
   deliveryPersons?: boolean | Prisma.Contributor$deliveryPersonsArgs<ExtArgs>
-  userRoles?: boolean | Prisma.Contributor$userRolesArgs<ExtArgs>
   permissions?: boolean | Prisma.Contributor$permissionsArgs<ExtArgs>
+  sellers?: boolean | Prisma.Contributor$sellersArgs<ExtArgs>
+  userRoles?: boolean | Prisma.Contributor$userRolesArgs<ExtArgs>
+  pushTokens?: boolean | Prisma.Contributor$pushTokensArgs<ExtArgs>
+  notificationPreference?: boolean | Prisma.Contributor$notificationPreferenceArgs<ExtArgs>
+  cellsMember?: boolean | Prisma.Contributor$cellsMemberArgs<ExtArgs>
   _count?: boolean | Prisma.ContributorCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ContributorIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1263,12 +1722,15 @@ export type ContributorIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.
 export type $ContributorPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Contributor"
   objects: {
-    sellers: Prisma.$SellerPayload<ExtArgs>[]
     cells: Prisma.$CellPayload<ExtArgs>[]
     cellNetworks: Prisma.$CellNetworkPayload<ExtArgs>[]
     deliveryPersons: Prisma.$DeliveryPersonPayload<ExtArgs>[]
-    userRoles: Prisma.$UserRolePayload<ExtArgs>[]
     permissions: Prisma.$PermissionPayload<ExtArgs>[]
+    sellers: Prisma.$SellerPayload<ExtArgs>[]
+    userRoles: Prisma.$UserRolePayload<ExtArgs>[]
+    pushTokens: Prisma.$PushTokenPayload<ExtArgs>[]
+    notificationPreference: Prisma.$NotificationPreferencePayload<ExtArgs> | null
+    cellsMember: Prisma.$ContributorCellPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1675,12 +2137,15 @@ readonly fields: ContributorFieldRefs;
  */
 export interface Prisma__ContributorClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  sellers<T extends Prisma.Contributor$sellersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contributor$sellersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SellerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cells<T extends Prisma.Contributor$cellsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contributor$cellsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CellPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cellNetworks<T extends Prisma.Contributor$cellNetworksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contributor$cellNetworksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CellNetworkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   deliveryPersons<T extends Prisma.Contributor$deliveryPersonsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contributor$deliveryPersonsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeliveryPersonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  userRoles<T extends Prisma.Contributor$userRolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contributor$userRolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   permissions<T extends Prisma.Contributor$permissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contributor$permissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sellers<T extends Prisma.Contributor$sellersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contributor$sellersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SellerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  userRoles<T extends Prisma.Contributor$userRolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contributor$userRolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pushTokens<T extends Prisma.Contributor$pushTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contributor$pushTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PushTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notificationPreference<T extends Prisma.Contributor$notificationPreferenceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contributor$notificationPreferenceArgs<ExtArgs>>): Prisma.Prisma__NotificationPreferenceClient<runtime.Types.Result.GetResult<Prisma.$NotificationPreferencePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  cellsMember<T extends Prisma.Contributor$cellsMemberArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contributor$cellsMemberArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContributorCellPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1916,6 +2381,11 @@ export type ContributorFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` Contributors.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Contributors.
+   */
   distinct?: Prisma.ContributorScalarFieldEnum | Prisma.ContributorScalarFieldEnum[]
 }
 
@@ -2108,30 +2578,6 @@ export type ContributorDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
 }
 
 /**
- * Contributor.sellers
- */
-export type Contributor$sellersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Seller
-   */
-  select?: Prisma.SellerSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Seller
-   */
-  omit?: Prisma.SellerOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SellerInclude<ExtArgs> | null
-  where?: Prisma.SellerWhereInput
-  orderBy?: Prisma.SellerOrderByWithRelationInput | Prisma.SellerOrderByWithRelationInput[]
-  cursor?: Prisma.SellerWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.SellerScalarFieldEnum | Prisma.SellerScalarFieldEnum[]
-}
-
-/**
  * Contributor.cells
  */
 export type Contributor$cellsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2204,6 +2650,54 @@ export type Contributor$deliveryPersonsArgs<ExtArgs extends runtime.Types.Extens
 }
 
 /**
+ * Contributor.permissions
+ */
+export type Contributor$permissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Permission
+   */
+  select?: Prisma.PermissionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Permission
+   */
+  omit?: Prisma.PermissionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PermissionInclude<ExtArgs> | null
+  where?: Prisma.PermissionWhereInput
+  orderBy?: Prisma.PermissionOrderByWithRelationInput | Prisma.PermissionOrderByWithRelationInput[]
+  cursor?: Prisma.PermissionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PermissionScalarFieldEnum | Prisma.PermissionScalarFieldEnum[]
+}
+
+/**
+ * Contributor.sellers
+ */
+export type Contributor$sellersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Seller
+   */
+  select?: Prisma.SellerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Seller
+   */
+  omit?: Prisma.SellerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SellerInclude<ExtArgs> | null
+  where?: Prisma.SellerWhereInput
+  orderBy?: Prisma.SellerOrderByWithRelationInput | Prisma.SellerOrderByWithRelationInput[]
+  cursor?: Prisma.SellerWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SellerScalarFieldEnum | Prisma.SellerScalarFieldEnum[]
+}
+
+/**
  * Contributor.userRoles
  */
 export type Contributor$userRolesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2228,27 +2722,70 @@ export type Contributor$userRolesArgs<ExtArgs extends runtime.Types.Extensions.I
 }
 
 /**
- * Contributor.permissions
+ * Contributor.pushTokens
  */
-export type Contributor$permissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Contributor$pushTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Permission
+   * Select specific fields to fetch from the PushToken
    */
-  select?: Prisma.PermissionSelect<ExtArgs> | null
+  select?: Prisma.PushTokenSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Permission
+   * Omit specific fields from the PushToken
    */
-  omit?: Prisma.PermissionOmit<ExtArgs> | null
+  omit?: Prisma.PushTokenOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.PermissionInclude<ExtArgs> | null
-  where?: Prisma.PermissionWhereInput
-  orderBy?: Prisma.PermissionOrderByWithRelationInput | Prisma.PermissionOrderByWithRelationInput[]
-  cursor?: Prisma.PermissionWhereUniqueInput
+  include?: Prisma.PushTokenInclude<ExtArgs> | null
+  where?: Prisma.PushTokenWhereInput
+  orderBy?: Prisma.PushTokenOrderByWithRelationInput | Prisma.PushTokenOrderByWithRelationInput[]
+  cursor?: Prisma.PushTokenWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.PermissionScalarFieldEnum | Prisma.PermissionScalarFieldEnum[]
+  distinct?: Prisma.PushTokenScalarFieldEnum | Prisma.PushTokenScalarFieldEnum[]
+}
+
+/**
+ * Contributor.notificationPreference
+ */
+export type Contributor$notificationPreferenceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the NotificationPreference
+   */
+  select?: Prisma.NotificationPreferenceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the NotificationPreference
+   */
+  omit?: Prisma.NotificationPreferenceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NotificationPreferenceInclude<ExtArgs> | null
+  where?: Prisma.NotificationPreferenceWhereInput
+}
+
+/**
+ * Contributor.cellsMember
+ */
+export type Contributor$cellsMemberArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ContributorCell
+   */
+  select?: Prisma.ContributorCellSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ContributorCell
+   */
+  omit?: Prisma.ContributorCellOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ContributorCellInclude<ExtArgs> | null
+  where?: Prisma.ContributorCellWhereInput
+  orderBy?: Prisma.ContributorCellOrderByWithRelationInput | Prisma.ContributorCellOrderByWithRelationInput[]
+  cursor?: Prisma.ContributorCellWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ContributorCellScalarFieldEnum | Prisma.ContributorCellScalarFieldEnum[]
 }
 
 /**

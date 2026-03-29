@@ -256,8 +256,8 @@ export type DonationEntryWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"DonationEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DonationEntry"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"DonationEntry"> | Date | string | null
-  partner?: Prisma.XOR<Prisma.PartnerScalarRelationFilter, Prisma.PartnerWhereInput>
   order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
+  partner?: Prisma.XOR<Prisma.PartnerScalarRelationFilter, Prisma.PartnerWhereInput>
   withdrawal?: Prisma.XOR<Prisma.WithdrawalNullableScalarRelationFilter, Prisma.WithdrawalWhereInput> | null
 }
 
@@ -272,8 +272,8 @@ export type DonationEntryOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  partner?: Prisma.PartnerOrderByWithRelationInput
   order?: Prisma.OrderOrderByWithRelationInput
+  partner?: Prisma.PartnerOrderByWithRelationInput
   withdrawal?: Prisma.WithdrawalOrderByWithRelationInput
   _relevance?: Prisma.DonationEntryOrderByRelevanceInput
 }
@@ -292,8 +292,8 @@ export type DonationEntryWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"DonationEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DonationEntry"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"DonationEntry"> | Date | string | null
-  partner?: Prisma.XOR<Prisma.PartnerScalarRelationFilter, Prisma.PartnerWhereInput>
   order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
+  partner?: Prisma.XOR<Prisma.PartnerScalarRelationFilter, Prisma.PartnerWhereInput>
   withdrawal?: Prisma.XOR<Prisma.WithdrawalNullableScalarRelationFilter, Prisma.WithdrawalWhereInput> | null
 }, "id">
 
@@ -339,8 +339,8 @@ export type DonationEntryCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  partner: Prisma.PartnerCreateNestedOneWithoutDonationEntryInput
   order?: Prisma.OrderCreateNestedOneWithoutDonationsEntriesInput
+  partner: Prisma.PartnerCreateNestedOneWithoutDonationEntryInput
   withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutDonationLogsInput
 }
 
@@ -365,8 +365,8 @@ export type DonationEntryUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  partner?: Prisma.PartnerUpdateOneRequiredWithoutDonationEntryNestedInput
   order?: Prisma.OrderUpdateOneWithoutDonationsEntriesNestedInput
+  partner?: Prisma.PartnerUpdateOneRequiredWithoutDonationEntryNestedInput
   withdrawal?: Prisma.WithdrawalUpdateOneWithoutDonationLogsNestedInput
 }
 
@@ -736,8 +736,8 @@ export type DonationEntryCreateWithoutWithdrawalInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  partner: Prisma.PartnerCreateNestedOneWithoutDonationEntryInput
   order?: Prisma.OrderCreateNestedOneWithoutDonationsEntriesInput
+  partner: Prisma.PartnerCreateNestedOneWithoutDonationEntryInput
 }
 
 export type DonationEntryUncheckedCreateWithoutWithdrawalInput = {
@@ -894,8 +894,8 @@ export type DonationEntryUpdateWithoutWithdrawalInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  partner?: Prisma.PartnerUpdateOneRequiredWithoutDonationEntryNestedInput
   order?: Prisma.OrderUpdateOneWithoutDonationsEntriesNestedInput
+  partner?: Prisma.PartnerUpdateOneRequiredWithoutDonationEntryNestedInput
 }
 
 export type DonationEntryUncheckedUpdateWithoutWithdrawalInput = {
@@ -935,8 +935,8 @@ export type DonationEntrySelect<ExtArgs extends runtime.Types.Extensions.Interna
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
   order?: boolean | Prisma.DonationEntry$orderArgs<ExtArgs>
+  partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
   withdrawal?: boolean | Prisma.DonationEntry$withdrawalArgs<ExtArgs>
 }, ExtArgs["result"]["donationEntry"]>
 
@@ -951,8 +951,8 @@ export type DonationEntrySelectCreateManyAndReturn<ExtArgs extends runtime.Types
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
   order?: boolean | Prisma.DonationEntry$orderArgs<ExtArgs>
+  partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
   withdrawal?: boolean | Prisma.DonationEntry$withdrawalArgs<ExtArgs>
 }, ExtArgs["result"]["donationEntry"]>
 
@@ -967,8 +967,8 @@ export type DonationEntrySelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
   order?: boolean | Prisma.DonationEntry$orderArgs<ExtArgs>
+  partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
   withdrawal?: boolean | Prisma.DonationEntry$withdrawalArgs<ExtArgs>
 }, ExtArgs["result"]["donationEntry"]>
 
@@ -987,26 +987,26 @@ export type DonationEntrySelectScalar = {
 
 export type DonationEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "partnerId" | "orderId" | "withdrawalId" | "quantity" | "type" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["donationEntry"]>
 export type DonationEntryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
   order?: boolean | Prisma.DonationEntry$orderArgs<ExtArgs>
+  partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
   withdrawal?: boolean | Prisma.DonationEntry$withdrawalArgs<ExtArgs>
 }
 export type DonationEntryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
   order?: boolean | Prisma.DonationEntry$orderArgs<ExtArgs>
+  partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
   withdrawal?: boolean | Prisma.DonationEntry$withdrawalArgs<ExtArgs>
 }
 export type DonationEntryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
   order?: boolean | Prisma.DonationEntry$orderArgs<ExtArgs>
+  partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
   withdrawal?: boolean | Prisma.DonationEntry$withdrawalArgs<ExtArgs>
 }
 
 export type $DonationEntryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "DonationEntry"
   objects: {
-    partner: Prisma.$PartnerPayload<ExtArgs>
     order: Prisma.$OrderPayload<ExtArgs> | null
+    partner: Prisma.$PartnerPayload<ExtArgs>
     withdrawal: Prisma.$WithdrawalPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1414,8 +1414,8 @@ readonly fields: DonationEntryFieldRefs;
  */
 export interface Prisma__DonationEntryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  partner<T extends Prisma.PartnerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PartnerDefaultArgs<ExtArgs>>): Prisma.Prisma__PartnerClient<runtime.Types.Result.GetResult<Prisma.$PartnerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   order<T extends Prisma.DonationEntry$orderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DonationEntry$orderArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  partner<T extends Prisma.PartnerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PartnerDefaultArgs<ExtArgs>>): Prisma.Prisma__PartnerClient<runtime.Types.Result.GetResult<Prisma.$PartnerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   withdrawal<T extends Prisma.DonationEntry$withdrawalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DonationEntry$withdrawalArgs<ExtArgs>>): Prisma.Prisma__WithdrawalClient<runtime.Types.Result.GetResult<Prisma.$WithdrawalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1652,6 +1652,11 @@ export type DonationEntryFindManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Skip the first `n` DonationEntries.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of DonationEntries.
+   */
   distinct?: Prisma.DonationEntryScalarFieldEnum | Prisma.DonationEntryScalarFieldEnum[]
 }
 

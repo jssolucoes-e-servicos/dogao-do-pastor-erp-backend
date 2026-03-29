@@ -91,20 +91,29 @@ export class RankingReportService extends BaseService {
   /**
    * Pega o total vendido de cada vendedor (incluindo o celular/líder)
    */
-  async getDailySalesReport() {
-    // 1) Descobre a Edição Ativa
-    const activeEdition = await getActiveEdition(this.prisma);
+  async getDailySalesReport(editionId?: string) {
+    // 1) Descobre a Edição Ativa (ou usa a passada)
+    let activeEdition: any = null;
+    if (editionId) {
+      activeEdition = await this.prisma.edition.findUnique({ where: { id: editionId } });
+    } else {
+      activeEdition = await getActiveEdition(this.prisma);
+    }
     if (!activeEdition) {
       throw new NotFoundException('Sem edição ativa para extrair relatórios.');
     }
 
-    // 2) Agrupa Pedidos por Vendedor (Contabiliza apenas os Pagos e Ativos)
+    // 2) Agrupa Pedidos por Vendedor — exclui PDV e tags internas
+    const EXCLUDED_TAGS = ['dogao', 'prfabiano'];
+
     const orderAggregates = await this.prisma.order.groupBy({
       by: ['sellerId'],
       where: {
         editionId: activeEdition.id,
         paymentStatus: PaymentStatusEnum.PAID,
         active: true,
+        origin: { not: 'PDV' as any },
+        seller: { tag: { notIn: EXCLUDED_TAGS } },
       },
       _sum: { totalValue: true },
     });
@@ -153,6 +162,7 @@ export class RankingReportService extends BaseService {
         sellerId: { in: sellerIds },
         paymentStatus: PaymentStatusEnum.PAID,
         active: true,
+        origin: { not: 'PDV' as any },
       },
       select: { id: true, sellerId: true },
     });
@@ -377,7 +387,7 @@ export class RankingReportService extends BaseService {
    * Executa todo dia às 9 da manhã no horário de Brasília (-03:00)
    * Verifica o cache, envia relatório aos que mudaram as vendas, e salva novo cache.
    */
-  @Cron('0 9 * * *', { timeZone: 'America/Sao_Paulo' })
+  //@Cron('0 9 * * *', { timeZone: 'America/Sao_Paulo' })
   async sendDailyReportsIfChanged() {
     if (this.configs.get('NODE_ENV') === 'development') return;
 

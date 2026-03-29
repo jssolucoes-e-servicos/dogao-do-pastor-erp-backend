@@ -1510,6 +1510,11 @@ export type SellerSettlementFindManyArgs<ExtArgs extends runtime.Types.Extension
    * Skip the first `n` SellerSettlements.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of SellerSettlements.
+   */
   distinct?: Prisma.SellerSettlementScalarFieldEnum | Prisma.SellerSettlementScalarFieldEnum[]
 }
 

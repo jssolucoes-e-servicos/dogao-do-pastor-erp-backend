@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 10mm;
+      color: #2c2c2c;
+      font-size: 10pt;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 3px solid #e1bb57;
+      padding-bottom: 10px;
+    }
+    .logo {
+      width: 60px;
+      height: 60px;
+      margin-right: 20px;
+      object-fit: contain;
+    }
+    .title-area {
+      flex-grow: 1;
+    }
+    .title {
+      font-size: 18pt;
+      font-weight: bold;
+      color: #cc8e13;
+      margin: 0;
+    }
+    .subtitle {
+      font-size: 11pt;
+      color: #666;
+      margin-top: 5px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th {
+      background-color: #f8f1de;
+      color: #b07114;
+      text-align: left;
+      padding: 8px;
+      border-bottom: 2px solid #e1bb57;
+      font-weight: bold;
+    }
+    td {
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+    }
+    .id-col {
+      font-size: 7pt;
+      color: #888;
+      width: 60px;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 8pt;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .status-FAILED {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+    .status-PENDING {
+      background-color: #fff3e0;
+      color: #ef6c00;
+    }
+    .footer {
+      margin-top: 30px;
+      font-size: 8pt;
+      color: #888;
+      text-align: center;
+      border-top: 1px solid #eee;
+      padding-top: 10px;
+    }
+    .summary {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: right;
+      font-size: 11pt;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="{{logo}}" class="logo"/>
+    <div class="title-area">
+      <h1 class="title">Relatório de Pedidos - Pagamentos Pendentes/Falhos</h1>
+      <div class="subtitle">Edição: {{editionName}} | Data de Geração: {{generationDate}}</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th class="id-col">ID</th>
+        <th>Cliente</th>
+        <th>Telefone</th>
+        <th>CPF</th>
+        <th>Valor</th>
+        <th>Entrega</th>
+        <th>Pagamento</th>
+        <th>Status</th>
+        <th>Itens</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each orders}}
+      <tr>
+        <td class="id-col">{{id}}</td>
+        <td>{{customerName}}</td>
+        <td>{{customerPhone}}</td>
+        <td>{{customerCPF}}</td>
+        <td>R$ {{totalValueFormatted}}</td>
+        <td>{{deliveryOption}}</td>
+        <td>{{paymentType}}</td>
+        <td>
+          <span class="status-badge status-{{paymentStatus}}">{{paymentStatus}}</span>
+        </td>
+        <td>{{itemsCount}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <div class="summary">
+    Total de Pedidos no Relatório: {{totalOrders}}
+  </div>
+
+  <div class="footer">
+    Dogão do Pastor - Sistema de Gestão | Gerado automaticamente em {{generationDate}}
+  </div>
+</body>
+</html>

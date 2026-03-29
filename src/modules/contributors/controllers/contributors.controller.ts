@@ -62,6 +62,14 @@ export class ContributorsController {
     return await this.service.update(user.id, dto);
   }
 
+  @Post('me/change-password')
+  async changePassword(
+    @User() user: any,
+    @Body() body: { currentPassword: string; newPassword: string },
+  ) {
+    return this.service.changePassword(user.id, body.currentPassword, body.newPassword);
+  }
+
   @Get('show/:id')
   @Roles('IT', 'ADMIN')
   async findById(@Param() { id }: IdParamDto) {

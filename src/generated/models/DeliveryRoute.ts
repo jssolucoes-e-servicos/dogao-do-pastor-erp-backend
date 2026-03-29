@@ -1530,6 +1530,11 @@ export type DeliveryRouteFindManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Skip the first `n` DeliveryRoutes.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of DeliveryRoutes.
+   */
   distinct?: Prisma.DeliveryRouteScalarFieldEnum | Prisma.DeliveryRouteScalarFieldEnum[]
 }
 

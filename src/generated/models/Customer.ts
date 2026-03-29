@@ -246,9 +246,9 @@ export type CustomerWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Customer"> | Date | string | null
-  vouchers?: Prisma.VoucherListRelationFilter
   addresses?: Prisma.CustomerAddressListRelationFilter
   orders?: Prisma.OrderListRelationFilter
+  vouchers?: Prisma.VoucherListRelationFilter
 }
 
 export type CustomerOrderByWithRelationInput = {
@@ -265,9 +265,9 @@ export type CustomerOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  vouchers?: Prisma.VoucherOrderByRelationAggregateInput
   addresses?: Prisma.CustomerAddressOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
+  vouchers?: Prisma.VoucherOrderByRelationAggregateInput
   _relevance?: Prisma.CustomerOrderByRelevanceInput
 }
 
@@ -288,9 +288,9 @@ export type CustomerWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Customer"> | Date | string | null
-  vouchers?: Prisma.VoucherListRelationFilter
   addresses?: Prisma.CustomerAddressListRelationFilter
   orders?: Prisma.OrderListRelationFilter
+  vouchers?: Prisma.VoucherListRelationFilter
 }, "id" | "email" | "cpf">
 
 export type CustomerOrderByWithAggregationInput = {
@@ -345,9 +345,9 @@ export type CustomerCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  vouchers?: Prisma.VoucherCreateNestedManyWithoutCustomerInput
   addresses?: Prisma.CustomerAddressCreateNestedManyWithoutCustomerInput
   orders?: Prisma.OrderCreateNestedManyWithoutCustomerInput
+  vouchers?: Prisma.VoucherCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateInput = {
@@ -364,9 +364,9 @@ export type CustomerUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  vouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutCustomerInput
   addresses?: Prisma.CustomerAddressUncheckedCreateNestedManyWithoutCustomerInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutCustomerInput
+  vouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUpdateInput = {
@@ -383,9 +383,9 @@ export type CustomerUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  vouchers?: Prisma.VoucherUpdateManyWithoutCustomerNestedInput
   addresses?: Prisma.CustomerAddressUpdateManyWithoutCustomerNestedInput
   orders?: Prisma.OrderUpdateManyWithoutCustomerNestedInput
+  vouchers?: Prisma.VoucherUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateInput = {
@@ -402,9 +402,9 @@ export type CustomerUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  vouchers?: Prisma.VoucherUncheckedUpdateManyWithoutCustomerNestedInput
   addresses?: Prisma.CustomerAddressUncheckedUpdateManyWithoutCustomerNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutCustomerNestedInput
+  vouchers?: Prisma.VoucherUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateManyInput = {
@@ -577,8 +577,8 @@ export type CustomerCreateWithoutAddressesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  vouchers?: Prisma.VoucherCreateNestedManyWithoutCustomerInput
   orders?: Prisma.OrderCreateNestedManyWithoutCustomerInput
+  vouchers?: Prisma.VoucherCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutAddressesInput = {
@@ -595,8 +595,8 @@ export type CustomerUncheckedCreateWithoutAddressesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  vouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutCustomerInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutCustomerInput
+  vouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutAddressesInput = {
@@ -629,8 +629,8 @@ export type CustomerUpdateWithoutAddressesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  vouchers?: Prisma.VoucherUpdateManyWithoutCustomerNestedInput
   orders?: Prisma.OrderUpdateManyWithoutCustomerNestedInput
+  vouchers?: Prisma.VoucherUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutAddressesInput = {
@@ -647,8 +647,8 @@ export type CustomerUncheckedUpdateWithoutAddressesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  vouchers?: Prisma.VoucherUncheckedUpdateManyWithoutCustomerNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutCustomerNestedInput
+  vouchers?: Prisma.VoucherUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutOrdersInput = {
@@ -665,8 +665,8 @@ export type CustomerCreateWithoutOrdersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  vouchers?: Prisma.VoucherCreateNestedManyWithoutCustomerInput
   addresses?: Prisma.CustomerAddressCreateNestedManyWithoutCustomerInput
+  vouchers?: Prisma.VoucherCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutOrdersInput = {
@@ -683,8 +683,8 @@ export type CustomerUncheckedCreateWithoutOrdersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  vouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutCustomerInput
   addresses?: Prisma.CustomerAddressUncheckedCreateNestedManyWithoutCustomerInput
+  vouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutOrdersInput = {
@@ -717,8 +717,8 @@ export type CustomerUpdateWithoutOrdersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  vouchers?: Prisma.VoucherUpdateManyWithoutCustomerNestedInput
   addresses?: Prisma.CustomerAddressUpdateManyWithoutCustomerNestedInput
+  vouchers?: Prisma.VoucherUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutOrdersInput = {
@@ -735,8 +735,8 @@ export type CustomerUncheckedUpdateWithoutOrdersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  vouchers?: Prisma.VoucherUncheckedUpdateManyWithoutCustomerNestedInput
   addresses?: Prisma.CustomerAddressUncheckedUpdateManyWithoutCustomerNestedInput
+  vouchers?: Prisma.VoucherUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutVouchersInput = {
@@ -833,15 +833,15 @@ export type CustomerUncheckedUpdateWithoutVouchersInput = {
  */
 
 export type CustomerCountOutputType = {
-  vouchers: number
   addresses: number
   orders: number
+  vouchers: number
 }
 
 export type CustomerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  vouchers?: boolean | CustomerCountOutputTypeCountVouchersArgs
   addresses?: boolean | CustomerCountOutputTypeCountAddressesArgs
   orders?: boolean | CustomerCountOutputTypeCountOrdersArgs
+  vouchers?: boolean | CustomerCountOutputTypeCountVouchersArgs
 }
 
 /**
@@ -857,13 +857,6 @@ export type CustomerCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ext
 /**
  * CustomerCountOutputType without action
  */
-export type CustomerCountOutputTypeCountVouchersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.VoucherWhereInput
-}
-
-/**
- * CustomerCountOutputType without action
- */
 export type CustomerCountOutputTypeCountAddressesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CustomerAddressWhereInput
 }
@@ -873,6 +866,13 @@ export type CustomerCountOutputTypeCountAddressesArgs<ExtArgs extends runtime.Ty
  */
 export type CustomerCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.OrderWhereInput
+}
+
+/**
+ * CustomerCountOutputType without action
+ */
+export type CustomerCountOutputTypeCountVouchersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.VoucherWhereInput
 }
 
 
@@ -890,9 +890,9 @@ export type CustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  vouchers?: boolean | Prisma.Customer$vouchersArgs<ExtArgs>
   addresses?: boolean | Prisma.Customer$addressesArgs<ExtArgs>
   orders?: boolean | Prisma.Customer$ordersArgs<ExtArgs>
+  vouchers?: boolean | Prisma.Customer$vouchersArgs<ExtArgs>
   _count?: boolean | Prisma.CustomerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["customer"]>
 
@@ -946,9 +946,9 @@ export type CustomerSelectScalar = {
 
 export type CustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "phone" | "cpf" | "password" | "knowsChurch" | "allowsChurch" | "firstRegister" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["customer"]>
 export type CustomerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  vouchers?: boolean | Prisma.Customer$vouchersArgs<ExtArgs>
   addresses?: boolean | Prisma.Customer$addressesArgs<ExtArgs>
   orders?: boolean | Prisma.Customer$ordersArgs<ExtArgs>
+  vouchers?: boolean | Prisma.Customer$vouchersArgs<ExtArgs>
   _count?: boolean | Prisma.CustomerCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CustomerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -957,9 +957,9 @@ export type CustomerIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type $CustomerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Customer"
   objects: {
-    vouchers: Prisma.$VoucherPayload<ExtArgs>[]
     addresses: Prisma.$CustomerAddressPayload<ExtArgs>[]
     orders: Prisma.$OrderPayload<ExtArgs>[]
+    vouchers: Prisma.$VoucherPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1369,9 +1369,9 @@ readonly fields: CustomerFieldRefs;
  */
 export interface Prisma__CustomerClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  vouchers<T extends Prisma.Customer$vouchersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$vouchersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VoucherPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   addresses<T extends Prisma.Customer$addressesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$addressesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomerAddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.Customer$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  vouchers<T extends Prisma.Customer$vouchersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$vouchersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VoucherPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1610,6 +1610,11 @@ export type CustomerFindManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Skip the first `n` Customers.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Customers.
+   */
   distinct?: Prisma.CustomerScalarFieldEnum | Prisma.CustomerScalarFieldEnum[]
 }
 
@@ -1802,30 +1807,6 @@ export type CustomerDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
- * Customer.vouchers
- */
-export type Customer$vouchersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Voucher
-   */
-  select?: Prisma.VoucherSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Voucher
-   */
-  omit?: Prisma.VoucherOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.VoucherInclude<ExtArgs> | null
-  where?: Prisma.VoucherWhereInput
-  orderBy?: Prisma.VoucherOrderByWithRelationInput | Prisma.VoucherOrderByWithRelationInput[]
-  cursor?: Prisma.VoucherWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.VoucherScalarFieldEnum | Prisma.VoucherScalarFieldEnum[]
-}
-
-/**
  * Customer.addresses
  */
 export type Customer$addressesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1871,6 +1852,30 @@ export type Customer$ordersArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
+}
+
+/**
+ * Customer.vouchers
+ */
+export type Customer$vouchersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Voucher
+   */
+  select?: Prisma.VoucherSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Voucher
+   */
+  omit?: Prisma.VoucherOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VoucherInclude<ExtArgs> | null
+  where?: Prisma.VoucherWhereInput
+  orderBy?: Prisma.VoucherOrderByWithRelationInput | Prisma.VoucherOrderByWithRelationInput[]
+  cursor?: Prisma.VoucherWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.VoucherScalarFieldEnum | Prisma.VoucherScalarFieldEnum[]
 }
 
 /**

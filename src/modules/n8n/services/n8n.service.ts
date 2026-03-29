@@ -18,14 +18,27 @@ export class N8nService extends BaseService {
     this.evoToken = this.configs.get<string>('EVOLUTION_API_TOKEN', '');
   }
 
-  async dispatchEvent(event: string, payload: any): Promise<any> {
+  async dispatchEvent(
+    event: string,
+    payload: any,
+    pathParam?: string,
+  ): Promise<any> {
     if (!this.webhookUrl) {
-      this.logger.warn(`N8N_WEBHOOK_URL não configurada. Evento [${event}] ignorado.`);
+      this.logger.warn(
+        `N8N_WEBHOOK_URL não configurada. Evento [${event}] ignorado.`,
+      );
       return null;
     }
 
+    // Se um path for informado, tentamos reconstruir a URL base pegando tudo antes de /webhook/
+    let targetUrl = this.webhookUrl;
+    if (pathParam) {
+      const baseUrl = this.webhookUrl.split('/webhook/')[0] + '/webhook/';
+      targetUrl = `${baseUrl}${pathParam}`;
+    }
+
     try {
-      this.logger.log(`Disparando evento [${event}] para o N8N: ${this.webhookUrl}`);
+      this.logger.log(`Disparando evento [${event}] para o N8N: ${targetUrl}`);
       
       let finalPhone = payload.adminPhone || payload.phone || payload.number || '';
       if (finalPhone) {
@@ -46,7 +59,7 @@ export class N8nService extends BaseService {
       }
 
       // Aguardando explicitamente a resposta para podermos estourar o erro caso o N8N esteja desligado
-      const res = await fetch(this.webhookUrl, {
+      const res = await fetch(targetUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

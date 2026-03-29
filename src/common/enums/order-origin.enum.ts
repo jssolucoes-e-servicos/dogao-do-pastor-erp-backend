@@ -1,12 +1,8 @@
-/* export enum OrderOriginEnum {
-  SITE = "SITE",
-  TICKET = "TICKET",
-  PDV = "PDV",
-} */
-
+// src/common/enums/order-origin.enum.ts
 export const OrderOriginEnum = {
+  APP: 'APP',
+  MANUAL: 'MANUAL',
   SITE: 'SITE',
-  TICKET: 'TICKET',
   PDV: 'PDV',
 } as const;
 

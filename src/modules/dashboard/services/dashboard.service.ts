@@ -39,17 +39,23 @@ export class DashboardService extends BaseService {
       allSellers,
       recentOrdersRaw,
       paidItems,
+      pendingItemsCount,
     ] = await Promise.all([
       this.prisma.order.aggregate({
         where: { editionId: activeEdition.id, paymentStatus: PaymentStatusEnum.PAID },
         _sum: { totalValue: true },
       }),
       this.prisma.order.findMany({
-        where: { editionId: activeEdition.id, paymentStatus: PaymentStatusEnum.PAID },
+        where: {
+          editionId: activeEdition.id,
+          paymentStatus: PaymentStatusEnum.PAID,
+          origin: { in: ['SITE', 'MANUAL', 'PDV', 'APP'] as any },
+        },
         select: { 
           sellerId: true, 
           paymentType: true, 
           deliveryOption: true,
+          partnerId: true,
           partner: { select: { name: true } }
         },
       }),
@@ -70,6 +76,15 @@ export class DashboardService extends BaseService {
       this.prisma.orderItem.findMany({
         where: { order: { editionId: activeEdition.id, paymentStatus: PaymentStatusEnum.PAID } },
         select: { removedIngredients: true },
+      }),
+      this.prisma.orderItem.count({
+        where: {
+          order: {
+            editionId: activeEdition.id,
+            paymentStatus: PaymentStatusEnum.PENDING,
+            totalValue: { gt: 0 },
+          },
+        },
       }),
     ]);
 
@@ -102,7 +117,7 @@ export class DashboardService extends BaseService {
       const method = order.paymentType || 'OUTROS';
       paymentMethodsMap[method] = (paymentMethodsMap[method] || 0) + 1;
 
-      if (order.deliveryOption === DeliveryOptionEnum.DONATE && order.partner) {
+      if (order.deliveryOption === DeliveryOptionEnum.DONATE && order.partner?.name) {
         partnersMap[order.partner.name] = (partnersMap[order.partner.name] || 0) + 1;
       }
     });
@@ -118,6 +133,7 @@ export class DashboardService extends BaseService {
       editionName: activeEdition.name,
       totalDogsSold: paidItems.length,
       availableDogs: activeEdition.limitSale - paidItems.length,
+      pendingDogs: pendingItemsCount,
       totalRevenue: revenueStats._sum.totalValue || 0,
       totalDonations: paidOrdersData.filter(o => o.deliveryOption === DeliveryOptionEnum.DONATE).length,
       pendingAnalysis: await this.prisma.order.count({ where: { editionId: activeEdition.id, siteStep: SiteOrderStepEnum.ANALYSIS } }),

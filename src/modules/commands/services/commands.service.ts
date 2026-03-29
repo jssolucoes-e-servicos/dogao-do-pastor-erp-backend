@@ -17,6 +17,7 @@ import {
 import { UpdateCommandDto } from '../dto/update-command.dto';
 import { getActiveEdition } from 'src/common/helpers/edition-helper';
 import { CreateManualCommandDto } from '../dto/create-manual-command.dto';
+import { CheckInCommandDto } from '../dto/check-in-command.dto';
 import { CustomersService } from 'src/modules/customers/services/customers.service';
 import { SellersService } from 'src/modules/sellers/services/sellers.service';
 import { CommandsGateway } from '../gateways/commands.gateway';
@@ -244,7 +245,7 @@ export class CommandsService extends BaseCrudService<
           customerCPF: customer.cpf || '',
           sellerId: sellerId || 'manual-default', // Necessário um seller válido
           sellerTag: seller?.tag || 'MANUAL',
-          origin: OrderOriginEnum.TICKET,
+          origin: OrderOriginEnum.MANUAL,
           status: OrderStatusEnum.PAID,
           paymentStatus: PaymentStatusEnum.PAID,
           paymentType: PaymentMethodEnum.MONEY, // Padrão para manual
@@ -265,7 +266,7 @@ export class CommandsService extends BaseCrudService<
       });
 
       // 5. Criar Comanda
-      return this.createCommandForOrder(tx, order as unknown as OrderEntity, edition);
+      return this.createCommandForOrder(tx, order as unknown as OrderEntity, edition, undefined);
     });
   }
 
@@ -273,6 +274,7 @@ export class CommandsService extends BaseCrudService<
     tx: any,
     order: OrderEntity,
     edition: EditionEntity,
+    selectedItems?: { itemId: string; removedIngredients?: string[] }[],
   ): Promise<CommandEntity> {
     const lastCommand = await tx.command.findFirst({
       where: { editionId: edition.id },
@@ -282,6 +284,20 @@ export class CommandsService extends BaseCrudService<
     const nextSequence = (lastCommand?.sequence || 0) + 1;
     const seqId = `${edition.code}${String(nextSequence).padStart(4, '0')}`;
 
+    // Determina quais items vão para a comanda
+    // Se selectedItems foi passado, usa ele; senão usa todos os items do pedido
+    let commandItemsData: { itemId: string; removedIngredients?: string[] }[] = [];
+
+    if (selectedItems && selectedItems.length > 0) {
+      commandItemsData = selectedItems;
+    } else {
+      // Busca todos os items do pedido se não foram passados
+      const orderItems = (order as any).items || await tx.orderItem.findMany({
+        where: { orderId: order.id, active: true },
+      });
+      commandItemsData = orderItems.map((item: any) => ({ itemId: item.id }));
+    }
+
     const command = await tx.command.create({
       data: {
         sequentialId: seqId,
@@ -289,8 +305,15 @@ export class CommandsService extends BaseCrudService<
         editionId: edition.id,
         editionCode: Number(edition.code),
         sequence: nextSequence,
+        commandItems: {
+          create: commandItemsData.map((ci) => ({
+            itemId: ci.itemId,
+            removedIngredients: ci.removedIngredients,
+          })),
+        },
       },
       include: {
+        commandItems: true,
         order: {
           include: {
             customer: true,
@@ -308,11 +331,12 @@ export class CommandsService extends BaseCrudService<
     return command;
   }
 
-  async checkIn(orderId: string): Promise<CommandEntity> {
+  async checkIn(orderId: string, dto?: CheckInCommandDto): Promise<CommandEntity> {
     const order = await this.prisma.order.findUnique({
       where: { id: orderId },
       include: { 
         edition: true,
+        items: { where: { active: true } },
         commands: { where: { active: true } }
       },
     });
@@ -329,8 +353,13 @@ export class CommandsService extends BaseCrudService<
       throw new Error('Este pedido já possui uma comanda ativa na produção');
     }
 
+    // Se items foram passados no dto, usa eles; senão usa todos
+    const selectedItems = dto?.items && dto.items.length > 0
+      ? dto.items
+      : undefined;
+
     return this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      return this.createCommandForOrder(tx, order as any, order.edition as any);
+      return this.createCommandForOrder(tx, order as any, order.edition as any, selectedItems);
     });
   }
 }

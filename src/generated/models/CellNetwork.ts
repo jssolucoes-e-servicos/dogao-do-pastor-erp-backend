@@ -206,8 +206,8 @@ export type CellNetworkWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"CellNetwork"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CellNetwork"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"CellNetwork"> | Date | string | null
-  supervisor?: Prisma.XOR<Prisma.ContributorNullableScalarRelationFilter, Prisma.ContributorWhereInput> | null
   cells?: Prisma.CellListRelationFilter
+  supervisor?: Prisma.XOR<Prisma.ContributorNullableScalarRelationFilter, Prisma.ContributorWhereInput> | null
 }
 
 export type CellNetworkOrderByWithRelationInput = {
@@ -219,8 +219,8 @@ export type CellNetworkOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  supervisor?: Prisma.ContributorOrderByWithRelationInput
   cells?: Prisma.CellOrderByRelationAggregateInput
+  supervisor?: Prisma.ContributorOrderByWithRelationInput
   _relevance?: Prisma.CellNetworkOrderByRelevanceInput
 }
 
@@ -236,8 +236,8 @@ export type CellNetworkWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"CellNetwork"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CellNetwork"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"CellNetwork"> | Date | string | null
-  supervisor?: Prisma.XOR<Prisma.ContributorNullableScalarRelationFilter, Prisma.ContributorWhereInput> | null
   cells?: Prisma.CellListRelationFilter
+  supervisor?: Prisma.XOR<Prisma.ContributorNullableScalarRelationFilter, Prisma.ContributorWhereInput> | null
 }, "id">
 
 export type CellNetworkOrderByWithAggregationInput = {
@@ -276,8 +276,8 @@ export type CellNetworkCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  supervisor?: Prisma.ContributorCreateNestedOneWithoutCellNetworksInput
   cells?: Prisma.CellCreateNestedManyWithoutNetworkInput
+  supervisor?: Prisma.ContributorCreateNestedOneWithoutCellNetworksInput
 }
 
 export type CellNetworkUncheckedCreateInput = {
@@ -300,8 +300,8 @@ export type CellNetworkUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  supervisor?: Prisma.ContributorUpdateOneWithoutCellNetworksNestedInput
   cells?: Prisma.CellUpdateManyWithoutNetworkNestedInput
+  supervisor?: Prisma.ContributorUpdateOneWithoutCellNetworksNestedInput
 }
 
 export type CellNetworkUncheckedUpdateInput = {
@@ -662,8 +662,8 @@ export type CellNetworkSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  supervisor?: boolean | Prisma.CellNetwork$supervisorArgs<ExtArgs>
   cells?: boolean | Prisma.CellNetwork$cellsArgs<ExtArgs>
+  supervisor?: boolean | Prisma.CellNetwork$supervisorArgs<ExtArgs>
   _count?: boolean | Prisma.CellNetworkCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["cellNetwork"]>
 
@@ -704,8 +704,8 @@ export type CellNetworkSelectScalar = {
 
 export type CellNetworkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "supervisorId" | "phone" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["cellNetwork"]>
 export type CellNetworkInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  supervisor?: boolean | Prisma.CellNetwork$supervisorArgs<ExtArgs>
   cells?: boolean | Prisma.CellNetwork$cellsArgs<ExtArgs>
+  supervisor?: boolean | Prisma.CellNetwork$supervisorArgs<ExtArgs>
   _count?: boolean | Prisma.CellNetworkCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CellNetworkIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -718,8 +718,8 @@ export type CellNetworkIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.
 export type $CellNetworkPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CellNetwork"
   objects: {
-    supervisor: Prisma.$ContributorPayload<ExtArgs> | null
     cells: Prisma.$CellPayload<ExtArgs>[]
+    supervisor: Prisma.$ContributorPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1124,8 +1124,8 @@ readonly fields: CellNetworkFieldRefs;
  */
 export interface Prisma__CellNetworkClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  supervisor<T extends Prisma.CellNetwork$supervisorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CellNetwork$supervisorArgs<ExtArgs>>): Prisma.Prisma__ContributorClient<runtime.Types.Result.GetResult<Prisma.$ContributorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   cells<T extends Prisma.CellNetwork$cellsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CellNetwork$cellsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CellPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  supervisor<T extends Prisma.CellNetwork$supervisorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CellNetwork$supervisorArgs<ExtArgs>>): Prisma.Prisma__ContributorClient<runtime.Types.Result.GetResult<Prisma.$ContributorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1359,6 +1359,11 @@ export type CellNetworkFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` CellNetworks.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of CellNetworks.
+   */
   distinct?: Prisma.CellNetworkScalarFieldEnum | Prisma.CellNetworkScalarFieldEnum[]
 }
 
@@ -1559,25 +1564,6 @@ export type CellNetworkDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
 }
 
 /**
- * CellNetwork.supervisor
- */
-export type CellNetwork$supervisorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Contributor
-   */
-  select?: Prisma.ContributorSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Contributor
-   */
-  omit?: Prisma.ContributorOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ContributorInclude<ExtArgs> | null
-  where?: Prisma.ContributorWhereInput
-}
-
-/**
  * CellNetwork.cells
  */
 export type CellNetwork$cellsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1599,6 +1585,25 @@ export type CellNetwork$cellsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.CellScalarFieldEnum | Prisma.CellScalarFieldEnum[]
+}
+
+/**
+ * CellNetwork.supervisor
+ */
+export type CellNetwork$supervisorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Contributor
+   */
+  select?: Prisma.ContributorSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Contributor
+   */
+  omit?: Prisma.ContributorOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ContributorInclude<ExtArgs> | null
+  where?: Prisma.ContributorWhereInput
 }
 
 /**

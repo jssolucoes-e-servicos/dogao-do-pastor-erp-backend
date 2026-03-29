@@ -7,7 +7,7 @@ import { Roles } from '../../auth/decorators/roles.decorator';
 
 @Controller('dashboard')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('IT', 'ADMIN', 'FINANCE', 'RECEPTION', 'MANAGER', 'LEADER')
+@Roles('T.I', 'Administração', 'Financeiro', 'Recepção', 'Líder de Célula', 'Supervisor de Rede', 'Vendedor')
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 

@@ -304,12 +304,12 @@ export type EditionWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Edition"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Edition"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Edition"> | Date | string | null
-  issuedVouchers?: Prisma.VoucherListRelationFilter
-  redeemedVouchers?: Prisma.VoucherListRelationFilter
-  tickets?: Prisma.TicketListRelationFilter
+  commands?: Prisma.CommandListRelationFilter
   orders?: Prisma.OrderListRelationFilter
   settlements?: Prisma.SellerSettlementListRelationFilter
-  commands?: Prisma.CommandListRelationFilter
+  tickets?: Prisma.TicketListRelationFilter
+  issuedVouchers?: Prisma.VoucherListRelationFilter
+  redeemedVouchers?: Prisma.VoucherListRelationFilter
 }
 
 export type EditionOrderByWithRelationInput = {
@@ -328,12 +328,12 @@ export type EditionOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  issuedVouchers?: Prisma.VoucherOrderByRelationAggregateInput
-  redeemedVouchers?: Prisma.VoucherOrderByRelationAggregateInput
-  tickets?: Prisma.TicketOrderByRelationAggregateInput
+  commands?: Prisma.CommandOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
   settlements?: Prisma.SellerSettlementOrderByRelationAggregateInput
-  commands?: Prisma.CommandOrderByRelationAggregateInput
+  tickets?: Prisma.TicketOrderByRelationAggregateInput
+  issuedVouchers?: Prisma.VoucherOrderByRelationAggregateInput
+  redeemedVouchers?: Prisma.VoucherOrderByRelationAggregateInput
   _relevance?: Prisma.EditionOrderByRelevanceInput
 }
 
@@ -356,12 +356,12 @@ export type EditionWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Edition"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Edition"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Edition"> | Date | string | null
-  issuedVouchers?: Prisma.VoucherListRelationFilter
-  redeemedVouchers?: Prisma.VoucherListRelationFilter
-  tickets?: Prisma.TicketListRelationFilter
+  commands?: Prisma.CommandListRelationFilter
   orders?: Prisma.OrderListRelationFilter
   settlements?: Prisma.SellerSettlementListRelationFilter
-  commands?: Prisma.CommandListRelationFilter
+  tickets?: Prisma.TicketListRelationFilter
+  issuedVouchers?: Prisma.VoucherListRelationFilter
+  redeemedVouchers?: Prisma.VoucherListRelationFilter
 }, "id" | "name" | "productionDate" | "code">
 
 export type EditionOrderByWithAggregationInput = {
@@ -424,12 +424,12 @@ export type EditionCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  issuedVouchers?: Prisma.VoucherCreateNestedManyWithoutIssuedEditionInput
-  redeemedVouchers?: Prisma.VoucherCreateNestedManyWithoutRedeemedEditionInput
-  tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
+  commands?: Prisma.CommandCreateNestedManyWithoutEditionInput
   orders?: Prisma.OrderCreateNestedManyWithoutEditionInput
   settlements?: Prisma.SellerSettlementCreateNestedManyWithoutEditionInput
-  commands?: Prisma.CommandCreateNestedManyWithoutEditionInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
+  issuedVouchers?: Prisma.VoucherCreateNestedManyWithoutIssuedEditionInput
+  redeemedVouchers?: Prisma.VoucherCreateNestedManyWithoutRedeemedEditionInput
 }
 
 export type EditionUncheckedCreateInput = {
@@ -448,12 +448,12 @@ export type EditionUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  issuedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutIssuedEditionInput
-  redeemedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutRedeemedEditionInput
-  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
+  commands?: Prisma.CommandUncheckedCreateNestedManyWithoutEditionInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutEditionInput
   settlements?: Prisma.SellerSettlementUncheckedCreateNestedManyWithoutEditionInput
-  commands?: Prisma.CommandUncheckedCreateNestedManyWithoutEditionInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
+  issuedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutIssuedEditionInput
+  redeemedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutRedeemedEditionInput
 }
 
 export type EditionUpdateInput = {
@@ -472,12 +472,12 @@ export type EditionUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  issuedVouchers?: Prisma.VoucherUpdateManyWithoutIssuedEditionNestedInput
-  redeemedVouchers?: Prisma.VoucherUpdateManyWithoutRedeemedEditionNestedInput
-  tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
+  commands?: Prisma.CommandUpdateManyWithoutEditionNestedInput
   orders?: Prisma.OrderUpdateManyWithoutEditionNestedInput
   settlements?: Prisma.SellerSettlementUpdateManyWithoutEditionNestedInput
-  commands?: Prisma.CommandUpdateManyWithoutEditionNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
+  issuedVouchers?: Prisma.VoucherUpdateManyWithoutIssuedEditionNestedInput
+  redeemedVouchers?: Prisma.VoucherUpdateManyWithoutRedeemedEditionNestedInput
 }
 
 export type EditionUncheckedUpdateInput = {
@@ -496,12 +496,12 @@ export type EditionUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  issuedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutIssuedEditionNestedInput
-  redeemedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutRedeemedEditionNestedInput
-  tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
+  commands?: Prisma.CommandUncheckedUpdateManyWithoutEditionNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutEditionNestedInput
   settlements?: Prisma.SellerSettlementUncheckedUpdateManyWithoutEditionNestedInput
-  commands?: Prisma.CommandUncheckedUpdateManyWithoutEditionNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
+  issuedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutIssuedEditionNestedInput
+  redeemedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutRedeemedEditionNestedInput
 }
 
 export type EditionCreateManyInput = {
@@ -750,11 +750,11 @@ export type EditionCreateWithoutOrdersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  commands?: Prisma.CommandCreateNestedManyWithoutEditionInput
+  settlements?: Prisma.SellerSettlementCreateNestedManyWithoutEditionInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
   issuedVouchers?: Prisma.VoucherCreateNestedManyWithoutIssuedEditionInput
   redeemedVouchers?: Prisma.VoucherCreateNestedManyWithoutRedeemedEditionInput
-  tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
-  settlements?: Prisma.SellerSettlementCreateNestedManyWithoutEditionInput
-  commands?: Prisma.CommandCreateNestedManyWithoutEditionInput
 }
 
 export type EditionUncheckedCreateWithoutOrdersInput = {
@@ -773,11 +773,11 @@ export type EditionUncheckedCreateWithoutOrdersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  commands?: Prisma.CommandUncheckedCreateNestedManyWithoutEditionInput
+  settlements?: Prisma.SellerSettlementUncheckedCreateNestedManyWithoutEditionInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
   issuedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutIssuedEditionInput
   redeemedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutRedeemedEditionInput
-  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
-  settlements?: Prisma.SellerSettlementUncheckedCreateNestedManyWithoutEditionInput
-  commands?: Prisma.CommandUncheckedCreateNestedManyWithoutEditionInput
 }
 
 export type EditionCreateOrConnectWithoutOrdersInput = {
@@ -812,11 +812,11 @@ export type EditionUpdateWithoutOrdersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  commands?: Prisma.CommandUpdateManyWithoutEditionNestedInput
+  settlements?: Prisma.SellerSettlementUpdateManyWithoutEditionNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
   issuedVouchers?: Prisma.VoucherUpdateManyWithoutIssuedEditionNestedInput
   redeemedVouchers?: Prisma.VoucherUpdateManyWithoutRedeemedEditionNestedInput
-  tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
-  settlements?: Prisma.SellerSettlementUpdateManyWithoutEditionNestedInput
-  commands?: Prisma.CommandUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionUncheckedUpdateWithoutOrdersInput = {
@@ -835,11 +835,11 @@ export type EditionUncheckedUpdateWithoutOrdersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  commands?: Prisma.CommandUncheckedUpdateManyWithoutEditionNestedInput
+  settlements?: Prisma.SellerSettlementUncheckedUpdateManyWithoutEditionNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
   issuedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutIssuedEditionNestedInput
   redeemedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutRedeemedEditionNestedInput
-  tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
-  settlements?: Prisma.SellerSettlementUncheckedUpdateManyWithoutEditionNestedInput
-  commands?: Prisma.CommandUncheckedUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionCreateWithoutTicketsInput = {
@@ -858,11 +858,11 @@ export type EditionCreateWithoutTicketsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  issuedVouchers?: Prisma.VoucherCreateNestedManyWithoutIssuedEditionInput
-  redeemedVouchers?: Prisma.VoucherCreateNestedManyWithoutRedeemedEditionInput
+  commands?: Prisma.CommandCreateNestedManyWithoutEditionInput
   orders?: Prisma.OrderCreateNestedManyWithoutEditionInput
   settlements?: Prisma.SellerSettlementCreateNestedManyWithoutEditionInput
-  commands?: Prisma.CommandCreateNestedManyWithoutEditionInput
+  issuedVouchers?: Prisma.VoucherCreateNestedManyWithoutIssuedEditionInput
+  redeemedVouchers?: Prisma.VoucherCreateNestedManyWithoutRedeemedEditionInput
 }
 
 export type EditionUncheckedCreateWithoutTicketsInput = {
@@ -881,11 +881,11 @@ export type EditionUncheckedCreateWithoutTicketsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  issuedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutIssuedEditionInput
-  redeemedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutRedeemedEditionInput
+  commands?: Prisma.CommandUncheckedCreateNestedManyWithoutEditionInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutEditionInput
   settlements?: Prisma.SellerSettlementUncheckedCreateNestedManyWithoutEditionInput
-  commands?: Prisma.CommandUncheckedCreateNestedManyWithoutEditionInput
+  issuedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutIssuedEditionInput
+  redeemedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutRedeemedEditionInput
 }
 
 export type EditionCreateOrConnectWithoutTicketsInput = {
@@ -920,11 +920,11 @@ export type EditionUpdateWithoutTicketsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  issuedVouchers?: Prisma.VoucherUpdateManyWithoutIssuedEditionNestedInput
-  redeemedVouchers?: Prisma.VoucherUpdateManyWithoutRedeemedEditionNestedInput
+  commands?: Prisma.CommandUpdateManyWithoutEditionNestedInput
   orders?: Prisma.OrderUpdateManyWithoutEditionNestedInput
   settlements?: Prisma.SellerSettlementUpdateManyWithoutEditionNestedInput
-  commands?: Prisma.CommandUpdateManyWithoutEditionNestedInput
+  issuedVouchers?: Prisma.VoucherUpdateManyWithoutIssuedEditionNestedInput
+  redeemedVouchers?: Prisma.VoucherUpdateManyWithoutRedeemedEditionNestedInput
 }
 
 export type EditionUncheckedUpdateWithoutTicketsInput = {
@@ -943,11 +943,11 @@ export type EditionUncheckedUpdateWithoutTicketsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  issuedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutIssuedEditionNestedInput
-  redeemedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutRedeemedEditionNestedInput
+  commands?: Prisma.CommandUncheckedUpdateManyWithoutEditionNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutEditionNestedInput
   settlements?: Prisma.SellerSettlementUncheckedUpdateManyWithoutEditionNestedInput
-  commands?: Prisma.CommandUncheckedUpdateManyWithoutEditionNestedInput
+  issuedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutIssuedEditionNestedInput
+  redeemedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutRedeemedEditionNestedInput
 }
 
 export type EditionCreateWithoutIssuedVouchersInput = {
@@ -966,11 +966,11 @@ export type EditionCreateWithoutIssuedVouchersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  redeemedVouchers?: Prisma.VoucherCreateNestedManyWithoutRedeemedEditionInput
-  tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
+  commands?: Prisma.CommandCreateNestedManyWithoutEditionInput
   orders?: Prisma.OrderCreateNestedManyWithoutEditionInput
   settlements?: Prisma.SellerSettlementCreateNestedManyWithoutEditionInput
-  commands?: Prisma.CommandCreateNestedManyWithoutEditionInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
+  redeemedVouchers?: Prisma.VoucherCreateNestedManyWithoutRedeemedEditionInput
 }
 
 export type EditionUncheckedCreateWithoutIssuedVouchersInput = {
@@ -989,11 +989,11 @@ export type EditionUncheckedCreateWithoutIssuedVouchersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  redeemedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutRedeemedEditionInput
-  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
+  commands?: Prisma.CommandUncheckedCreateNestedManyWithoutEditionInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutEditionInput
   settlements?: Prisma.SellerSettlementUncheckedCreateNestedManyWithoutEditionInput
-  commands?: Prisma.CommandUncheckedCreateNestedManyWithoutEditionInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
+  redeemedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutRedeemedEditionInput
 }
 
 export type EditionCreateOrConnectWithoutIssuedVouchersInput = {
@@ -1017,11 +1017,11 @@ export type EditionCreateWithoutRedeemedVouchersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  issuedVouchers?: Prisma.VoucherCreateNestedManyWithoutIssuedEditionInput
-  tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
+  commands?: Prisma.CommandCreateNestedManyWithoutEditionInput
   orders?: Prisma.OrderCreateNestedManyWithoutEditionInput
   settlements?: Prisma.SellerSettlementCreateNestedManyWithoutEditionInput
-  commands?: Prisma.CommandCreateNestedManyWithoutEditionInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
+  issuedVouchers?: Prisma.VoucherCreateNestedManyWithoutIssuedEditionInput
 }
 
 export type EditionUncheckedCreateWithoutRedeemedVouchersInput = {
@@ -1040,11 +1040,11 @@ export type EditionUncheckedCreateWithoutRedeemedVouchersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  issuedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutIssuedEditionInput
-  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
+  commands?: Prisma.CommandUncheckedCreateNestedManyWithoutEditionInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutEditionInput
   settlements?: Prisma.SellerSettlementUncheckedCreateNestedManyWithoutEditionInput
-  commands?: Prisma.CommandUncheckedCreateNestedManyWithoutEditionInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
+  issuedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutIssuedEditionInput
 }
 
 export type EditionCreateOrConnectWithoutRedeemedVouchersInput = {
@@ -1079,11 +1079,11 @@ export type EditionUpdateWithoutIssuedVouchersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  redeemedVouchers?: Prisma.VoucherUpdateManyWithoutRedeemedEditionNestedInput
-  tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
+  commands?: Prisma.CommandUpdateManyWithoutEditionNestedInput
   orders?: Prisma.OrderUpdateManyWithoutEditionNestedInput
   settlements?: Prisma.SellerSettlementUpdateManyWithoutEditionNestedInput
-  commands?: Prisma.CommandUpdateManyWithoutEditionNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
+  redeemedVouchers?: Prisma.VoucherUpdateManyWithoutRedeemedEditionNestedInput
 }
 
 export type EditionUncheckedUpdateWithoutIssuedVouchersInput = {
@@ -1102,11 +1102,11 @@ export type EditionUncheckedUpdateWithoutIssuedVouchersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  redeemedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutRedeemedEditionNestedInput
-  tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
+  commands?: Prisma.CommandUncheckedUpdateManyWithoutEditionNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutEditionNestedInput
   settlements?: Prisma.SellerSettlementUncheckedUpdateManyWithoutEditionNestedInput
-  commands?: Prisma.CommandUncheckedUpdateManyWithoutEditionNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
+  redeemedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutRedeemedEditionNestedInput
 }
 
 export type EditionUpsertWithoutRedeemedVouchersInput = {
@@ -1136,11 +1136,11 @@ export type EditionUpdateWithoutRedeemedVouchersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  issuedVouchers?: Prisma.VoucherUpdateManyWithoutIssuedEditionNestedInput
-  tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
+  commands?: Prisma.CommandUpdateManyWithoutEditionNestedInput
   orders?: Prisma.OrderUpdateManyWithoutEditionNestedInput
   settlements?: Prisma.SellerSettlementUpdateManyWithoutEditionNestedInput
-  commands?: Prisma.CommandUpdateManyWithoutEditionNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
+  issuedVouchers?: Prisma.VoucherUpdateManyWithoutIssuedEditionNestedInput
 }
 
 export type EditionUncheckedUpdateWithoutRedeemedVouchersInput = {
@@ -1159,11 +1159,11 @@ export type EditionUncheckedUpdateWithoutRedeemedVouchersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  issuedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutIssuedEditionNestedInput
-  tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
+  commands?: Prisma.CommandUncheckedUpdateManyWithoutEditionNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutEditionNestedInput
   settlements?: Prisma.SellerSettlementUncheckedUpdateManyWithoutEditionNestedInput
-  commands?: Prisma.CommandUncheckedUpdateManyWithoutEditionNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
+  issuedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutIssuedEditionNestedInput
 }
 
 export type EditionCreateWithoutCommandsInput = {
@@ -1182,11 +1182,11 @@ export type EditionCreateWithoutCommandsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  issuedVouchers?: Prisma.VoucherCreateNestedManyWithoutIssuedEditionInput
-  redeemedVouchers?: Prisma.VoucherCreateNestedManyWithoutRedeemedEditionInput
-  tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
   orders?: Prisma.OrderCreateNestedManyWithoutEditionInput
   settlements?: Prisma.SellerSettlementCreateNestedManyWithoutEditionInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
+  issuedVouchers?: Prisma.VoucherCreateNestedManyWithoutIssuedEditionInput
+  redeemedVouchers?: Prisma.VoucherCreateNestedManyWithoutRedeemedEditionInput
 }
 
 export type EditionUncheckedCreateWithoutCommandsInput = {
@@ -1205,11 +1205,11 @@ export type EditionUncheckedCreateWithoutCommandsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  issuedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutIssuedEditionInput
-  redeemedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutRedeemedEditionInput
-  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutEditionInput
   settlements?: Prisma.SellerSettlementUncheckedCreateNestedManyWithoutEditionInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
+  issuedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutIssuedEditionInput
+  redeemedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutRedeemedEditionInput
 }
 
 export type EditionCreateOrConnectWithoutCommandsInput = {
@@ -1244,11 +1244,11 @@ export type EditionUpdateWithoutCommandsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  issuedVouchers?: Prisma.VoucherUpdateManyWithoutIssuedEditionNestedInput
-  redeemedVouchers?: Prisma.VoucherUpdateManyWithoutRedeemedEditionNestedInput
-  tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
   orders?: Prisma.OrderUpdateManyWithoutEditionNestedInput
   settlements?: Prisma.SellerSettlementUpdateManyWithoutEditionNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
+  issuedVouchers?: Prisma.VoucherUpdateManyWithoutIssuedEditionNestedInput
+  redeemedVouchers?: Prisma.VoucherUpdateManyWithoutRedeemedEditionNestedInput
 }
 
 export type EditionUncheckedUpdateWithoutCommandsInput = {
@@ -1267,11 +1267,11 @@ export type EditionUncheckedUpdateWithoutCommandsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  issuedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutIssuedEditionNestedInput
-  redeemedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutRedeemedEditionNestedInput
-  tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutEditionNestedInput
   settlements?: Prisma.SellerSettlementUncheckedUpdateManyWithoutEditionNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
+  issuedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutIssuedEditionNestedInput
+  redeemedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutRedeemedEditionNestedInput
 }
 
 export type EditionCreateWithoutSettlementsInput = {
@@ -1290,11 +1290,11 @@ export type EditionCreateWithoutSettlementsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  commands?: Prisma.CommandCreateNestedManyWithoutEditionInput
+  orders?: Prisma.OrderCreateNestedManyWithoutEditionInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
   issuedVouchers?: Prisma.VoucherCreateNestedManyWithoutIssuedEditionInput
   redeemedVouchers?: Prisma.VoucherCreateNestedManyWithoutRedeemedEditionInput
-  tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
-  orders?: Prisma.OrderCreateNestedManyWithoutEditionInput
-  commands?: Prisma.CommandCreateNestedManyWithoutEditionInput
 }
 
 export type EditionUncheckedCreateWithoutSettlementsInput = {
@@ -1313,11 +1313,11 @@ export type EditionUncheckedCreateWithoutSettlementsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  commands?: Prisma.CommandUncheckedCreateNestedManyWithoutEditionInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutEditionInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
   issuedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutIssuedEditionInput
   redeemedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutRedeemedEditionInput
-  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
-  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutEditionInput
-  commands?: Prisma.CommandUncheckedCreateNestedManyWithoutEditionInput
 }
 
 export type EditionCreateOrConnectWithoutSettlementsInput = {
@@ -1352,11 +1352,11 @@ export type EditionUpdateWithoutSettlementsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  commands?: Prisma.CommandUpdateManyWithoutEditionNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutEditionNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
   issuedVouchers?: Prisma.VoucherUpdateManyWithoutIssuedEditionNestedInput
   redeemedVouchers?: Prisma.VoucherUpdateManyWithoutRedeemedEditionNestedInput
-  tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
-  orders?: Prisma.OrderUpdateManyWithoutEditionNestedInput
-  commands?: Prisma.CommandUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionUncheckedUpdateWithoutSettlementsInput = {
@@ -1375,11 +1375,11 @@ export type EditionUncheckedUpdateWithoutSettlementsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  commands?: Prisma.CommandUncheckedUpdateManyWithoutEditionNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutEditionNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
   issuedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutIssuedEditionNestedInput
   redeemedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutRedeemedEditionNestedInput
-  tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
-  orders?: Prisma.OrderUncheckedUpdateManyWithoutEditionNestedInput
-  commands?: Prisma.CommandUncheckedUpdateManyWithoutEditionNestedInput
 }
 
 
@@ -1388,21 +1388,21 @@ export type EditionUncheckedUpdateWithoutSettlementsInput = {
  */
 
 export type EditionCountOutputType = {
-  issuedVouchers: number
-  redeemedVouchers: number
-  tickets: number
+  commands: number
   orders: number
   settlements: number
-  commands: number
+  tickets: number
+  issuedVouchers: number
+  redeemedVouchers: number
 }
 
 export type EditionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  issuedVouchers?: boolean | EditionCountOutputTypeCountIssuedVouchersArgs
-  redeemedVouchers?: boolean | EditionCountOutputTypeCountRedeemedVouchersArgs
-  tickets?: boolean | EditionCountOutputTypeCountTicketsArgs
+  commands?: boolean | EditionCountOutputTypeCountCommandsArgs
   orders?: boolean | EditionCountOutputTypeCountOrdersArgs
   settlements?: boolean | EditionCountOutputTypeCountSettlementsArgs
-  commands?: boolean | EditionCountOutputTypeCountCommandsArgs
+  tickets?: boolean | EditionCountOutputTypeCountTicketsArgs
+  issuedVouchers?: boolean | EditionCountOutputTypeCountIssuedVouchersArgs
+  redeemedVouchers?: boolean | EditionCountOutputTypeCountRedeemedVouchersArgs
 }
 
 /**
@@ -1418,22 +1418,8 @@ export type EditionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
 /**
  * EditionCountOutputType without action
  */
-export type EditionCountOutputTypeCountIssuedVouchersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.VoucherWhereInput
-}
-
-/**
- * EditionCountOutputType without action
- */
-export type EditionCountOutputTypeCountRedeemedVouchersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.VoucherWhereInput
-}
-
-/**
- * EditionCountOutputType without action
- */
-export type EditionCountOutputTypeCountTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.TicketWhereInput
+export type EditionCountOutputTypeCountCommandsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CommandWhereInput
 }
 
 /**
@@ -1453,8 +1439,22 @@ export type EditionCountOutputTypeCountSettlementsArgs<ExtArgs extends runtime.T
 /**
  * EditionCountOutputType without action
  */
-export type EditionCountOutputTypeCountCommandsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.CommandWhereInput
+export type EditionCountOutputTypeCountTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TicketWhereInput
+}
+
+/**
+ * EditionCountOutputType without action
+ */
+export type EditionCountOutputTypeCountIssuedVouchersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.VoucherWhereInput
+}
+
+/**
+ * EditionCountOutputType without action
+ */
+export type EditionCountOutputTypeCountRedeemedVouchersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.VoucherWhereInput
 }
 
 
@@ -1474,12 +1474,12 @@ export type EditionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  issuedVouchers?: boolean | Prisma.Edition$issuedVouchersArgs<ExtArgs>
-  redeemedVouchers?: boolean | Prisma.Edition$redeemedVouchersArgs<ExtArgs>
-  tickets?: boolean | Prisma.Edition$ticketsArgs<ExtArgs>
+  commands?: boolean | Prisma.Edition$commandsArgs<ExtArgs>
   orders?: boolean | Prisma.Edition$ordersArgs<ExtArgs>
   settlements?: boolean | Prisma.Edition$settlementsArgs<ExtArgs>
-  commands?: boolean | Prisma.Edition$commandsArgs<ExtArgs>
+  tickets?: boolean | Prisma.Edition$ticketsArgs<ExtArgs>
+  issuedVouchers?: boolean | Prisma.Edition$issuedVouchersArgs<ExtArgs>
+  redeemedVouchers?: boolean | Prisma.Edition$redeemedVouchersArgs<ExtArgs>
   _count?: boolean | Prisma.EditionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["edition"]>
 
@@ -1539,12 +1539,12 @@ export type EditionSelectScalar = {
 
 export type EditionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "productionDate" | "code" | "saleStartDate" | "saleEndDate" | "autoEnableDate" | "autoDisableDate" | "limitSale" | "dogsSold" | "dogPrice" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["edition"]>
 export type EditionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  issuedVouchers?: boolean | Prisma.Edition$issuedVouchersArgs<ExtArgs>
-  redeemedVouchers?: boolean | Prisma.Edition$redeemedVouchersArgs<ExtArgs>
-  tickets?: boolean | Prisma.Edition$ticketsArgs<ExtArgs>
+  commands?: boolean | Prisma.Edition$commandsArgs<ExtArgs>
   orders?: boolean | Prisma.Edition$ordersArgs<ExtArgs>
   settlements?: boolean | Prisma.Edition$settlementsArgs<ExtArgs>
-  commands?: boolean | Prisma.Edition$commandsArgs<ExtArgs>
+  tickets?: boolean | Prisma.Edition$ticketsArgs<ExtArgs>
+  issuedVouchers?: boolean | Prisma.Edition$issuedVouchersArgs<ExtArgs>
+  redeemedVouchers?: boolean | Prisma.Edition$redeemedVouchersArgs<ExtArgs>
   _count?: boolean | Prisma.EditionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EditionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1553,12 +1553,12 @@ export type EditionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type $EditionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Edition"
   objects: {
-    issuedVouchers: Prisma.$VoucherPayload<ExtArgs>[]
-    redeemedVouchers: Prisma.$VoucherPayload<ExtArgs>[]
-    tickets: Prisma.$TicketPayload<ExtArgs>[]
+    commands: Prisma.$CommandPayload<ExtArgs>[]
     orders: Prisma.$OrderPayload<ExtArgs>[]
     settlements: Prisma.$SellerSettlementPayload<ExtArgs>[]
-    commands: Prisma.$CommandPayload<ExtArgs>[]
+    tickets: Prisma.$TicketPayload<ExtArgs>[]
+    issuedVouchers: Prisma.$VoucherPayload<ExtArgs>[]
+    redeemedVouchers: Prisma.$VoucherPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1970,12 +1970,12 @@ readonly fields: EditionFieldRefs;
  */
 export interface Prisma__EditionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  issuedVouchers<T extends Prisma.Edition$issuedVouchersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Edition$issuedVouchersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VoucherPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  redeemedVouchers<T extends Prisma.Edition$redeemedVouchersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Edition$redeemedVouchersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VoucherPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  tickets<T extends Prisma.Edition$ticketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Edition$ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  commands<T extends Prisma.Edition$commandsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Edition$commandsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommandPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.Edition$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Edition$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   settlements<T extends Prisma.Edition$settlementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Edition$settlementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SellerSettlementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  commands<T extends Prisma.Edition$commandsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Edition$commandsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommandPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tickets<T extends Prisma.Edition$ticketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Edition$ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  issuedVouchers<T extends Prisma.Edition$issuedVouchersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Edition$issuedVouchersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VoucherPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  redeemedVouchers<T extends Prisma.Edition$redeemedVouchersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Edition$redeemedVouchersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VoucherPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2216,6 +2216,11 @@ export type EditionFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Skip the first `n` Editions.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Editions.
+   */
   distinct?: Prisma.EditionScalarFieldEnum | Prisma.EditionScalarFieldEnum[]
 }
 
@@ -2408,75 +2413,27 @@ export type EditionDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Edition.issuedVouchers
+ * Edition.commands
  */
-export type Edition$issuedVouchersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Edition$commandsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Voucher
+   * Select specific fields to fetch from the Command
    */
-  select?: Prisma.VoucherSelect<ExtArgs> | null
+  select?: Prisma.CommandSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Voucher
+   * Omit specific fields from the Command
    */
-  omit?: Prisma.VoucherOmit<ExtArgs> | null
+  omit?: Prisma.CommandOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.VoucherInclude<ExtArgs> | null
-  where?: Prisma.VoucherWhereInput
-  orderBy?: Prisma.VoucherOrderByWithRelationInput | Prisma.VoucherOrderByWithRelationInput[]
-  cursor?: Prisma.VoucherWhereUniqueInput
+  include?: Prisma.CommandInclude<ExtArgs> | null
+  where?: Prisma.CommandWhereInput
+  orderBy?: Prisma.CommandOrderByWithRelationInput | Prisma.CommandOrderByWithRelationInput[]
+  cursor?: Prisma.CommandWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.VoucherScalarFieldEnum | Prisma.VoucherScalarFieldEnum[]
-}
-
-/**
- * Edition.redeemedVouchers
- */
-export type Edition$redeemedVouchersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Voucher
-   */
-  select?: Prisma.VoucherSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Voucher
-   */
-  omit?: Prisma.VoucherOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.VoucherInclude<ExtArgs> | null
-  where?: Prisma.VoucherWhereInput
-  orderBy?: Prisma.VoucherOrderByWithRelationInput | Prisma.VoucherOrderByWithRelationInput[]
-  cursor?: Prisma.VoucherWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.VoucherScalarFieldEnum | Prisma.VoucherScalarFieldEnum[]
-}
-
-/**
- * Edition.tickets
- */
-export type Edition$ticketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Ticket
-   */
-  select?: Prisma.TicketSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Ticket
-   */
-  omit?: Prisma.TicketOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TicketInclude<ExtArgs> | null
-  where?: Prisma.TicketWhereInput
-  orderBy?: Prisma.TicketOrderByWithRelationInput | Prisma.TicketOrderByWithRelationInput[]
-  cursor?: Prisma.TicketWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.TicketScalarFieldEnum | Prisma.TicketScalarFieldEnum[]
+  distinct?: Prisma.CommandScalarFieldEnum | Prisma.CommandScalarFieldEnum[]
 }
 
 /**
@@ -2528,27 +2485,75 @@ export type Edition$settlementsArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * Edition.commands
+ * Edition.tickets
  */
-export type Edition$commandsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Edition$ticketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Command
+   * Select specific fields to fetch from the Ticket
    */
-  select?: Prisma.CommandSelect<ExtArgs> | null
+  select?: Prisma.TicketSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Command
+   * Omit specific fields from the Ticket
    */
-  omit?: Prisma.CommandOmit<ExtArgs> | null
+  omit?: Prisma.TicketOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.CommandInclude<ExtArgs> | null
-  where?: Prisma.CommandWhereInput
-  orderBy?: Prisma.CommandOrderByWithRelationInput | Prisma.CommandOrderByWithRelationInput[]
-  cursor?: Prisma.CommandWhereUniqueInput
+  include?: Prisma.TicketInclude<ExtArgs> | null
+  where?: Prisma.TicketWhereInput
+  orderBy?: Prisma.TicketOrderByWithRelationInput | Prisma.TicketOrderByWithRelationInput[]
+  cursor?: Prisma.TicketWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.CommandScalarFieldEnum | Prisma.CommandScalarFieldEnum[]
+  distinct?: Prisma.TicketScalarFieldEnum | Prisma.TicketScalarFieldEnum[]
+}
+
+/**
+ * Edition.issuedVouchers
+ */
+export type Edition$issuedVouchersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Voucher
+   */
+  select?: Prisma.VoucherSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Voucher
+   */
+  omit?: Prisma.VoucherOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VoucherInclude<ExtArgs> | null
+  where?: Prisma.VoucherWhereInput
+  orderBy?: Prisma.VoucherOrderByWithRelationInput | Prisma.VoucherOrderByWithRelationInput[]
+  cursor?: Prisma.VoucherWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.VoucherScalarFieldEnum | Prisma.VoucherScalarFieldEnum[]
+}
+
+/**
+ * Edition.redeemedVouchers
+ */
+export type Edition$redeemedVouchersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Voucher
+   */
+  select?: Prisma.VoucherSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Voucher
+   */
+  omit?: Prisma.VoucherOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VoucherInclude<ExtArgs> | null
+  where?: Prisma.VoucherWhereInput
+  orderBy?: Prisma.VoucherOrderByWithRelationInput | Prisma.VoucherOrderByWithRelationInput[]
+  cursor?: Prisma.VoucherWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.VoucherScalarFieldEnum | Prisma.VoucherScalarFieldEnum[]
 }
 
 /**

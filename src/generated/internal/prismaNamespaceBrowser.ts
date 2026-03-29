@@ -61,6 +61,7 @@ export const ModelName = {
   CellNetwork: 'CellNetwork',
   Cell: 'Cell',
   Seller: 'Seller',
+  ContributorCell: 'ContributorCell',
   DeliveryPerson: 'DeliveryPerson',
   Customer: 'Customer',
   CustomerAddress: 'CustomerAddress',
@@ -70,6 +71,7 @@ export const ModelName = {
   Voucher: 'Voucher',
   Payment: 'Payment',
   Command: 'Command',
+  CommandItem: 'CommandItem',
   DailyReportSoldsCache: 'DailyReportSoldsCache',
   DeliveryRoute: 'DeliveryRoute',
   DeliveryStop: 'DeliveryStop',
@@ -78,7 +80,10 @@ export const ModelName = {
   OtpVerification: 'OtpVerification',
   DonationEntry: 'DonationEntry',
   Withdrawal: 'Withdrawal',
-  WithdrawalItem: 'WithdrawalItem'
+  WithdrawalItem: 'WithdrawalItem',
+  PushToken: 'PushToken',
+  NotificationPreference: 'NotificationPreference',
+  NotificationLog: 'NotificationLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -253,6 +258,20 @@ export const SellerScalarFieldEnum = {
 export type SellerScalarFieldEnum = (typeof SellerScalarFieldEnum)[keyof typeof SellerScalarFieldEnum]
 
 
+export const ContributorCellScalarFieldEnum = {
+  id: 'id',
+  cellId: 'cellId',
+  contributorId: 'contributorId',
+  sellerId: 'sellerId',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type ContributorCellScalarFieldEnum = (typeof ContributorCellScalarFieldEnum)[keyof typeof ContributorCellScalarFieldEnum]
+
+
 export const DeliveryPersonScalarFieldEnum = {
   id: 'id',
   contributorId: 'contributorId',
@@ -327,10 +346,10 @@ export const OrderScalarFieldEnum = {
   addressId: 'addressId',
   observations: 'observations',
   active: 'active',
-  paymentReminderSent: 'paymentReminderSent',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  paymentReminderSent: 'paymentReminderSent'
 } as const
 
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -339,9 +358,9 @@ export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof Or
 export const OrderItemScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
-  quantity: 'quantity',
   unitPrice: 'unitPrice',
   removedIngredients: 'removedIngredients',
+  commanded: 'commanded',
   active: 'active',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -414,7 +433,6 @@ export const CommandScalarFieldEnum = {
   id: 'id',
   sequentialId: 'sequentialId',
   orderId: 'orderId',
-  withdrawalId: 'withdrawalId',
   editionId: 'editionId',
   editionCode: 'editionCode',
   sequence: 'sequence',
@@ -422,14 +440,31 @@ export const CommandScalarFieldEnum = {
   pdfUrl: 'pdfUrl',
   sentWhatsApp: 'sentWhatsApp',
   sentAt: 'sentAt',
+  quantity: 'quantity',
   status: 'status',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  withdrawalId: 'withdrawalId'
+} as const
+
+export type CommandScalarFieldEnum = (typeof CommandScalarFieldEnum)[keyof typeof CommandScalarFieldEnum]
+
+
+export const CommandItemScalarFieldEnum = {
+  id: 'id',
+  commandId: 'commandId',
+  itemId: 'itemId',
+  removedIngredients: 'removedIngredients',
+  producced: 'producced',
   active: 'active',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
 } as const
 
-export type CommandScalarFieldEnum = (typeof CommandScalarFieldEnum)[keyof typeof CommandScalarFieldEnum]
+export type CommandItemScalarFieldEnum = (typeof CommandItemScalarFieldEnum)[keyof typeof CommandItemScalarFieldEnum]
 
 
 export const DailyReportSoldsCacheScalarFieldEnum = {
@@ -595,6 +630,49 @@ export const WithdrawalItemScalarFieldEnum = {
 export type WithdrawalItemScalarFieldEnum = (typeof WithdrawalItemScalarFieldEnum)[keyof typeof WithdrawalItemScalarFieldEnum]
 
 
+export const PushTokenScalarFieldEnum = {
+  id: 'id',
+  contributorId: 'contributorId',
+  token: 'token',
+  platform: 'platform',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PushTokenScalarFieldEnum = (typeof PushTokenScalarFieldEnum)[keyof typeof PushTokenScalarFieldEnum]
+
+
+export const NotificationPreferenceScalarFieldEnum = {
+  id: 'id',
+  contributorId: 'contributorId',
+  sales: 'sales',
+  orders: 'orders',
+  ranking: 'ranking',
+  cell: 'cell',
+  network: 'network',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NotificationPreferenceScalarFieldEnum = (typeof NotificationPreferenceScalarFieldEnum)[keyof typeof NotificationPreferenceScalarFieldEnum]
+
+
+export const NotificationLogScalarFieldEnum = {
+  id: 'id',
+  contributorId: 'contributorId',
+  type: 'type',
+  title: 'title',
+  body: 'body',
+  data: 'data',
+  sentAt: 'sentAt',
+  success: 'success',
+  error: 'error'
+} as const
+
+export type NotificationLogScalarFieldEnum = (typeof NotificationLogScalarFieldEnum)[keyof typeof NotificationLogScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -729,6 +807,16 @@ export const SellerOrderByRelevanceFieldEnum = {
 export type SellerOrderByRelevanceFieldEnum = (typeof SellerOrderByRelevanceFieldEnum)[keyof typeof SellerOrderByRelevanceFieldEnum]
 
 
+export const ContributorCellOrderByRelevanceFieldEnum = {
+  id: 'id',
+  cellId: 'cellId',
+  contributorId: 'contributorId',
+  sellerId: 'sellerId'
+} as const
+
+export type ContributorCellOrderByRelevanceFieldEnum = (typeof ContributorCellOrderByRelevanceFieldEnum)[keyof typeof ContributorCellOrderByRelevanceFieldEnum]
+
+
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -842,12 +930,22 @@ export const CommandOrderByRelevanceFieldEnum = {
   id: 'id',
   sequentialId: 'sequentialId',
   orderId: 'orderId',
-  withdrawalId: 'withdrawalId',
   editionId: 'editionId',
-  pdfUrl: 'pdfUrl'
+  pdfUrl: 'pdfUrl',
+  withdrawalId: 'withdrawalId'
 } as const
 
 export type CommandOrderByRelevanceFieldEnum = (typeof CommandOrderByRelevanceFieldEnum)[keyof typeof CommandOrderByRelevanceFieldEnum]
+
+
+export const CommandItemOrderByRelevanceFieldEnum = {
+  id: 'id',
+  commandId: 'commandId',
+  itemId: 'itemId',
+  removedIngredients: 'removedIngredients'
+} as const
+
+export type CommandItemOrderByRelevanceFieldEnum = (typeof CommandItemOrderByRelevanceFieldEnum)[keyof typeof CommandItemOrderByRelevanceFieldEnum]
 
 
 export const DailyReportSoldsCacheOrderByRelevanceFieldEnum = {
@@ -950,4 +1048,33 @@ export const WithdrawalItemOrderByRelevanceFieldEnum = {
 } as const
 
 export type WithdrawalItemOrderByRelevanceFieldEnum = (typeof WithdrawalItemOrderByRelevanceFieldEnum)[keyof typeof WithdrawalItemOrderByRelevanceFieldEnum]
+
+
+export const PushTokenOrderByRelevanceFieldEnum = {
+  id: 'id',
+  contributorId: 'contributorId',
+  token: 'token',
+  platform: 'platform'
+} as const
+
+export type PushTokenOrderByRelevanceFieldEnum = (typeof PushTokenOrderByRelevanceFieldEnum)[keyof typeof PushTokenOrderByRelevanceFieldEnum]
+
+
+export const NotificationPreferenceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  contributorId: 'contributorId'
+} as const
+
+export type NotificationPreferenceOrderByRelevanceFieldEnum = (typeof NotificationPreferenceOrderByRelevanceFieldEnum)[keyof typeof NotificationPreferenceOrderByRelevanceFieldEnum]
+
+
+export const NotificationLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  contributorId: 'contributorId',
+  title: 'title',
+  body: 'body',
+  error: 'error'
+} as const
+
+export type NotificationLogOrderByRelevanceFieldEnum = (typeof NotificationLogOrderByRelevanceFieldEnum)[keyof typeof NotificationLogOrderByRelevanceFieldEnum]
 

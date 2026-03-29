@@ -15,6 +15,7 @@ import { IdParamDto } from 'src/common/dto/id.param.dto';
 import { CommandEntity } from 'src/common/entities';
 import { CreateManualCommandDto } from '../dto/create-manual-command.dto';
 import { UpdateCommandDto } from '../dto/update-command.dto';
+import { CheckInCommandDto } from '../dto/check-in-command.dto';
 import { CommandsService } from '../services/commands.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
@@ -90,7 +91,10 @@ export class CommandsController {
 
   @Post('check-in/:id')
   @ApiOperation({ summary: 'Envia um pedido pago para a produção (Check-in)' })
-  async checkIn(@Param() { id }: IdParamDto): Promise<CommandEntity> {
-    return this.service.checkIn(id);
+  async checkIn(
+    @Param() { id }: IdParamDto,
+    @Body() dto?: CheckInCommandDto,
+  ): Promise<CommandEntity> {
+    return this.service.checkIn(id, dto);
   }
 }

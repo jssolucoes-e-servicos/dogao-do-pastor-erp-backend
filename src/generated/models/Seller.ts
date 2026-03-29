@@ -214,11 +214,12 @@ export type SellerWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Seller"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Seller"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Seller"> | Date | string | null
+  orders?: Prisma.OrderListRelationFilter
   cell?: Prisma.XOR<Prisma.CellScalarRelationFilter, Prisma.CellWhereInput>
   contributor?: Prisma.XOR<Prisma.ContributorScalarRelationFilter, Prisma.ContributorWhereInput>
-  tickets?: Prisma.TicketListRelationFilter
-  orders?: Prisma.OrderListRelationFilter
   settlements?: Prisma.SellerSettlementListRelationFilter
+  tickets?: Prisma.TicketListRelationFilter
+  dependents?: Prisma.ContributorCellListRelationFilter
 }
 
 export type SellerOrderByWithRelationInput = {
@@ -231,11 +232,12 @@ export type SellerOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  orders?: Prisma.OrderOrderByRelationAggregateInput
   cell?: Prisma.CellOrderByWithRelationInput
   contributor?: Prisma.ContributorOrderByWithRelationInput
-  tickets?: Prisma.TicketOrderByRelationAggregateInput
-  orders?: Prisma.OrderOrderByRelationAggregateInput
   settlements?: Prisma.SellerSettlementOrderByRelationAggregateInput
+  tickets?: Prisma.TicketOrderByRelationAggregateInput
+  dependents?: Prisma.ContributorCellOrderByRelationAggregateInput
   _relevance?: Prisma.SellerOrderByRelevanceInput
 }
 
@@ -252,11 +254,12 @@ export type SellerWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Seller"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Seller"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Seller"> | Date | string | null
+  orders?: Prisma.OrderListRelationFilter
   cell?: Prisma.XOR<Prisma.CellScalarRelationFilter, Prisma.CellWhereInput>
   contributor?: Prisma.XOR<Prisma.ContributorScalarRelationFilter, Prisma.ContributorWhereInput>
-  tickets?: Prisma.TicketListRelationFilter
-  orders?: Prisma.OrderListRelationFilter
   settlements?: Prisma.SellerSettlementListRelationFilter
+  tickets?: Prisma.TicketListRelationFilter
+  dependents?: Prisma.ContributorCellListRelationFilter
 }, "id" | "tag">
 
 export type SellerOrderByWithAggregationInput = {
@@ -297,11 +300,12 @@ export type SellerCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  orders?: Prisma.OrderCreateNestedManyWithoutSellerInput
   cell: Prisma.CellCreateNestedOneWithoutSellersInput
   contributor: Prisma.ContributorCreateNestedOneWithoutSellersInput
-  tickets?: Prisma.TicketCreateNestedManyWithoutSellerInput
-  orders?: Prisma.OrderCreateNestedManyWithoutSellerInput
   settlements?: Prisma.SellerSettlementCreateNestedManyWithoutSellerInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutSellerInput
+  dependents?: Prisma.ContributorCellCreateNestedManyWithoutSellerDefaultInput
 }
 
 export type SellerUncheckedCreateInput = {
@@ -314,9 +318,10 @@ export type SellerUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutSellerInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
   settlements?: Prisma.SellerSettlementUncheckedCreateNestedManyWithoutSellerInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutSellerInput
+  dependents?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutSellerDefaultInput
 }
 
 export type SellerUpdateInput = {
@@ -327,11 +332,12 @@ export type SellerUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
   cell?: Prisma.CellUpdateOneRequiredWithoutSellersNestedInput
   contributor?: Prisma.ContributorUpdateOneRequiredWithoutSellersNestedInput
-  tickets?: Prisma.TicketUpdateManyWithoutSellerNestedInput
-  orders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
   settlements?: Prisma.SellerSettlementUpdateManyWithoutSellerNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutSellerNestedInput
+  dependents?: Prisma.ContributorCellUpdateManyWithoutSellerDefaultNestedInput
 }
 
 export type SellerUncheckedUpdateInput = {
@@ -344,9 +350,10 @@ export type SellerUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  tickets?: Prisma.TicketUncheckedUpdateManyWithoutSellerNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
   settlements?: Prisma.SellerSettlementUncheckedUpdateManyWithoutSellerNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutSellerNestedInput
+  dependents?: Prisma.ContributorCellUncheckedUpdateManyWithoutSellerDefaultNestedInput
 }
 
 export type SellerCreateManyInput = {
@@ -524,6 +531,20 @@ export type SellerUncheckedUpdateManyWithoutCellNestedInput = {
   deleteMany?: Prisma.SellerScalarWhereInput | Prisma.SellerScalarWhereInput[]
 }
 
+export type SellerCreateNestedOneWithoutDependentsInput = {
+  create?: Prisma.XOR<Prisma.SellerCreateWithoutDependentsInput, Prisma.SellerUncheckedCreateWithoutDependentsInput>
+  connectOrCreate?: Prisma.SellerCreateOrConnectWithoutDependentsInput
+  connect?: Prisma.SellerWhereUniqueInput
+}
+
+export type SellerUpdateOneRequiredWithoutDependentsNestedInput = {
+  create?: Prisma.XOR<Prisma.SellerCreateWithoutDependentsInput, Prisma.SellerUncheckedCreateWithoutDependentsInput>
+  connectOrCreate?: Prisma.SellerCreateOrConnectWithoutDependentsInput
+  upsert?: Prisma.SellerUpsertWithoutDependentsInput
+  connect?: Prisma.SellerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SellerUpdateToOneWithWhereWithoutDependentsInput, Prisma.SellerUpdateWithoutDependentsInput>, Prisma.SellerUncheckedUpdateWithoutDependentsInput>
+}
+
 export type SellerCreateNestedOneWithoutOrdersInput = {
   create?: Prisma.XOR<Prisma.SellerCreateWithoutOrdersInput, Prisma.SellerUncheckedCreateWithoutOrdersInput>
   connectOrCreate?: Prisma.SellerCreateOrConnectWithoutOrdersInput
@@ -574,10 +595,11 @@ export type SellerCreateWithoutContributorInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  cell: Prisma.CellCreateNestedOneWithoutSellersInput
-  tickets?: Prisma.TicketCreateNestedManyWithoutSellerInput
   orders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+  cell: Prisma.CellCreateNestedOneWithoutSellersInput
   settlements?: Prisma.SellerSettlementCreateNestedManyWithoutSellerInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutSellerInput
+  dependents?: Prisma.ContributorCellCreateNestedManyWithoutSellerDefaultInput
 }
 
 export type SellerUncheckedCreateWithoutContributorInput = {
@@ -589,9 +611,10 @@ export type SellerUncheckedCreateWithoutContributorInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutSellerInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
   settlements?: Prisma.SellerSettlementUncheckedCreateNestedManyWithoutSellerInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutSellerInput
+  dependents?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutSellerDefaultInput
 }
 
 export type SellerCreateOrConnectWithoutContributorInput = {
@@ -643,10 +666,11 @@ export type SellerCreateWithoutCellInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  contributor: Prisma.ContributorCreateNestedOneWithoutSellersInput
-  tickets?: Prisma.TicketCreateNestedManyWithoutSellerInput
   orders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+  contributor: Prisma.ContributorCreateNestedOneWithoutSellersInput
   settlements?: Prisma.SellerSettlementCreateNestedManyWithoutSellerInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutSellerInput
+  dependents?: Prisma.ContributorCellCreateNestedManyWithoutSellerDefaultInput
 }
 
 export type SellerUncheckedCreateWithoutCellInput = {
@@ -658,9 +682,10 @@ export type SellerUncheckedCreateWithoutCellInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutSellerInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
   settlements?: Prisma.SellerSettlementUncheckedCreateNestedManyWithoutSellerInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutSellerInput
+  dependents?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutSellerDefaultInput
 }
 
 export type SellerCreateOrConnectWithoutCellInput = {
@@ -689,6 +714,82 @@ export type SellerUpdateManyWithWhereWithoutCellInput = {
   data: Prisma.XOR<Prisma.SellerUpdateManyMutationInput, Prisma.SellerUncheckedUpdateManyWithoutCellInput>
 }
 
+export type SellerCreateWithoutDependentsInput = {
+  id?: string
+  name: string
+  tag: string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  orders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+  cell: Prisma.CellCreateNestedOneWithoutSellersInput
+  contributor: Prisma.ContributorCreateNestedOneWithoutSellersInput
+  settlements?: Prisma.SellerSettlementCreateNestedManyWithoutSellerInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutSellerInput
+}
+
+export type SellerUncheckedCreateWithoutDependentsInput = {
+  id?: string
+  name: string
+  cellId: string
+  contributorId: string
+  tag: string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
+  settlements?: Prisma.SellerSettlementUncheckedCreateNestedManyWithoutSellerInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutSellerInput
+}
+
+export type SellerCreateOrConnectWithoutDependentsInput = {
+  where: Prisma.SellerWhereUniqueInput
+  create: Prisma.XOR<Prisma.SellerCreateWithoutDependentsInput, Prisma.SellerUncheckedCreateWithoutDependentsInput>
+}
+
+export type SellerUpsertWithoutDependentsInput = {
+  update: Prisma.XOR<Prisma.SellerUpdateWithoutDependentsInput, Prisma.SellerUncheckedUpdateWithoutDependentsInput>
+  create: Prisma.XOR<Prisma.SellerCreateWithoutDependentsInput, Prisma.SellerUncheckedCreateWithoutDependentsInput>
+  where?: Prisma.SellerWhereInput
+}
+
+export type SellerUpdateToOneWithWhereWithoutDependentsInput = {
+  where?: Prisma.SellerWhereInput
+  data: Prisma.XOR<Prisma.SellerUpdateWithoutDependentsInput, Prisma.SellerUncheckedUpdateWithoutDependentsInput>
+}
+
+export type SellerUpdateWithoutDependentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  tag?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+  cell?: Prisma.CellUpdateOneRequiredWithoutSellersNestedInput
+  contributor?: Prisma.ContributorUpdateOneRequiredWithoutSellersNestedInput
+  settlements?: Prisma.SellerSettlementUpdateManyWithoutSellerNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutSellerNestedInput
+}
+
+export type SellerUncheckedUpdateWithoutDependentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  cellId?: Prisma.StringFieldUpdateOperationsInput | string
+  contributorId?: Prisma.StringFieldUpdateOperationsInput | string
+  tag?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
+  settlements?: Prisma.SellerSettlementUncheckedUpdateManyWithoutSellerNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutSellerNestedInput
+}
+
 export type SellerCreateWithoutOrdersInput = {
   id?: string
   name: string
@@ -699,8 +800,9 @@ export type SellerCreateWithoutOrdersInput = {
   deletedAt?: Date | string | null
   cell: Prisma.CellCreateNestedOneWithoutSellersInput
   contributor: Prisma.ContributorCreateNestedOneWithoutSellersInput
-  tickets?: Prisma.TicketCreateNestedManyWithoutSellerInput
   settlements?: Prisma.SellerSettlementCreateNestedManyWithoutSellerInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutSellerInput
+  dependents?: Prisma.ContributorCellCreateNestedManyWithoutSellerDefaultInput
 }
 
 export type SellerUncheckedCreateWithoutOrdersInput = {
@@ -713,8 +815,9 @@ export type SellerUncheckedCreateWithoutOrdersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutSellerInput
   settlements?: Prisma.SellerSettlementUncheckedCreateNestedManyWithoutSellerInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutSellerInput
+  dependents?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutSellerDefaultInput
 }
 
 export type SellerCreateOrConnectWithoutOrdersInput = {
@@ -743,8 +846,9 @@ export type SellerUpdateWithoutOrdersInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cell?: Prisma.CellUpdateOneRequiredWithoutSellersNestedInput
   contributor?: Prisma.ContributorUpdateOneRequiredWithoutSellersNestedInput
-  tickets?: Prisma.TicketUpdateManyWithoutSellerNestedInput
   settlements?: Prisma.SellerSettlementUpdateManyWithoutSellerNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutSellerNestedInput
+  dependents?: Prisma.ContributorCellUpdateManyWithoutSellerDefaultNestedInput
 }
 
 export type SellerUncheckedUpdateWithoutOrdersInput = {
@@ -757,8 +861,9 @@ export type SellerUncheckedUpdateWithoutOrdersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  tickets?: Prisma.TicketUncheckedUpdateManyWithoutSellerNestedInput
   settlements?: Prisma.SellerSettlementUncheckedUpdateManyWithoutSellerNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutSellerNestedInput
+  dependents?: Prisma.ContributorCellUncheckedUpdateManyWithoutSellerDefaultNestedInput
 }
 
 export type SellerCreateWithoutTicketsInput = {
@@ -769,10 +874,11 @@ export type SellerCreateWithoutTicketsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  orders?: Prisma.OrderCreateNestedManyWithoutSellerInput
   cell: Prisma.CellCreateNestedOneWithoutSellersInput
   contributor: Prisma.ContributorCreateNestedOneWithoutSellersInput
-  orders?: Prisma.OrderCreateNestedManyWithoutSellerInput
   settlements?: Prisma.SellerSettlementCreateNestedManyWithoutSellerInput
+  dependents?: Prisma.ContributorCellCreateNestedManyWithoutSellerDefaultInput
 }
 
 export type SellerUncheckedCreateWithoutTicketsInput = {
@@ -787,6 +893,7 @@ export type SellerUncheckedCreateWithoutTicketsInput = {
   deletedAt?: Date | string | null
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
   settlements?: Prisma.SellerSettlementUncheckedCreateNestedManyWithoutSellerInput
+  dependents?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutSellerDefaultInput
 }
 
 export type SellerCreateOrConnectWithoutTicketsInput = {
@@ -813,10 +920,11 @@ export type SellerUpdateWithoutTicketsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
   cell?: Prisma.CellUpdateOneRequiredWithoutSellersNestedInput
   contributor?: Prisma.ContributorUpdateOneRequiredWithoutSellersNestedInput
-  orders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
   settlements?: Prisma.SellerSettlementUpdateManyWithoutSellerNestedInput
+  dependents?: Prisma.ContributorCellUpdateManyWithoutSellerDefaultNestedInput
 }
 
 export type SellerUncheckedUpdateWithoutTicketsInput = {
@@ -831,6 +939,7 @@ export type SellerUncheckedUpdateWithoutTicketsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   orders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
   settlements?: Prisma.SellerSettlementUncheckedUpdateManyWithoutSellerNestedInput
+  dependents?: Prisma.ContributorCellUncheckedUpdateManyWithoutSellerDefaultNestedInput
 }
 
 export type SellerCreateWithoutSettlementsInput = {
@@ -841,10 +950,11 @@ export type SellerCreateWithoutSettlementsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  orders?: Prisma.OrderCreateNestedManyWithoutSellerInput
   cell: Prisma.CellCreateNestedOneWithoutSellersInput
   contributor: Prisma.ContributorCreateNestedOneWithoutSellersInput
   tickets?: Prisma.TicketCreateNestedManyWithoutSellerInput
-  orders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+  dependents?: Prisma.ContributorCellCreateNestedManyWithoutSellerDefaultInput
 }
 
 export type SellerUncheckedCreateWithoutSettlementsInput = {
@@ -857,8 +967,9 @@ export type SellerUncheckedCreateWithoutSettlementsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutSellerInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutSellerInput
+  dependents?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutSellerDefaultInput
 }
 
 export type SellerCreateOrConnectWithoutSettlementsInput = {
@@ -885,10 +996,11 @@ export type SellerUpdateWithoutSettlementsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
   cell?: Prisma.CellUpdateOneRequiredWithoutSellersNestedInput
   contributor?: Prisma.ContributorUpdateOneRequiredWithoutSellersNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutSellerNestedInput
-  orders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+  dependents?: Prisma.ContributorCellUpdateManyWithoutSellerDefaultNestedInput
 }
 
 export type SellerUncheckedUpdateWithoutSettlementsInput = {
@@ -901,8 +1013,9 @@ export type SellerUncheckedUpdateWithoutSettlementsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  tickets?: Prisma.TicketUncheckedUpdateManyWithoutSellerNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutSellerNestedInput
+  dependents?: Prisma.ContributorCellUncheckedUpdateManyWithoutSellerDefaultNestedInput
 }
 
 export type SellerCreateManyContributorInput = {
@@ -924,10 +1037,11 @@ export type SellerUpdateWithoutContributorInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cell?: Prisma.CellUpdateOneRequiredWithoutSellersNestedInput
-  tickets?: Prisma.TicketUpdateManyWithoutSellerNestedInput
   orders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+  cell?: Prisma.CellUpdateOneRequiredWithoutSellersNestedInput
   settlements?: Prisma.SellerSettlementUpdateManyWithoutSellerNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutSellerNestedInput
+  dependents?: Prisma.ContributorCellUpdateManyWithoutSellerDefaultNestedInput
 }
 
 export type SellerUncheckedUpdateWithoutContributorInput = {
@@ -939,9 +1053,10 @@ export type SellerUncheckedUpdateWithoutContributorInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  tickets?: Prisma.TicketUncheckedUpdateManyWithoutSellerNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
   settlements?: Prisma.SellerSettlementUncheckedUpdateManyWithoutSellerNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutSellerNestedInput
+  dependents?: Prisma.ContributorCellUncheckedUpdateManyWithoutSellerDefaultNestedInput
 }
 
 export type SellerUncheckedUpdateManyWithoutContributorInput = {
@@ -974,10 +1089,11 @@ export type SellerUpdateWithoutCellInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  contributor?: Prisma.ContributorUpdateOneRequiredWithoutSellersNestedInput
-  tickets?: Prisma.TicketUpdateManyWithoutSellerNestedInput
   orders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+  contributor?: Prisma.ContributorUpdateOneRequiredWithoutSellersNestedInput
   settlements?: Prisma.SellerSettlementUpdateManyWithoutSellerNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutSellerNestedInput
+  dependents?: Prisma.ContributorCellUpdateManyWithoutSellerDefaultNestedInput
 }
 
 export type SellerUncheckedUpdateWithoutCellInput = {
@@ -989,9 +1105,10 @@ export type SellerUncheckedUpdateWithoutCellInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  tickets?: Prisma.TicketUncheckedUpdateManyWithoutSellerNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
   settlements?: Prisma.SellerSettlementUncheckedUpdateManyWithoutSellerNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutSellerNestedInput
+  dependents?: Prisma.ContributorCellUncheckedUpdateManyWithoutSellerDefaultNestedInput
 }
 
 export type SellerUncheckedUpdateManyWithoutCellInput = {
@@ -1011,15 +1128,17 @@ export type SellerUncheckedUpdateManyWithoutCellInput = {
  */
 
 export type SellerCountOutputType = {
-  tickets: number
   orders: number
   settlements: number
+  tickets: number
+  dependents: number
 }
 
 export type SellerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  tickets?: boolean | SellerCountOutputTypeCountTicketsArgs
   orders?: boolean | SellerCountOutputTypeCountOrdersArgs
   settlements?: boolean | SellerCountOutputTypeCountSettlementsArgs
+  tickets?: boolean | SellerCountOutputTypeCountTicketsArgs
+  dependents?: boolean | SellerCountOutputTypeCountDependentsArgs
 }
 
 /**
@@ -1030,13 +1149,6 @@ export type SellerCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exten
    * Select specific fields to fetch from the SellerCountOutputType
    */
   select?: Prisma.SellerCountOutputTypeSelect<ExtArgs> | null
-}
-
-/**
- * SellerCountOutputType without action
- */
-export type SellerCountOutputTypeCountTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.TicketWhereInput
 }
 
 /**
@@ -1053,6 +1165,20 @@ export type SellerCountOutputTypeCountSettlementsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.SellerSettlementWhereInput
 }
 
+/**
+ * SellerCountOutputType without action
+ */
+export type SellerCountOutputTypeCountTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TicketWhereInput
+}
+
+/**
+ * SellerCountOutputType without action
+ */
+export type SellerCountOutputTypeCountDependentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ContributorCellWhereInput
+}
+
 
 export type SellerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1064,11 +1190,12 @@ export type SellerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
+  orders?: boolean | Prisma.Seller$ordersArgs<ExtArgs>
   cell?: boolean | Prisma.CellDefaultArgs<ExtArgs>
   contributor?: boolean | Prisma.ContributorDefaultArgs<ExtArgs>
-  tickets?: boolean | Prisma.Seller$ticketsArgs<ExtArgs>
-  orders?: boolean | Prisma.Seller$ordersArgs<ExtArgs>
   settlements?: boolean | Prisma.Seller$settlementsArgs<ExtArgs>
+  tickets?: boolean | Prisma.Seller$ticketsArgs<ExtArgs>
+  dependents?: boolean | Prisma.Seller$dependentsArgs<ExtArgs>
   _count?: boolean | Prisma.SellerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["seller"]>
 
@@ -1114,11 +1241,12 @@ export type SellerSelectScalar = {
 
 export type SellerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "cellId" | "contributorId" | "tag" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["seller"]>
 export type SellerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  orders?: boolean | Prisma.Seller$ordersArgs<ExtArgs>
   cell?: boolean | Prisma.CellDefaultArgs<ExtArgs>
   contributor?: boolean | Prisma.ContributorDefaultArgs<ExtArgs>
-  tickets?: boolean | Prisma.Seller$ticketsArgs<ExtArgs>
-  orders?: boolean | Prisma.Seller$ordersArgs<ExtArgs>
   settlements?: boolean | Prisma.Seller$settlementsArgs<ExtArgs>
+  tickets?: boolean | Prisma.Seller$ticketsArgs<ExtArgs>
+  dependents?: boolean | Prisma.Seller$dependentsArgs<ExtArgs>
   _count?: boolean | Prisma.SellerCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SellerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1133,11 +1261,12 @@ export type SellerIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type $SellerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Seller"
   objects: {
+    orders: Prisma.$OrderPayload<ExtArgs>[]
     cell: Prisma.$CellPayload<ExtArgs>
     contributor: Prisma.$ContributorPayload<ExtArgs>
-    tickets: Prisma.$TicketPayload<ExtArgs>[]
-    orders: Prisma.$OrderPayload<ExtArgs>[]
     settlements: Prisma.$SellerSettlementPayload<ExtArgs>[]
+    tickets: Prisma.$TicketPayload<ExtArgs>[]
+    dependents: Prisma.$ContributorCellPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1543,11 +1672,12 @@ readonly fields: SellerFieldRefs;
  */
 export interface Prisma__SellerClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  orders<T extends Prisma.Seller$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Seller$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cell<T extends Prisma.CellDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CellDefaultArgs<ExtArgs>>): Prisma.Prisma__CellClient<runtime.Types.Result.GetResult<Prisma.$CellPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   contributor<T extends Prisma.ContributorDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContributorDefaultArgs<ExtArgs>>): Prisma.Prisma__ContributorClient<runtime.Types.Result.GetResult<Prisma.$ContributorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  tickets<T extends Prisma.Seller$ticketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Seller$ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  orders<T extends Prisma.Seller$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Seller$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   settlements<T extends Prisma.Seller$settlementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Seller$settlementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SellerSettlementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tickets<T extends Prisma.Seller$ticketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Seller$ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  dependents<T extends Prisma.Seller$dependentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Seller$dependentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContributorCellPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1782,6 +1912,11 @@ export type SellerFindManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Skip the first `n` Sellers.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Sellers.
+   */
   distinct?: Prisma.SellerScalarFieldEnum | Prisma.SellerScalarFieldEnum[]
 }
 
@@ -1982,30 +2117,6 @@ export type SellerDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
- * Seller.tickets
- */
-export type Seller$ticketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Ticket
-   */
-  select?: Prisma.TicketSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Ticket
-   */
-  omit?: Prisma.TicketOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TicketInclude<ExtArgs> | null
-  where?: Prisma.TicketWhereInput
-  orderBy?: Prisma.TicketOrderByWithRelationInput | Prisma.TicketOrderByWithRelationInput[]
-  cursor?: Prisma.TicketWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.TicketScalarFieldEnum | Prisma.TicketScalarFieldEnum[]
-}
-
-/**
  * Seller.orders
  */
 export type Seller$ordersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2051,6 +2162,54 @@ export type Seller$settlementsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.SellerSettlementScalarFieldEnum | Prisma.SellerSettlementScalarFieldEnum[]
+}
+
+/**
+ * Seller.tickets
+ */
+export type Seller$ticketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Ticket
+   */
+  select?: Prisma.TicketSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Ticket
+   */
+  omit?: Prisma.TicketOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TicketInclude<ExtArgs> | null
+  where?: Prisma.TicketWhereInput
+  orderBy?: Prisma.TicketOrderByWithRelationInput | Prisma.TicketOrderByWithRelationInput[]
+  cursor?: Prisma.TicketWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TicketScalarFieldEnum | Prisma.TicketScalarFieldEnum[]
+}
+
+/**
+ * Seller.dependents
+ */
+export type Seller$dependentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ContributorCell
+   */
+  select?: Prisma.ContributorCellSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ContributorCell
+   */
+  omit?: Prisma.ContributorCellOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ContributorCellInclude<ExtArgs> | null
+  where?: Prisma.ContributorCellWhereInput
+  orderBy?: Prisma.ContributorCellOrderByWithRelationInput | Prisma.ContributorCellOrderByWithRelationInput[]
+  cursor?: Prisma.ContributorCellWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ContributorCellScalarFieldEnum | Prisma.ContributorCellScalarFieldEnum[]
 }
 
 /**

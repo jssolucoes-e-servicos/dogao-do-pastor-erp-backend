@@ -130,12 +130,13 @@ export class EditionsService extends BaseCrudService<
   }
 
   async update(id: string, dto: UpdateEditionDto): Promise<EditionEntity> {
-    /**
-     * Garantia extra de imutabilidade
-     */
-    /* if ('code' in dto) {
-      delete (dto as any).code;
-    } */
+    // Se está ativando esta edição, desativa todas as outras
+    if (dto.active === true) {
+      await this.model.updateMany({
+        where: { id: { not: id }, active: true },
+        data: { active: false },
+      });
+    }
 
     return await super.update(id, dto);
   }

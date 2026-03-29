@@ -117,12 +117,8 @@ export class CellsService extends BaseCrudService<
     return super.findById(id, {
       include: {
         leader: true,
-        network: {
-          include: {
-            supervisor: true,
-          },
-        },
-        sellers: true,
+        network: { include: { supervisor: true } },
+        sellers: { select: { id: true, tag: true, name: true } },
       },
     });
   }
@@ -133,12 +129,8 @@ export class CellsService extends BaseCrudService<
       {
         include: {
           leader: true,
-          network: {
-            include: {
-              supervisor: true,
-            },
-          },
-          sellers: true,
+          network: { include: { supervisor: true } },
+          sellers: { select: { id: true, tag: true, name: true } },
         },
       },
     );

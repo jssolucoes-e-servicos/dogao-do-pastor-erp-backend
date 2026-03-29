@@ -176,8 +176,20 @@ export class OrdersController {
   }
 
   @Post('create-pdv')
-  @Roles('IT', 'ADMIN', 'FINANCE', 'RECEPTION')
+  @Roles('T.I', 'Administração', 'Financeiro', 'Recepção', 'Vendedor', 'Líder de Célula', 'Supervisor de Rede')
   async createPDV(@Body() dto: CreatePdvOrderDto, @User() user: IUser) {
     return this.service.createPDV(dto, user);
+  }
+
+  @Get('pending-pdv/:customerId')
+  @Roles('T.I', 'Administração', 'Financeiro', 'Recepção', 'Vendedor', 'Líder de Célula', 'Supervisor de Rede')
+  async pendingPdv(@Param('customerId') customerId: string) {
+    return this.service.findPendingPdvByCustomer(customerId);
+  }
+
+  @Post(':id/send-pix-code')
+  @Roles('T.I', 'Administração', 'Financeiro', 'Recepção', 'Vendedor', 'Líder de Célula', 'Supervisor de Rede')
+  async sendPixCode(@Param() { id }: IdParamDto) {
+    return this.service.sendPixCode(id);
   }
 }

@@ -2,6 +2,7 @@ export interface DashboardStatsEntity {
   editionName: string;
   totalDogsSold: number;
   availableDogs: number;
+  pendingDogs: number;
   totalRevenue: number;
   totalDonations: number;
   pendingAnalysis: number;

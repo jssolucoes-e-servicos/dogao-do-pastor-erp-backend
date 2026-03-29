@@ -103,10 +103,10 @@ export const PaymentMethodEnum = {
   CARD: 'CARD',
   CARD_CREDIT: 'CARD_CREDIT',
   CARD_DEBIT: 'CARD_DEBIT',
-  PIX_OFFLINE: 'PIX_OFFLINE',
   POS: 'POS',
   MONEY: 'MONEY',
-  TICKET: 'TICKET'
+  TICKET: 'TICKET',
+  PIX_OFFLINE: 'PIX_OFFLINE'
 } as const
 
 export type PaymentMethodEnum = (typeof PaymentMethodEnum)[keyof typeof PaymentMethodEnum]
@@ -124,8 +124,9 @@ export type EmailStatusEnum = (typeof EmailStatusEnum)[keyof typeof EmailStatusE
 
 
 export const OrderOriginEnum = {
+  APP: 'APP',
+  MANUAL: 'MANUAL',
   SITE: 'SITE',
-  TICKET: 'TICKET',
   PDV: 'PDV'
 } as const
 
@@ -182,3 +183,15 @@ export const WithdrawalStatusEnum = {
 } as const
 
 export type WithdrawalStatusEnum = (typeof WithdrawalStatusEnum)[keyof typeof WithdrawalStatusEnum]
+
+
+export const NotificationTypeEnum = {
+  SYSTEM: 'SYSTEM',
+  SALES: 'SALES',
+  ORDERS: 'ORDERS',
+  RANKING: 'RANKING',
+  CELL: 'CELL',
+  NETWORK: 'NETWORK'
+} as const
+
+export type NotificationTypeEnum = (typeof NotificationTypeEnum)[keyof typeof NotificationTypeEnum]

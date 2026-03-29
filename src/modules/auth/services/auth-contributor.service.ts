@@ -29,10 +29,11 @@ export class AuthContributorService extends BaseService {
       },
       include: {
         userRoles: { include: { role: true } },
-        sellers: { select: { id: true }, where: { active: true } },
+        sellers: { select: { id: true, tag: true, cellId: true }, where: { active: true } },
         deliveryPersons: { select: { id: true }, where: { active: true } },
         cells: { select: { id: true }, where: { active: true } },
         cellNetworks: { select: { id: true }, where: { active: true } },
+        cellsMember: { select: { id: true, cellId: true, sellerId: true }, where: { active: true } },
       },
     });
 
