@@ -9,11 +9,15 @@ export async function getActiveEdition(
   const now = new Date();
 
   // 1. Tenta encontrar a edição estritamente ativa no momento
+  // autoDisableDate é opcional — se não preenchido, não bloqueia
   const active = await prisma.edition.findFirst({
     where: {
       active: true,
       saleStartDate: { lte: now },
-      autoDisableDate: { gte: now },
+      OR: [
+        { autoDisableDate: null },
+        { autoDisableDate: { gte: now } },
+      ],
     },
     orderBy: { saleStartDate: 'desc' },
   });
@@ -27,7 +31,7 @@ export async function getActiveEdition(
     return active as unknown as EditionEntity;
   }
 
-  // 2. Fallback: Se não houver estritamente ativa, pega a última que foi marcada como ativa
+  // 2. Fallback: última edição marcada como ativa, independente de datas
   const fallback = (await prisma.edition.findFirst({
     where: { active: true },
     orderBy: { saleStartDate: 'desc' },
