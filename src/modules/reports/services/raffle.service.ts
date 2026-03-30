@@ -5,7 +5,7 @@ import {
   PrismaService,
 } from 'src/common/helpers/importer.helper';
 import { BaseService } from 'src/common/services/base.service';
-import { PaymentStatusEnum } from 'src/common/enums';
+import { PaymentStatusEnum, OrderOriginEnum } from 'src/common/enums';
 
 export interface CustomerRaffleEntry {
   customerId: string;
@@ -92,7 +92,7 @@ export class RaffleService extends BaseService {
         editionId,
         paymentStatus: PaymentStatusEnum.PAID,
         active: true,
-        origin: { not: 'PDV' as any },
+        origin: { not: OrderOriginEnum.PDV },
         sellerId: { in: allSellers.map((s) => s.id) },
       },
       select: { id: true, sellerId: true },

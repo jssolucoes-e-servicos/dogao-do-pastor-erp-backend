@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DashboardStatsEntity } from 'src/common/entities';
 import {
   DeliveryOptionEnum,
+  OrderOriginEnum,
   PaymentStatusEnum,
   SiteOrderStepEnum,
 } from 'src/common/enums';
@@ -23,11 +24,27 @@ export class DashboardService extends BaseService {
     super(configService, loggerService, prismaService);
   }
 
-  async getSummary(): Promise<DashboardStatsEntity> {
-    const activeEdition = await getActiveEdition(this.prisma);
-
-    if (!activeEdition) {
-      throw new NotFoundException('Nenhuma edição ativa encontrada.');
+  async getSummary(editionId?: string): Promise<DashboardStatsEntity> {
+    // Usa a edição passada, ou a ativa, ou a mais recente
+    type EditionRow = { id: string; name: string; limitSale: number };
+    let edition: EditionRow | null = null;
+    if (editionId) {
+      edition = await this.prisma.edition.findUnique({
+        where: { id: editionId },
+        select: { id: true, name: true, limitSale: true },
+      });
+    }
+    if (!edition) {
+      edition = (await getActiveEdition(this.prisma)) as EditionRow | null;
+    }
+    if (!edition) {
+      edition = await this.prisma.edition.findFirst({
+        orderBy: { productionDate: 'desc' },
+        select: { id: true, name: true, limitSale: true },
+      });
+    }
+    if (!edition) {
+      return this.emptyStats('Nenhuma edição encontrada');
     }
 
     const twelveHoursAgo = new Date(Date.now() - 12 * 60 * 60 * 1000);
@@ -42,14 +59,14 @@ export class DashboardService extends BaseService {
       pendingItemsCount,
     ] = await Promise.all([
       this.prisma.order.aggregate({
-        where: { editionId: activeEdition.id, paymentStatus: PaymentStatusEnum.PAID },
+        where: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PAID },
         _sum: { totalValue: true },
       }),
       this.prisma.order.findMany({
         where: {
-          editionId: activeEdition.id,
+          editionId: edition.id,
           paymentStatus: PaymentStatusEnum.PAID,
-          origin: { in: ['SITE', 'MANUAL', 'PDV', 'APP'] as any },
+          origin: { in: [OrderOriginEnum.SITE, OrderOriginEnum.MANUAL, OrderOriginEnum.PDV, OrderOriginEnum.APP] },
         },
         select: { 
           sellerId: true, 
@@ -67,20 +84,20 @@ export class DashboardService extends BaseService {
       }),
       this.prisma.order.findMany({
         where: { 
-          editionId: activeEdition.id,
+          editionId: edition.id,
           customer: { firstRegister: false } 
         },
         take: 5,
         orderBy: { updatedAt: 'desc' },
       }),
       this.prisma.orderItem.findMany({
-        where: { order: { editionId: activeEdition.id, paymentStatus: PaymentStatusEnum.PAID } },
+        where: { order: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PAID } },
         select: { removedIngredients: true },
       }),
       this.prisma.orderItem.count({
         where: {
           order: {
-            editionId: activeEdition.id,
+            editionId: edition.id,
             paymentStatus: PaymentStatusEnum.PENDING,
             totalValue: { gt: 0 },
           },
@@ -130,14 +147,14 @@ export class DashboardService extends BaseService {
     });
 
     return {
-      editionName: activeEdition.name,
+      editionName: edition.name,
       totalDogsSold: paidItems.length,
-      availableDogs: activeEdition.limitSale - paidItems.length,
+      availableDogs: edition.limitSale - paidItems.length,
       pendingDogs: pendingItemsCount,
       totalRevenue: revenueStats._sum.totalValue || 0,
       totalDonations: paidOrdersData.filter(o => o.deliveryOption === DeliveryOptionEnum.DONATE).length,
-      pendingAnalysis: await this.prisma.order.count({ where: { editionId: activeEdition.id, siteStep: SiteOrderStepEnum.ANALYSIS } }),
-      abandonedOrdersCount: await this.prisma.order.count({ where: { editionId: activeEdition.id, paymentStatus: PaymentStatusEnum.PENDING, createdAt: { lt: twelveHoursAgo }, items: { some: {} } } }),
+      pendingAnalysis: await this.prisma.order.count({ where: { editionId: edition.id, siteStep: SiteOrderStepEnum.ANALYSIS } }),
+      abandonedOrdersCount: await this.prisma.order.count({ where: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PENDING, createdAt: { lt: twelveHoursAgo }, items: { some: {} } } }),
       ingredientsStats: Object.entries(ingredientsMap).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count),
       paymentMethodsStats: Object.entries(paymentMethodsMap).map(([method, count]) => ({ method, count })),
       rankingCells,
@@ -150,6 +167,26 @@ export class DashboardService extends BaseService {
         status: o.status,
         time: o.updatedAt,
       })),
+    };
+  }
+
+  private emptyStats(editionName: string): DashboardStatsEntity {
+    return {
+      editionName,
+      totalDogsSold: 0,
+      availableDogs: 0,
+      pendingDogs: 0,
+      totalRevenue: 0,
+      totalDonations: 0,
+      pendingAnalysis: 0,
+      abandonedOrdersCount: 0,
+      ingredientsStats: [],
+      paymentMethodsStats: [],
+      rankingCells: [],
+      rankingSellers: [],
+      logisticsStats: [],
+      donationsByPartner: [],
+      recentOrders: [],
     };
   }
 }

@@ -7,7 +7,7 @@ import {
 } from 'src/common/helpers/importer.helper';
 import { BaseService } from 'src/common/services/base.service';
 import { N8nService } from 'src/modules/n8n/services/n8n.service';
-import { PaymentStatusEnum } from 'src/common/enums';
+import { PaymentStatusEnum, OrderOriginEnum } from 'src/common/enums';
 import { getActiveEdition } from 'src/common/helpers/edition-helper';
 import { MW_CellDailyReport, MW_GlobalRankingReport, MW_SellerDailyReport, MW_NetworkDailyReport } from 'src/common/messages';
 import { ErrorNotificationService } from 'src/common/services/error-notification.service';
@@ -112,7 +112,7 @@ export class RankingReportService extends BaseService {
         editionId: activeEdition.id,
         paymentStatus: PaymentStatusEnum.PAID,
         active: true,
-        origin: { not: 'PDV' as any },
+        origin: { not: OrderOriginEnum.PDV },
         seller: { tag: { notIn: EXCLUDED_TAGS } },
       },
       _sum: { totalValue: true },
@@ -162,7 +162,7 @@ export class RankingReportService extends BaseService {
         sellerId: { in: sellerIds },
         paymentStatus: PaymentStatusEnum.PAID,
         active: true,
-        origin: { not: 'PDV' as any },
+        origin: { not: OrderOriginEnum.PDV },
       },
       select: { id: true, sellerId: true },
     });

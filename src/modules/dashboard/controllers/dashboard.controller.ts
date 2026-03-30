@@ -1,5 +1,5 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
-import { DashboardStatsEntity } from 'src/common/entities'; // Ajuste o path
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { DashboardStatsEntity } from 'src/common/entities';
 import { DashboardService } from '../services/dashboard.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
@@ -12,7 +12,7 @@ export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
   @Get('summary')
-  async getSummary(): Promise<DashboardStatsEntity> {
-    return this.dashboardService.getSummary();
+  async getSummary(@Query('editionId') editionId?: string): Promise<DashboardStatsEntity> {
+    return this.dashboardService.getSummary(editionId);
   }
 }

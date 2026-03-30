@@ -1,5 +1,5 @@
 import { applyDecorators, Get } from '@nestjs/common';
-import { ApiQuery } from '@nestjs/swagger';
+import { ApiQuery, ApiOperation } from '@nestjs/swagger';
 
 type PaginatedQueryProps = {
   route?: string;
@@ -8,6 +8,7 @@ type PaginatedQueryProps = {
 export function PaginatedQuery({ route = '' }: PaginatedQueryProps = {}) {
   return applyDecorators(
     Get(route),
+    ApiOperation({ description: 'Listagem de registros com paginação' }),
     ApiQuery({
       name: 'page',
       required: false,

@@ -1,10 +1,17 @@
+// src/modules/editions/dto/create-edition.dto.ts
+
+import { ApiSchema } from '@nestjs/swagger';
 import {
   DateValidator,
   FloatValidator,
   NumberValidator,
-  StringValidator
+  StringValidator,
 } from 'src/common/validators';
 
+@ApiSchema({
+  name: 'CreateEditionDto',
+  description: 'Modelo de criação de edição',
+})
 export class CreateEditionDto {
   @StringValidator({
     fieldName: 'name',

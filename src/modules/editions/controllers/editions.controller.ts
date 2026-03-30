@@ -1,3 +1,5 @@
+// src/modules/editions/controllers/editions.controller.ts
+
 import {
   Body,
   Controller,
@@ -8,6 +10,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
+import { ApiOperation } from '@nestjs/swagger';
 
 import { PaginatedQuery } from 'src/common/decorators';
 import { IdParamDto } from 'src/common/dto/id.param.dto';
@@ -15,9 +18,10 @@ import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { EditionEntity } from 'src/common/entities';
 import { IPaginatedResponse } from 'src/common/interfaces';
 import { EditionResponseType } from 'src/common/types/edition-response.type';
-import { CreateEditionDto } from '../dto/create-edition.dto';
-import { UpdateEditionDto } from '../dto/update-edition.dto';
-import { EditionsService } from '../services/editions.service';
+import { Roles } from 'src/modules/auth/decorators/roles.decorator';
+import { CreateEditionDto } from 'src/modules/editions/dto/create-edition.dto';
+import { UpdateEditionDto } from 'src/modules/editions/dto/update-edition.dto';
+import { EditionsService } from 'src/modules/editions/services/editions.service';
 
 @Controller('editions')
 export class EditionsController {
@@ -26,6 +30,7 @@ export class EditionsController {
   }
 
   @Get('get-active')
+  @ApiOperation({ description: 'Recupera os dados da edição atual' })
   async getActiveEdition(): Promise<EditionResponseType> {
     return await this.service.getActiveEdition();
   }
@@ -38,6 +43,8 @@ export class EditionsController {
   }
 
   @Post()
+  @ApiOperation({ description: 'Cadastrar edicao' })
+  @Roles('TI')
   async create(@Body() dto: CreateEditionDto) {
     return await this.service.create(dto);
   }

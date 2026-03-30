@@ -1,0 +1,3 @@
+-- Add MANUAL and APP to OrderOriginEnum
+ALTER TYPE "OrderOriginEnum" ADD VALUE IF NOT EXISTS 'MANUAL';
+ALTER TYPE "OrderOriginEnum" ADD VALUE IF NOT EXISTS 'APP';
