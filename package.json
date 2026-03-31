@@ -1,21 +1,22 @@
 {
-  "name": "backend",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "name": "dogao-do-partor-backend",
+  "version": "1.0.3",
+  "description": "Backend da plataforma Dogão do Pastor",
+  "author": "JS Soluções e Serviços",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "engines": {
-    "node": ">=20.19.0"
+    "node": "24"
   },
   "scripts": {
     "postinstall": "npm run prisma:generate",
     "build": "npx nest build",
+    "postbuild": "ls dist/src/main.js || echo BUILD_FAILED",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "npx nest start",
     "dev": "npx nest start --watch",
     "start:debug": "npx nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/src/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -116,19 +117,13 @@
     "typescript-eslint": "^8.20.0"
   },
   "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
+    "moduleFileExtensions": ["js", "json", "ts"],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
+    "collectCoverageFrom": ["**/*.(t|j)s"],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   }
