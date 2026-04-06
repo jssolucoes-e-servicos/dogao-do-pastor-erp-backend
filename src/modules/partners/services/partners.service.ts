@@ -43,14 +43,21 @@ export class PartnersService extends BaseCrudService<
   }
 
   async register(id: string, data: RegisterPartnerDto) {
-    // 1. Validar se o WhatsApp do responsável existe
-    const waCheck = await this.evolutionService.checkWhatsAppNumber(
-      data.responsiblePhone,
-    );
-    if (!waCheck[0]?.exists) {
-      throw new BadRequestException(
-        'O número de WhatsApp informado não é válido.',
+    // 1. Validar se o WhatsApp do responsável existe (não-bloqueante)
+    try {
+      const waCheck = await this.evolutionService.checkWhatsAppNumber(
+        data.responsiblePhone,
       );
+      if (waCheck && waCheck[0] && waCheck[0].exists === false) {
+        throw new BadRequestException(
+          'O número de WhatsApp informado não é válido.',
+        );
+      }
+    } catch (err) {
+      // Se for o BadRequestException que lançamos, repropaga
+      if (err instanceof BadRequestException) throw err;
+      // Qualquer outro erro (N8N offline, Evolution indisponível) — ignora e continua
+      this.logger.warn(`Validação WhatsApp falhou para ${data.responsiblePhone}: ${err?.message}. Continuando cadastro.`);
     }
     const existing = await this.model.findFirst({
       where: { cnpj: data.cnpj, NOT: { id } },
@@ -73,7 +80,12 @@ export class PartnersService extends BaseCrudService<
         active: true,
       },
     });
-    await this.partnersNotificationsService.welcomePortal(updatePartner);
+
+    // Notificação não-bloqueante — N8N pode estar indisponível
+    this.partnersNotificationsService.welcomePortal(updatePartner).catch((err) => {
+      this.logger.warn(`Falha ao enviar boas-vindas para parceiro ${updatePartner.id}: ${err?.message}`);
+    });
+
     return updatePartner;
   }
 
@@ -237,29 +249,31 @@ export class PartnersService extends BaseCrudService<
   async getStats(partnerId: string) {
     const partner = await this.model.findUnique({
       where: { id: partnerId },
-      include: {
-        withdrawals: {
-          include: {
-            items: true
-          }
-        }
-      }
     });
 
     if (!partner) throw new NotFoundException('Parceiro não encontrado');
 
-    const totalRecebido = partner.withdrawals.reduce((acc, w) => {
-      const itemsSum = w.items.reduce((sum, i) => sum + i.quantity, 0);
-      return acc + itemsSum;
-    }, 0);
+    // Saldo = soma de todos os CREDIT - soma de todos os DEBIT via DonationEntry
+    const entries = await this.prisma.donationEntry.aggregate({
+      where: { partnerId, active: true, deletedAt: null },
+      _sum: { quantity: true },
+    });
 
-    // Por enquanto, consideramos que o parceiro começa com um saldo baseado nas Withdrawals criadas
-    // No futuro, isso pode ser integrado com Donations diretas.
-    
+    const disponiveis = entries._sum.quantity || 0;
+
+    // Total recebido = apenas créditos
+    const creditos = await this.prisma.donationEntry.aggregate({
+      where: { partnerId, active: true, deletedAt: null, type: 'CREDIT' },
+      _sum: { quantity: true },
+    });
+
+    const totalRecebido = creditos._sum.quantity || 0;
+    const jaRetirados = totalRecebido - disponiveis;
+
     return {
       totalRecebido,
-      jaRetirados: 0, // Implementar lógica de retirada real se houver tabela separada
-      disponiveis: totalRecebido,
+      jaRetirados: jaRetirados > 0 ? jaRetirados : 0,
+      disponiveis: disponiveis > 0 ? disponiveis : 0,
     };
   }
 

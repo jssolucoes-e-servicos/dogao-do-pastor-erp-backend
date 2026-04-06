@@ -24,6 +24,7 @@ import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { ModulesModule } from './modules/modules.module';
 import { TicketsModule } from './tickets/tickets.module';
+import { DonationsModule } from './donations/donations.module';
 import { NotificationsModule } from './notifications/notifications.module';
 
 
@@ -62,6 +63,7 @@ import { NotificationsModule } from './notifications/notifications.module';
     ModulesModule,
     TicketsModule,
     NotificationsModule,
+    DonationsModule,
   ],
 
   providers: [],

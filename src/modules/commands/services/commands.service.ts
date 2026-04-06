@@ -78,6 +78,7 @@ export class CommandsService extends BaseCrudService<
     return this.paginate(query, {
       where,
       include: {
+        commandItems: true,
         order: {
           include: {
             customer: true,
@@ -121,14 +122,16 @@ export class CommandsService extends BaseCrudService<
   }
 
   async update(id: string, dto: UpdateCommandDto): Promise<CommandEntity> {
-    // Se o status for PRODUCED, fazemos a transição inteligente
     if (dto.status === 'PRODUCED') {
       const command = await this.model.findUnique({
         where: { id },
         include: { order: true },
       });
 
-      if (command?.order) {
+      // Doação (withdrawal sem order) → vai direto para EXPEDITION (fila de retirada)
+      if (command?.withdrawalId && !command?.orderId) {
+        dto.status = 'EXPEDITION' as any;
+      } else if (command?.order) {
         if (command.order.deliveryOption === 'PICKUP') {
           dto.status = 'EXPEDITION' as any;
         } else if (command.order.deliveryOption === 'DELIVERY') {
@@ -137,13 +140,30 @@ export class CommandsService extends BaseCrudService<
       }
     }
 
-    // Verifica existência sem args extras (findUnique não aceita orderBy)
     const exists = await this.model.findUnique({ where: { id } });
     if (!exists || exists.deletedAt) {
       throw new NotFoundException('Comanda não encontrada');
     }
 
-    return this.model.update({ where: { id }, data: dto });
+    const updated = await this.model.update({ where: { id }, data: dto });
+
+    // Sincroniza status do Withdrawal
+    if (exists.withdrawalId) {
+      const withdrawalStatus =
+        dto.status === 'IN_PRODUCTION' ? 'CONFIRMED'  :  // Iniciou → Em Produção
+        dto.status === 'EXPEDITION'    ? 'COMPLETED'  :  // Concluiu → Pronto p/ retirada
+        dto.status === 'DELIVERED'     ? 'DELIVERED'  :  // Retirado → Finalizado
+        null;
+
+      if (withdrawalStatus) {
+        await this.prisma.withdrawal.update({
+          where: { id: exists.withdrawalId },
+          data: { status: withdrawalStatus as any },
+        });
+      }
+    }
+
+    return updated;
   }
 
   async getPendingPrint(): Promise<CommandEntity[]> {
@@ -154,6 +174,7 @@ export class CommandsService extends BaseCrudService<
         editionId: edition?.id,
       },
       include: {
+        commandItems: true,
         order: {
           include: {
             customer: true,
@@ -305,10 +326,11 @@ export class CommandsService extends BaseCrudService<
         editionId: edition.id,
         editionCode: Number(edition.code),
         sequence: nextSequence,
+        status: (order as any).deliveryTime ? 'QUEUE' : 'PENDING',
         commandItems: {
           create: commandItemsData.map((ci) => ({
             itemId: ci.itemId,
-            removedIngredients: ci.removedIngredients,
+            removedIngredients: ci.removedIngredients ?? [], // nunca null
           })),
         },
       },
@@ -326,6 +348,25 @@ export class CommandsService extends BaseCrudService<
       },
     });
 
+    // Marca os OrderItems como commanded = true e sincroniza removedIngredients
+    const commandedIds = commandItemsData.map((ci) => ci.itemId);
+    if (commandedIds.length > 0) {
+      // Atualiza cada item individualmente para preservar os removedIngredients corretos
+      await Promise.all(
+        commandItemsData.map((ci) =>
+          tx.orderItem.update({
+            where: { id: ci.itemId },
+            data: {
+              commanded: true,
+              ...(ci.removedIngredients !== undefined
+                ? { removedIngredients: ci.removedIngredients }
+                : {}),
+            },
+          }),
+        ),
+      );
+    }
+
     this.gateway.emitNewCommand(command);
 
     return command;
@@ -337,7 +378,10 @@ export class CommandsService extends BaseCrudService<
       include: { 
         edition: true,
         items: { where: { active: true } },
-        commands: { where: { active: true } }
+        commands: { 
+          where: { active: true },
+          include: { commandItems: true },
+        },
       },
     });
 
@@ -349,14 +393,24 @@ export class CommandsService extends BaseCrudService<
       throw new Error('Pedido ainda não está pago');
     }
 
-    if (order.commands.length > 0) {
-      throw new Error('Este pedido já possui uma comanda ativa na produção');
-    }
+    // Verifica quais items já foram comandados
+    const commandedItemIds = new Set(
+      order.commands.flatMap((c) => c.commandItems.map((ci: any) => ci.itemId))
+    );
 
-    // Se items foram passados no dto, usa eles; senão usa todos
-    const selectedItems = dto?.items && dto.items.length > 0
-      ? dto.items
-      : undefined;
+    // Se items foram passados no dto, usa eles
+    // Senão usa todos os items ainda não comandados
+    let selectedItems: { itemId: string; removedIngredients?: string[] }[] | undefined;
+
+    if (dto?.items && dto.items.length > 0) {
+      selectedItems = dto.items;
+    } else {
+      const uncommanded = order.items.filter((i) => !commandedItemIds.has(i.id));
+      if (uncommanded.length === 0) {
+        throw new Error('Todos os items deste pedido já foram enviados para produção');
+      }
+      selectedItems = uncommanded.map((i) => ({ itemId: i.id }));
+    }
 
     return this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       return this.createCommandForOrder(tx, order as any, order.edition as any, selectedItems);

@@ -134,6 +134,7 @@ export type OrderOriginEnum = (typeof OrderOriginEnum)[keyof typeof OrderOriginE
 
 
 export const CommandStatusEnum = {
+  QUEUE: 'QUEUE',
   PENDING: 'PENDING',
   IN_PRODUCTION: 'IN_PRODUCTION',
   PRODUCED: 'PRODUCED',

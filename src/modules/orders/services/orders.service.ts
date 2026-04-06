@@ -26,6 +26,7 @@ import { OrdersNotificationsService } from 'src/modules/evolution/services/notif
 import { SellersService } from 'src/modules/sellers/services/sellers.service';
 import { TicketsService } from 'src/modules/tickets/services/tickets.service';
 import { MpPaymentsService } from 'src/modules/payments/services/mercadopago/mp-payments.service';
+import { CommandsService } from 'src/modules/commands/services/commands.service';
 
 import { DefinePaymetnDTO } from '../dto/define-payment.dto';
 import { ForDeliveryDTO } from '../dto/for-delivery.dto';
@@ -54,7 +55,8 @@ export class OrdersService extends BaseCrudService<
     private readonly notifications: OrdersNotificationsService,
     @Inject(forwardRef(() => MpPaymentsService))
     private readonly mpPaymentsService: MpPaymentsService,
-
+    @Inject(forwardRef(() => CommandsService))
+    private readonly commandsService: CommandsService,
   ) {
     super(configService, loggerService, prismaService);
     this.model = this.prisma.order;
@@ -216,7 +218,8 @@ export class OrdersService extends BaseCrudService<
     if (query.hasCommand === 'true') {
       where.commands = { some: { active: true } };
     } else if (query.hasCommand === 'false') {
-      where.commands = { none: {} };
+      // Pedidos que ainda têm items não comandados (check-in parcial ou sem comanda)
+      where.items = { some: { active: true, commandItems: { none: {} } } };
     }
 
     if (query.commandStatus) {
@@ -300,7 +303,11 @@ export class OrdersService extends BaseCrudService<
           },
         },
         items: true,
-        commands: true,
+        commands: {
+          include: {
+            commandItems: true,
+          },
+        },
         deliveryStops: true,
       },
       orderBy: { createdAt: 'asc' },
@@ -681,9 +688,30 @@ export class OrdersService extends BaseCrudService<
         deliveryOption: DeliveryOptionEnum.DONATE,
         status: OrderStatusEnum.DIGITATION,
         siteStep: SiteOrderStepEnum.PAYMENT,
-        observations: updatedObservations, // Agora com o conteúdo acumulado
+        observations: updatedObservations,
       },
     });
+
+    // Se o pedido já está pago, cria a DonationEntry imediatamente
+    if (order.paymentStatus === PaymentStatusEnum.PAID && finalPartnerId) {
+      const donationExists = await this.prisma.donationEntry.findFirst({
+        where: { orderId: dto.orderId },
+      });
+      if (!donationExists) {
+        const itemCount = await this.prisma.orderItem.count({
+          where: { orderId: dto.orderId, active: true },
+        });
+        await this.prisma.donationEntry.create({
+          data: {
+            partnerId: finalPartnerId,
+            orderId: dto.orderId,
+            quantity: itemCount,
+            type: 'CREDIT',
+          },
+        });
+      }
+    }
+
     return this.findById(dto.orderId);
   }
 
@@ -817,10 +845,53 @@ export class OrdersService extends BaseCrudService<
       throw new NotFoundException('Nenhuma edição ativa encontrada');
     }
 
-    // 1. Upsert Customer
-    const customer = await this.customersService.autoCreate({
-      cpf: dto.customerCpf || dto.customerPhone,
+    // 1. Upsert Customer — no PDV o operador sempre tem os dados reais
+    // Busca por CPF ou telefone, cria se não existir, sempre atualiza nome/telefone
+    const cpfOrPhone = (dto.customerCpf || dto.customerPhone).replace(/\D/g, '');
+    let customer = await this.prisma.customer.findFirst({
+      where: {
+        OR: [
+          { cpf: cpfOrPhone },
+          { phone: cpfOrPhone },
+        ],
+        active: true,
+      },
     });
+
+    const customerName = dto.customerName?.trim() || `CLIENTE - ${cpfOrPhone}`;
+    const customerPhone = dto.customerPhone?.replace(/\D/g, '') || '';
+
+    if (customer) {
+      // Atualiza se o nome atual é genérico ou se vieram dados melhores
+      const hasRealName = customerName.length >= 3 && !customerName.startsWith('CLIENTE');
+      if (hasRealName || (customerPhone && customer.phone !== customerPhone)) {
+        customer = await this.prisma.customer.update({
+          where: { id: customer.id },
+          data: {
+            ...(hasRealName ? { name: customerName } : {}),
+            ...(customerPhone ? { phone: customerPhone } : {}),
+          },
+        });
+      }
+    } else {
+      const password = await this.prisma.customer
+        .findFirst({ where: { cpf: cpfOrPhone } })
+        .then(() => null)
+        .catch(() => null);
+      const bcrypt = await import('bcrypt');
+      const hashedPw = await bcrypt.hash('dogao@2026', 10);
+      customer = await this.prisma.customer.create({
+        data: {
+          name: customerName,
+          phone: customerPhone,
+          cpf: cpfOrPhone,
+          password: hashedPw,
+          knowsChurch: true,
+          allowsChurch: true,
+          firstRegister: false,
+        },
+      });
+    }
 
     // 1b. Validar Tickets se houver
     if (dto.ticketNumbers && dto.ticketNumbers.length > 0) {
@@ -938,6 +1009,7 @@ export class OrdersService extends BaseCrudService<
           deliveryOption: dto.deliveryOption || DeliveryOptionEnum.PICKUP,
           deliveryTime: dto.scheduledTime,
           addressId: addressId,
+          partnerId: dto.partnerId || null,
           siteStep: SiteOrderStepEnum.THANKS,
           items: {
             create: dto.items.map((item) => ({
@@ -970,6 +1042,7 @@ export class OrdersService extends BaseCrudService<
           deliveryOption: dto.deliveryOption || DeliveryOptionEnum.PICKUP,
           deliveryTime: dto.scheduledTime,
           addressId: addressId,
+          partnerId: dto.partnerId || null,
           siteStep: SiteOrderStepEnum.THANKS,
           items: {
             create: dto.items.map((item) => ({
@@ -1060,6 +1133,23 @@ export class OrdersService extends BaseCrudService<
           data: { dogsSold: { increment: totalDogsInOrder } },
         });
       }
+
+      // Cria DonationEntry se for doação paga no PDV
+      if (dto.deliveryOption === DeliveryOptionEnum.DONATE && order.partnerId) {
+        const donationExists = await this.prisma.donationEntry.findFirst({
+          where: { orderId: order.id },
+        });
+        if (!donationExists) {
+          await this.prisma.donationEntry.create({
+            data: {
+              partnerId: order.partnerId,
+              orderId: order.id,
+              quantity: totalDogsInOrder,
+              type: 'CREDIT',
+            },
+          });
+        }
+      }
     }
 
     // 4. Vincular Tickets
@@ -1079,6 +1169,18 @@ export class OrdersService extends BaseCrudService<
       }
     }
 
+    // 5. Auto check-in para PICKUP pago imediatamente no PDV
+    if (
+      orderStatus === OrderStatusEnum.PAID &&
+      dto.deliveryOption === DeliveryOptionEnum.PICKUP
+    ) {
+      try {
+        const fullOrder = await this.findById(order.id);
+        await this.commandsService.checkIn(order.id);
+      } catch (err) {
+        this.logger.warn(`Auto check-in PDV falhou para ${order.id}: ${err?.message}`);
+      }
+    }
 
     return this.findById(order.id);
   }

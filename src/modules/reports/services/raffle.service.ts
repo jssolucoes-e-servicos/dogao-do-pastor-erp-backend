@@ -41,6 +41,10 @@ export class RaffleService extends BaseService {
           editionId,
           paymentStatus: PaymentStatusEnum.PAID,
           active: true,
+          // Apenas SITE e APP — exclui PDV e MANUAL
+          origin: { in: [OrderOriginEnum.SITE, OrderOriginEnum.APP] },
+          // Exclui clientes sem nome real (CLIENTE - {cpf})
+          customerName: { not: { startsWith: 'CLIENTE' } },
         },
         active: true,
       },
@@ -53,6 +57,8 @@ export class RaffleService extends BaseService {
     for (const row of rows) {
       const id = row.order.customerId;
       const name = row.order.customerName;
+      // Dupla verificação no nome
+      if (name?.toUpperCase().startsWith('CLIENTE')) continue;
       if (!map[id]) {
         map[id] = { customerId: id, customerName: name, tickets: 0 };
       }

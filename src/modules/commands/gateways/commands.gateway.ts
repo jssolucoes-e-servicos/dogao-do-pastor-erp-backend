@@ -41,6 +41,10 @@ export class CommandsGateway
     this.server.emit('new-command', command);
   }
 
+  emitBatchActivated(count: number) {
+    this.server.emit('batch-activated', { count, timestamp: new Date().getTime() });
+  }
+
   /**
    * Responde a pings de clientes para validação de conexão ativa
    */

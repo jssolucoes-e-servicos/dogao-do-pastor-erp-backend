@@ -1,5 +1,3 @@
-// src/modules/cells/cells.module.ts
-
 import { Module } from '@nestjs/common';
 import {
   LoggerService,
@@ -18,6 +16,7 @@ import { PaymentsModule } from '../payments/payments.modules';
 import { N8nModule } from 'src/modules/n8n/n8n.module';
 import { TicketsModule } from '../tickets/tickets.module';
 import { OrdersNotificationsService } from '../evolution/services/notifications/orders-notifications.service';
+import { CommandsModule } from '../commands/commands.module';
 
 @Module({
   imports: [
@@ -27,6 +26,7 @@ import { OrdersNotificationsService } from '../evolution/services/notifications/
     N8nModule,
     TicketsModule,
     forwardRef(() => PaymentsModule),
+    forwardRef(() => CommandsModule),
   ],
   controllers: [OrdersController],
   providers: [

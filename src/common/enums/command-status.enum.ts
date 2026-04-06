@@ -8,7 +8,8 @@
   DELIVERED = 'DELIVERED',
 } */
 export const CommandStatusEnum = {
-  PENDING: 'PENDING',
+  QUEUE: 'QUEUE',       // Agendada, aguardando ser puxada para produção
+  PENDING: 'PENDING',   // Na fila de produção, aguardando iniciar
   IN_PRODUCTION: 'IN_PRODUCTION',
   PRODUCED: 'PRODUCED',
   EXPEDITION: 'EXPEDITION',

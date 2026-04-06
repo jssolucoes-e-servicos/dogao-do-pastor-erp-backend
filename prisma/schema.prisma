@@ -105,6 +105,7 @@ enum OrderOriginEnum {
 }
 
 enum CommandStatusEnum {
+  QUEUE
   PENDING
   IN_PRODUCTION
   PRODUCED
@@ -137,7 +138,9 @@ enum DonationEntryType {
 enum WithdrawalStatusEnum {
   PENDING
   CONFIRMED
+  READY
   COMPLETED
+  DELIVERED
   CANCELLED
 }
 

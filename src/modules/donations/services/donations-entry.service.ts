@@ -48,7 +48,6 @@ export class DonationsEntryService extends BaseCrudService<
     const partners = await this.prisma.partner.findMany({
       where: {
         active: true,
-        approved: true,
         deletedAt: null,
       },
       select: {
@@ -154,31 +153,26 @@ export class DonationsEntryService extends BaseCrudService<
         },
       });
 
-      // 3. Gerar Comandas (Uma para cada item da retirada)
-      // Aqui pegamos a última sequência da edição para o sequentialId
+      // 3. Gerar UMA comanda para toda a retirada (withdrawalId é @unique)
       const lastCommand = await tx.command.findFirst({
         where: { editionId: edition.id },
         orderBy: { sequence: 'desc' },
       });
 
-      let nextSequence = (lastCommand?.sequence || 0) + 1;
+      const nextSequence = (lastCommand?.sequence || 0) + 1;
+      const seqId = `${edition.code}${String(nextSequence).padStart(4, '0')}`;
 
-      // Gerar comandas para cada lanche da retirada
-      for (const item of withdrawal.items) {
-        const seqId = `${edition.code}${String(nextSequence).padStart(5, '0')}`;
-
-        await tx.command.create({
-          data: {
-            sequentialId: seqId,
-            withdrawalId: withdrawal.id,
-            editionId: edition.id,
-            editionCode: Number(edition.code),
-            sequence: nextSequence,
-            status: CommandStatusEnum.PENDING,
-          },
-        });
-        nextSequence++;
-      }
+      await tx.command.create({
+        data: {
+          sequentialId: seqId,
+          withdrawalId: withdrawal.id,
+          editionId: edition.id,
+          editionCode: Number(edition.code),
+          sequence: nextSequence,
+          quantity: totalRequested,
+          status: CommandStatusEnum.PENDING,
+        },
+      });
 
       return withdrawal;
     });
@@ -193,8 +187,27 @@ export class DonationsEntryService extends BaseCrudService<
       data: {
         orderId,
         partnerId,
-        quantity, // Positivo para CREDIT
+        quantity,
         type: DonationEntryTypeEnum.CREDIT,
+      },
+    });
+  }
+
+  async listWithdrawalsByPartner(partnerId: string) {
+    return this.prisma.withdrawal.findMany({
+      where: { partnerId, active: true },
+      include: { items: true, donationLogs: true },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async getWithdrawal(id: string) {
+    return this.prisma.withdrawal.findUnique({
+      where: { id },
+      include: {
+        partner: true,
+        items: true,
+        donationLogs: true,
       },
     });
   }

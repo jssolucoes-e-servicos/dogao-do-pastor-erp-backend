@@ -120,4 +120,11 @@ export class CreatePdvOrderDto {
     optional: true,
   })
   sellerId?: string;
+
+  @StringValidator({
+    fieldName: 'partnerId',
+    label: 'ID do Parceiro (Doação)',
+    optional: true,
+  })
+  partnerId?: string;
 }
