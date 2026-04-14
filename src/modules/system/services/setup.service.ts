@@ -42,12 +42,12 @@ export class SetupService extends BaseService {
 
     // 2. Criar Módulos Iniciais
     const modules = [
-      { id: 'sys_mod_dash', name: 'Dashboard', description: 'Painel de indicadores', ctrl: 'dashboard', page: '/' },
-      { id: 'sys_mod_orders', name: 'Pedidos', description: 'Gestão de pedidos', ctrl: 'orders', page: '/pedidos' },
-      { id: 'sys_mod_customers', name: 'Clientes', description: 'Gestão de clientes', ctrl: 'customers', page: '/clientes' },
-      { id: 'sys_mod_partners', name: 'Parceiros', description: 'Gestão de parceiros', ctrl: 'partners', page: '/parceiros' },
-      { id: 'sys_mod_sellers', name: 'Vendedores', description: 'Gestão de vendedores', ctrl: 'sellers', page: '/vendedores' },
-      { id: 'sys_mod_staff', name: 'Colaboradores', description: 'Gestão de acesso', ctrl: 'contributors', page: '/colaboradores' },
+      { id: 'sys_mod_dash',      name: 'Dashboard',     slug: 'erp.dashboard',    description: 'Painel de indicadores', ctrl: 'dashboard',    page: '/' },
+      { id: 'sys_mod_orders',    name: 'Pedidos',        slug: 'erp.pedidos',      description: 'Gestão de pedidos',     ctrl: 'orders',       page: '/pedidos' },
+      { id: 'sys_mod_customers', name: 'Clientes',       slug: 'erp.clientes',     description: 'Gestão de clientes',    ctrl: 'customers',    page: '/clientes' },
+      { id: 'sys_mod_partners',  name: 'Parceiros',      slug: 'erp.parceiros',    description: 'Gestão de parceiros',   ctrl: 'partners',     page: '/parceiros' },
+      { id: 'sys_mod_sellers',   name: 'Vendedores',     slug: 'erp.vendedores',   description: 'Gestão de vendedores',  ctrl: 'sellers',      page: '/vendedores' },
+      { id: 'sys_mod_staff',     name: 'Colaboradores',  slug: 'erp.colaboradores',description: 'Gestão de acesso',      ctrl: 'contributors', page: '/colaboradores' },
     ];
 
     for (const mod of modules) {

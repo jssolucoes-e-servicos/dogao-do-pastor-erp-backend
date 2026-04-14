@@ -26,7 +26,7 @@ export class RolesGuard implements CanActivate {
       context.getClass(),
     ]);
 
-    if (!requiredRoles) return true;
+    if (!requiredRoles || requiredRoles.length === 0) return true;
 
     const { user } = request;
 
@@ -34,7 +34,7 @@ export class RolesGuard implements CanActivate {
 
     // Se o usuário for IT, TI ou ADMIN ele passa em tudo que requer role (Superusuários)
     const userRoles = user.roles || [];
-    const isMaster = userRoles.some(r => ['IT', 'IT', 'ADMIN'].includes(r.toUpperCase()));
+    const isMaster = userRoles.some((r: string) => ['IT', 'TI', 'ADMIN', 'ADMINISTRAÇÃO', 'ADMINISTRACAO'].includes(r.toUpperCase()));
     if (isMaster) return true;
 
     // Normaliza roles requeridas para comparação (tudo maiúsculo)

@@ -10,8 +10,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../../auth/guards/roles.guard';
-import { Roles } from '../../auth/decorators/roles.decorator';
 import { PaginatedQuery } from 'src/common/decorators';
 import { IdParamDto } from 'src/common/dto/id.param.dto';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
@@ -22,8 +20,7 @@ import { UpdateModuleDto } from '../dto/update-module.dto';
 import { ModulesService } from '../services/modules.service';
 
 @Controller('modules')
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('IT', 'ADMIN')
+@UseGuards(JwtAuthGuard)
 export class ModulesController {
   constructor(private readonly service: ModulesService) {}
 

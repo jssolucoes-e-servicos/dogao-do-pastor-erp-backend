@@ -40,7 +40,6 @@ export class OrdersController {
   }
 
   @PaginatedQuery()
-  @Roles('IT', 'ADMIN', 'FINANCE', 'SELLER', 'LEADER', 'MANAGER')
   async list(
     @Query() query: PaginationQueryDto,
     @User() user: IUser,

@@ -179,7 +179,9 @@ export type DonationEntryType = (typeof DonationEntryType)[keyof typeof Donation
 export const WithdrawalStatusEnum = {
   PENDING: 'PENDING',
   CONFIRMED: 'CONFIRMED',
+  READY: 'READY',
   COMPLETED: 'COMPLETED',
+  DELIVERED: 'DELIVERED',
   CANCELLED: 'CANCELLED'
 } as const
 
@@ -196,3 +198,15 @@ export const NotificationTypeEnum = {
 } as const
 
 export type NotificationTypeEnum = (typeof NotificationTypeEnum)[keyof typeof NotificationTypeEnum]
+
+
+export const StockMovementTypeEnum = {
+  PURCHASE_IN: 'PURCHASE_IN',
+  PRODUCTION_OUT: 'PRODUCTION_OUT',
+  SURPLUS_DONATE: 'SURPLUS_DONATE',
+  SURPLUS_SELL: 'SURPLUS_SELL',
+  SURPLUS_DISCARD: 'SURPLUS_DISCARD',
+  ADJUSTMENT: 'ADJUSTMENT'
+} as const
+
+export type StockMovementTypeEnum = (typeof StockMovementTypeEnum)[keyof typeof StockMovementTypeEnum]

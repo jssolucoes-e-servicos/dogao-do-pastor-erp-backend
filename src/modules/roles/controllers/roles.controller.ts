@@ -10,8 +10,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../../auth/guards/roles.guard';
-import { Roles } from '../../auth/decorators/roles.decorator';
 import { PaginatedQuery } from 'src/common/decorators';
 import { IdParamDto } from 'src/common/dto/id.param.dto';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
@@ -22,8 +20,7 @@ import { UpdateRoleDto } from '../dto/update-role.dto';
 import { RolesService } from '../services/roles.service';
 
 @Controller('roles')
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('IT', 'ADMIN')
+@UseGuards(JwtAuthGuard)
 export class RolesController {
   constructor(private readonly service: RolesService) {}
 
@@ -55,7 +52,6 @@ export class RolesController {
   }
 
   @Post(':id/permissions/:moduleId')
-  @Roles('IT', 'ADMIN')
   async setRolePermission(
     @Param('id') id: string,
     @Param('moduleId') moduleId: string,

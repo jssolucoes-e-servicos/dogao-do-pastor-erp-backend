@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { SetupService } from './services/setup.service';
-import { SystemController } from './controllers/system.controller';
+import { PrismaService } from 'src/common/helpers/importer.helper';
+import { SystemConfigService } from './system-config.service';
 
 @Module({
-  providers: [SetupService],
-  controllers: [SystemController],
-  exports: [SetupService],
+  providers: [PrismaService, SystemConfigService],
+  exports: [SystemConfigService],
 })
 export class SystemModule {}

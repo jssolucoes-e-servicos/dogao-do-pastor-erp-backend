@@ -27,6 +27,7 @@ export type AggregateModule = {
 export type ModuleMinAggregateOutputType = {
   id: string | null
   name: string | null
+  slug: string | null
   description: string | null
   ctrl: string | null
   page: string | null
@@ -39,6 +40,7 @@ export type ModuleMinAggregateOutputType = {
 export type ModuleMaxAggregateOutputType = {
   id: string | null
   name: string | null
+  slug: string | null
   description: string | null
   ctrl: string | null
   page: string | null
@@ -51,6 +53,7 @@ export type ModuleMaxAggregateOutputType = {
 export type ModuleCountAggregateOutputType = {
   id: number
   name: number
+  slug: number
   description: number
   ctrl: number
   page: number
@@ -65,6 +68,7 @@ export type ModuleCountAggregateOutputType = {
 export type ModuleMinAggregateInputType = {
   id?: true
   name?: true
+  slug?: true
   description?: true
   ctrl?: true
   page?: true
@@ -77,6 +81,7 @@ export type ModuleMinAggregateInputType = {
 export type ModuleMaxAggregateInputType = {
   id?: true
   name?: true
+  slug?: true
   description?: true
   ctrl?: true
   page?: true
@@ -89,6 +94,7 @@ export type ModuleMaxAggregateInputType = {
 export type ModuleCountAggregateInputType = {
   id?: true
   name?: true
+  slug?: true
   description?: true
   ctrl?: true
   page?: true
@@ -174,6 +180,7 @@ export type ModuleGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 export type ModuleGroupByOutputType = {
   id: string
   name: string
+  slug: string
   description: string
   ctrl: string
   page: string
@@ -207,6 +214,7 @@ export type ModuleWhereInput = {
   NOT?: Prisma.ModuleWhereInput | Prisma.ModuleWhereInput[]
   id?: Prisma.StringFilter<"Module"> | string
   name?: Prisma.StringFilter<"Module"> | string
+  slug?: Prisma.StringFilter<"Module"> | string
   description?: Prisma.StringFilter<"Module"> | string
   ctrl?: Prisma.StringFilter<"Module"> | string
   page?: Prisma.StringFilter<"Module"> | string
@@ -215,11 +223,13 @@ export type ModuleWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Module"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Module"> | Date | string | null
   permissions?: Prisma.PermissionListRelationFilter
+  controls?: Prisma.ControlListRelationFilter
 }
 
 export type ModuleOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
   ctrl?: Prisma.SortOrder
   page?: Prisma.SortOrder
@@ -228,11 +238,13 @@ export type ModuleOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   permissions?: Prisma.PermissionOrderByRelationAggregateInput
+  controls?: Prisma.ControlOrderByRelationAggregateInput
   _relevance?: Prisma.ModuleOrderByRelevanceInput
 }
 
 export type ModuleWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  slug?: string
   AND?: Prisma.ModuleWhereInput | Prisma.ModuleWhereInput[]
   OR?: Prisma.ModuleWhereInput[]
   NOT?: Prisma.ModuleWhereInput | Prisma.ModuleWhereInput[]
@@ -245,11 +257,13 @@ export type ModuleWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Module"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Module"> | Date | string | null
   permissions?: Prisma.PermissionListRelationFilter
-}, "id">
+  controls?: Prisma.ControlListRelationFilter
+}, "id" | "slug">
 
 export type ModuleOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
   ctrl?: Prisma.SortOrder
   page?: Prisma.SortOrder
@@ -268,6 +282,7 @@ export type ModuleScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ModuleScalarWhereWithAggregatesInput | Prisma.ModuleScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Module"> | string
   name?: Prisma.StringWithAggregatesFilter<"Module"> | string
+  slug?: Prisma.StringWithAggregatesFilter<"Module"> | string
   description?: Prisma.StringWithAggregatesFilter<"Module"> | string
   ctrl?: Prisma.StringWithAggregatesFilter<"Module"> | string
   page?: Prisma.StringWithAggregatesFilter<"Module"> | string
@@ -280,6 +295,7 @@ export type ModuleScalarWhereWithAggregatesInput = {
 export type ModuleCreateInput = {
   id?: string
   name: string
+  slug: string
   description: string
   ctrl: string
   page: string
@@ -288,11 +304,13 @@ export type ModuleCreateInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   permissions?: Prisma.PermissionCreateNestedManyWithoutModuleInput
+  controls?: Prisma.ControlCreateNestedManyWithoutModuleInput
 }
 
 export type ModuleUncheckedCreateInput = {
   id?: string
   name: string
+  slug: string
   description: string
   ctrl: string
   page: string
@@ -301,11 +319,13 @@ export type ModuleUncheckedCreateInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutModuleInput
+  controls?: Prisma.ControlUncheckedCreateNestedManyWithoutModuleInput
 }
 
 export type ModuleUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   ctrl?: Prisma.StringFieldUpdateOperationsInput | string
   page?: Prisma.StringFieldUpdateOperationsInput | string
@@ -314,11 +334,13 @@ export type ModuleUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   permissions?: Prisma.PermissionUpdateManyWithoutModuleNestedInput
+  controls?: Prisma.ControlUpdateManyWithoutModuleNestedInput
 }
 
 export type ModuleUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   ctrl?: Prisma.StringFieldUpdateOperationsInput | string
   page?: Prisma.StringFieldUpdateOperationsInput | string
@@ -327,11 +349,13 @@ export type ModuleUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   permissions?: Prisma.PermissionUncheckedUpdateManyWithoutModuleNestedInput
+  controls?: Prisma.ControlUncheckedUpdateManyWithoutModuleNestedInput
 }
 
 export type ModuleCreateManyInput = {
   id?: string
   name: string
+  slug: string
   description: string
   ctrl: string
   page: string
@@ -344,6 +368,7 @@ export type ModuleCreateManyInput = {
 export type ModuleUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   ctrl?: Prisma.StringFieldUpdateOperationsInput | string
   page?: Prisma.StringFieldUpdateOperationsInput | string
@@ -356,6 +381,7 @@ export type ModuleUpdateManyMutationInput = {
 export type ModuleUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   ctrl?: Prisma.StringFieldUpdateOperationsInput | string
   page?: Prisma.StringFieldUpdateOperationsInput | string
@@ -374,6 +400,7 @@ export type ModuleOrderByRelevanceInput = {
 export type ModuleCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
   ctrl?: Prisma.SortOrder
   page?: Prisma.SortOrder
@@ -386,6 +413,7 @@ export type ModuleCountOrderByAggregateInput = {
 export type ModuleMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
   ctrl?: Prisma.SortOrder
   page?: Prisma.SortOrder
@@ -398,6 +426,7 @@ export type ModuleMaxOrderByAggregateInput = {
 export type ModuleMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
   ctrl?: Prisma.SortOrder
   page?: Prisma.SortOrder
@@ -426,9 +455,24 @@ export type ModuleUpdateOneRequiredWithoutPermissionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ModuleUpdateToOneWithWhereWithoutPermissionsInput, Prisma.ModuleUpdateWithoutPermissionsInput>, Prisma.ModuleUncheckedUpdateWithoutPermissionsInput>
 }
 
+export type ModuleCreateNestedOneWithoutControlsInput = {
+  create?: Prisma.XOR<Prisma.ModuleCreateWithoutControlsInput, Prisma.ModuleUncheckedCreateWithoutControlsInput>
+  connectOrCreate?: Prisma.ModuleCreateOrConnectWithoutControlsInput
+  connect?: Prisma.ModuleWhereUniqueInput
+}
+
+export type ModuleUpdateOneRequiredWithoutControlsNestedInput = {
+  create?: Prisma.XOR<Prisma.ModuleCreateWithoutControlsInput, Prisma.ModuleUncheckedCreateWithoutControlsInput>
+  connectOrCreate?: Prisma.ModuleCreateOrConnectWithoutControlsInput
+  upsert?: Prisma.ModuleUpsertWithoutControlsInput
+  connect?: Prisma.ModuleWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ModuleUpdateToOneWithWhereWithoutControlsInput, Prisma.ModuleUpdateWithoutControlsInput>, Prisma.ModuleUncheckedUpdateWithoutControlsInput>
+}
+
 export type ModuleCreateWithoutPermissionsInput = {
   id?: string
   name: string
+  slug: string
   description: string
   ctrl: string
   page: string
@@ -436,11 +480,13 @@ export type ModuleCreateWithoutPermissionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  controls?: Prisma.ControlCreateNestedManyWithoutModuleInput
 }
 
 export type ModuleUncheckedCreateWithoutPermissionsInput = {
   id?: string
   name: string
+  slug: string
   description: string
   ctrl: string
   page: string
@@ -448,6 +494,7 @@ export type ModuleUncheckedCreateWithoutPermissionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  controls?: Prisma.ControlUncheckedCreateNestedManyWithoutModuleInput
 }
 
 export type ModuleCreateOrConnectWithoutPermissionsInput = {
@@ -469,6 +516,7 @@ export type ModuleUpdateToOneWithWhereWithoutPermissionsInput = {
 export type ModuleUpdateWithoutPermissionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   ctrl?: Prisma.StringFieldUpdateOperationsInput | string
   page?: Prisma.StringFieldUpdateOperationsInput | string
@@ -476,11 +524,13 @@ export type ModuleUpdateWithoutPermissionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controls?: Prisma.ControlUpdateManyWithoutModuleNestedInput
 }
 
 export type ModuleUncheckedUpdateWithoutPermissionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   ctrl?: Prisma.StringFieldUpdateOperationsInput | string
   page?: Prisma.StringFieldUpdateOperationsInput | string
@@ -488,6 +538,79 @@ export type ModuleUncheckedUpdateWithoutPermissionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controls?: Prisma.ControlUncheckedUpdateManyWithoutModuleNestedInput
+}
+
+export type ModuleCreateWithoutControlsInput = {
+  id?: string
+  name: string
+  slug: string
+  description: string
+  ctrl: string
+  page: string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  permissions?: Prisma.PermissionCreateNestedManyWithoutModuleInput
+}
+
+export type ModuleUncheckedCreateWithoutControlsInput = {
+  id?: string
+  name: string
+  slug: string
+  description: string
+  ctrl: string
+  page: string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutModuleInput
+}
+
+export type ModuleCreateOrConnectWithoutControlsInput = {
+  where: Prisma.ModuleWhereUniqueInput
+  create: Prisma.XOR<Prisma.ModuleCreateWithoutControlsInput, Prisma.ModuleUncheckedCreateWithoutControlsInput>
+}
+
+export type ModuleUpsertWithoutControlsInput = {
+  update: Prisma.XOR<Prisma.ModuleUpdateWithoutControlsInput, Prisma.ModuleUncheckedUpdateWithoutControlsInput>
+  create: Prisma.XOR<Prisma.ModuleCreateWithoutControlsInput, Prisma.ModuleUncheckedCreateWithoutControlsInput>
+  where?: Prisma.ModuleWhereInput
+}
+
+export type ModuleUpdateToOneWithWhereWithoutControlsInput = {
+  where?: Prisma.ModuleWhereInput
+  data: Prisma.XOR<Prisma.ModuleUpdateWithoutControlsInput, Prisma.ModuleUncheckedUpdateWithoutControlsInput>
+}
+
+export type ModuleUpdateWithoutControlsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  ctrl?: Prisma.StringFieldUpdateOperationsInput | string
+  page?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  permissions?: Prisma.PermissionUpdateManyWithoutModuleNestedInput
+}
+
+export type ModuleUncheckedUpdateWithoutControlsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  ctrl?: Prisma.StringFieldUpdateOperationsInput | string
+  page?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  permissions?: Prisma.PermissionUncheckedUpdateManyWithoutModuleNestedInput
 }
 
 
@@ -497,10 +620,12 @@ export type ModuleUncheckedUpdateWithoutPermissionsInput = {
 
 export type ModuleCountOutputType = {
   permissions: number
+  controls: number
 }
 
 export type ModuleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   permissions?: boolean | ModuleCountOutputTypeCountPermissionsArgs
+  controls?: boolean | ModuleCountOutputTypeCountControlsArgs
 }
 
 /**
@@ -520,10 +645,18 @@ export type ModuleCountOutputTypeCountPermissionsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.PermissionWhereInput
 }
 
+/**
+ * ModuleCountOutputType without action
+ */
+export type ModuleCountOutputTypeCountControlsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ControlWhereInput
+}
+
 
 export type ModuleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  slug?: boolean
   description?: boolean
   ctrl?: boolean
   page?: boolean
@@ -532,12 +665,14 @@ export type ModuleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   updatedAt?: boolean
   deletedAt?: boolean
   permissions?: boolean | Prisma.Module$permissionsArgs<ExtArgs>
+  controls?: boolean | Prisma.Module$controlsArgs<ExtArgs>
   _count?: boolean | Prisma.ModuleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["module"]>
 
 export type ModuleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  slug?: boolean
   description?: boolean
   ctrl?: boolean
   page?: boolean
@@ -550,6 +685,7 @@ export type ModuleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type ModuleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  slug?: boolean
   description?: boolean
   ctrl?: boolean
   page?: boolean
@@ -562,6 +698,7 @@ export type ModuleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type ModuleSelectScalar = {
   id?: boolean
   name?: boolean
+  slug?: boolean
   description?: boolean
   ctrl?: boolean
   page?: boolean
@@ -571,9 +708,10 @@ export type ModuleSelectScalar = {
   deletedAt?: boolean
 }
 
-export type ModuleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "ctrl" | "page" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["module"]>
+export type ModuleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "description" | "ctrl" | "page" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["module"]>
 export type ModuleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   permissions?: boolean | Prisma.Module$permissionsArgs<ExtArgs>
+  controls?: boolean | Prisma.Module$controlsArgs<ExtArgs>
   _count?: boolean | Prisma.ModuleCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ModuleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -583,10 +721,12 @@ export type $ModulePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name: "Module"
   objects: {
     permissions: Prisma.$PermissionPayload<ExtArgs>[]
+    controls: Prisma.$ControlPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
+    slug: string
     description: string
     ctrl: string
     page: string
@@ -989,6 +1129,7 @@ readonly fields: ModuleFieldRefs;
 export interface Prisma__ModuleClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   permissions<T extends Prisma.Module$permissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Module$permissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  controls<T extends Prisma.Module$controlsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Module$controlsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ControlPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1020,6 +1161,7 @@ export interface Prisma__ModuleClient<T, Null = never, ExtArgs extends runtime.T
 export interface ModuleFieldRefs {
   readonly id: Prisma.FieldRef<"Module", 'String'>
   readonly name: Prisma.FieldRef<"Module", 'String'>
+  readonly slug: Prisma.FieldRef<"Module", 'String'>
   readonly description: Prisma.FieldRef<"Module", 'String'>
   readonly ctrl: Prisma.FieldRef<"Module", 'String'>
   readonly page: Prisma.FieldRef<"Module", 'String'>
@@ -1441,6 +1583,30 @@ export type Module$permissionsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.PermissionScalarFieldEnum | Prisma.PermissionScalarFieldEnum[]
+}
+
+/**
+ * Module.controls
+ */
+export type Module$controlsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Control
+   */
+  select?: Prisma.ControlSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Control
+   */
+  omit?: Prisma.ControlOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ControlInclude<ExtArgs> | null
+  where?: Prisma.ControlWhereInput
+  orderBy?: Prisma.ControlOrderByWithRelationInput | Prisma.ControlOrderByWithRelationInput[]
+  cursor?: Prisma.ControlWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ControlScalarFieldEnum | Prisma.ControlScalarFieldEnum[]
 }
 
 /**

@@ -127,4 +127,8 @@ export class CreatePdvOrderDto {
     optional: true,
   })
   partnerId?: string;
+
+  @IsOptional()
+  @IsString()
+  contributorId?: string; // quem registrou a venda no app (para Minhas Vendas individual)
 }

@@ -83,7 +83,14 @@ export const ModelName = {
   WithdrawalItem: 'WithdrawalItem',
   PushToken: 'PushToken',
   NotificationPreference: 'NotificationPreference',
-  NotificationLog: 'NotificationLog'
+  NotificationLog: 'NotificationLog',
+  Control: 'Control',
+  ControlPermission: 'ControlPermission',
+  SystemConfig: 'SystemConfig',
+  StockProduct: 'StockProduct',
+  PurchaseOrder: 'PurchaseOrder',
+  PurchaseItem: 'PurchaseItem',
+  StockMovement: 'StockMovement'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -123,6 +130,7 @@ export const RoleScalarFieldEnum = {
   name: 'name',
   description: 'description',
   active: 'active',
+  dashboardCards: 'dashboardCards',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -147,6 +155,7 @@ export type UserRoleScalarFieldEnum = (typeof UserRoleScalarFieldEnum)[keyof typ
 export const ModuleScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  slug: 'slug',
   description: 'description',
   ctrl: 'ctrl',
   page: 'page',
@@ -349,7 +358,8 @@ export const OrderScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
-  paymentReminderSent: 'paymentReminderSent'
+  paymentReminderSent: 'paymentReminderSent',
+  createdByContributorId: 'createdByContributorId'
 } as const
 
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -673,6 +683,113 @@ export const NotificationLogScalarFieldEnum = {
 export type NotificationLogScalarFieldEnum = (typeof NotificationLogScalarFieldEnum)[keyof typeof NotificationLogScalarFieldEnum]
 
 
+export const ControlScalarFieldEnum = {
+  id: 'id',
+  moduleId: 'moduleId',
+  name: 'name',
+  slug: 'slug',
+  description: 'description',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type ControlScalarFieldEnum = (typeof ControlScalarFieldEnum)[keyof typeof ControlScalarFieldEnum]
+
+
+export const ControlPermissionScalarFieldEnum = {
+  id: 'id',
+  controlId: 'controlId',
+  contributorId: 'contributorId',
+  roleId: 'roleId',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type ControlPermissionScalarFieldEnum = (typeof ControlPermissionScalarFieldEnum)[keyof typeof ControlPermissionScalarFieldEnum]
+
+
+export const SystemConfigScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  value: 'value',
+  description: 'description',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SystemConfigScalarFieldEnum = (typeof SystemConfigScalarFieldEnum)[keyof typeof SystemConfigScalarFieldEnum]
+
+
+export const StockProductScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  unit: 'unit',
+  description: 'description',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type StockProductScalarFieldEnum = (typeof StockProductScalarFieldEnum)[keyof typeof StockProductScalarFieldEnum]
+
+
+export const PurchaseOrderScalarFieldEnum = {
+  id: 'id',
+  editionId: 'editionId',
+  supplierId: 'supplierId',
+  supplierName: 'supplierName',
+  notes: 'notes',
+  totalValue: 'totalValue',
+  orderedAt: 'orderedAt',
+  deliveredAt: 'deliveredAt',
+  createdById: 'createdById',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type PurchaseOrderScalarFieldEnum = (typeof PurchaseOrderScalarFieldEnum)[keyof typeof PurchaseOrderScalarFieldEnum]
+
+
+export const PurchaseItemScalarFieldEnum = {
+  id: 'id',
+  purchaseOrderId: 'purchaseOrderId',
+  productId: 'productId',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  totalPrice: 'totalPrice',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PurchaseItemScalarFieldEnum = (typeof PurchaseItemScalarFieldEnum)[keyof typeof PurchaseItemScalarFieldEnum]
+
+
+export const StockMovementScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  editionId: 'editionId',
+  type: 'type',
+  quantity: 'quantity',
+  notes: 'notes',
+  createdById: 'createdById',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type StockMovementScalarFieldEnum = (typeof StockMovementScalarFieldEnum)[keyof typeof StockMovementScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -720,7 +837,8 @@ export type ContributorOrderByRelevanceFieldEnum = (typeof ContributorOrderByRel
 export const RoleOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
-  description: 'description'
+  description: 'description',
+  dashboardCards: 'dashboardCards'
 } as const
 
 export type RoleOrderByRelevanceFieldEnum = (typeof RoleOrderByRelevanceFieldEnum)[keyof typeof RoleOrderByRelevanceFieldEnum]
@@ -738,6 +856,7 @@ export type UserRoleOrderByRelevanceFieldEnum = (typeof UserRoleOrderByRelevance
 export const ModuleOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
+  slug: 'slug',
   description: 'description',
   ctrl: 'ctrl',
   page: 'page'
@@ -873,7 +992,8 @@ export const OrderOrderByRelevanceFieldEnum = {
   deliveryTime: 'deliveryTime',
   partnerId: 'partnerId',
   addressId: 'addressId',
-  observations: 'observations'
+  observations: 'observations',
+  createdByContributorId: 'createdByContributorId'
 } as const
 
 export type OrderOrderByRelevanceFieldEnum = (typeof OrderOrderByRelevanceFieldEnum)[keyof typeof OrderOrderByRelevanceFieldEnum]
@@ -1077,4 +1197,78 @@ export const NotificationLogOrderByRelevanceFieldEnum = {
 } as const
 
 export type NotificationLogOrderByRelevanceFieldEnum = (typeof NotificationLogOrderByRelevanceFieldEnum)[keyof typeof NotificationLogOrderByRelevanceFieldEnum]
+
+
+export const ControlOrderByRelevanceFieldEnum = {
+  id: 'id',
+  moduleId: 'moduleId',
+  name: 'name',
+  slug: 'slug',
+  description: 'description'
+} as const
+
+export type ControlOrderByRelevanceFieldEnum = (typeof ControlOrderByRelevanceFieldEnum)[keyof typeof ControlOrderByRelevanceFieldEnum]
+
+
+export const ControlPermissionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  controlId: 'controlId',
+  contributorId: 'contributorId',
+  roleId: 'roleId'
+} as const
+
+export type ControlPermissionOrderByRelevanceFieldEnum = (typeof ControlPermissionOrderByRelevanceFieldEnum)[keyof typeof ControlPermissionOrderByRelevanceFieldEnum]
+
+
+export const SystemConfigOrderByRelevanceFieldEnum = {
+  id: 'id',
+  key: 'key',
+  value: 'value',
+  description: 'description',
+  updatedBy: 'updatedBy'
+} as const
+
+export type SystemConfigOrderByRelevanceFieldEnum = (typeof SystemConfigOrderByRelevanceFieldEnum)[keyof typeof SystemConfigOrderByRelevanceFieldEnum]
+
+
+export const StockProductOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  unit: 'unit',
+  description: 'description'
+} as const
+
+export type StockProductOrderByRelevanceFieldEnum = (typeof StockProductOrderByRelevanceFieldEnum)[keyof typeof StockProductOrderByRelevanceFieldEnum]
+
+
+export const PurchaseOrderOrderByRelevanceFieldEnum = {
+  id: 'id',
+  editionId: 'editionId',
+  supplierId: 'supplierId',
+  supplierName: 'supplierName',
+  notes: 'notes',
+  createdById: 'createdById'
+} as const
+
+export type PurchaseOrderOrderByRelevanceFieldEnum = (typeof PurchaseOrderOrderByRelevanceFieldEnum)[keyof typeof PurchaseOrderOrderByRelevanceFieldEnum]
+
+
+export const PurchaseItemOrderByRelevanceFieldEnum = {
+  id: 'id',
+  purchaseOrderId: 'purchaseOrderId',
+  productId: 'productId'
+} as const
+
+export type PurchaseItemOrderByRelevanceFieldEnum = (typeof PurchaseItemOrderByRelevanceFieldEnum)[keyof typeof PurchaseItemOrderByRelevanceFieldEnum]
+
+
+export const StockMovementOrderByRelevanceFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  editionId: 'editionId',
+  notes: 'notes',
+  createdById: 'createdById'
+} as const
+
+export type StockMovementOrderByRelevanceFieldEnum = (typeof StockMovementOrderByRelevanceFieldEnum)[keyof typeof StockMovementOrderByRelevanceFieldEnum]
 

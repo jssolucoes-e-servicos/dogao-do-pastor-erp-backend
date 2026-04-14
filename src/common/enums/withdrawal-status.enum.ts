@@ -1,15 +1,9 @@
-/* export enum WithdrawalStatusEnum {
-  PENDING = 'PENDING',
-  CONFIRMED = 'CONFIRMED',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED',
-}
- */
-
 export const WithdrawalStatusEnum = {
-  PENDING: 'PENDING',
+  PENDING:   'PENDING',
   CONFIRMED: 'CONFIRMED',
+  READY:     'READY',
   COMPLETED: 'COMPLETED',
+  DELIVERED: 'DELIVERED',
   CANCELLED: 'CANCELLED',
 } as const;
 

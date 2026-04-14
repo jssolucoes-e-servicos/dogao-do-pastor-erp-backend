@@ -59,6 +59,7 @@ export type OrderMinAggregateOutputType = {
   updatedAt: Date | null
   deletedAt: Date | null
   paymentReminderSent: boolean | null
+  createdByContributorId: string | null
 }
 
 export type OrderMaxAggregateOutputType = {
@@ -86,6 +87,7 @@ export type OrderMaxAggregateOutputType = {
   updatedAt: Date | null
   deletedAt: Date | null
   paymentReminderSent: boolean | null
+  createdByContributorId: string | null
 }
 
 export type OrderCountAggregateOutputType = {
@@ -113,6 +115,7 @@ export type OrderCountAggregateOutputType = {
   updatedAt: number
   deletedAt: number
   paymentReminderSent: number
+  createdByContributorId: number
   _all: number
 }
 
@@ -150,6 +153,7 @@ export type OrderMinAggregateInputType = {
   updatedAt?: true
   deletedAt?: true
   paymentReminderSent?: true
+  createdByContributorId?: true
 }
 
 export type OrderMaxAggregateInputType = {
@@ -177,6 +181,7 @@ export type OrderMaxAggregateInputType = {
   updatedAt?: true
   deletedAt?: true
   paymentReminderSent?: true
+  createdByContributorId?: true
 }
 
 export type OrderCountAggregateInputType = {
@@ -204,6 +209,7 @@ export type OrderCountAggregateInputType = {
   updatedAt?: true
   deletedAt?: true
   paymentReminderSent?: true
+  createdByContributorId?: true
   _all?: true
 }
 
@@ -318,6 +324,7 @@ export type OrderGroupByOutputType = {
   updatedAt: Date
   deletedAt: Date | null
   paymentReminderSent: boolean
+  createdByContributorId: string | null
   _count: OrderCountAggregateOutputType | null
   _avg: OrderAvgAggregateOutputType | null
   _sum: OrderSumAggregateOutputType | null
@@ -368,6 +375,7 @@ export type OrderWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   paymentReminderSent?: Prisma.BoolFilter<"Order"> | boolean
+  createdByContributorId?: Prisma.StringNullableFilter<"Order"> | string | null
   commands?: Prisma.CommandListRelationFilter
   deliveryStops?: Prisma.DeliveryStopListRelationFilter
   donationsEntries?: Prisma.DonationEntryListRelationFilter
@@ -407,6 +415,7 @@ export type OrderOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentReminderSent?: Prisma.SortOrder
+  createdByContributorId?: Prisma.SortOrderInput | Prisma.SortOrder
   commands?: Prisma.CommandOrderByRelationAggregateInput
   deliveryStops?: Prisma.DeliveryStopOrderByRelationAggregateInput
   donationsEntries?: Prisma.DonationEntryOrderByRelationAggregateInput
@@ -450,6 +459,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   paymentReminderSent?: Prisma.BoolFilter<"Order"> | boolean
+  createdByContributorId?: Prisma.StringNullableFilter<"Order"> | string | null
   commands?: Prisma.CommandListRelationFilter
   deliveryStops?: Prisma.DeliveryStopListRelationFilter
   donationsEntries?: Prisma.DonationEntryListRelationFilter
@@ -489,6 +499,7 @@ export type OrderOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentReminderSent?: Prisma.SortOrder
+  createdByContributorId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.OrderCountOrderByAggregateInput
   _avg?: Prisma.OrderAvgOrderByAggregateInput
   _max?: Prisma.OrderMaxOrderByAggregateInput
@@ -524,6 +535,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
   paymentReminderSent?: Prisma.BoolWithAggregatesFilter<"Order"> | boolean
+  createdByContributorId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
 }
 
 export type OrderCreateInput = {
@@ -546,6 +558,7 @@ export type OrderCreateInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
@@ -585,6 +598,7 @@ export type OrderUncheckedCreateInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
@@ -614,6 +628,7 @@ export type OrderUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
@@ -653,6 +668,7 @@ export type OrderUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
@@ -687,6 +703,7 @@ export type OrderCreateManyInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
 }
 
 export type OrderUpdateManyMutationInput = {
@@ -709,6 +726,7 @@ export type OrderUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OrderUncheckedUpdateManyInput = {
@@ -736,6 +754,7 @@ export type OrderUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OrderListRelationFilter = {
@@ -779,6 +798,7 @@ export type OrderCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   paymentReminderSent?: Prisma.SortOrder
+  createdByContributorId?: Prisma.SortOrder
 }
 
 export type OrderAvgOrderByAggregateInput = {
@@ -810,6 +830,7 @@ export type OrderMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   paymentReminderSent?: Prisma.SortOrder
+  createdByContributorId?: Prisma.SortOrder
 }
 
 export type OrderMinOrderByAggregateInput = {
@@ -837,6 +858,7 @@ export type OrderMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   paymentReminderSent?: Prisma.SortOrder
+  createdByContributorId?: Prisma.SortOrder
 }
 
 export type OrderSumOrderByAggregateInput = {
@@ -1213,6 +1235,7 @@ export type OrderCreateWithoutEditionInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
@@ -1250,6 +1273,7 @@ export type OrderUncheckedCreateWithoutEditionInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
@@ -1313,6 +1337,7 @@ export type OrderScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   paymentReminderSent?: Prisma.BoolFilter<"Order"> | boolean
+  createdByContributorId?: Prisma.StringNullableFilter<"Order"> | string | null
 }
 
 export type OrderCreateWithoutSellerInput = {
@@ -1335,6 +1360,7 @@ export type OrderCreateWithoutSellerInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
@@ -1372,6 +1398,7 @@ export type OrderUncheckedCreateWithoutSellerInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
@@ -1427,6 +1454,7 @@ export type OrderCreateWithoutCustomerInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
@@ -1464,6 +1492,7 @@ export type OrderUncheckedCreateWithoutCustomerInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
@@ -1519,6 +1548,7 @@ export type OrderCreateWithoutAddressInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
@@ -1556,6 +1586,7 @@ export type OrderUncheckedCreateWithoutAddressInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
@@ -1611,6 +1642,7 @@ export type OrderCreateWithoutItemsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
@@ -1649,6 +1681,7 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
@@ -1693,6 +1726,7 @@ export type OrderUpdateWithoutItemsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
@@ -1731,6 +1765,7 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
@@ -1759,6 +1794,7 @@ export type OrderCreateWithoutTicketsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
@@ -1797,6 +1833,7 @@ export type OrderUncheckedCreateWithoutTicketsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
@@ -1841,6 +1878,7 @@ export type OrderUpdateWithoutTicketsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
@@ -1879,6 +1917,7 @@ export type OrderUncheckedUpdateWithoutTicketsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
@@ -1907,6 +1946,7 @@ export type OrderCreateWithoutVouchersInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
@@ -1945,6 +1985,7 @@ export type OrderUncheckedCreateWithoutVouchersInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
@@ -1989,6 +2030,7 @@ export type OrderUpdateWithoutVouchersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
@@ -2027,6 +2069,7 @@ export type OrderUncheckedUpdateWithoutVouchersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
@@ -2055,6 +2098,7 @@ export type OrderCreateWithoutPaymentsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
@@ -2093,6 +2137,7 @@ export type OrderUncheckedCreateWithoutPaymentsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
@@ -2137,6 +2182,7 @@ export type OrderUpdateWithoutPaymentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
@@ -2175,6 +2221,7 @@ export type OrderUncheckedUpdateWithoutPaymentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
@@ -2203,6 +2250,7 @@ export type OrderCreateWithoutCommandsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
   address?: Prisma.CustomerAddressCreateNestedOneWithoutOrdersInput
@@ -2241,6 +2289,7 @@ export type OrderUncheckedCreateWithoutCommandsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
@@ -2285,6 +2334,7 @@ export type OrderUpdateWithoutCommandsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
   address?: Prisma.CustomerAddressUpdateOneWithoutOrdersNestedInput
@@ -2323,6 +2373,7 @@ export type OrderUncheckedUpdateWithoutCommandsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
@@ -2351,6 +2402,7 @@ export type OrderCreateWithoutDeliveryStopsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
   address?: Prisma.CustomerAddressCreateNestedOneWithoutOrdersInput
@@ -2389,6 +2441,7 @@ export type OrderUncheckedCreateWithoutDeliveryStopsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
@@ -2433,6 +2486,7 @@ export type OrderUpdateWithoutDeliveryStopsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
   address?: Prisma.CustomerAddressUpdateOneWithoutOrdersNestedInput
@@ -2471,6 +2525,7 @@ export type OrderUncheckedUpdateWithoutDeliveryStopsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
@@ -2499,6 +2554,7 @@ export type OrderCreateWithoutPartnerInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
@@ -2536,6 +2592,7 @@ export type OrderUncheckedCreateWithoutPartnerInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
@@ -2591,6 +2648,7 @@ export type OrderCreateWithoutDonationsEntriesInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   address?: Prisma.CustomerAddressCreateNestedOneWithoutOrdersInput
@@ -2629,6 +2687,7 @@ export type OrderUncheckedCreateWithoutDonationsEntriesInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
@@ -2673,6 +2732,7 @@ export type OrderUpdateWithoutDonationsEntriesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   address?: Prisma.CustomerAddressUpdateOneWithoutOrdersNestedInput
@@ -2711,6 +2771,7 @@ export type OrderUncheckedUpdateWithoutDonationsEntriesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
@@ -2743,6 +2804,7 @@ export type OrderCreateManyEditionInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
 }
 
 export type OrderUpdateWithoutEditionInput = {
@@ -2765,6 +2827,7 @@ export type OrderUpdateWithoutEditionInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
@@ -2802,6 +2865,7 @@ export type OrderUncheckedUpdateWithoutEditionInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
@@ -2835,6 +2899,7 @@ export type OrderUncheckedUpdateManyWithoutEditionInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OrderCreateManySellerInput = {
@@ -2861,6 +2926,7 @@ export type OrderCreateManySellerInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
 }
 
 export type OrderUpdateWithoutSellerInput = {
@@ -2883,6 +2949,7 @@ export type OrderUpdateWithoutSellerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
@@ -2920,6 +2987,7 @@ export type OrderUncheckedUpdateWithoutSellerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
@@ -2953,6 +3021,7 @@ export type OrderUncheckedUpdateManyWithoutSellerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OrderCreateManyCustomerInput = {
@@ -2979,6 +3048,7 @@ export type OrderCreateManyCustomerInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
 }
 
 export type OrderUpdateWithoutCustomerInput = {
@@ -3001,6 +3071,7 @@ export type OrderUpdateWithoutCustomerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
@@ -3038,6 +3109,7 @@ export type OrderUncheckedUpdateWithoutCustomerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
@@ -3071,6 +3143,7 @@ export type OrderUncheckedUpdateManyWithoutCustomerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OrderCreateManyAddressInput = {
@@ -3097,6 +3170,7 @@ export type OrderCreateManyAddressInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
 }
 
 export type OrderUpdateWithoutAddressInput = {
@@ -3119,6 +3193,7 @@ export type OrderUpdateWithoutAddressInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
@@ -3156,6 +3231,7 @@ export type OrderUncheckedUpdateWithoutAddressInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
@@ -3189,6 +3265,7 @@ export type OrderUncheckedUpdateManyWithoutAddressInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OrderCreateManyPartnerInput = {
@@ -3215,6 +3292,7 @@ export type OrderCreateManyPartnerInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   paymentReminderSent?: boolean
+  createdByContributorId?: string | null
 }
 
 export type OrderUpdateWithoutPartnerInput = {
@@ -3237,6 +3315,7 @@ export type OrderUpdateWithoutPartnerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
@@ -3274,6 +3353,7 @@ export type OrderUncheckedUpdateWithoutPartnerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
@@ -3307,6 +3387,7 @@ export type OrderUncheckedUpdateManyWithoutPartnerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -3419,6 +3500,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   updatedAt?: boolean
   deletedAt?: boolean
   paymentReminderSent?: boolean
+  createdByContributorId?: boolean
   commands?: boolean | Prisma.Order$commandsArgs<ExtArgs>
   deliveryStops?: boolean | Prisma.Order$deliveryStopsArgs<ExtArgs>
   donationsEntries?: boolean | Prisma.Order$donationsEntriesArgs<ExtArgs>
@@ -3459,6 +3541,7 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   updatedAt?: boolean
   deletedAt?: boolean
   paymentReminderSent?: boolean
+  createdByContributorId?: boolean
   address?: boolean | Prisma.Order$addressArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   edition?: boolean | Prisma.EditionDefaultArgs<ExtArgs>
@@ -3491,6 +3574,7 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   updatedAt?: boolean
   deletedAt?: boolean
   paymentReminderSent?: boolean
+  createdByContributorId?: boolean
   address?: boolean | Prisma.Order$addressArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   edition?: boolean | Prisma.EditionDefaultArgs<ExtArgs>
@@ -3523,9 +3607,10 @@ export type OrderSelectScalar = {
   updatedAt?: boolean
   deletedAt?: boolean
   paymentReminderSent?: boolean
+  createdByContributorId?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "editionId" | "customerId" | "customerName" | "customerPhone" | "customerCPF" | "sellerId" | "sellerTag" | "origin" | "totalValue" | "status" | "siteStep" | "paymentStatus" | "paymentType" | "deliveryOption" | "deliveryTime" | "partnerId" | "addressId" | "observations" | "active" | "createdAt" | "updatedAt" | "deletedAt" | "paymentReminderSent", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "editionId" | "customerId" | "customerName" | "customerPhone" | "customerCPF" | "sellerId" | "sellerTag" | "origin" | "totalValue" | "status" | "siteStep" | "paymentStatus" | "paymentType" | "deliveryOption" | "deliveryTime" | "partnerId" | "addressId" | "observations" | "active" | "createdAt" | "updatedAt" | "deletedAt" | "paymentReminderSent" | "createdByContributorId", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   commands?: boolean | Prisma.Order$commandsArgs<ExtArgs>
   deliveryStops?: boolean | Prisma.Order$deliveryStopsArgs<ExtArgs>
@@ -3597,6 +3682,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     updatedAt: Date
     deletedAt: Date | null
     paymentReminderSent: boolean
+    createdByContributorId: string | null
   }, ExtArgs["result"]["order"]>
   composites: {}
 }
@@ -4056,6 +4142,7 @@ export interface OrderFieldRefs {
   readonly updatedAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly paymentReminderSent: Prisma.FieldRef<"Order", 'Boolean'>
+  readonly createdByContributorId: Prisma.FieldRef<"Order", 'String'>
 }
     
 

@@ -310,6 +310,8 @@ export type EditionWhereInput = {
   tickets?: Prisma.TicketListRelationFilter
   issuedVouchers?: Prisma.VoucherListRelationFilter
   redeemedVouchers?: Prisma.VoucherListRelationFilter
+  purchaseOrders?: Prisma.PurchaseOrderListRelationFilter
+  stockMovements?: Prisma.StockMovementListRelationFilter
 }
 
 export type EditionOrderByWithRelationInput = {
@@ -334,6 +336,8 @@ export type EditionOrderByWithRelationInput = {
   tickets?: Prisma.TicketOrderByRelationAggregateInput
   issuedVouchers?: Prisma.VoucherOrderByRelationAggregateInput
   redeemedVouchers?: Prisma.VoucherOrderByRelationAggregateInput
+  purchaseOrders?: Prisma.PurchaseOrderOrderByRelationAggregateInput
+  stockMovements?: Prisma.StockMovementOrderByRelationAggregateInput
   _relevance?: Prisma.EditionOrderByRelevanceInput
 }
 
@@ -362,6 +366,8 @@ export type EditionWhereUniqueInput = Prisma.AtLeast<{
   tickets?: Prisma.TicketListRelationFilter
   issuedVouchers?: Prisma.VoucherListRelationFilter
   redeemedVouchers?: Prisma.VoucherListRelationFilter
+  purchaseOrders?: Prisma.PurchaseOrderListRelationFilter
+  stockMovements?: Prisma.StockMovementListRelationFilter
 }, "id" | "name" | "productionDate" | "code">
 
 export type EditionOrderByWithAggregationInput = {
@@ -430,6 +436,8 @@ export type EditionCreateInput = {
   tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
   issuedVouchers?: Prisma.VoucherCreateNestedManyWithoutIssuedEditionInput
   redeemedVouchers?: Prisma.VoucherCreateNestedManyWithoutRedeemedEditionInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutEditionInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEditionInput
 }
 
 export type EditionUncheckedCreateInput = {
@@ -454,6 +462,8 @@ export type EditionUncheckedCreateInput = {
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
   issuedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutIssuedEditionInput
   redeemedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutRedeemedEditionInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutEditionInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEditionInput
 }
 
 export type EditionUpdateInput = {
@@ -478,6 +488,8 @@ export type EditionUpdateInput = {
   tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
   issuedVouchers?: Prisma.VoucherUpdateManyWithoutIssuedEditionNestedInput
   redeemedVouchers?: Prisma.VoucherUpdateManyWithoutRedeemedEditionNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutEditionNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionUncheckedUpdateInput = {
@@ -502,6 +514,8 @@ export type EditionUncheckedUpdateInput = {
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
   issuedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutIssuedEditionNestedInput
   redeemedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutRedeemedEditionNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutEditionNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionCreateManyInput = {
@@ -734,6 +748,34 @@ export type EditionUpdateOneRequiredWithoutSettlementsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EditionUpdateToOneWithWhereWithoutSettlementsInput, Prisma.EditionUpdateWithoutSettlementsInput>, Prisma.EditionUncheckedUpdateWithoutSettlementsInput>
 }
 
+export type EditionCreateNestedOneWithoutPurchaseOrdersInput = {
+  create?: Prisma.XOR<Prisma.EditionCreateWithoutPurchaseOrdersInput, Prisma.EditionUncheckedCreateWithoutPurchaseOrdersInput>
+  connectOrCreate?: Prisma.EditionCreateOrConnectWithoutPurchaseOrdersInput
+  connect?: Prisma.EditionWhereUniqueInput
+}
+
+export type EditionUpdateOneRequiredWithoutPurchaseOrdersNestedInput = {
+  create?: Prisma.XOR<Prisma.EditionCreateWithoutPurchaseOrdersInput, Prisma.EditionUncheckedCreateWithoutPurchaseOrdersInput>
+  connectOrCreate?: Prisma.EditionCreateOrConnectWithoutPurchaseOrdersInput
+  upsert?: Prisma.EditionUpsertWithoutPurchaseOrdersInput
+  connect?: Prisma.EditionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EditionUpdateToOneWithWhereWithoutPurchaseOrdersInput, Prisma.EditionUpdateWithoutPurchaseOrdersInput>, Prisma.EditionUncheckedUpdateWithoutPurchaseOrdersInput>
+}
+
+export type EditionCreateNestedOneWithoutStockMovementsInput = {
+  create?: Prisma.XOR<Prisma.EditionCreateWithoutStockMovementsInput, Prisma.EditionUncheckedCreateWithoutStockMovementsInput>
+  connectOrCreate?: Prisma.EditionCreateOrConnectWithoutStockMovementsInput
+  connect?: Prisma.EditionWhereUniqueInput
+}
+
+export type EditionUpdateOneRequiredWithoutStockMovementsNestedInput = {
+  create?: Prisma.XOR<Prisma.EditionCreateWithoutStockMovementsInput, Prisma.EditionUncheckedCreateWithoutStockMovementsInput>
+  connectOrCreate?: Prisma.EditionCreateOrConnectWithoutStockMovementsInput
+  upsert?: Prisma.EditionUpsertWithoutStockMovementsInput
+  connect?: Prisma.EditionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EditionUpdateToOneWithWhereWithoutStockMovementsInput, Prisma.EditionUpdateWithoutStockMovementsInput>, Prisma.EditionUncheckedUpdateWithoutStockMovementsInput>
+}
+
 export type EditionCreateWithoutOrdersInput = {
   id?: string
   name: string
@@ -755,6 +797,8 @@ export type EditionCreateWithoutOrdersInput = {
   tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
   issuedVouchers?: Prisma.VoucherCreateNestedManyWithoutIssuedEditionInput
   redeemedVouchers?: Prisma.VoucherCreateNestedManyWithoutRedeemedEditionInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutEditionInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEditionInput
 }
 
 export type EditionUncheckedCreateWithoutOrdersInput = {
@@ -778,6 +822,8 @@ export type EditionUncheckedCreateWithoutOrdersInput = {
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
   issuedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutIssuedEditionInput
   redeemedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutRedeemedEditionInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutEditionInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEditionInput
 }
 
 export type EditionCreateOrConnectWithoutOrdersInput = {
@@ -817,6 +863,8 @@ export type EditionUpdateWithoutOrdersInput = {
   tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
   issuedVouchers?: Prisma.VoucherUpdateManyWithoutIssuedEditionNestedInput
   redeemedVouchers?: Prisma.VoucherUpdateManyWithoutRedeemedEditionNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutEditionNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionUncheckedUpdateWithoutOrdersInput = {
@@ -840,6 +888,8 @@ export type EditionUncheckedUpdateWithoutOrdersInput = {
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
   issuedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutIssuedEditionNestedInput
   redeemedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutRedeemedEditionNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutEditionNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionCreateWithoutTicketsInput = {
@@ -863,6 +913,8 @@ export type EditionCreateWithoutTicketsInput = {
   settlements?: Prisma.SellerSettlementCreateNestedManyWithoutEditionInput
   issuedVouchers?: Prisma.VoucherCreateNestedManyWithoutIssuedEditionInput
   redeemedVouchers?: Prisma.VoucherCreateNestedManyWithoutRedeemedEditionInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutEditionInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEditionInput
 }
 
 export type EditionUncheckedCreateWithoutTicketsInput = {
@@ -886,6 +938,8 @@ export type EditionUncheckedCreateWithoutTicketsInput = {
   settlements?: Prisma.SellerSettlementUncheckedCreateNestedManyWithoutEditionInput
   issuedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutIssuedEditionInput
   redeemedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutRedeemedEditionInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutEditionInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEditionInput
 }
 
 export type EditionCreateOrConnectWithoutTicketsInput = {
@@ -925,6 +979,8 @@ export type EditionUpdateWithoutTicketsInput = {
   settlements?: Prisma.SellerSettlementUpdateManyWithoutEditionNestedInput
   issuedVouchers?: Prisma.VoucherUpdateManyWithoutIssuedEditionNestedInput
   redeemedVouchers?: Prisma.VoucherUpdateManyWithoutRedeemedEditionNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutEditionNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionUncheckedUpdateWithoutTicketsInput = {
@@ -948,6 +1004,8 @@ export type EditionUncheckedUpdateWithoutTicketsInput = {
   settlements?: Prisma.SellerSettlementUncheckedUpdateManyWithoutEditionNestedInput
   issuedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutIssuedEditionNestedInput
   redeemedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutRedeemedEditionNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutEditionNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionCreateWithoutIssuedVouchersInput = {
@@ -971,6 +1029,8 @@ export type EditionCreateWithoutIssuedVouchersInput = {
   settlements?: Prisma.SellerSettlementCreateNestedManyWithoutEditionInput
   tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
   redeemedVouchers?: Prisma.VoucherCreateNestedManyWithoutRedeemedEditionInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutEditionInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEditionInput
 }
 
 export type EditionUncheckedCreateWithoutIssuedVouchersInput = {
@@ -994,6 +1054,8 @@ export type EditionUncheckedCreateWithoutIssuedVouchersInput = {
   settlements?: Prisma.SellerSettlementUncheckedCreateNestedManyWithoutEditionInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
   redeemedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutRedeemedEditionInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutEditionInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEditionInput
 }
 
 export type EditionCreateOrConnectWithoutIssuedVouchersInput = {
@@ -1022,6 +1084,8 @@ export type EditionCreateWithoutRedeemedVouchersInput = {
   settlements?: Prisma.SellerSettlementCreateNestedManyWithoutEditionInput
   tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
   issuedVouchers?: Prisma.VoucherCreateNestedManyWithoutIssuedEditionInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutEditionInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEditionInput
 }
 
 export type EditionUncheckedCreateWithoutRedeemedVouchersInput = {
@@ -1045,6 +1109,8 @@ export type EditionUncheckedCreateWithoutRedeemedVouchersInput = {
   settlements?: Prisma.SellerSettlementUncheckedCreateNestedManyWithoutEditionInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
   issuedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutIssuedEditionInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutEditionInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEditionInput
 }
 
 export type EditionCreateOrConnectWithoutRedeemedVouchersInput = {
@@ -1084,6 +1150,8 @@ export type EditionUpdateWithoutIssuedVouchersInput = {
   settlements?: Prisma.SellerSettlementUpdateManyWithoutEditionNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
   redeemedVouchers?: Prisma.VoucherUpdateManyWithoutRedeemedEditionNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutEditionNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionUncheckedUpdateWithoutIssuedVouchersInput = {
@@ -1107,6 +1175,8 @@ export type EditionUncheckedUpdateWithoutIssuedVouchersInput = {
   settlements?: Prisma.SellerSettlementUncheckedUpdateManyWithoutEditionNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
   redeemedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutRedeemedEditionNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutEditionNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionUpsertWithoutRedeemedVouchersInput = {
@@ -1141,6 +1211,8 @@ export type EditionUpdateWithoutRedeemedVouchersInput = {
   settlements?: Prisma.SellerSettlementUpdateManyWithoutEditionNestedInput
   tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
   issuedVouchers?: Prisma.VoucherUpdateManyWithoutIssuedEditionNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutEditionNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionUncheckedUpdateWithoutRedeemedVouchersInput = {
@@ -1164,6 +1236,8 @@ export type EditionUncheckedUpdateWithoutRedeemedVouchersInput = {
   settlements?: Prisma.SellerSettlementUncheckedUpdateManyWithoutEditionNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
   issuedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutIssuedEditionNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutEditionNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionCreateWithoutCommandsInput = {
@@ -1187,6 +1261,8 @@ export type EditionCreateWithoutCommandsInput = {
   tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
   issuedVouchers?: Prisma.VoucherCreateNestedManyWithoutIssuedEditionInput
   redeemedVouchers?: Prisma.VoucherCreateNestedManyWithoutRedeemedEditionInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutEditionInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEditionInput
 }
 
 export type EditionUncheckedCreateWithoutCommandsInput = {
@@ -1210,6 +1286,8 @@ export type EditionUncheckedCreateWithoutCommandsInput = {
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
   issuedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutIssuedEditionInput
   redeemedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutRedeemedEditionInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutEditionInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEditionInput
 }
 
 export type EditionCreateOrConnectWithoutCommandsInput = {
@@ -1249,6 +1327,8 @@ export type EditionUpdateWithoutCommandsInput = {
   tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
   issuedVouchers?: Prisma.VoucherUpdateManyWithoutIssuedEditionNestedInput
   redeemedVouchers?: Prisma.VoucherUpdateManyWithoutRedeemedEditionNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutEditionNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionUncheckedUpdateWithoutCommandsInput = {
@@ -1272,6 +1352,8 @@ export type EditionUncheckedUpdateWithoutCommandsInput = {
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
   issuedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutIssuedEditionNestedInput
   redeemedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutRedeemedEditionNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutEditionNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionCreateWithoutSettlementsInput = {
@@ -1295,6 +1377,8 @@ export type EditionCreateWithoutSettlementsInput = {
   tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
   issuedVouchers?: Prisma.VoucherCreateNestedManyWithoutIssuedEditionInput
   redeemedVouchers?: Prisma.VoucherCreateNestedManyWithoutRedeemedEditionInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutEditionInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEditionInput
 }
 
 export type EditionUncheckedCreateWithoutSettlementsInput = {
@@ -1318,6 +1402,8 @@ export type EditionUncheckedCreateWithoutSettlementsInput = {
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
   issuedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutIssuedEditionInput
   redeemedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutRedeemedEditionInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutEditionInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEditionInput
 }
 
 export type EditionCreateOrConnectWithoutSettlementsInput = {
@@ -1357,6 +1443,8 @@ export type EditionUpdateWithoutSettlementsInput = {
   tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
   issuedVouchers?: Prisma.VoucherUpdateManyWithoutIssuedEditionNestedInput
   redeemedVouchers?: Prisma.VoucherUpdateManyWithoutRedeemedEditionNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutEditionNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEditionNestedInput
 }
 
 export type EditionUncheckedUpdateWithoutSettlementsInput = {
@@ -1380,6 +1468,240 @@ export type EditionUncheckedUpdateWithoutSettlementsInput = {
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
   issuedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutIssuedEditionNestedInput
   redeemedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutRedeemedEditionNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutEditionNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEditionNestedInput
+}
+
+export type EditionCreateWithoutPurchaseOrdersInput = {
+  id?: string
+  name: string
+  productionDate: Date | string
+  code: string
+  saleStartDate: Date | string
+  saleEndDate: Date | string
+  autoEnableDate?: Date | string | null
+  autoDisableDate?: Date | string | null
+  limitSale: number
+  dogsSold?: number
+  dogPrice?: number
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  commands?: Prisma.CommandCreateNestedManyWithoutEditionInput
+  orders?: Prisma.OrderCreateNestedManyWithoutEditionInput
+  settlements?: Prisma.SellerSettlementCreateNestedManyWithoutEditionInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
+  issuedVouchers?: Prisma.VoucherCreateNestedManyWithoutIssuedEditionInput
+  redeemedVouchers?: Prisma.VoucherCreateNestedManyWithoutRedeemedEditionInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEditionInput
+}
+
+export type EditionUncheckedCreateWithoutPurchaseOrdersInput = {
+  id?: string
+  name: string
+  productionDate: Date | string
+  code: string
+  saleStartDate: Date | string
+  saleEndDate: Date | string
+  autoEnableDate?: Date | string | null
+  autoDisableDate?: Date | string | null
+  limitSale: number
+  dogsSold?: number
+  dogPrice?: number
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  commands?: Prisma.CommandUncheckedCreateNestedManyWithoutEditionInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutEditionInput
+  settlements?: Prisma.SellerSettlementUncheckedCreateNestedManyWithoutEditionInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
+  issuedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutIssuedEditionInput
+  redeemedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutRedeemedEditionInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEditionInput
+}
+
+export type EditionCreateOrConnectWithoutPurchaseOrdersInput = {
+  where: Prisma.EditionWhereUniqueInput
+  create: Prisma.XOR<Prisma.EditionCreateWithoutPurchaseOrdersInput, Prisma.EditionUncheckedCreateWithoutPurchaseOrdersInput>
+}
+
+export type EditionUpsertWithoutPurchaseOrdersInput = {
+  update: Prisma.XOR<Prisma.EditionUpdateWithoutPurchaseOrdersInput, Prisma.EditionUncheckedUpdateWithoutPurchaseOrdersInput>
+  create: Prisma.XOR<Prisma.EditionCreateWithoutPurchaseOrdersInput, Prisma.EditionUncheckedCreateWithoutPurchaseOrdersInput>
+  where?: Prisma.EditionWhereInput
+}
+
+export type EditionUpdateToOneWithWhereWithoutPurchaseOrdersInput = {
+  where?: Prisma.EditionWhereInput
+  data: Prisma.XOR<Prisma.EditionUpdateWithoutPurchaseOrdersInput, Prisma.EditionUncheckedUpdateWithoutPurchaseOrdersInput>
+}
+
+export type EditionUpdateWithoutPurchaseOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  productionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  saleStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  saleEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  autoEnableDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autoDisableDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  limitSale?: Prisma.IntFieldUpdateOperationsInput | number
+  dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
+  dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  commands?: Prisma.CommandUpdateManyWithoutEditionNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutEditionNestedInput
+  settlements?: Prisma.SellerSettlementUpdateManyWithoutEditionNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
+  issuedVouchers?: Prisma.VoucherUpdateManyWithoutIssuedEditionNestedInput
+  redeemedVouchers?: Prisma.VoucherUpdateManyWithoutRedeemedEditionNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEditionNestedInput
+}
+
+export type EditionUncheckedUpdateWithoutPurchaseOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  productionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  saleStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  saleEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  autoEnableDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autoDisableDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  limitSale?: Prisma.IntFieldUpdateOperationsInput | number
+  dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
+  dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  commands?: Prisma.CommandUncheckedUpdateManyWithoutEditionNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutEditionNestedInput
+  settlements?: Prisma.SellerSettlementUncheckedUpdateManyWithoutEditionNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
+  issuedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutIssuedEditionNestedInput
+  redeemedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutRedeemedEditionNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEditionNestedInput
+}
+
+export type EditionCreateWithoutStockMovementsInput = {
+  id?: string
+  name: string
+  productionDate: Date | string
+  code: string
+  saleStartDate: Date | string
+  saleEndDate: Date | string
+  autoEnableDate?: Date | string | null
+  autoDisableDate?: Date | string | null
+  limitSale: number
+  dogsSold?: number
+  dogPrice?: number
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  commands?: Prisma.CommandCreateNestedManyWithoutEditionInput
+  orders?: Prisma.OrderCreateNestedManyWithoutEditionInput
+  settlements?: Prisma.SellerSettlementCreateNestedManyWithoutEditionInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutEditionInput
+  issuedVouchers?: Prisma.VoucherCreateNestedManyWithoutIssuedEditionInput
+  redeemedVouchers?: Prisma.VoucherCreateNestedManyWithoutRedeemedEditionInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutEditionInput
+}
+
+export type EditionUncheckedCreateWithoutStockMovementsInput = {
+  id?: string
+  name: string
+  productionDate: Date | string
+  code: string
+  saleStartDate: Date | string
+  saleEndDate: Date | string
+  autoEnableDate?: Date | string | null
+  autoDisableDate?: Date | string | null
+  limitSale: number
+  dogsSold?: number
+  dogPrice?: number
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  commands?: Prisma.CommandUncheckedCreateNestedManyWithoutEditionInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutEditionInput
+  settlements?: Prisma.SellerSettlementUncheckedCreateNestedManyWithoutEditionInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutEditionInput
+  issuedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutIssuedEditionInput
+  redeemedVouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutRedeemedEditionInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutEditionInput
+}
+
+export type EditionCreateOrConnectWithoutStockMovementsInput = {
+  where: Prisma.EditionWhereUniqueInput
+  create: Prisma.XOR<Prisma.EditionCreateWithoutStockMovementsInput, Prisma.EditionUncheckedCreateWithoutStockMovementsInput>
+}
+
+export type EditionUpsertWithoutStockMovementsInput = {
+  update: Prisma.XOR<Prisma.EditionUpdateWithoutStockMovementsInput, Prisma.EditionUncheckedUpdateWithoutStockMovementsInput>
+  create: Prisma.XOR<Prisma.EditionCreateWithoutStockMovementsInput, Prisma.EditionUncheckedCreateWithoutStockMovementsInput>
+  where?: Prisma.EditionWhereInput
+}
+
+export type EditionUpdateToOneWithWhereWithoutStockMovementsInput = {
+  where?: Prisma.EditionWhereInput
+  data: Prisma.XOR<Prisma.EditionUpdateWithoutStockMovementsInput, Prisma.EditionUncheckedUpdateWithoutStockMovementsInput>
+}
+
+export type EditionUpdateWithoutStockMovementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  productionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  saleStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  saleEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  autoEnableDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autoDisableDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  limitSale?: Prisma.IntFieldUpdateOperationsInput | number
+  dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
+  dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  commands?: Prisma.CommandUpdateManyWithoutEditionNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutEditionNestedInput
+  settlements?: Prisma.SellerSettlementUpdateManyWithoutEditionNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutEditionNestedInput
+  issuedVouchers?: Prisma.VoucherUpdateManyWithoutIssuedEditionNestedInput
+  redeemedVouchers?: Prisma.VoucherUpdateManyWithoutRedeemedEditionNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutEditionNestedInput
+}
+
+export type EditionUncheckedUpdateWithoutStockMovementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  productionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  saleStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  saleEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  autoEnableDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autoDisableDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  limitSale?: Prisma.IntFieldUpdateOperationsInput | number
+  dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
+  dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  commands?: Prisma.CommandUncheckedUpdateManyWithoutEditionNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutEditionNestedInput
+  settlements?: Prisma.SellerSettlementUncheckedUpdateManyWithoutEditionNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutEditionNestedInput
+  issuedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutIssuedEditionNestedInput
+  redeemedVouchers?: Prisma.VoucherUncheckedUpdateManyWithoutRedeemedEditionNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutEditionNestedInput
 }
 
 
@@ -1394,6 +1716,8 @@ export type EditionCountOutputType = {
   tickets: number
   issuedVouchers: number
   redeemedVouchers: number
+  purchaseOrders: number
+  stockMovements: number
 }
 
 export type EditionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1403,6 +1727,8 @@ export type EditionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   tickets?: boolean | EditionCountOutputTypeCountTicketsArgs
   issuedVouchers?: boolean | EditionCountOutputTypeCountIssuedVouchersArgs
   redeemedVouchers?: boolean | EditionCountOutputTypeCountRedeemedVouchersArgs
+  purchaseOrders?: boolean | EditionCountOutputTypeCountPurchaseOrdersArgs
+  stockMovements?: boolean | EditionCountOutputTypeCountStockMovementsArgs
 }
 
 /**
@@ -1457,6 +1783,20 @@ export type EditionCountOutputTypeCountRedeemedVouchersArgs<ExtArgs extends runt
   where?: Prisma.VoucherWhereInput
 }
 
+/**
+ * EditionCountOutputType without action
+ */
+export type EditionCountOutputTypeCountPurchaseOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PurchaseOrderWhereInput
+}
+
+/**
+ * EditionCountOutputType without action
+ */
+export type EditionCountOutputTypeCountStockMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StockMovementWhereInput
+}
+
 
 export type EditionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1480,6 +1820,8 @@ export type EditionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   tickets?: boolean | Prisma.Edition$ticketsArgs<ExtArgs>
   issuedVouchers?: boolean | Prisma.Edition$issuedVouchersArgs<ExtArgs>
   redeemedVouchers?: boolean | Prisma.Edition$redeemedVouchersArgs<ExtArgs>
+  purchaseOrders?: boolean | Prisma.Edition$purchaseOrdersArgs<ExtArgs>
+  stockMovements?: boolean | Prisma.Edition$stockMovementsArgs<ExtArgs>
   _count?: boolean | Prisma.EditionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["edition"]>
 
@@ -1545,6 +1887,8 @@ export type EditionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   tickets?: boolean | Prisma.Edition$ticketsArgs<ExtArgs>
   issuedVouchers?: boolean | Prisma.Edition$issuedVouchersArgs<ExtArgs>
   redeemedVouchers?: boolean | Prisma.Edition$redeemedVouchersArgs<ExtArgs>
+  purchaseOrders?: boolean | Prisma.Edition$purchaseOrdersArgs<ExtArgs>
+  stockMovements?: boolean | Prisma.Edition$stockMovementsArgs<ExtArgs>
   _count?: boolean | Prisma.EditionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EditionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1559,6 +1903,8 @@ export type $EditionPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     tickets: Prisma.$TicketPayload<ExtArgs>[]
     issuedVouchers: Prisma.$VoucherPayload<ExtArgs>[]
     redeemedVouchers: Prisma.$VoucherPayload<ExtArgs>[]
+    purchaseOrders: Prisma.$PurchaseOrderPayload<ExtArgs>[]
+    stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1976,6 +2322,8 @@ export interface Prisma__EditionClient<T, Null = never, ExtArgs extends runtime.
   tickets<T extends Prisma.Edition$ticketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Edition$ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   issuedVouchers<T extends Prisma.Edition$issuedVouchersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Edition$issuedVouchersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VoucherPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   redeemedVouchers<T extends Prisma.Edition$redeemedVouchersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Edition$redeemedVouchersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VoucherPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  purchaseOrders<T extends Prisma.Edition$purchaseOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Edition$purchaseOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  stockMovements<T extends Prisma.Edition$stockMovementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Edition$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2554,6 +2902,54 @@ export type Edition$redeemedVouchersArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.VoucherScalarFieldEnum | Prisma.VoucherScalarFieldEnum[]
+}
+
+/**
+ * Edition.purchaseOrders
+ */
+export type Edition$purchaseOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PurchaseOrder
+   */
+  select?: Prisma.PurchaseOrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PurchaseOrder
+   */
+  omit?: Prisma.PurchaseOrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchaseOrderInclude<ExtArgs> | null
+  where?: Prisma.PurchaseOrderWhereInput
+  orderBy?: Prisma.PurchaseOrderOrderByWithRelationInput | Prisma.PurchaseOrderOrderByWithRelationInput[]
+  cursor?: Prisma.PurchaseOrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PurchaseOrderScalarFieldEnum | Prisma.PurchaseOrderScalarFieldEnum[]
+}
+
+/**
+ * Edition.stockMovements
+ */
+export type Edition$stockMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StockMovement
+   */
+  select?: Prisma.StockMovementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StockMovement
+   */
+  omit?: Prisma.StockMovementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StockMovementInclude<ExtArgs> | null
+  where?: Prisma.StockMovementWhereInput
+  orderBy?: Prisma.StockMovementOrderByWithRelationInput | Prisma.StockMovementOrderByWithRelationInput[]
+  cursor?: Prisma.StockMovementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StockMovementScalarFieldEnum | Prisma.StockMovementScalarFieldEnum[]
 }
 
 /**

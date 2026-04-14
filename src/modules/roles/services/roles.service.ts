@@ -28,6 +28,15 @@ export class RolesService extends BaseCrudService<
     this.model = this.prisma.role;
   }
 
+  async findById(id: string) {
+    return super.findById(id, {
+      include: {
+        permissions: { include: { module: true } },
+        users: { include: { contributor: true } },
+      },
+    });
+  }
+
   async setRolePermission(
     roleId: string,
     moduleId: string,

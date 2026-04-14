@@ -204,3 +204,38 @@ export type NotificationPreference = Prisma.NotificationPreferenceModel
  * 
  */
 export type NotificationLog = Prisma.NotificationLogModel
+/**
+ * Model Control
+ * 
+ */
+export type Control = Prisma.ControlModel
+/**
+ * Model ControlPermission
+ * 
+ */
+export type ControlPermission = Prisma.ControlPermissionModel
+/**
+ * Model SystemConfig
+ * 
+ */
+export type SystemConfig = Prisma.SystemConfigModel
+/**
+ * Model StockProduct
+ * 
+ */
+export type StockProduct = Prisma.StockProductModel
+/**
+ * Model PurchaseOrder
+ * 
+ */
+export type PurchaseOrder = Prisma.PurchaseOrderModel
+/**
+ * Model PurchaseItem
+ * 
+ */
+export type PurchaseItem = Prisma.PurchaseItemModel
+/**
+ * Model StockMovement
+ * 
+ */
+export type StockMovement = Prisma.StockMovementModel

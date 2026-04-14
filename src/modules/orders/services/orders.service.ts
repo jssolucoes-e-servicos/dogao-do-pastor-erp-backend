@@ -146,10 +146,11 @@ export class OrdersService extends BaseCrudService<
         customerCPF: customerBase.cpf!,
         sellerId: seller.id,
         sellerTag: seller.tag,
-        origin: OrderOriginEnum.SITE,
+        origin: dto.contributorId ? OrderOriginEnum.APP : OrderOriginEnum.SITE,
         status: OrderStatusEnum.DIGITATION,
         siteStep: SiteOrderStepEnum.CUSTOMER,
         totalValue: 0,
+        createdByContributorId: dto.contributorId || null,
       },
       include: {
         items: true,
@@ -264,6 +265,12 @@ export class OrdersService extends BaseCrudService<
     if (user && !isPrivileged) {
       const securityOR: any[] = [];
 
+      // Vendas criadas diretamente por este contributor (app, PDV)
+      if (user.id) {
+        securityOR.push({ createdByContributorId: user.id });
+      }
+
+      // Vendas pela tag do seller vinculado ao contributor
       if (user.sellerId) {
         securityOR.push({ sellerId: user.sellerId });
       }
@@ -1011,6 +1018,7 @@ export class OrdersService extends BaseCrudService<
           addressId: addressId,
           partnerId: dto.partnerId || null,
           siteStep: SiteOrderStepEnum.THANKS,
+          createdByContributorId: dto.contributorId || user?.id || null,
           items: {
             create: dto.items.map((item) => ({
               unitPrice: dto.totalValue / (dto.items.length || 1),
@@ -1044,6 +1052,7 @@ export class OrdersService extends BaseCrudService<
           addressId: addressId,
           partnerId: dto.partnerId || null,
           siteStep: SiteOrderStepEnum.THANKS,
+          createdByContributorId: dto.contributorId || user?.id || null,
           items: {
             create: dto.items.map((item) => ({
               unitPrice: dto.totalValue / (dto.items.length || 1),

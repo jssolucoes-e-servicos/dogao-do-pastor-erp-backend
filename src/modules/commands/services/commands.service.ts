@@ -151,7 +151,7 @@ export class CommandsService extends BaseCrudService<
     if (exists.withdrawalId) {
       const withdrawalStatus =
         dto.status === 'IN_PRODUCTION' ? 'CONFIRMED'  :  // Iniciou → Em Produção
-        dto.status === 'EXPEDITION'    ? 'COMPLETED'  :  // Concluiu → Pronto p/ retirada
+        dto.status === 'EXPEDITION'    ? 'READY'      :  // Concluiu → Pronto p/ retirada
         dto.status === 'DELIVERED'     ? 'DELIVERED'  :  // Retirado → Finalizado
         null;
 

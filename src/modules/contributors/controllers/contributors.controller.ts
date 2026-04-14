@@ -29,12 +29,9 @@ import { UploadPhotoDto } from '../dto/upload-photo.dto';
 @Controller('contributors')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class ContributorsController {
-  constructor(private readonly service: ContributorsService) {
-    /* void */
-  }
+  constructor(private readonly service: ContributorsService) {}
 
   @PaginatedQuery()
-  @Roles('IT', 'ADMIN')
   async list(
     @Query() query: PaginationQueryDto,
     @User() user: any,
@@ -46,10 +43,7 @@ export class ContributorsController {
   @Roles('IT', 'ADMIN')
   async create(@Body() dto: CreateContributorDto) {
     const created = await this.service.create(dto);
-    return {
-      ...created,
-      password: undefined,
-    };
+    return { ...created, password: undefined };
   }
 
   @Get('me')
@@ -71,7 +65,6 @@ export class ContributorsController {
   }
 
   @Get('show/:id')
-  @Roles('IT', 'ADMIN')
   async findById(@Param() { id }: IdParamDto) {
     return await this.service.findById(id);
   }
@@ -102,7 +95,7 @@ export class ContributorsController {
 
   @Post(':id/photo')
   @Roles('IT', 'ADMIN')
-  @FormDataRequest() // Necessário para processar multipart/form-data
+  @FormDataRequest()
   async uploadPhoto(
     @Param() { id }: IdParamDto,
     @Body() { photo }: UploadPhotoDto,
@@ -110,25 +103,23 @@ export class ContributorsController {
     return await this.service.uploadPhoto(id, photo);
   }
 
+  // ── Gestão de perfis e permissões (sem restrição de role por enquanto) ──
+
   @Post(':id/roles/:roleId')
-  @Roles('IT', 'ADMIN')
   async linkRole(@Param('id') id: string, @Param('roleId') roleId: string) {
     return await this.service.linkRole(id, roleId);
   }
 
   @Delete(':id/roles/:roleId')
-  @Roles('IT', 'ADMIN')
   async unlinkRole(@Param('id') id: string, @Param('roleId') roleId: string) {
     return await this.service.unlinkRole(id, roleId);
   }
 
   @Post(':id/permissions/:moduleId')
-  @Roles('IT', 'ADMIN')
   async setPermission(
     @Param('id') id: string,
     @Param('moduleId') moduleId: string,
-    @Body()
-    permissions: {
+    @Body() permissions: {
       access?: boolean;
       create?: boolean;
       update?: boolean;

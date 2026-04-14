@@ -5,6 +5,9 @@ export class CreateModuleDto {
   name: string;
 
   @IsString()
+  slug: string;
+
+  @IsString()
   description: string;
 
   @IsString()
