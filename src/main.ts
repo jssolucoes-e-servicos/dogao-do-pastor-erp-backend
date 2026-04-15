@@ -49,9 +49,21 @@ async function bootstrap() {
       'This is a API for Dogão do Pastor - by smart Foods Tecnology',
     )
     .setVersion('1.0')
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT', in: 'header' },
+      'JWT',
+    )
+    .addApiKey(
+      { type: 'apiKey', in: 'header', name: 'x-system-secret' },
+      'SystemSecret',
+    )
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  SwaggerModule.setup('api', app, documentFactory, {
+    swaggerOptions: {
+      persistAuthorization: true, // mantém o token entre reloads
+    },
+  });
 
   console.log('--- BACKEND DDP RESTARTED - PORT:', process.env.PORT ?? 3010, '---');
   await app.listen(process.env.PORT ?? 3010);
