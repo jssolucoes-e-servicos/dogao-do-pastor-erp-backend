@@ -80,10 +80,10 @@ export class SellersController {
     return await this.service.restore(id);
   }
 
-  /* @Post('send-links-all')
+  @Post('send-links-all')
   async sendLinksAll() {
     return await this.service.sendLinksAll();
-  } */
+  }
 
   @Post('send-link/:id')
   async sendLinksFor(@Param() { id }: IdParamDto) {

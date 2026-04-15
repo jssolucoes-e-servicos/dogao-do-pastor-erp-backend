@@ -379,6 +379,7 @@ export type OrderWhereInput = {
   commands?: Prisma.CommandListRelationFilter
   deliveryStops?: Prisma.DeliveryStopListRelationFilter
   donationsEntries?: Prisma.DonationEntryListRelationFilter
+  cashSettlementOrder?: Prisma.XOR<Prisma.CashSettlementOrderNullableScalarRelationFilter, Prisma.CashSettlementOrderWhereInput> | null
   address?: Prisma.XOR<Prisma.CustomerAddressNullableScalarRelationFilter, Prisma.CustomerAddressWhereInput> | null
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
   edition?: Prisma.XOR<Prisma.EditionScalarRelationFilter, Prisma.EditionWhereInput>
@@ -419,6 +420,7 @@ export type OrderOrderByWithRelationInput = {
   commands?: Prisma.CommandOrderByRelationAggregateInput
   deliveryStops?: Prisma.DeliveryStopOrderByRelationAggregateInput
   donationsEntries?: Prisma.DonationEntryOrderByRelationAggregateInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderOrderByWithRelationInput
   address?: Prisma.CustomerAddressOrderByWithRelationInput
   customer?: Prisma.CustomerOrderByWithRelationInput
   edition?: Prisma.EditionOrderByWithRelationInput
@@ -463,6 +465,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   commands?: Prisma.CommandListRelationFilter
   deliveryStops?: Prisma.DeliveryStopListRelationFilter
   donationsEntries?: Prisma.DonationEntryListRelationFilter
+  cashSettlementOrder?: Prisma.XOR<Prisma.CashSettlementOrderNullableScalarRelationFilter, Prisma.CashSettlementOrderWhereInput> | null
   address?: Prisma.XOR<Prisma.CustomerAddressNullableScalarRelationFilter, Prisma.CustomerAddressWhereInput> | null
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
   edition?: Prisma.XOR<Prisma.EditionScalarRelationFilter, Prisma.EditionWhereInput>
@@ -562,6 +565,7 @@ export type OrderCreateInput = {
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderCreateNestedOneWithoutOrderInput
   address?: Prisma.CustomerAddressCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   edition: Prisma.EditionCreateNestedOneWithoutOrdersInput
@@ -602,6 +606,7 @@ export type OrderUncheckedCreateInput = {
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
@@ -632,6 +637,7 @@ export type OrderUpdateInput = {
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUpdateOneWithoutOrderNestedInput
   address?: Prisma.CustomerAddressUpdateOneWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   edition?: Prisma.EditionUpdateOneRequiredWithoutOrdersNestedInput
@@ -672,6 +678,7 @@ export type OrderUncheckedUpdateInput = {
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
@@ -1215,6 +1222,20 @@ export type OrderUpdateOneWithoutDonationsEntriesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutDonationsEntriesInput, Prisma.OrderUpdateWithoutDonationsEntriesInput>, Prisma.OrderUncheckedUpdateWithoutDonationsEntriesInput>
 }
 
+export type OrderCreateNestedOneWithoutCashSettlementOrderInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutCashSettlementOrderInput, Prisma.OrderUncheckedCreateWithoutCashSettlementOrderInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutCashSettlementOrderInput
+  connect?: Prisma.OrderWhereUniqueInput
+}
+
+export type OrderUpdateOneRequiredWithoutCashSettlementOrderNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutCashSettlementOrderInput, Prisma.OrderUncheckedCreateWithoutCashSettlementOrderInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutCashSettlementOrderInput
+  upsert?: Prisma.OrderUpsertWithoutCashSettlementOrderInput
+  connect?: Prisma.OrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutCashSettlementOrderInput, Prisma.OrderUpdateWithoutCashSettlementOrderInput>, Prisma.OrderUncheckedUpdateWithoutCashSettlementOrderInput>
+}
+
 export type OrderCreateWithoutEditionInput = {
   id?: string
   customerName: string
@@ -1239,6 +1260,7 @@ export type OrderCreateWithoutEditionInput = {
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderCreateNestedOneWithoutOrderInput
   address?: Prisma.CustomerAddressCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   partner?: Prisma.PartnerCreateNestedOneWithoutDonationsInput
@@ -1277,6 +1299,7 @@ export type OrderUncheckedCreateWithoutEditionInput = {
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
@@ -1364,6 +1387,7 @@ export type OrderCreateWithoutSellerInput = {
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderCreateNestedOneWithoutOrderInput
   address?: Prisma.CustomerAddressCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   edition: Prisma.EditionCreateNestedOneWithoutOrdersInput
@@ -1402,6 +1426,7 @@ export type OrderUncheckedCreateWithoutSellerInput = {
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
@@ -1458,6 +1483,7 @@ export type OrderCreateWithoutCustomerInput = {
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderCreateNestedOneWithoutOrderInput
   address?: Prisma.CustomerAddressCreateNestedOneWithoutOrdersInput
   edition: Prisma.EditionCreateNestedOneWithoutOrdersInput
   partner?: Prisma.PartnerCreateNestedOneWithoutDonationsInput
@@ -1496,6 +1522,7 @@ export type OrderUncheckedCreateWithoutCustomerInput = {
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
@@ -1552,6 +1579,7 @@ export type OrderCreateWithoutAddressInput = {
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderCreateNestedOneWithoutOrderInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   edition: Prisma.EditionCreateNestedOneWithoutOrdersInput
   partner?: Prisma.PartnerCreateNestedOneWithoutDonationsInput
@@ -1590,6 +1618,7 @@ export type OrderUncheckedCreateWithoutAddressInput = {
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
@@ -1646,6 +1675,7 @@ export type OrderCreateWithoutItemsInput = {
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderCreateNestedOneWithoutOrderInput
   address?: Prisma.CustomerAddressCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   edition: Prisma.EditionCreateNestedOneWithoutOrdersInput
@@ -1685,6 +1715,7 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedCreateNestedOneWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
   vouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutOrderInput
@@ -1730,6 +1761,7 @@ export type OrderUpdateWithoutItemsInput = {
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUpdateOneWithoutOrderNestedInput
   address?: Prisma.CustomerAddressUpdateOneWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   edition?: Prisma.EditionUpdateOneRequiredWithoutOrdersNestedInput
@@ -1769,6 +1801,7 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedUpdateOneWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
   vouchers?: Prisma.VoucherUncheckedUpdateManyWithoutOrderNestedInput
@@ -1798,6 +1831,7 @@ export type OrderCreateWithoutTicketsInput = {
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderCreateNestedOneWithoutOrderInput
   address?: Prisma.CustomerAddressCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   edition: Prisma.EditionCreateNestedOneWithoutOrdersInput
@@ -1837,6 +1871,7 @@ export type OrderUncheckedCreateWithoutTicketsInput = {
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   vouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutOrderInput
@@ -1882,6 +1917,7 @@ export type OrderUpdateWithoutTicketsInput = {
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUpdateOneWithoutOrderNestedInput
   address?: Prisma.CustomerAddressUpdateOneWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   edition?: Prisma.EditionUpdateOneRequiredWithoutOrdersNestedInput
@@ -1921,6 +1957,7 @@ export type OrderUncheckedUpdateWithoutTicketsInput = {
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   vouchers?: Prisma.VoucherUncheckedUpdateManyWithoutOrderNestedInput
@@ -1950,6 +1987,7 @@ export type OrderCreateWithoutVouchersInput = {
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderCreateNestedOneWithoutOrderInput
   address?: Prisma.CustomerAddressCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   edition: Prisma.EditionCreateNestedOneWithoutOrdersInput
@@ -1989,6 +2027,7 @@ export type OrderUncheckedCreateWithoutVouchersInput = {
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
@@ -2034,6 +2073,7 @@ export type OrderUpdateWithoutVouchersInput = {
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUpdateOneWithoutOrderNestedInput
   address?: Prisma.CustomerAddressUpdateOneWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   edition?: Prisma.EditionUpdateOneRequiredWithoutOrdersNestedInput
@@ -2073,6 +2113,7 @@ export type OrderUncheckedUpdateWithoutVouchersInput = {
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
@@ -2102,6 +2143,7 @@ export type OrderCreateWithoutPaymentsInput = {
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderCreateNestedOneWithoutOrderInput
   address?: Prisma.CustomerAddressCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   edition: Prisma.EditionCreateNestedOneWithoutOrdersInput
@@ -2141,6 +2183,7 @@ export type OrderUncheckedCreateWithoutPaymentsInput = {
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
   vouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutOrderInput
@@ -2186,6 +2229,7 @@ export type OrderUpdateWithoutPaymentsInput = {
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUpdateOneWithoutOrderNestedInput
   address?: Prisma.CustomerAddressUpdateOneWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   edition?: Prisma.EditionUpdateOneRequiredWithoutOrdersNestedInput
@@ -2225,6 +2269,7 @@ export type OrderUncheckedUpdateWithoutPaymentsInput = {
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
   vouchers?: Prisma.VoucherUncheckedUpdateManyWithoutOrderNestedInput
@@ -2253,6 +2298,7 @@ export type OrderCreateWithoutCommandsInput = {
   createdByContributorId?: string | null
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderCreateNestedOneWithoutOrderInput
   address?: Prisma.CustomerAddressCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   edition: Prisma.EditionCreateNestedOneWithoutOrdersInput
@@ -2292,6 +2338,7 @@ export type OrderUncheckedCreateWithoutCommandsInput = {
   createdByContributorId?: string | null
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
@@ -2337,6 +2384,7 @@ export type OrderUpdateWithoutCommandsInput = {
   createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUpdateOneWithoutOrderNestedInput
   address?: Prisma.CustomerAddressUpdateOneWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   edition?: Prisma.EditionUpdateOneRequiredWithoutOrdersNestedInput
@@ -2376,6 +2424,7 @@ export type OrderUncheckedUpdateWithoutCommandsInput = {
   createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
@@ -2405,6 +2454,7 @@ export type OrderCreateWithoutDeliveryStopsInput = {
   createdByContributorId?: string | null
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderCreateNestedOneWithoutOrderInput
   address?: Prisma.CustomerAddressCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   edition: Prisma.EditionCreateNestedOneWithoutOrdersInput
@@ -2444,6 +2494,7 @@ export type OrderUncheckedCreateWithoutDeliveryStopsInput = {
   createdByContributorId?: string | null
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
@@ -2489,6 +2540,7 @@ export type OrderUpdateWithoutDeliveryStopsInput = {
   createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUpdateOneWithoutOrderNestedInput
   address?: Prisma.CustomerAddressUpdateOneWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   edition?: Prisma.EditionUpdateOneRequiredWithoutOrdersNestedInput
@@ -2528,6 +2580,7 @@ export type OrderUncheckedUpdateWithoutDeliveryStopsInput = {
   createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
@@ -2558,6 +2611,7 @@ export type OrderCreateWithoutPartnerInput = {
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderCreateNestedOneWithoutOrderInput
   address?: Prisma.CustomerAddressCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   edition: Prisma.EditionCreateNestedOneWithoutOrdersInput
@@ -2596,6 +2650,7 @@ export type OrderUncheckedCreateWithoutPartnerInput = {
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
   donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
@@ -2651,6 +2706,7 @@ export type OrderCreateWithoutDonationsEntriesInput = {
   createdByContributorId?: string | null
   commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderCreateNestedOneWithoutOrderInput
   address?: Prisma.CustomerAddressCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   edition: Prisma.EditionCreateNestedOneWithoutOrdersInput
@@ -2690,6 +2746,7 @@ export type OrderUncheckedCreateWithoutDonationsEntriesInput = {
   createdByContributorId?: string | null
   commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
   deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedCreateNestedOneWithoutOrderInput
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
@@ -2735,6 +2792,7 @@ export type OrderUpdateWithoutDonationsEntriesInput = {
   createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUpdateOneWithoutOrderNestedInput
   address?: Prisma.CustomerAddressUpdateOneWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   edition?: Prisma.EditionUpdateOneRequiredWithoutOrdersNestedInput
@@ -2774,6 +2832,163 @@ export type OrderUncheckedUpdateWithoutDonationsEntriesInput = {
   createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedUpdateOneWithoutOrderNestedInput
+  items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
+  vouchers?: Prisma.VoucherUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderCreateWithoutCashSettlementOrderInput = {
+  id?: string
+  customerName: string
+  customerPhone: string
+  customerCPF: string
+  sellerTag: string
+  origin?: $Enums.OrderOriginEnum
+  totalValue: number
+  status?: $Enums.OrderStatusEnum
+  siteStep?: $Enums.SiteOrderStepEnum
+  paymentStatus?: $Enums.PaymentStatusEnum
+  paymentType?: $Enums.PaymentMethodEnum
+  deliveryOption?: $Enums.DeliveryOptionEnum
+  deliveryTime?: string | null
+  observations?: string | null
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  paymentReminderSent?: boolean
+  createdByContributorId?: string | null
+  commands?: Prisma.CommandCreateNestedManyWithoutOrderInput
+  deliveryStops?: Prisma.DeliveryStopCreateNestedManyWithoutOrderInput
+  donationsEntries?: Prisma.DonationEntryCreateNestedManyWithoutOrderInput
+  address?: Prisma.CustomerAddressCreateNestedOneWithoutOrdersInput
+  customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
+  edition: Prisma.EditionCreateNestedOneWithoutOrdersInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutDonationsInput
+  seller: Prisma.SellerCreateNestedOneWithoutOrdersInput
+  items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutOrderInput
+  vouchers?: Prisma.VoucherCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutCashSettlementOrderInput = {
+  id?: string
+  editionId: string
+  customerId: string
+  customerName: string
+  customerPhone: string
+  customerCPF: string
+  sellerId: string
+  sellerTag: string
+  origin?: $Enums.OrderOriginEnum
+  totalValue: number
+  status?: $Enums.OrderStatusEnum
+  siteStep?: $Enums.SiteOrderStepEnum
+  paymentStatus?: $Enums.PaymentStatusEnum
+  paymentType?: $Enums.PaymentMethodEnum
+  deliveryOption?: $Enums.DeliveryOptionEnum
+  deliveryTime?: string | null
+  partnerId?: string | null
+  addressId?: string | null
+  observations?: string | null
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  paymentReminderSent?: boolean
+  createdByContributorId?: string | null
+  commands?: Prisma.CommandUncheckedCreateNestedManyWithoutOrderInput
+  deliveryStops?: Prisma.DeliveryStopUncheckedCreateNestedManyWithoutOrderInput
+  donationsEntries?: Prisma.DonationEntryUncheckedCreateNestedManyWithoutOrderInput
+  items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
+  vouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutCashSettlementOrderInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutCashSettlementOrderInput, Prisma.OrderUncheckedCreateWithoutCashSettlementOrderInput>
+}
+
+export type OrderUpsertWithoutCashSettlementOrderInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutCashSettlementOrderInput, Prisma.OrderUncheckedUpdateWithoutCashSettlementOrderInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutCashSettlementOrderInput, Prisma.OrderUncheckedCreateWithoutCashSettlementOrderInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutCashSettlementOrderInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutCashSettlementOrderInput, Prisma.OrderUncheckedUpdateWithoutCashSettlementOrderInput>
+}
+
+export type OrderUpdateWithoutCashSettlementOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerName?: Prisma.StringFieldUpdateOperationsInput | string
+  customerPhone?: Prisma.StringFieldUpdateOperationsInput | string
+  customerCPF?: Prisma.StringFieldUpdateOperationsInput | string
+  sellerTag?: Prisma.StringFieldUpdateOperationsInput | string
+  origin?: Prisma.EnumOrderOriginEnumFieldUpdateOperationsInput | $Enums.OrderOriginEnum
+  totalValue?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOrderStatusEnumFieldUpdateOperationsInput | $Enums.OrderStatusEnum
+  siteStep?: Prisma.EnumSiteOrderStepEnumFieldUpdateOperationsInput | $Enums.SiteOrderStepEnum
+  paymentStatus?: Prisma.EnumPaymentStatusEnumFieldUpdateOperationsInput | $Enums.PaymentStatusEnum
+  paymentType?: Prisma.EnumPaymentMethodEnumFieldUpdateOperationsInput | $Enums.PaymentMethodEnum
+  deliveryOption?: Prisma.EnumDeliveryOptionEnumFieldUpdateOperationsInput | $Enums.DeliveryOptionEnum
+  deliveryTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
+  deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
+  donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
+  address?: Prisma.CustomerAddressUpdateOneWithoutOrdersNestedInput
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
+  edition?: Prisma.EditionUpdateOneRequiredWithoutOrdersNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutDonationsNestedInput
+  seller?: Prisma.SellerUpdateOneRequiredWithoutOrdersNestedInput
+  items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutOrderNestedInput
+  vouchers?: Prisma.VoucherUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutCashSettlementOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  editionId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerName?: Prisma.StringFieldUpdateOperationsInput | string
+  customerPhone?: Prisma.StringFieldUpdateOperationsInput | string
+  customerCPF?: Prisma.StringFieldUpdateOperationsInput | string
+  sellerId?: Prisma.StringFieldUpdateOperationsInput | string
+  sellerTag?: Prisma.StringFieldUpdateOperationsInput | string
+  origin?: Prisma.EnumOrderOriginEnumFieldUpdateOperationsInput | $Enums.OrderOriginEnum
+  totalValue?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOrderStatusEnumFieldUpdateOperationsInput | $Enums.OrderStatusEnum
+  siteStep?: Prisma.EnumSiteOrderStepEnumFieldUpdateOperationsInput | $Enums.SiteOrderStepEnum
+  paymentStatus?: Prisma.EnumPaymentStatusEnumFieldUpdateOperationsInput | $Enums.PaymentStatusEnum
+  paymentType?: Prisma.EnumPaymentMethodEnumFieldUpdateOperationsInput | $Enums.PaymentMethodEnum
+  deliveryOption?: Prisma.EnumDeliveryOptionEnumFieldUpdateOperationsInput | $Enums.DeliveryOptionEnum
+  deliveryTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observations?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paymentReminderSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdByContributorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
+  deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
+  donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
@@ -2831,6 +3046,7 @@ export type OrderUpdateWithoutEditionInput = {
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUpdateOneWithoutOrderNestedInput
   address?: Prisma.CustomerAddressUpdateOneWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   partner?: Prisma.PartnerUpdateOneWithoutDonationsNestedInput
@@ -2869,6 +3085,7 @@ export type OrderUncheckedUpdateWithoutEditionInput = {
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
@@ -2953,6 +3170,7 @@ export type OrderUpdateWithoutSellerInput = {
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUpdateOneWithoutOrderNestedInput
   address?: Prisma.CustomerAddressUpdateOneWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   edition?: Prisma.EditionUpdateOneRequiredWithoutOrdersNestedInput
@@ -2991,6 +3209,7 @@ export type OrderUncheckedUpdateWithoutSellerInput = {
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
@@ -3075,6 +3294,7 @@ export type OrderUpdateWithoutCustomerInput = {
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUpdateOneWithoutOrderNestedInput
   address?: Prisma.CustomerAddressUpdateOneWithoutOrdersNestedInput
   edition?: Prisma.EditionUpdateOneRequiredWithoutOrdersNestedInput
   partner?: Prisma.PartnerUpdateOneWithoutDonationsNestedInput
@@ -3113,6 +3333,7 @@ export type OrderUncheckedUpdateWithoutCustomerInput = {
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
@@ -3197,6 +3418,7 @@ export type OrderUpdateWithoutAddressInput = {
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUpdateOneWithoutOrderNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   edition?: Prisma.EditionUpdateOneRequiredWithoutOrdersNestedInput
   partner?: Prisma.PartnerUpdateOneWithoutDonationsNestedInput
@@ -3235,6 +3457,7 @@ export type OrderUncheckedUpdateWithoutAddressInput = {
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
@@ -3319,6 +3542,7 @@ export type OrderUpdateWithoutPartnerInput = {
   commands?: Prisma.CommandUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUpdateOneWithoutOrderNestedInput
   address?: Prisma.CustomerAddressUpdateOneWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   edition?: Prisma.EditionUpdateOneRequiredWithoutOrdersNestedInput
@@ -3357,6 +3581,7 @@ export type OrderUncheckedUpdateWithoutPartnerInput = {
   commands?: Prisma.CommandUncheckedUpdateManyWithoutOrderNestedInput
   deliveryStops?: Prisma.DeliveryStopUncheckedUpdateManyWithoutOrderNestedInput
   donationsEntries?: Prisma.DonationEntryUncheckedUpdateManyWithoutOrderNestedInput
+  cashSettlementOrder?: Prisma.CashSettlementOrderUncheckedUpdateOneWithoutOrderNestedInput
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
@@ -3504,6 +3729,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   commands?: boolean | Prisma.Order$commandsArgs<ExtArgs>
   deliveryStops?: boolean | Prisma.Order$deliveryStopsArgs<ExtArgs>
   donationsEntries?: boolean | Prisma.Order$donationsEntriesArgs<ExtArgs>
+  cashSettlementOrder?: boolean | Prisma.Order$cashSettlementOrderArgs<ExtArgs>
   address?: boolean | Prisma.Order$addressArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   edition?: boolean | Prisma.EditionDefaultArgs<ExtArgs>
@@ -3615,6 +3841,7 @@ export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   commands?: boolean | Prisma.Order$commandsArgs<ExtArgs>
   deliveryStops?: boolean | Prisma.Order$deliveryStopsArgs<ExtArgs>
   donationsEntries?: boolean | Prisma.Order$donationsEntriesArgs<ExtArgs>
+  cashSettlementOrder?: boolean | Prisma.Order$cashSettlementOrderArgs<ExtArgs>
   address?: boolean | Prisma.Order$addressArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   edition?: boolean | Prisma.EditionDefaultArgs<ExtArgs>
@@ -3647,6 +3874,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     commands: Prisma.$CommandPayload<ExtArgs>[]
     deliveryStops: Prisma.$DeliveryStopPayload<ExtArgs>[]
     donationsEntries: Prisma.$DonationEntryPayload<ExtArgs>[]
+    cashSettlementOrder: Prisma.$CashSettlementOrderPayload<ExtArgs> | null
     address: Prisma.$CustomerAddressPayload<ExtArgs> | null
     customer: Prisma.$CustomerPayload<ExtArgs>
     edition: Prisma.$EditionPayload<ExtArgs>
@@ -4080,6 +4308,7 @@ export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Ty
   commands<T extends Prisma.Order$commandsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$commandsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommandPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   deliveryStops<T extends Prisma.Order$deliveryStopsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$deliveryStopsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeliveryStopPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   donationsEntries<T extends Prisma.Order$donationsEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$donationsEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DonationEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  cashSettlementOrder<T extends Prisma.Order$cashSettlementOrderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$cashSettlementOrderArgs<ExtArgs>>): Prisma.Prisma__CashSettlementOrderClient<runtime.Types.Result.GetResult<Prisma.$CashSettlementOrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   address<T extends Prisma.Order$addressArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$addressArgs<ExtArgs>>): Prisma.Prisma__CustomerAddressClient<runtime.Types.Result.GetResult<Prisma.$CustomerAddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   customer<T extends Prisma.CustomerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CustomerDefaultArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   edition<T extends Prisma.EditionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EditionDefaultArgs<ExtArgs>>): Prisma.Prisma__EditionClient<runtime.Types.Result.GetResult<Prisma.$EditionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -4613,6 +4842,25 @@ export type Order$donationsEntriesArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.DonationEntryScalarFieldEnum | Prisma.DonationEntryScalarFieldEnum[]
+}
+
+/**
+ * Order.cashSettlementOrder
+ */
+export type Order$cashSettlementOrderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CashSettlementOrder
+   */
+  select?: Prisma.CashSettlementOrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CashSettlementOrder
+   */
+  omit?: Prisma.CashSettlementOrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CashSettlementOrderInclude<ExtArgs> | null
+  where?: Prisma.CashSettlementOrderWhereInput
 }
 
 /**

@@ -217,3 +217,13 @@ export type PurchaseItem = Prisma.PurchaseItemModel
  * 
  */
 export type StockMovement = Prisma.StockMovementModel
+/**
+ * Model CashSettlement
+ * 
+ */
+export type CashSettlement = Prisma.CashSettlementModel
+/**
+ * Model CashSettlementOrder
+ * 
+ */
+export type CashSettlementOrder = Prisma.CashSettlementOrderModel

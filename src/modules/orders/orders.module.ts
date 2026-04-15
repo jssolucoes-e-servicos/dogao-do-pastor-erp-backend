@@ -17,6 +17,7 @@ import { N8nModule } from 'src/modules/n8n/n8n.module';
 import { TicketsModule } from '../tickets/tickets.module';
 import { OrdersNotificationsService } from '../evolution/services/notifications/orders-notifications.service';
 import { CommandsModule } from '../commands/commands.module';
+import { CashSettlementModule } from '../cash-settlement/cash-settlement.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { CommandsModule } from '../commands/commands.module';
     TicketsModule,
     forwardRef(() => PaymentsModule),
     forwardRef(() => CommandsModule),
+    CashSettlementModule,
   ],
   controllers: [OrdersController],
   providers: [

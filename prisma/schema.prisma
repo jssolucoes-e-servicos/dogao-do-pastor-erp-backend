@@ -176,6 +176,7 @@ model Contributor {
   notificationPreference NotificationPreference?
   cellsMember            ContributorCell[]
   controlPermissions     ControlPermission[]
+  cashSettlements        CashSettlement[]
 
   @@map("contributors")
 }
@@ -288,6 +289,7 @@ model Edition {
   redeemedVouchers Voucher[]          @relation("VoucherRedeemedEdition")
   purchaseOrders   PurchaseOrder[]
   stockMovements   StockMovement[]
+  cashSettlements  CashSettlement[]
 
   @@index([saleEndDate, saleStartDate])
   @@map("editions")
@@ -422,7 +424,7 @@ model CustomerAddress {
 }
 
 model Order {
-  id                     String             @id @default(cuid())
+  id                     String               @id @default(cuid())
   editionId              String
   customerId             String
   customerName           String
@@ -430,31 +432,32 @@ model Order {
   customerCPF            String
   sellerId               String
   sellerTag              String
-  origin                 OrderOriginEnum    @default(SITE)
+  origin                 OrderOriginEnum      @default(SITE)
   totalValue             Float
-  status                 OrderStatusEnum    @default(DIGITATION)
-  siteStep               SiteOrderStepEnum  @default(CUSTOMER)
-  paymentStatus          PaymentStatusEnum  @default(PENDING)
-  paymentType            PaymentMethodEnum  @default(UNDEFINED)
-  deliveryOption         DeliveryOptionEnum @default(UNDEFINED)
+  status                 OrderStatusEnum      @default(DIGITATION)
+  siteStep               SiteOrderStepEnum    @default(CUSTOMER)
+  paymentStatus          PaymentStatusEnum    @default(PENDING)
+  paymentType            PaymentMethodEnum    @default(UNDEFINED)
+  deliveryOption         DeliveryOptionEnum   @default(UNDEFINED)
   deliveryTime           String?
   partnerId              String?
   addressId              String?
   observations           String?
-  active                 Boolean            @default(true)
-  createdAt              DateTime           @default(now())
-  updatedAt              DateTime           @updatedAt
+  active                 Boolean              @default(true)
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
   deletedAt              DateTime?
-  paymentReminderSent    Boolean            @default(false)
+  paymentReminderSent    Boolean              @default(false)
   createdByContributorId String?
   commands               Command[]
   deliveryStops          DeliveryStop[]
   donationsEntries       DonationEntry[]
-  address                CustomerAddress?   @relation(fields: [addressId], references: [id])
-  customer               Customer           @relation(fields: [customerId], references: [id])
-  edition                Edition            @relation(fields: [editionId], references: [id])
-  partner                Partner?           @relation(fields: [partnerId], references: [id])
-  seller                 Seller             @relation(fields: [sellerId], references: [id])
+  cashSettlementOrder    CashSettlementOrder?
+  address                CustomerAddress?     @relation(fields: [addressId], references: [id])
+  customer               Customer             @relation(fields: [customerId], references: [id])
+  edition                Edition              @relation(fields: [editionId], references: [id])
+  partner                Partner?             @relation(fields: [partnerId], references: [id])
+  seller                 Seller               @relation(fields: [sellerId], references: [id])
   items                  OrderItem[]
   payments               Payment[]
   tickets                Ticket[]
@@ -948,4 +951,51 @@ model StockMovement {
 
   @@index([productId, editionId, type])
   @@map("stock_movements")
+}
+
+// ─── ACERTO FINANCEIRO (DINHEIRO APP) ────────────────────────────────────────
+
+enum CashSettlementStatusEnum {
+  PENDING // saldo em aberto
+  SUBMITTED // vendedor informou que repassou
+  CONFIRMED // tesoureira confirmou
+  CANCELLED
+}
+
+model CashSettlement {
+  id            String                   @id @default(cuid())
+  contributorId String
+  editionId     String
+  totalAmount   Float                    @default(0)
+  status        CashSettlementStatusEnum @default(PENDING)
+  paymentMethod String? // 'PIX' | 'CASH'
+  notes         String?
+  submittedAt   DateTime?
+  confirmedAt   DateTime?
+  confirmedById String?
+  active        Boolean                  @default(true)
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+  deletedAt     DateTime?
+
+  contributor Contributor           @relation(fields: [contributorId], references: [id])
+  edition     Edition               @relation(fields: [editionId], references: [id])
+  orders      CashSettlementOrder[]
+
+  @@index([contributorId, editionId])
+  @@index([status])
+  @@map("cash_settlements")
+}
+
+model CashSettlementOrder {
+  id           String   @id @default(cuid())
+  settlementId String
+  orderId      String   @unique
+  amount       Float
+  createdAt    DateTime @default(now())
+
+  settlement CashSettlement @relation(fields: [settlementId], references: [id], onDelete: Cascade)
+  order      Order          @relation(fields: [orderId], references: [id])
+
+  @@map("cash_settlement_orders")
 }

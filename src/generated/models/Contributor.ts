@@ -232,6 +232,7 @@ export type ContributorWhereInput = {
   notificationPreference?: Prisma.XOR<Prisma.NotificationPreferenceNullableScalarRelationFilter, Prisma.NotificationPreferenceWhereInput> | null
   cellsMember?: Prisma.ContributorCellListRelationFilter
   controlPermissions?: Prisma.ControlPermissionListRelationFilter
+  cashSettlements?: Prisma.CashSettlementListRelationFilter
 }
 
 export type ContributorOrderByWithRelationInput = {
@@ -255,6 +256,7 @@ export type ContributorOrderByWithRelationInput = {
   notificationPreference?: Prisma.NotificationPreferenceOrderByWithRelationInput
   cellsMember?: Prisma.ContributorCellOrderByRelationAggregateInput
   controlPermissions?: Prisma.ControlPermissionOrderByRelationAggregateInput
+  cashSettlements?: Prisma.CashSettlementOrderByRelationAggregateInput
   _relevance?: Prisma.ContributorOrderByRelevanceInput
 }
 
@@ -282,6 +284,7 @@ export type ContributorWhereUniqueInput = Prisma.AtLeast<{
   notificationPreference?: Prisma.XOR<Prisma.NotificationPreferenceNullableScalarRelationFilter, Prisma.NotificationPreferenceWhereInput> | null
   cellsMember?: Prisma.ContributorCellListRelationFilter
   controlPermissions?: Prisma.ControlPermissionListRelationFilter
+  cashSettlements?: Prisma.CashSettlementListRelationFilter
 }, "id" | "username">
 
 export type ContributorOrderByWithAggregationInput = {
@@ -337,6 +340,7 @@ export type ContributorCreateInput = {
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
   cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUncheckedCreateInput = {
@@ -360,6 +364,7 @@ export type ContributorUncheckedCreateInput = {
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
   cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionUncheckedCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementUncheckedCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUpdateInput = {
@@ -383,6 +388,7 @@ export type ContributorUpdateInput = {
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorUncheckedUpdateInput = {
@@ -406,6 +412,7 @@ export type ContributorUncheckedUpdateInput = {
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUncheckedUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUncheckedUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorCreateManyInput = {
@@ -670,6 +677,20 @@ export type ContributorUpdateOneWithoutControlPermissionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ContributorUpdateToOneWithWhereWithoutControlPermissionsInput, Prisma.ContributorUpdateWithoutControlPermissionsInput>, Prisma.ContributorUncheckedUpdateWithoutControlPermissionsInput>
 }
 
+export type ContributorCreateNestedOneWithoutCashSettlementsInput = {
+  create?: Prisma.XOR<Prisma.ContributorCreateWithoutCashSettlementsInput, Prisma.ContributorUncheckedCreateWithoutCashSettlementsInput>
+  connectOrCreate?: Prisma.ContributorCreateOrConnectWithoutCashSettlementsInput
+  connect?: Prisma.ContributorWhereUniqueInput
+}
+
+export type ContributorUpdateOneRequiredWithoutCashSettlementsNestedInput = {
+  create?: Prisma.XOR<Prisma.ContributorCreateWithoutCashSettlementsInput, Prisma.ContributorUncheckedCreateWithoutCashSettlementsInput>
+  connectOrCreate?: Prisma.ContributorCreateOrConnectWithoutCashSettlementsInput
+  upsert?: Prisma.ContributorUpsertWithoutCashSettlementsInput
+  connect?: Prisma.ContributorWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ContributorUpdateToOneWithWhereWithoutCashSettlementsInput, Prisma.ContributorUpdateWithoutCashSettlementsInput>, Prisma.ContributorUncheckedUpdateWithoutCashSettlementsInput>
+}
+
 export type ContributorCreateWithoutUserRolesInput = {
   id?: string
   name: string
@@ -690,6 +711,7 @@ export type ContributorCreateWithoutUserRolesInput = {
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
   cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUncheckedCreateWithoutUserRolesInput = {
@@ -712,6 +734,7 @@ export type ContributorUncheckedCreateWithoutUserRolesInput = {
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
   cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionUncheckedCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementUncheckedCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorCreateOrConnectWithoutUserRolesInput = {
@@ -750,6 +773,7 @@ export type ContributorUpdateWithoutUserRolesInput = {
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorUncheckedUpdateWithoutUserRolesInput = {
@@ -772,6 +796,7 @@ export type ContributorUncheckedUpdateWithoutUserRolesInput = {
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUncheckedUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUncheckedUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorCreateWithoutPermissionsInput = {
@@ -794,6 +819,7 @@ export type ContributorCreateWithoutPermissionsInput = {
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
   cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUncheckedCreateWithoutPermissionsInput = {
@@ -816,6 +842,7 @@ export type ContributorUncheckedCreateWithoutPermissionsInput = {
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
   cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionUncheckedCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementUncheckedCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorCreateOrConnectWithoutPermissionsInput = {
@@ -854,6 +881,7 @@ export type ContributorUpdateWithoutPermissionsInput = {
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorUncheckedUpdateWithoutPermissionsInput = {
@@ -876,6 +904,7 @@ export type ContributorUncheckedUpdateWithoutPermissionsInput = {
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUncheckedUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUncheckedUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorCreateWithoutCellNetworksInput = {
@@ -898,6 +927,7 @@ export type ContributorCreateWithoutCellNetworksInput = {
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
   cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUncheckedCreateWithoutCellNetworksInput = {
@@ -920,6 +950,7 @@ export type ContributorUncheckedCreateWithoutCellNetworksInput = {
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
   cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionUncheckedCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementUncheckedCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorCreateOrConnectWithoutCellNetworksInput = {
@@ -958,6 +989,7 @@ export type ContributorUpdateWithoutCellNetworksInput = {
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorUncheckedUpdateWithoutCellNetworksInput = {
@@ -980,6 +1012,7 @@ export type ContributorUncheckedUpdateWithoutCellNetworksInput = {
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUncheckedUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUncheckedUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorCreateWithoutCellsInput = {
@@ -1002,6 +1035,7 @@ export type ContributorCreateWithoutCellsInput = {
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
   cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUncheckedCreateWithoutCellsInput = {
@@ -1024,6 +1058,7 @@ export type ContributorUncheckedCreateWithoutCellsInput = {
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
   cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionUncheckedCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementUncheckedCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorCreateOrConnectWithoutCellsInput = {
@@ -1062,6 +1097,7 @@ export type ContributorUpdateWithoutCellsInput = {
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorUncheckedUpdateWithoutCellsInput = {
@@ -1084,6 +1120,7 @@ export type ContributorUncheckedUpdateWithoutCellsInput = {
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUncheckedUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUncheckedUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorCreateWithoutSellersInput = {
@@ -1106,6 +1143,7 @@ export type ContributorCreateWithoutSellersInput = {
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
   cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUncheckedCreateWithoutSellersInput = {
@@ -1128,6 +1166,7 @@ export type ContributorUncheckedCreateWithoutSellersInput = {
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
   cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionUncheckedCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementUncheckedCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorCreateOrConnectWithoutSellersInput = {
@@ -1166,6 +1205,7 @@ export type ContributorUpdateWithoutSellersInput = {
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorUncheckedUpdateWithoutSellersInput = {
@@ -1188,6 +1228,7 @@ export type ContributorUncheckedUpdateWithoutSellersInput = {
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUncheckedUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUncheckedUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorCreateWithoutCellsMemberInput = {
@@ -1210,6 +1251,7 @@ export type ContributorCreateWithoutCellsMemberInput = {
   pushTokens?: Prisma.PushTokenCreateNestedManyWithoutContributorInput
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUncheckedCreateWithoutCellsMemberInput = {
@@ -1232,6 +1274,7 @@ export type ContributorUncheckedCreateWithoutCellsMemberInput = {
   pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutContributorInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionUncheckedCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementUncheckedCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorCreateOrConnectWithoutCellsMemberInput = {
@@ -1270,6 +1313,7 @@ export type ContributorUpdateWithoutCellsMemberInput = {
   pushTokens?: Prisma.PushTokenUpdateManyWithoutContributorNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorUncheckedUpdateWithoutCellsMemberInput = {
@@ -1292,6 +1336,7 @@ export type ContributorUncheckedUpdateWithoutCellsMemberInput = {
   pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutContributorNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUncheckedUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUncheckedUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorCreateWithoutDeliveryPersonsInput = {
@@ -1314,6 +1359,7 @@ export type ContributorCreateWithoutDeliveryPersonsInput = {
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
   cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUncheckedCreateWithoutDeliveryPersonsInput = {
@@ -1336,6 +1382,7 @@ export type ContributorUncheckedCreateWithoutDeliveryPersonsInput = {
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
   cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionUncheckedCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementUncheckedCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorCreateOrConnectWithoutDeliveryPersonsInput = {
@@ -1374,6 +1421,7 @@ export type ContributorUpdateWithoutDeliveryPersonsInput = {
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorUncheckedUpdateWithoutDeliveryPersonsInput = {
@@ -1396,6 +1444,7 @@ export type ContributorUncheckedUpdateWithoutDeliveryPersonsInput = {
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUncheckedUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUncheckedUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorCreateWithoutPushTokensInput = {
@@ -1418,6 +1467,7 @@ export type ContributorCreateWithoutPushTokensInput = {
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
   cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUncheckedCreateWithoutPushTokensInput = {
@@ -1440,6 +1490,7 @@ export type ContributorUncheckedCreateWithoutPushTokensInput = {
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
   cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionUncheckedCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementUncheckedCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorCreateOrConnectWithoutPushTokensInput = {
@@ -1478,6 +1529,7 @@ export type ContributorUpdateWithoutPushTokensInput = {
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorUncheckedUpdateWithoutPushTokensInput = {
@@ -1500,6 +1552,7 @@ export type ContributorUncheckedUpdateWithoutPushTokensInput = {
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUncheckedUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUncheckedUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorCreateWithoutNotificationPreferenceInput = {
@@ -1522,6 +1575,7 @@ export type ContributorCreateWithoutNotificationPreferenceInput = {
   pushTokens?: Prisma.PushTokenCreateNestedManyWithoutContributorInput
   cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUncheckedCreateWithoutNotificationPreferenceInput = {
@@ -1544,6 +1598,7 @@ export type ContributorUncheckedCreateWithoutNotificationPreferenceInput = {
   pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutContributorInput
   cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
   controlPermissions?: Prisma.ControlPermissionUncheckedCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementUncheckedCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorCreateOrConnectWithoutNotificationPreferenceInput = {
@@ -1582,6 +1637,7 @@ export type ContributorUpdateWithoutNotificationPreferenceInput = {
   pushTokens?: Prisma.PushTokenUpdateManyWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorUncheckedUpdateWithoutNotificationPreferenceInput = {
@@ -1604,6 +1660,7 @@ export type ContributorUncheckedUpdateWithoutNotificationPreferenceInput = {
   pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
   controlPermissions?: Prisma.ControlPermissionUncheckedUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUncheckedUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorCreateWithoutControlPermissionsInput = {
@@ -1626,6 +1683,7 @@ export type ContributorCreateWithoutControlPermissionsInput = {
   pushTokens?: Prisma.PushTokenCreateNestedManyWithoutContributorInput
   notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
   cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorUncheckedCreateWithoutControlPermissionsInput = {
@@ -1648,6 +1706,7 @@ export type ContributorUncheckedCreateWithoutControlPermissionsInput = {
   pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutContributorInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
   cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
+  cashSettlements?: Prisma.CashSettlementUncheckedCreateNestedManyWithoutContributorInput
 }
 
 export type ContributorCreateOrConnectWithoutControlPermissionsInput = {
@@ -1686,6 +1745,7 @@ export type ContributorUpdateWithoutControlPermissionsInput = {
   pushTokens?: Prisma.PushTokenUpdateManyWithoutContributorNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUpdateManyWithoutContributorNestedInput
 }
 
 export type ContributorUncheckedUpdateWithoutControlPermissionsInput = {
@@ -1708,6 +1768,115 @@ export type ContributorUncheckedUpdateWithoutControlPermissionsInput = {
   pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutContributorNestedInput
   notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
   cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
+  cashSettlements?: Prisma.CashSettlementUncheckedUpdateManyWithoutContributorNestedInput
+}
+
+export type ContributorCreateWithoutCashSettlementsInput = {
+  id?: string
+  name: string
+  phone?: string | null
+  photo?: string | null
+  username?: string | null
+  password: string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  cells?: Prisma.CellCreateNestedManyWithoutLeaderInput
+  cellNetworks?: Prisma.CellNetworkCreateNestedManyWithoutSupervisorInput
+  deliveryPersons?: Prisma.DeliveryPersonCreateNestedManyWithoutContributorInput
+  permissions?: Prisma.PermissionCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerCreateNestedManyWithoutContributorInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceCreateNestedOneWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellCreateNestedManyWithoutContributorInput
+  controlPermissions?: Prisma.ControlPermissionCreateNestedManyWithoutContributorInput
+}
+
+export type ContributorUncheckedCreateWithoutCashSettlementsInput = {
+  id?: string
+  name: string
+  phone?: string | null
+  photo?: string | null
+  username?: string | null
+  password: string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  cells?: Prisma.CellUncheckedCreateNestedManyWithoutLeaderInput
+  cellNetworks?: Prisma.CellNetworkUncheckedCreateNestedManyWithoutSupervisorInput
+  deliveryPersons?: Prisma.DeliveryPersonUncheckedCreateNestedManyWithoutContributorInput
+  permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutContributorInput
+  sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutContributorInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutContributorInput
+  pushTokens?: Prisma.PushTokenUncheckedCreateNestedManyWithoutContributorInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedCreateNestedOneWithoutContributorInput
+  cellsMember?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutContributorInput
+  controlPermissions?: Prisma.ControlPermissionUncheckedCreateNestedManyWithoutContributorInput
+}
+
+export type ContributorCreateOrConnectWithoutCashSettlementsInput = {
+  where: Prisma.ContributorWhereUniqueInput
+  create: Prisma.XOR<Prisma.ContributorCreateWithoutCashSettlementsInput, Prisma.ContributorUncheckedCreateWithoutCashSettlementsInput>
+}
+
+export type ContributorUpsertWithoutCashSettlementsInput = {
+  update: Prisma.XOR<Prisma.ContributorUpdateWithoutCashSettlementsInput, Prisma.ContributorUncheckedUpdateWithoutCashSettlementsInput>
+  create: Prisma.XOR<Prisma.ContributorCreateWithoutCashSettlementsInput, Prisma.ContributorUncheckedCreateWithoutCashSettlementsInput>
+  where?: Prisma.ContributorWhereInput
+}
+
+export type ContributorUpdateToOneWithWhereWithoutCashSettlementsInput = {
+  where?: Prisma.ContributorWhereInput
+  data: Prisma.XOR<Prisma.ContributorUpdateWithoutCashSettlementsInput, Prisma.ContributorUncheckedUpdateWithoutCashSettlementsInput>
+}
+
+export type ContributorUpdateWithoutCashSettlementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cells?: Prisma.CellUpdateManyWithoutLeaderNestedInput
+  cellNetworks?: Prisma.CellNetworkUpdateManyWithoutSupervisorNestedInput
+  deliveryPersons?: Prisma.DeliveryPersonUpdateManyWithoutContributorNestedInput
+  permissions?: Prisma.PermissionUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUpdateManyWithoutContributorNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUpdateOneWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUpdateManyWithoutContributorNestedInput
+  controlPermissions?: Prisma.ControlPermissionUpdateManyWithoutContributorNestedInput
+}
+
+export type ContributorUncheckedUpdateWithoutCashSettlementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cells?: Prisma.CellUncheckedUpdateManyWithoutLeaderNestedInput
+  cellNetworks?: Prisma.CellNetworkUncheckedUpdateManyWithoutSupervisorNestedInput
+  deliveryPersons?: Prisma.DeliveryPersonUncheckedUpdateManyWithoutContributorNestedInput
+  permissions?: Prisma.PermissionUncheckedUpdateManyWithoutContributorNestedInput
+  sellers?: Prisma.SellerUncheckedUpdateManyWithoutContributorNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutContributorNestedInput
+  pushTokens?: Prisma.PushTokenUncheckedUpdateManyWithoutContributorNestedInput
+  notificationPreference?: Prisma.NotificationPreferenceUncheckedUpdateOneWithoutContributorNestedInput
+  cellsMember?: Prisma.ContributorCellUncheckedUpdateManyWithoutContributorNestedInput
+  controlPermissions?: Prisma.ControlPermissionUncheckedUpdateManyWithoutContributorNestedInput
 }
 
 
@@ -1725,6 +1894,7 @@ export type ContributorCountOutputType = {
   pushTokens: number
   cellsMember: number
   controlPermissions: number
+  cashSettlements: number
 }
 
 export type ContributorCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1737,6 +1907,7 @@ export type ContributorCountOutputTypeSelect<ExtArgs extends runtime.Types.Exten
   pushTokens?: boolean | ContributorCountOutputTypeCountPushTokensArgs
   cellsMember?: boolean | ContributorCountOutputTypeCountCellsMemberArgs
   controlPermissions?: boolean | ContributorCountOutputTypeCountControlPermissionsArgs
+  cashSettlements?: boolean | ContributorCountOutputTypeCountCashSettlementsArgs
 }
 
 /**
@@ -1812,6 +1983,13 @@ export type ContributorCountOutputTypeCountControlPermissionsArgs<ExtArgs extend
   where?: Prisma.ControlPermissionWhereInput
 }
 
+/**
+ * ContributorCountOutputType without action
+ */
+export type ContributorCountOutputTypeCountCashSettlementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CashSettlementWhereInput
+}
+
 
 export type ContributorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1834,6 +2012,7 @@ export type ContributorSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   notificationPreference?: boolean | Prisma.Contributor$notificationPreferenceArgs<ExtArgs>
   cellsMember?: boolean | Prisma.Contributor$cellsMemberArgs<ExtArgs>
   controlPermissions?: boolean | Prisma.Contributor$controlPermissionsArgs<ExtArgs>
+  cashSettlements?: boolean | Prisma.Contributor$cashSettlementsArgs<ExtArgs>
   _count?: boolean | Prisma.ContributorCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["contributor"]>
 
@@ -1888,6 +2067,7 @@ export type ContributorInclude<ExtArgs extends runtime.Types.Extensions.Internal
   notificationPreference?: boolean | Prisma.Contributor$notificationPreferenceArgs<ExtArgs>
   cellsMember?: boolean | Prisma.Contributor$cellsMemberArgs<ExtArgs>
   controlPermissions?: boolean | Prisma.Contributor$controlPermissionsArgs<ExtArgs>
+  cashSettlements?: boolean | Prisma.Contributor$cashSettlementsArgs<ExtArgs>
   _count?: boolean | Prisma.ContributorCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ContributorIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1906,6 +2086,7 @@ export type $ContributorPayload<ExtArgs extends runtime.Types.Extensions.Interna
     notificationPreference: Prisma.$NotificationPreferencePayload<ExtArgs> | null
     cellsMember: Prisma.$ContributorCellPayload<ExtArgs>[]
     controlPermissions: Prisma.$ControlPermissionPayload<ExtArgs>[]
+    cashSettlements: Prisma.$CashSettlementPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2322,6 +2503,7 @@ export interface Prisma__ContributorClient<T, Null = never, ExtArgs extends runt
   notificationPreference<T extends Prisma.Contributor$notificationPreferenceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contributor$notificationPreferenceArgs<ExtArgs>>): Prisma.Prisma__NotificationPreferenceClient<runtime.Types.Result.GetResult<Prisma.$NotificationPreferencePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   cellsMember<T extends Prisma.Contributor$cellsMemberArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contributor$cellsMemberArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContributorCellPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   controlPermissions<T extends Prisma.Contributor$controlPermissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contributor$controlPermissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ControlPermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  cashSettlements<T extends Prisma.Contributor$cashSettlementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contributor$cashSettlementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CashSettlementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2986,6 +3168,30 @@ export type Contributor$controlPermissionsArgs<ExtArgs extends runtime.Types.Ext
   take?: number
   skip?: number
   distinct?: Prisma.ControlPermissionScalarFieldEnum | Prisma.ControlPermissionScalarFieldEnum[]
+}
+
+/**
+ * Contributor.cashSettlements
+ */
+export type Contributor$cashSettlementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CashSettlement
+   */
+  select?: Prisma.CashSettlementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CashSettlement
+   */
+  omit?: Prisma.CashSettlementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CashSettlementInclude<ExtArgs> | null
+  where?: Prisma.CashSettlementWhereInput
+  orderBy?: Prisma.CashSettlementOrderByWithRelationInput | Prisma.CashSettlementOrderByWithRelationInput[]
+  cursor?: Prisma.CashSettlementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CashSettlementScalarFieldEnum | Prisma.CashSettlementScalarFieldEnum[]
 }
 
 /**

@@ -90,7 +90,9 @@ export const ModelName = {
   StockProduct: 'StockProduct',
   PurchaseOrder: 'PurchaseOrder',
   PurchaseItem: 'PurchaseItem',
-  StockMovement: 'StockMovement'
+  StockMovement: 'StockMovement',
+  CashSettlement: 'CashSettlement',
+  CashSettlementOrder: 'CashSettlementOrder'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -790,6 +792,37 @@ export const StockMovementScalarFieldEnum = {
 export type StockMovementScalarFieldEnum = (typeof StockMovementScalarFieldEnum)[keyof typeof StockMovementScalarFieldEnum]
 
 
+export const CashSettlementScalarFieldEnum = {
+  id: 'id',
+  contributorId: 'contributorId',
+  editionId: 'editionId',
+  totalAmount: 'totalAmount',
+  status: 'status',
+  paymentMethod: 'paymentMethod',
+  notes: 'notes',
+  submittedAt: 'submittedAt',
+  confirmedAt: 'confirmedAt',
+  confirmedById: 'confirmedById',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type CashSettlementScalarFieldEnum = (typeof CashSettlementScalarFieldEnum)[keyof typeof CashSettlementScalarFieldEnum]
+
+
+export const CashSettlementOrderScalarFieldEnum = {
+  id: 'id',
+  settlementId: 'settlementId',
+  orderId: 'orderId',
+  amount: 'amount',
+  createdAt: 'createdAt'
+} as const
+
+export type CashSettlementOrderScalarFieldEnum = (typeof CashSettlementOrderScalarFieldEnum)[keyof typeof CashSettlementOrderScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1271,4 +1304,25 @@ export const StockMovementOrderByRelevanceFieldEnum = {
 } as const
 
 export type StockMovementOrderByRelevanceFieldEnum = (typeof StockMovementOrderByRelevanceFieldEnum)[keyof typeof StockMovementOrderByRelevanceFieldEnum]
+
+
+export const CashSettlementOrderByRelevanceFieldEnum = {
+  id: 'id',
+  contributorId: 'contributorId',
+  editionId: 'editionId',
+  paymentMethod: 'paymentMethod',
+  notes: 'notes',
+  confirmedById: 'confirmedById'
+} as const
+
+export type CashSettlementOrderByRelevanceFieldEnum = (typeof CashSettlementOrderByRelevanceFieldEnum)[keyof typeof CashSettlementOrderByRelevanceFieldEnum]
+
+
+export const CashSettlementOrderOrderByRelevanceFieldEnum = {
+  id: 'id',
+  settlementId: 'settlementId',
+  orderId: 'orderId'
+} as const
+
+export type CashSettlementOrderOrderByRelevanceFieldEnum = (typeof CashSettlementOrderOrderByRelevanceFieldEnum)[keyof typeof CashSettlementOrderOrderByRelevanceFieldEnum]
 

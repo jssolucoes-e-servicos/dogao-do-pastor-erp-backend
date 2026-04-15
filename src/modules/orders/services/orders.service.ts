@@ -27,6 +27,7 @@ import { SellersService } from 'src/modules/sellers/services/sellers.service';
 import { TicketsService } from 'src/modules/tickets/services/tickets.service';
 import { MpPaymentsService } from 'src/modules/payments/services/mercadopago/mp-payments.service';
 import { CommandsService } from 'src/modules/commands/services/commands.service';
+import { CashSettlementService } from 'src/modules/cash-settlement/services/cash-settlement.service';
 
 import { DefinePaymetnDTO } from '../dto/define-payment.dto';
 import { ForDeliveryDTO } from '../dto/for-delivery.dto';
@@ -57,6 +58,7 @@ export class OrdersService extends BaseCrudService<
     private readonly mpPaymentsService: MpPaymentsService,
     @Inject(forwardRef(() => CommandsService))
     private readonly commandsService: CommandsService,
+    private readonly cashSettlementService: CashSettlementService,
   ) {
     super(configService, loggerService, prismaService);
     this.model = this.prisma.order;
@@ -1007,7 +1009,7 @@ export class OrdersService extends BaseCrudService<
           customerCPF: dto.customerCpf || '',
           sellerId: finalSellerId,
           sellerTag: finalSellerTag,
-          origin: OrderOriginEnum.PDV,
+          origin: dto.contributorId ? OrderOriginEnum.APP : OrderOriginEnum.PDV,
           status: orderStatus,
           paymentStatus: paymentStatus,
           paymentType: dto.paymentMethod,
@@ -1041,7 +1043,7 @@ export class OrdersService extends BaseCrudService<
           customerCPF: dto.customerCpf || '',
           sellerId: finalSellerId,
           sellerTag: finalSellerTag,
-          origin: OrderOriginEnum.PDV,
+          origin: dto.contributorId ? OrderOriginEnum.APP : OrderOriginEnum.PDV,
           status: orderStatus,
           paymentStatus: paymentStatus,
           paymentType: dto.paymentMethod,
@@ -1157,6 +1159,21 @@ export class OrdersService extends BaseCrudService<
               type: 'CREDIT',
             },
           });
+        }
+      }
+
+      // Venda em dinheiro pelo app → registra no acerto financeiro
+      const contributorId = dto.contributorId || user?.id;
+      if (dto.paymentMethod === PaymentMethodEnum.MONEY && contributorId) {
+        try {
+          await this.cashSettlementService.addCashOrder(
+            order.id,
+            contributorId,
+            dto.totalValue,
+            edition.id,
+          );
+        } catch (err) {
+          this.logger.warn(`Falha ao registrar acerto de dinheiro para order ${order.id}: ${err?.message}`);
         }
       }
     }

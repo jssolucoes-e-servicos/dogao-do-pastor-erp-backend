@@ -26,7 +26,7 @@ export class SellersNotificationsService extends BaseService {
       this.logger.log(
         `Enviando aviso de falha na entrega para ${seller.contributor.phone}`,
       );
-      const url = `${process.env.FRONTEND_PORTALS_URL}/comprar?v=${seller.tag}`;
+      const url = `https://igrejavivaemcelulas.com.br/dogao-do-pastor?v=${seller.tag}`;
       const message = MW_SendWellcomeSeller(seller);
       //await this.evolutionService.sendText('51982488374', message);
       //await this.evolutionService.sendText('51982488374', url);

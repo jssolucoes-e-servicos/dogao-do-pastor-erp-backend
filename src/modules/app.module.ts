@@ -26,6 +26,7 @@ import { ModulesModule } from './modules/modules.module';
 import { TicketsModule } from './tickets/tickets.module';
 import { StockModule } from './stock/stock.module';
 import { PurchasingModule } from './purchasing/purchasing.module';
+import { CashSettlementModule } from './cash-settlement/cash-settlement.module';
 import { DonationsModule } from './donations/donations.module';
 import { NotificationsModule } from './notifications/notifications.module';
 
@@ -68,6 +69,7 @@ import { NotificationsModule } from './notifications/notifications.module';
     DonationsModule,
     StockModule,
     PurchasingModule,
+    CashSettlementModule,
   ],
 
   providers: [],

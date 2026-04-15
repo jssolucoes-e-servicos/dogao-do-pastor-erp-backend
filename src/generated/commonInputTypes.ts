@@ -600,6 +600,23 @@ export type EnumStockMovementTypeEnumWithAggregatesFilter<$PrismaModel = never> 
   _max?: Prisma.NestedEnumStockMovementTypeEnumFilter<$PrismaModel>
 }
 
+export type EnumCashSettlementStatusEnumFilter<$PrismaModel = never> = {
+  equals?: $Enums.CashSettlementStatusEnum | Prisma.EnumCashSettlementStatusEnumFieldRefInput<$PrismaModel>
+  in?: $Enums.CashSettlementStatusEnum[] | Prisma.ListEnumCashSettlementStatusEnumFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CashSettlementStatusEnum[] | Prisma.ListEnumCashSettlementStatusEnumFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCashSettlementStatusEnumFilter<$PrismaModel> | $Enums.CashSettlementStatusEnum
+}
+
+export type EnumCashSettlementStatusEnumWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CashSettlementStatusEnum | Prisma.EnumCashSettlementStatusEnumFieldRefInput<$PrismaModel>
+  in?: $Enums.CashSettlementStatusEnum[] | Prisma.ListEnumCashSettlementStatusEnumFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CashSettlementStatusEnum[] | Prisma.ListEnumCashSettlementStatusEnumFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCashSettlementStatusEnumWithAggregatesFilter<$PrismaModel> | $Enums.CashSettlementStatusEnum
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCashSettlementStatusEnumFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCashSettlementStatusEnumFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -1148,6 +1165,23 @@ export type NestedEnumStockMovementTypeEnumWithAggregatesFilter<$PrismaModel = n
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumStockMovementTypeEnumFilter<$PrismaModel>
   _max?: Prisma.NestedEnumStockMovementTypeEnumFilter<$PrismaModel>
+}
+
+export type NestedEnumCashSettlementStatusEnumFilter<$PrismaModel = never> = {
+  equals?: $Enums.CashSettlementStatusEnum | Prisma.EnumCashSettlementStatusEnumFieldRefInput<$PrismaModel>
+  in?: $Enums.CashSettlementStatusEnum[] | Prisma.ListEnumCashSettlementStatusEnumFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CashSettlementStatusEnum[] | Prisma.ListEnumCashSettlementStatusEnumFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCashSettlementStatusEnumFilter<$PrismaModel> | $Enums.CashSettlementStatusEnum
+}
+
+export type NestedEnumCashSettlementStatusEnumWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CashSettlementStatusEnum | Prisma.EnumCashSettlementStatusEnumFieldRefInput<$PrismaModel>
+  in?: $Enums.CashSettlementStatusEnum[] | Prisma.ListEnumCashSettlementStatusEnumFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CashSettlementStatusEnum[] | Prisma.ListEnumCashSettlementStatusEnumFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCashSettlementStatusEnumWithAggregatesFilter<$PrismaModel> | $Enums.CashSettlementStatusEnum
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCashSettlementStatusEnumFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCashSettlementStatusEnumFilter<$PrismaModel>
 }
 
 
