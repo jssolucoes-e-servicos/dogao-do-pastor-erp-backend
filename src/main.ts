@@ -29,7 +29,7 @@ async function bootstrap() {
   app.use(compression());
   app.use(helmet());
   app.enableCors({
-    origin: [
+    /* origin: [
       'http://localhost:3000',
       'http://localhost:3001',
       'http://localhost:3002',
@@ -39,7 +39,8 @@ async function bootstrap() {
       'https://equipe.igrejavivaemcelulas.com.br',
       // aceita qualquer subdomínio de igrejavivaemcelulas.com.br
       /\.igrejavivaemcelulas\.com\.br$/,
-    ],
+    ], */
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
