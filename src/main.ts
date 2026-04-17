@@ -33,7 +33,12 @@ async function bootstrap() {
       'http://localhost:3000',
       'http://localhost:3001',
       'http://localhost:3002',
-      'https://dogao.igrejavivaemcelulas.com.br'
+      'https://dogao.igrejavivaemcelulas.com.br',
+      'https://igrejavivaemcelulas.com.br',
+      'https://pwa.igrejavivaemcelulas.com.br',
+      'https://equipe.igrejavivaemcelulas.com.br',
+      // aceita qualquer subdomínio de igrejavivaemcelulas.com.br
+      /\.igrejavivaemcelulas\.com\.br$/,
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,

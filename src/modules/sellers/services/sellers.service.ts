@@ -177,9 +177,7 @@ export class SellersService extends BaseCrudService<
 
   async sendLinksAll() {
     const sellers = await this.model.findMany({
-      include: {
-        contributor: true,
-      },
+      include: { contributor: true },
     });
 
     this.logger.log(`Iniciando disparo para ${sellers.length} vendedores...`);
@@ -187,26 +185,29 @@ export class SellersService extends BaseCrudService<
     let successCount = 0;
     let errorCount = 0;
 
-    for (const seller of sellers) {
+    for (let i = 0; i < sellers.length; i++) {
+      const seller = sellers[i];
       try {
-        // Espera cada um terminar antes de ir para o próximo
         await this.notifications.welcomeSeller(seller);
         successCount++;
-        // Opcional: pequeno delay de 500ms para evitar spam filters
-        await new Promise( resolve => setTimeout(resolve, 500) );
       } catch (error) {
         errorCount++;
-        this.logger.error(
-          `Falha ao enviar para ${seller.contributor.name}: ${error.message}`,
-        );
+        this.logger.error(`Falha ao enviar para ${seller.contributor.name}: ${error.message}`);
+      }
+
+      // Pausa grande a cada 30 envios
+      if ((i + 1) % 30 === 0 && i + 1 < sellers.length) {
+        this.logger.log(`[PAUSA] Aguardando pausa anti-bloqueio após ${i + 1} envios...`);
+        const pause = Math.floor(Math.random() * 30000) + 30000; // 30-60s
+        await new Promise(r => setTimeout(r, pause));
+      } else if (i + 1 < sellers.length) {
+        // 8-15s entre contatos
+        const delay = Math.floor(Math.random() * 7000) + 8000;
+        await new Promise(r => setTimeout(r, delay));
       }
     }
 
-    return {
-      total: sellers.length,
-      success: successCount,
-      errors: errorCount,
-    };
+    return { total: sellers.length, success: successCount, errors: errorCount };
   }
 
   async sendLinksFor(id: string) {

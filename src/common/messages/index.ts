@@ -20,6 +20,8 @@ import { MW_CellDailyReport } from './whatsapp/reports/cell-daily-report.message
 import { MW_NetworkDailyReport } from './whatsapp/reports/network-daily-report.message';
 import { MW_GlobalRankingReport } from './whatsapp/reports/global-ranking.message';
 import { MW_SellerDailyReport } from './whatsapp/reports/seller-daily-report.message';
+import { MW_CustomerNewEditionAnnouncement, MW_CustomerNewEditionLink } from './whatsapp/customers/new-edition-announcement.message';
+import { MW_ContributorWelcomeCredentials, MW_ContributorSystemLink } from './whatsapp/contributors/welcome-credentials.message';
 
 const validateContact = (order: Partial<OrderEntity>): boolean => {
   if (!order.customer?.phone) {
@@ -32,6 +34,8 @@ const validateContact = (order: Partial<OrderEntity>): boolean => {
 };
 
 export {
-  MW_CellDailyReport, MW_NetworkDailyReport, MW_DeliveryPersons_RouteAssigned, MW_GlobalRankingReport, MW_OrderCardGenerated, MW_OrderDelivered, MW_OrderDeliveryFailed, MW_OrderDeliverySkiped, MW_OrderNewSite, MW_OrderNextDelivery, MW_OrderPaymentExpired22h, MW_OrderPaymentPending24h, MW_OrderPaymentReceive, MW_OrderPaymentReminder6h, MW_OrderPixGenerated, MW_OrderRecoveryAbandoned, MW_OrderResponseAnalisys, MW_OrderSendAnalisys, MW_PartnerWellcomePortal, MW_SellerDailyReport, validateContact
+  MW_CellDailyReport, MW_NetworkDailyReport, MW_DeliveryPersons_RouteAssigned, MW_GlobalRankingReport, MW_OrderCardGenerated, MW_OrderDelivered, MW_OrderDeliveryFailed, MW_OrderDeliverySkiped, MW_OrderNewSite, MW_OrderNextDelivery, MW_OrderPaymentExpired22h, MW_OrderPaymentPending24h, MW_OrderPaymentReceive, MW_OrderPaymentReminder6h, MW_OrderPixGenerated, MW_OrderRecoveryAbandoned, MW_OrderResponseAnalisys, MW_OrderSendAnalisys, MW_PartnerWellcomePortal, MW_SellerDailyReport, validateContact,
+  MW_CustomerNewEditionAnnouncement, MW_CustomerNewEditionLink,
+  MW_ContributorWelcomeCredentials, MW_ContributorSystemLink,
 };
 

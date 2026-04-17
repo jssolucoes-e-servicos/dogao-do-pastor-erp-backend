@@ -6,6 +6,8 @@ import { EvolutionController } from './controllers/evolution.controller';
 import { OrdersNotificationsService } from './services/notifications/orders-notifications.service';
 import { PartnersNotificationsService } from './services/notifications/partners-notifications.service';
 import { SellersNotificationsService } from './services/notifications/sellers-notifications.service';
+import { CustomersNotificationsService } from './services/notifications/customers-notifications.service';
+import { ContributorsNotificationsService } from './services/notifications/contributors-notifications.service';
 import { N8nModule } from 'src/modules/n8n/n8n.module';
 
 @Module({
@@ -18,12 +20,16 @@ import { N8nModule } from 'src/modules/n8n/n8n.module';
     OrdersNotificationsService,
     PartnersNotificationsService,
     SellersNotificationsService,
+    CustomersNotificationsService,
+    ContributorsNotificationsService,
   ],
   exports: [
     EvolutionService,
     OrdersNotificationsService,
     PartnersNotificationsService,
     SellersNotificationsService,
+    CustomersNotificationsService,
+    ContributorsNotificationsService,
   ],
 })
 export class EvolutionModule {
