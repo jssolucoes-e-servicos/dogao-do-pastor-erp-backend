@@ -106,41 +106,63 @@ export class ContributorsService extends BaseCrudService<
     }) as unknown as ContributorEntity;
   }
 
-  /** Vincula contributor a uma célula como membro (cria seller padrão se não existir) */
+  /** Vincula contributor a uma célula como membro (usa seller do líder se existir) */
   async addToCell(contributorId: string, cellId: string): Promise<void> {
     const cell = await this.prisma.cell.findUnique({
       where: { id: cellId },
-      select: { id: true, name: true },
+      select: { id: true, name: true, leaderId: true },
     });
     if (!cell) return;
 
-    // Cria seller padrão para o membro se não existir
-    let seller = await this.prisma.seller.findFirst({
-      where: { contributorId, cellId, active: true },
-    });
-    if (!seller) {
-      const contributor = await this.prisma.contributor.findUnique({
-        where: { id: contributorId },
-        select: { name: true, username: true },
+    let sellerId: string | undefined;
+
+    // Tenta obter o sellerId do líder da célula para o vínculo (vincular ao líder)
+    if (cell.leaderId) {
+      const leaderSeller = await this.prisma.seller.findFirst({
+        where: { contributorId: cell.leaderId, cellId, active: true },
+        select: { id: true },
       });
-      const tag = (contributor?.username ?? contributorId.slice(-6)).toLowerCase().replace(/\s/g, '');
-      seller = await this.prisma.seller.create({
-        data: {
-          name: contributor?.name ?? 'Vendedor',
-          cellId,
-          contributorId,
-          tag,
-        },
-      });
+      if (leaderSeller) {
+        sellerId = leaderSeller.id;
+      }
     }
 
-    // Cria vínculo ContributorCell se não existir
+    // Se não encontrou seller do líder, cria/busca um individual para o membro
+    if (!sellerId) {
+      let seller = await this.prisma.seller.findFirst({
+        where: { contributorId, cellId, active: true },
+      });
+      if (!seller) {
+        const contributor = await this.prisma.contributor.findUnique({
+          where: { id: contributorId },
+          select: { name: true, username: true },
+        });
+        const tag = (contributor?.username ?? contributorId.slice(-6)).toLowerCase().replace(/\s/g, '');
+        seller = await this.prisma.seller.create({
+          data: {
+            name: contributor?.name ?? 'Vendedor',
+            cellId,
+            contributorId,
+            tag,
+          },
+        });
+      }
+      sellerId = seller.id;
+    }
+
+    // Cria/Atualiza vínculo ContributorCell
     const existing = await this.prisma.contributorCell.findFirst({
-      where: { contributorId, cellId, active: true },
+      where: { contributorId, cellId },
     });
+
     if (!existing) {
       await this.prisma.contributorCell.create({
-        data: { contributorId, cellId, sellerId: seller.id },
+        data: { contributorId, cellId, sellerId },
+      });
+    } else if (existing.sellerId !== sellerId || !existing.active) {
+      await this.prisma.contributorCell.update({
+        where: { id: existing.id },
+        data: { sellerId, active: true, deletedAt: null },
       });
     }
 

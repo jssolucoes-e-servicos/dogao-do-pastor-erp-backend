@@ -7,7 +7,7 @@ import {
   PermissionAction,
 } from '../interfaces/effective-permissions.interface';
 
-const SUPERUSER_ROLES = ['IT', 'ADMIN'];
+const SUPERUSER_ROLES = ['IT', 'ADMIN', 'TI', 'T.I', 'ADMINISTRAÇÃO'];
 
 @Injectable()
 export class PermissionResolverService {

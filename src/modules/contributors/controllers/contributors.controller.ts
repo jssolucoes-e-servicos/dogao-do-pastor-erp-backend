@@ -53,12 +53,12 @@ export class ContributorsController {
   @UseGuards(JwtAuthGuard, SlugGuard)
   @RequireSlug('erp.my-cell', 'erp.admin')
   async inviteMember(
-    @Body() dto: CreateContributorDto & { cellId?: string },
+    @Body() { cellId: cellIdFromDto, ...dto }: CreateContributorDto & { cellId?: string },
     @User() user: any,
   ) {
     const created = await this.service.create(dto);
     // Vincula à célula do líder (ou à cellId passada)
-    const cellId = dto.cellId ?? user.leaderCellId;
+    const cellId = cellIdFromDto ?? user.leaderCellId;
     if (cellId && created.id) {
       await this.service.addToCell(created.id, cellId);
     }
@@ -147,5 +147,11 @@ export class ContributorsController {
     },
   ) {
     return await this.service.setIndividualPermission(id, moduleId, permissions);
+  }
+
+  @Post(':id/cells/:cellId')
+  @Roles('IT', 'ADMIN')
+  async linkToCell(@Param('id') id: string, @Param('cellId') cellId: string) {
+    return await this.service.addToCell(id, cellId);
   }
 }
