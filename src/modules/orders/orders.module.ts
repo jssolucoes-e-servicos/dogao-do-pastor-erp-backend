@@ -18,6 +18,8 @@ import { TicketsModule } from '../tickets/tickets.module';
 import { OrdersNotificationsService } from '../evolution/services/notifications/orders-notifications.service';
 import { CommandsModule } from '../commands/commands.module';
 import { CashSettlementModule } from '../cash-settlement/cash-settlement.module';
+import { OrderReceiptService } from './services/order-receipt.service';
+import { UploadsModule } from '../uploads/uploads.module';
 
 @Module({
   imports: [
@@ -29,6 +31,7 @@ import { CashSettlementModule } from '../cash-settlement/cash-settlement.module'
     forwardRef(() => PaymentsModule),
     forwardRef(() => CommandsModule),
     CashSettlementModule,
+    UploadsModule,
   ],
   controllers: [OrdersController],
   providers: [
@@ -37,6 +40,7 @@ import { CashSettlementModule } from '../cash-settlement/cash-settlement.module'
     OrdersService,
     CustomersService,
     SellersService,
+    OrderReceiptService,
   ],
   exports: [OrdersService],
 })

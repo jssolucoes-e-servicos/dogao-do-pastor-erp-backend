@@ -14,6 +14,7 @@ import { IPaginatedResponse } from 'src/common/interfaces';
 import { CreateContributorDto } from 'src/modules/contributors/dto/create-contributor.dto';
 import { UpdateContributorDto } from 'src/modules/contributors/dto/update-contributor.dto';
 import { UploadsService } from 'src/modules/uploads/services/uploads.service';
+import { ContributorsNotificationsService } from 'src/modules/evolution/services/notifications/contributors-notifications.service';
 
 @Injectable()
 export class ContributorsService extends BaseCrudService<
@@ -36,6 +37,7 @@ export class ContributorsService extends BaseCrudService<
     loggerService: LoggerService,
     prismaService: PrismaService,
     private readonly uploadsService: UploadsService,
+    private readonly contributorsNotifications: ContributorsNotificationsService,
   ) {
     super(configService, loggerService, prismaService);
     this.model = this.prisma.contributor;
@@ -104,6 +106,63 @@ export class ContributorsService extends BaseCrudService<
     }) as unknown as ContributorEntity;
   }
 
+  /** Vincula contributor a uma célula como membro (cria seller padrão se não existir) */
+  async addToCell(contributorId: string, cellId: string): Promise<void> {
+    const cell = await this.prisma.cell.findUnique({
+      where: { id: cellId },
+      select: { id: true, name: true },
+    });
+    if (!cell) return;
+
+    // Cria seller padrão para o membro se não existir
+    let seller = await this.prisma.seller.findFirst({
+      where: { contributorId, cellId, active: true },
+    });
+    if (!seller) {
+      const contributor = await this.prisma.contributor.findUnique({
+        where: { id: contributorId },
+        select: { name: true, username: true },
+      });
+      const tag = (contributor?.username ?? contributorId.slice(-6)).toLowerCase().replace(/\s/g, '');
+      seller = await this.prisma.seller.create({
+        data: {
+          name: contributor?.name ?? 'Vendedor',
+          cellId,
+          contributorId,
+          tag,
+        },
+      });
+    }
+
+    // Cria vínculo ContributorCell se não existir
+    const existing = await this.prisma.contributorCell.findFirst({
+      where: { contributorId, cellId, active: true },
+    });
+    if (!existing) {
+      await this.prisma.contributorCell.create({
+        data: { contributorId, cellId, sellerId: seller.id },
+      });
+    }
+
+    // Atribui role Vendedor se não tiver
+    const vendedorRole = await this.prisma.role.findFirst({
+      where: { name: { contains: 'Vendedor', mode: 'insensitive' }, active: true },
+    });
+    if (vendedorRole) {
+      const hasRole = await this.prisma.userRole.findFirst({
+        where: { contributorId, roleId: vendedorRole.id, active: true },
+      });
+      if (!hasRole) {
+        await this.prisma.userRole.create({
+          data: { contributorId, roleId: vendedorRole.id },
+        });
+      }
+    }
+
+    // Envia mensagem de boas-vindas com credenciais (em background)
+    this.contributorsNotifications.sendWelcomeCredentialsOne(contributorId).catch(() => {});
+  }
+
   async list(
     query: PaginationQueryDto,
     user?: any,
@@ -154,6 +213,7 @@ export class ContributorsService extends BaseCrudService<
         cellNetworks: true,
         deliveryPersons: true,
         sellers: true,
+        cellsMember: { where: { active: true } },
         userRoles: { include: { role: true } },
         permissions: { include: { module: true } },
       },

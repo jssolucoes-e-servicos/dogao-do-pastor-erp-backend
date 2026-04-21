@@ -23,8 +23,15 @@ export class StringsHelper {
   static translatePaymentMethod(method: PaymentMethodEnum): string {
     const TRANSLATE: Partial<Record<PaymentMethodEnum, string>> = {
       [PaymentMethodEnum.PIX]: 'PIX',
-      [PaymentMethodEnum.CARD]: 'Cartão de Crédito',
+      [PaymentMethodEnum.CARD]: 'Cartão',
+      [PaymentMethodEnum.CARD_CREDIT]: 'Cartão de Crédito',
+      [PaymentMethodEnum.CARD_DEBIT]: 'Cartão de Débito',
+      [PaymentMethodEnum.MONEY]: 'Dinheiro',
+      [PaymentMethodEnum.POS]: 'Maquininha',
+      [PaymentMethodEnum.PIX_OFFLINE]: 'PIX',
+      [PaymentMethodEnum.TICKET]: 'Ticket',
+      [PaymentMethodEnum.UNDEFINED]: '—',
     };
-    return TRANSLATE[method]!;
+    return TRANSLATE[method] ?? method ?? '—';
   }
 }

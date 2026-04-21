@@ -28,6 +28,7 @@ import { TicketsService } from 'src/modules/tickets/services/tickets.service';
 import { MpPaymentsService } from 'src/modules/payments/services/mercadopago/mp-payments.service';
 import { CommandsService } from 'src/modules/commands/services/commands.service';
 import { CashSettlementService } from 'src/modules/cash-settlement/services/cash-settlement.service';
+import { OrderReceiptService } from './order-receipt.service';
 
 import { DefinePaymetnDTO } from '../dto/define-payment.dto';
 import { ForDeliveryDTO } from '../dto/for-delivery.dto';
@@ -59,6 +60,7 @@ export class OrdersService extends BaseCrudService<
     @Inject(forwardRef(() => CommandsService))
     private readonly commandsService: CommandsService,
     private readonly cashSettlementService: CashSettlementService,
+    private readonly receiptService: OrderReceiptService,
   ) {
     super(configService, loggerService, prismaService);
     this.model = this.prisma.order;
@@ -804,24 +806,26 @@ export class OrdersService extends BaseCrudService<
         items: true,
         edition: true,
         customer: true,
-        seller: {
-          include: {
-            contributor: true,
-          },
-        },
+        seller: { include: { contributor: true } },
       },
     });
-    if (!order) {
-      throw new NotFoundException('Pedido não encontrado');
-    }
+    if (!order) throw new NotFoundException('Pedido não encontrado');
+
+    // 1. Mensagem de texto imediata — confirmação da compra
     await this.notifications.paymentReceived(
-      order,
+      order as any,
       order.customerPhone,
       order.customerName,
-      order.items?.length,
+      order.items?.length ?? 0,
       order.totalValue,
       order.paymentType,
     );
+
+    // 2. Gera PDF, salva no MinIO e envia como documento (em background)
+    this.receiptService.generateAndSave(id)
+      .then(pdfUrl => this.notifications.sendReceiptPdf(order as any, pdfUrl))
+      .catch(err => this.logger.warn(`Falha ao enviar PDF comprovante ${id}: ${err?.message}`));
+
     return true;
   }
 
@@ -1163,6 +1167,7 @@ export class OrdersService extends BaseCrudService<
       }
 
       // Venda em dinheiro pelo app → registra no acerto financeiro
+      // NÃO envia comprovante aqui — só após o cliente confirmar o pagamento (handleCashFinalize)
       const contributorId = dto.contributorId || user?.id;
       if (dto.paymentMethod === PaymentMethodEnum.MONEY && contributorId) {
         try {
@@ -1195,18 +1200,23 @@ export class OrdersService extends BaseCrudService<
       }
     }
 
-    // 5. Auto check-in para PICKUP pago imediatamente no PDV
+    // 5. Auto-comanda para DELIVERY pago imediatamente no PDV
+    // PICKUP: comanda gerada no check-in pelo balcão
+    // DONATE: comanda gerada quando o parceiro solicita retirada
     if (
       orderStatus === OrderStatusEnum.PAID &&
-      dto.deliveryOption === DeliveryOptionEnum.PICKUP
+      dto.deliveryOption === DeliveryOptionEnum.DELIVERY
     ) {
       try {
-        const fullOrder = await this.findById(order.id);
         await this.commandsService.checkIn(order.id);
       } catch (err) {
-        this.logger.warn(`Auto check-in PDV falhou para ${order.id}: ${err?.message}`);
+        this.logger.warn(`Auto-comanda PDV (delivery) falhou para ${order.id}: ${err?.message}`);
       }
     }
+
+    // 6. Envia comprovante PDF via WhatsApp para pagamentos em dinheiro (confirmados na hora)
+    // NÃO dispara aqui — o app chama POST /orders/:id/finalize-cash após o cliente confirmar o troco
+    // Isso evita enviar comprovante de pedidos cancelados antes de confirmar o valor recebido
 
     return this.findById(order.id);
   }

@@ -9,16 +9,16 @@ import { GenerateOrderCardDTO } from '../dto/generate-order-card.dto';
 import { GenerateOrderPixDTO } from '../dto/generate-order-pix.dto';
 import { PaymentsService } from '../services/payments.service';
 import { PaymentsTasksService } from '../services/payments-tasks.service';
+import { CashSettlementService } from 'src/modules/cash-settlement/services/cash-settlement.service';
 
 @Controller('payments')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class PaymentsController {
   constructor(
     private readonly service: PaymentsService,
-    private readonly tasksService: PaymentsTasksService
-  ) {
-    /* void */
-  }
+    private readonly tasksService: PaymentsTasksService,
+    private readonly cashSettlementService: CashSettlementService,
+  ) {}
 
   @Post('create-order-pix')
   @Public()
@@ -46,21 +46,28 @@ export class PaymentsController {
   @HttpCode(200)
   @Public()
   async handleWebhook(@Body() body: any) {
-    // Agora o N8N recebe o evento do MercadoPago puro e repassa apenas o providerPaymentId pra nós!
     const providerEventId = body?.data?.id || body?.id;
 
     if (providerEventId) {
       console.log(`[Webhook N8N -> NestJS] Recebido pagamento MP ID: ${providerEventId}`);
-      const paymentParams = await this.service.findOne({
-        providerPaymentId: String(providerEventId),
-      });
 
-      if (paymentParams) {
-        await this.tasksService.handlePendingPayments(paymentParams as any);
+      // Verifica se é um acerto financeiro (PIX QR Code de acerto)
+      const isSettlement = await this.cashSettlementService.handleMpPayment(
+        String(providerEventId),
+        body?.data?.status || body?.status || 'approved',
+      );
+
+      if (!isSettlement) {
+        // Fluxo normal de pedido
+        const paymentParams = await this.service.findOne({
+          providerPaymentId: String(providerEventId),
+        });
+        if (paymentParams) {
+          await this.tasksService.handlePendingPayments(paymentParams as any);
+        }
       }
     }
-    
-    // Sempre retornar 200 OK
+
     return { received: true };
   }
 

@@ -29,6 +29,20 @@ export class ContributorsNotificationsService extends BaseService {
     super(configService, loggerService, prismaService);
   }
 
+  /** Envia boas-vindas + credenciais para um contributor específico */
+  async sendWelcomeCredentialsOne(contributorId: string): Promise<void> {
+    const contributor = await this.prisma.contributor.findUnique({
+      where: { id: contributorId },
+      select: { name: true, username: true, phone: true },
+    });
+    if (!contributor?.phone || !contributor?.username) return;
+
+    const message = MW_ContributorWelcomeCredentials(contributor.name, contributor.username);
+    await this.evolutionService.sendText(contributor.phone, message);
+    await delayBetweenMessages();
+    await this.evolutionService.sendText(contributor.phone, MW_ContributorSystemLink);
+  }
+
   async sendWelcomeCredentialsAll(): Promise<{ total: number; success: number; errors: number }> {
     const contributors = await this.prisma.contributor.findMany({
       where: {

@@ -18,8 +18,10 @@ import { AuthCustomerService } from './services/auth-customer.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
+import { SlugGuard } from './guards/slug.guard';
 import { AccessLinkGuard } from './guards/access-link.guard';
 import { PassportModule } from '@nestjs/passport';
+import { PermissionsModule } from 'src/modules/permissions/permissions.module';
 
 @Module({
   imports: [
@@ -27,14 +29,13 @@ import { PassportModule } from '@nestjs/passport';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         secret: config.get('JWT_SECRET'),
-        signOptions: {
-          expiresIn: '7d',
-        },
+        signOptions: { expiresIn: '7d' },
       }),
     }),
     EvolutionModule,
     N8nModule,
     PassportModule,
+    PermissionsModule,
   ],
   controllers: [AuthController],
   providers: [
@@ -48,9 +49,10 @@ import { PassportModule } from '@nestjs/passport';
     JwtStrategy,
     JwtAuthGuard,
     RolesGuard,
+    SlugGuard,
     AccessLinkGuard,
   ],
-  exports: [AuthService, JwtAuthGuard, RolesGuard, AccessLinkGuard],
+  exports: [AuthService, JwtAuthGuard, RolesGuard, SlugGuard, AccessLinkGuard],
 })
 export class AuthModule {
   /* void */

@@ -40,11 +40,21 @@ export class RolesGuard implements CanActivate {
     // Normaliza roles requeridas para comparação (tudo maiúsculo)
     const normalizedRequired = requiredRoles.map(r => r.toUpperCase());
 
+    // Normaliza roles do usuário (tudo maiúsculo)
+    const normalizedUserRoles = userRoles.map((r: string) => r.toUpperCase());
+
     // Verifica se alguma das roles do usuário bate com as requeridas na rota
-    const hasRole = normalizedRequired.some((role) => userRoles.includes(role));
+    // Matching flexível: 'LÍDER DE CÉLULA' bate com 'LÍDER', 'SUPERVISOR DE REDE' bate com 'SUPERVISOR'
+    const hasRole = normalizedRequired.some((required) =>
+      normalizedUserRoles.some((userRole: string) =>
+        userRole === required ||
+        userRole.startsWith(required.split(' ')[0]) ||
+        required.startsWith(userRole.split(' ')[0])
+      )
+    );
     
     if (!hasRole) {
-      throw new ForbiddenException(`Acesso negado. Requer prefil: ${normalizedRequired.join(', ')}`);
+      throw new ForbiddenException(`Acesso negado. Requer perfil: ${normalizedRequired.join(', ')}`);
     }
 
     return true;

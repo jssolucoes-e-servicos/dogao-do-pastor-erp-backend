@@ -40,6 +40,7 @@ export type CashSettlementOrderMinAggregateOutputType = {
   orderId: string | null
   amount: number | null
   createdAt: Date | null
+  deletedAt: Date | null
 }
 
 export type CashSettlementOrderMaxAggregateOutputType = {
@@ -48,6 +49,7 @@ export type CashSettlementOrderMaxAggregateOutputType = {
   orderId: string | null
   amount: number | null
   createdAt: Date | null
+  deletedAt: Date | null
 }
 
 export type CashSettlementOrderCountAggregateOutputType = {
@@ -56,6 +58,7 @@ export type CashSettlementOrderCountAggregateOutputType = {
   orderId: number
   amount: number
   createdAt: number
+  deletedAt: number
   _all: number
 }
 
@@ -74,6 +77,7 @@ export type CashSettlementOrderMinAggregateInputType = {
   orderId?: true
   amount?: true
   createdAt?: true
+  deletedAt?: true
 }
 
 export type CashSettlementOrderMaxAggregateInputType = {
@@ -82,6 +86,7 @@ export type CashSettlementOrderMaxAggregateInputType = {
   orderId?: true
   amount?: true
   createdAt?: true
+  deletedAt?: true
 }
 
 export type CashSettlementOrderCountAggregateInputType = {
@@ -90,6 +95,7 @@ export type CashSettlementOrderCountAggregateInputType = {
   orderId?: true
   amount?: true
   createdAt?: true
+  deletedAt?: true
   _all?: true
 }
 
@@ -185,6 +191,7 @@ export type CashSettlementOrderGroupByOutputType = {
   orderId: string
   amount: number
   createdAt: Date
+  deletedAt: Date | null
   _count: CashSettlementOrderCountAggregateOutputType | null
   _avg: CashSettlementOrderAvgAggregateOutputType | null
   _sum: CashSettlementOrderSumAggregateOutputType | null
@@ -216,6 +223,7 @@ export type CashSettlementOrderWhereInput = {
   orderId?: Prisma.StringFilter<"CashSettlementOrder"> | string
   amount?: Prisma.FloatFilter<"CashSettlementOrder"> | number
   createdAt?: Prisma.DateTimeFilter<"CashSettlementOrder"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"CashSettlementOrder"> | Date | string | null
   settlement?: Prisma.XOR<Prisma.CashSettlementScalarRelationFilter, Prisma.CashSettlementWhereInput>
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
 }
@@ -226,6 +234,7 @@ export type CashSettlementOrderOrderByWithRelationInput = {
   orderId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   settlement?: Prisma.CashSettlementOrderByWithRelationInput
   order?: Prisma.OrderOrderByWithRelationInput
   _relevance?: Prisma.CashSettlementOrderOrderByRelevanceInput
@@ -240,6 +249,7 @@ export type CashSettlementOrderWhereUniqueInput = Prisma.AtLeast<{
   settlementId?: Prisma.StringFilter<"CashSettlementOrder"> | string
   amount?: Prisma.FloatFilter<"CashSettlementOrder"> | number
   createdAt?: Prisma.DateTimeFilter<"CashSettlementOrder"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"CashSettlementOrder"> | Date | string | null
   settlement?: Prisma.XOR<Prisma.CashSettlementScalarRelationFilter, Prisma.CashSettlementWhereInput>
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
 }, "id" | "orderId">
@@ -250,6 +260,7 @@ export type CashSettlementOrderOrderByWithAggregationInput = {
   orderId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.CashSettlementOrderCountOrderByAggregateInput
   _avg?: Prisma.CashSettlementOrderAvgOrderByAggregateInput
   _max?: Prisma.CashSettlementOrderMaxOrderByAggregateInput
@@ -266,12 +277,14 @@ export type CashSettlementOrderScalarWhereWithAggregatesInput = {
   orderId?: Prisma.StringWithAggregatesFilter<"CashSettlementOrder"> | string
   amount?: Prisma.FloatWithAggregatesFilter<"CashSettlementOrder"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CashSettlementOrder"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CashSettlementOrder"> | Date | string | null
 }
 
 export type CashSettlementOrderCreateInput = {
   id?: string
   amount: number
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   settlement: Prisma.CashSettlementCreateNestedOneWithoutOrdersInput
   order: Prisma.OrderCreateNestedOneWithoutCashSettlementOrderInput
 }
@@ -282,12 +295,14 @@ export type CashSettlementOrderUncheckedCreateInput = {
   orderId: string
   amount: number
   createdAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type CashSettlementOrderUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   settlement?: Prisma.CashSettlementUpdateOneRequiredWithoutOrdersNestedInput
   order?: Prisma.OrderUpdateOneRequiredWithoutCashSettlementOrderNestedInput
 }
@@ -298,6 +313,7 @@ export type CashSettlementOrderUncheckedUpdateInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CashSettlementOrderCreateManyInput = {
@@ -306,12 +322,14 @@ export type CashSettlementOrderCreateManyInput = {
   orderId: string
   amount: number
   createdAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type CashSettlementOrderUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CashSettlementOrderUncheckedUpdateManyInput = {
@@ -320,6 +338,7 @@ export type CashSettlementOrderUncheckedUpdateManyInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CashSettlementOrderNullableScalarRelationFilter = {
@@ -349,6 +368,7 @@ export type CashSettlementOrderCountOrderByAggregateInput = {
   orderId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type CashSettlementOrderAvgOrderByAggregateInput = {
@@ -361,6 +381,7 @@ export type CashSettlementOrderMaxOrderByAggregateInput = {
   orderId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type CashSettlementOrderMinOrderByAggregateInput = {
@@ -369,6 +390,7 @@ export type CashSettlementOrderMinOrderByAggregateInput = {
   orderId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type CashSettlementOrderSumOrderByAggregateInput = {
@@ -453,6 +475,7 @@ export type CashSettlementOrderCreateWithoutOrderInput = {
   id?: string
   amount: number
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   settlement: Prisma.CashSettlementCreateNestedOneWithoutOrdersInput
 }
 
@@ -461,6 +484,7 @@ export type CashSettlementOrderUncheckedCreateWithoutOrderInput = {
   settlementId: string
   amount: number
   createdAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type CashSettlementOrderCreateOrConnectWithoutOrderInput = {
@@ -483,6 +507,7 @@ export type CashSettlementOrderUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   settlement?: Prisma.CashSettlementUpdateOneRequiredWithoutOrdersNestedInput
 }
 
@@ -491,12 +516,14 @@ export type CashSettlementOrderUncheckedUpdateWithoutOrderInput = {
   settlementId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CashSettlementOrderCreateWithoutSettlementInput = {
   id?: string
   amount: number
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   order: Prisma.OrderCreateNestedOneWithoutCashSettlementOrderInput
 }
 
@@ -505,6 +532,7 @@ export type CashSettlementOrderUncheckedCreateWithoutSettlementInput = {
   orderId: string
   amount: number
   createdAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type CashSettlementOrderCreateOrConnectWithoutSettlementInput = {
@@ -542,6 +570,7 @@ export type CashSettlementOrderScalarWhereInput = {
   orderId?: Prisma.StringFilter<"CashSettlementOrder"> | string
   amount?: Prisma.FloatFilter<"CashSettlementOrder"> | number
   createdAt?: Prisma.DateTimeFilter<"CashSettlementOrder"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"CashSettlementOrder"> | Date | string | null
 }
 
 export type CashSettlementOrderCreateManySettlementInput = {
@@ -549,12 +578,14 @@ export type CashSettlementOrderCreateManySettlementInput = {
   orderId: string
   amount: number
   createdAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type CashSettlementOrderUpdateWithoutSettlementInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   order?: Prisma.OrderUpdateOneRequiredWithoutCashSettlementOrderNestedInput
 }
 
@@ -563,6 +594,7 @@ export type CashSettlementOrderUncheckedUpdateWithoutSettlementInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CashSettlementOrderUncheckedUpdateManyWithoutSettlementInput = {
@@ -570,6 +602,7 @@ export type CashSettlementOrderUncheckedUpdateManyWithoutSettlementInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -580,6 +613,7 @@ export type CashSettlementOrderSelect<ExtArgs extends runtime.Types.Extensions.I
   orderId?: boolean
   amount?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
   settlement?: boolean | Prisma.CashSettlementDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["cashSettlementOrder"]>
@@ -590,6 +624,7 @@ export type CashSettlementOrderSelectCreateManyAndReturn<ExtArgs extends runtime
   orderId?: boolean
   amount?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
   settlement?: boolean | Prisma.CashSettlementDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["cashSettlementOrder"]>
@@ -600,6 +635,7 @@ export type CashSettlementOrderSelectUpdateManyAndReturn<ExtArgs extends runtime
   orderId?: boolean
   amount?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
   settlement?: boolean | Prisma.CashSettlementDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["cashSettlementOrder"]>
@@ -610,9 +646,10 @@ export type CashSettlementOrderSelectScalar = {
   orderId?: boolean
   amount?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
 }
 
-export type CashSettlementOrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "settlementId" | "orderId" | "amount" | "createdAt", ExtArgs["result"]["cashSettlementOrder"]>
+export type CashSettlementOrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "settlementId" | "orderId" | "amount" | "createdAt" | "deletedAt", ExtArgs["result"]["cashSettlementOrder"]>
 export type CashSettlementOrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   settlement?: boolean | Prisma.CashSettlementDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
@@ -638,6 +675,7 @@ export type $CashSettlementOrderPayload<ExtArgs extends runtime.Types.Extensions
     orderId: string
     amount: number
     createdAt: Date
+    deletedAt: Date | null
   }, ExtArgs["result"]["cashSettlementOrder"]>
   composites: {}
 }
@@ -1068,6 +1106,7 @@ export interface CashSettlementOrderFieldRefs {
   readonly orderId: Prisma.FieldRef<"CashSettlementOrder", 'String'>
   readonly amount: Prisma.FieldRef<"CashSettlementOrder", 'Float'>
   readonly createdAt: Prisma.FieldRef<"CashSettlementOrder", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"CashSettlementOrder", 'DateTime'>
 }
     
 

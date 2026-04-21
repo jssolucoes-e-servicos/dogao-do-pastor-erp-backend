@@ -103,26 +103,27 @@ export class MinioService extends BaseService {
    */
   async uploadFile(
     buffer: Buffer,
-    originalName: string,
+    objectName: string,
     mimeType: string,
   ): Promise<IUploadResult> {
-    const timestamp = Date.now();
-    const objectName = `${timestamp}_${originalName.replace(/\s/g, '_')}`;
-    const metaData = {
-      'Content-Type': mimeType,
-    };
+    // Se o objectName já contém '/' (tem diretório), usa direto sem timestamp
+    // Caso contrário, adiciona timestamp para evitar colisões em uploads genéricos
+    const finalName = objectName.includes('/')
+      ? objectName.replace(/\s/g, '_')
+      : `${Date.now()}_${objectName.replace(/\s/g, '_')}`;
+
+    const metaData = { 'Content-Type': mimeType };
 
     const uploadedObjectInfo = await this.minioClient.putObject(
       this.bucketName,
-      objectName,
+      finalName,
       buffer,
       buffer.length,
       metaData,
     );
 
-    // Retorna o caminho que será salvo no banco de dados do negócio (Fatura, Cliente, etc.)
     return {
-      path: `/${this.bucketName}/${objectName}`,
+      path: `/${this.bucketName}/${finalName}`,
       etag: uploadedObjectInfo.etag,
       bucket: this.bucketName,
     };

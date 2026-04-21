@@ -28,10 +28,12 @@ export type AggregateCashSettlement = {
 
 export type CashSettlementAvgAggregateOutputType = {
   totalAmount: number | null
+  paidAmount: number | null
 }
 
 export type CashSettlementSumAggregateOutputType = {
   totalAmount: number | null
+  paidAmount: number | null
 }
 
 export type CashSettlementMinAggregateOutputType = {
@@ -39,12 +41,8 @@ export type CashSettlementMinAggregateOutputType = {
   contributorId: string | null
   editionId: string | null
   totalAmount: number | null
+  paidAmount: number | null
   status: $Enums.CashSettlementStatusEnum | null
-  paymentMethod: string | null
-  notes: string | null
-  submittedAt: Date | null
-  confirmedAt: Date | null
-  confirmedById: string | null
   active: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -56,12 +54,8 @@ export type CashSettlementMaxAggregateOutputType = {
   contributorId: string | null
   editionId: string | null
   totalAmount: number | null
+  paidAmount: number | null
   status: $Enums.CashSettlementStatusEnum | null
-  paymentMethod: string | null
-  notes: string | null
-  submittedAt: Date | null
-  confirmedAt: Date | null
-  confirmedById: string | null
   active: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -73,12 +67,8 @@ export type CashSettlementCountAggregateOutputType = {
   contributorId: number
   editionId: number
   totalAmount: number
+  paidAmount: number
   status: number
-  paymentMethod: number
-  notes: number
-  submittedAt: number
-  confirmedAt: number
-  confirmedById: number
   active: number
   createdAt: number
   updatedAt: number
@@ -89,10 +79,12 @@ export type CashSettlementCountAggregateOutputType = {
 
 export type CashSettlementAvgAggregateInputType = {
   totalAmount?: true
+  paidAmount?: true
 }
 
 export type CashSettlementSumAggregateInputType = {
   totalAmount?: true
+  paidAmount?: true
 }
 
 export type CashSettlementMinAggregateInputType = {
@@ -100,12 +92,8 @@ export type CashSettlementMinAggregateInputType = {
   contributorId?: true
   editionId?: true
   totalAmount?: true
+  paidAmount?: true
   status?: true
-  paymentMethod?: true
-  notes?: true
-  submittedAt?: true
-  confirmedAt?: true
-  confirmedById?: true
   active?: true
   createdAt?: true
   updatedAt?: true
@@ -117,12 +105,8 @@ export type CashSettlementMaxAggregateInputType = {
   contributorId?: true
   editionId?: true
   totalAmount?: true
+  paidAmount?: true
   status?: true
-  paymentMethod?: true
-  notes?: true
-  submittedAt?: true
-  confirmedAt?: true
-  confirmedById?: true
   active?: true
   createdAt?: true
   updatedAt?: true
@@ -134,12 +118,8 @@ export type CashSettlementCountAggregateInputType = {
   contributorId?: true
   editionId?: true
   totalAmount?: true
+  paidAmount?: true
   status?: true
-  paymentMethod?: true
-  notes?: true
-  submittedAt?: true
-  confirmedAt?: true
-  confirmedById?: true
   active?: true
   createdAt?: true
   updatedAt?: true
@@ -238,12 +218,8 @@ export type CashSettlementGroupByOutputType = {
   contributorId: string
   editionId: string
   totalAmount: number
+  paidAmount: number
   status: $Enums.CashSettlementStatusEnum
-  paymentMethod: string | null
-  notes: string | null
-  submittedAt: Date | null
-  confirmedAt: Date | null
-  confirmedById: string | null
   active: boolean
   createdAt: Date
   updatedAt: Date
@@ -278,12 +254,8 @@ export type CashSettlementWhereInput = {
   contributorId?: Prisma.StringFilter<"CashSettlement"> | string
   editionId?: Prisma.StringFilter<"CashSettlement"> | string
   totalAmount?: Prisma.FloatFilter<"CashSettlement"> | number
+  paidAmount?: Prisma.FloatFilter<"CashSettlement"> | number
   status?: Prisma.EnumCashSettlementStatusEnumFilter<"CashSettlement"> | $Enums.CashSettlementStatusEnum
-  paymentMethod?: Prisma.StringNullableFilter<"CashSettlement"> | string | null
-  notes?: Prisma.StringNullableFilter<"CashSettlement"> | string | null
-  submittedAt?: Prisma.DateTimeNullableFilter<"CashSettlement"> | Date | string | null
-  confirmedAt?: Prisma.DateTimeNullableFilter<"CashSettlement"> | Date | string | null
-  confirmedById?: Prisma.StringNullableFilter<"CashSettlement"> | string | null
   active?: Prisma.BoolFilter<"CashSettlement"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CashSettlement"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CashSettlement"> | Date | string
@@ -291,6 +263,7 @@ export type CashSettlementWhereInput = {
   contributor?: Prisma.XOR<Prisma.ContributorScalarRelationFilter, Prisma.ContributorWhereInput>
   edition?: Prisma.XOR<Prisma.EditionScalarRelationFilter, Prisma.EditionWhereInput>
   orders?: Prisma.CashSettlementOrderListRelationFilter
+  payments?: Prisma.CashSettlementPaymentListRelationFilter
 }
 
 export type CashSettlementOrderByWithRelationInput = {
@@ -298,12 +271,8 @@ export type CashSettlementOrderByWithRelationInput = {
   contributorId?: Prisma.SortOrder
   editionId?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
+  paidAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  paymentMethod?: Prisma.SortOrderInput | Prisma.SortOrder
-  notes?: Prisma.SortOrderInput | Prisma.SortOrder
-  submittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  confirmedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  confirmedById?: Prisma.SortOrderInput | Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -311,6 +280,7 @@ export type CashSettlementOrderByWithRelationInput = {
   contributor?: Prisma.ContributorOrderByWithRelationInput
   edition?: Prisma.EditionOrderByWithRelationInput
   orders?: Prisma.CashSettlementOrderOrderByRelationAggregateInput
+  payments?: Prisma.CashSettlementPaymentOrderByRelationAggregateInput
   _relevance?: Prisma.CashSettlementOrderByRelevanceInput
 }
 
@@ -322,12 +292,8 @@ export type CashSettlementWhereUniqueInput = Prisma.AtLeast<{
   contributorId?: Prisma.StringFilter<"CashSettlement"> | string
   editionId?: Prisma.StringFilter<"CashSettlement"> | string
   totalAmount?: Prisma.FloatFilter<"CashSettlement"> | number
+  paidAmount?: Prisma.FloatFilter<"CashSettlement"> | number
   status?: Prisma.EnumCashSettlementStatusEnumFilter<"CashSettlement"> | $Enums.CashSettlementStatusEnum
-  paymentMethod?: Prisma.StringNullableFilter<"CashSettlement"> | string | null
-  notes?: Prisma.StringNullableFilter<"CashSettlement"> | string | null
-  submittedAt?: Prisma.DateTimeNullableFilter<"CashSettlement"> | Date | string | null
-  confirmedAt?: Prisma.DateTimeNullableFilter<"CashSettlement"> | Date | string | null
-  confirmedById?: Prisma.StringNullableFilter<"CashSettlement"> | string | null
   active?: Prisma.BoolFilter<"CashSettlement"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CashSettlement"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CashSettlement"> | Date | string
@@ -335,6 +301,7 @@ export type CashSettlementWhereUniqueInput = Prisma.AtLeast<{
   contributor?: Prisma.XOR<Prisma.ContributorScalarRelationFilter, Prisma.ContributorWhereInput>
   edition?: Prisma.XOR<Prisma.EditionScalarRelationFilter, Prisma.EditionWhereInput>
   orders?: Prisma.CashSettlementOrderListRelationFilter
+  payments?: Prisma.CashSettlementPaymentListRelationFilter
 }, "id">
 
 export type CashSettlementOrderByWithAggregationInput = {
@@ -342,12 +309,8 @@ export type CashSettlementOrderByWithAggregationInput = {
   contributorId?: Prisma.SortOrder
   editionId?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
+  paidAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  paymentMethod?: Prisma.SortOrderInput | Prisma.SortOrder
-  notes?: Prisma.SortOrderInput | Prisma.SortOrder
-  submittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  confirmedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  confirmedById?: Prisma.SortOrderInput | Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -367,12 +330,8 @@ export type CashSettlementScalarWhereWithAggregatesInput = {
   contributorId?: Prisma.StringWithAggregatesFilter<"CashSettlement"> | string
   editionId?: Prisma.StringWithAggregatesFilter<"CashSettlement"> | string
   totalAmount?: Prisma.FloatWithAggregatesFilter<"CashSettlement"> | number
+  paidAmount?: Prisma.FloatWithAggregatesFilter<"CashSettlement"> | number
   status?: Prisma.EnumCashSettlementStatusEnumWithAggregatesFilter<"CashSettlement"> | $Enums.CashSettlementStatusEnum
-  paymentMethod?: Prisma.StringNullableWithAggregatesFilter<"CashSettlement"> | string | null
-  notes?: Prisma.StringNullableWithAggregatesFilter<"CashSettlement"> | string | null
-  submittedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CashSettlement"> | Date | string | null
-  confirmedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CashSettlement"> | Date | string | null
-  confirmedById?: Prisma.StringNullableWithAggregatesFilter<"CashSettlement"> | string | null
   active?: Prisma.BoolWithAggregatesFilter<"CashSettlement"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CashSettlement"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CashSettlement"> | Date | string
@@ -382,12 +341,8 @@ export type CashSettlementScalarWhereWithAggregatesInput = {
 export type CashSettlementCreateInput = {
   id?: string
   totalAmount?: number
+  paidAmount?: number
   status?: $Enums.CashSettlementStatusEnum
-  paymentMethod?: string | null
-  notes?: string | null
-  submittedAt?: Date | string | null
-  confirmedAt?: Date | string | null
-  confirmedById?: string | null
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -395,6 +350,7 @@ export type CashSettlementCreateInput = {
   contributor: Prisma.ContributorCreateNestedOneWithoutCashSettlementsInput
   edition: Prisma.EditionCreateNestedOneWithoutCashSettlementsInput
   orders?: Prisma.CashSettlementOrderCreateNestedManyWithoutSettlementInput
+  payments?: Prisma.CashSettlementPaymentCreateNestedManyWithoutSettlementInput
 }
 
 export type CashSettlementUncheckedCreateInput = {
@@ -402,28 +358,21 @@ export type CashSettlementUncheckedCreateInput = {
   contributorId: string
   editionId: string
   totalAmount?: number
+  paidAmount?: number
   status?: $Enums.CashSettlementStatusEnum
-  paymentMethod?: string | null
-  notes?: string | null
-  submittedAt?: Date | string | null
-  confirmedAt?: Date | string | null
-  confirmedById?: string | null
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   orders?: Prisma.CashSettlementOrderUncheckedCreateNestedManyWithoutSettlementInput
+  payments?: Prisma.CashSettlementPaymentUncheckedCreateNestedManyWithoutSettlementInput
 }
 
 export type CashSettlementUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumCashSettlementStatusEnumFieldUpdateOperationsInput | $Enums.CashSettlementStatusEnum
-  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -431,6 +380,7 @@ export type CashSettlementUpdateInput = {
   contributor?: Prisma.ContributorUpdateOneRequiredWithoutCashSettlementsNestedInput
   edition?: Prisma.EditionUpdateOneRequiredWithoutCashSettlementsNestedInput
   orders?: Prisma.CashSettlementOrderUpdateManyWithoutSettlementNestedInput
+  payments?: Prisma.CashSettlementPaymentUpdateManyWithoutSettlementNestedInput
 }
 
 export type CashSettlementUncheckedUpdateInput = {
@@ -438,17 +388,14 @@ export type CashSettlementUncheckedUpdateInput = {
   contributorId?: Prisma.StringFieldUpdateOperationsInput | string
   editionId?: Prisma.StringFieldUpdateOperationsInput | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumCashSettlementStatusEnumFieldUpdateOperationsInput | $Enums.CashSettlementStatusEnum
-  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   orders?: Prisma.CashSettlementOrderUncheckedUpdateManyWithoutSettlementNestedInput
+  payments?: Prisma.CashSettlementPaymentUncheckedUpdateManyWithoutSettlementNestedInput
 }
 
 export type CashSettlementCreateManyInput = {
@@ -456,12 +403,8 @@ export type CashSettlementCreateManyInput = {
   contributorId: string
   editionId: string
   totalAmount?: number
+  paidAmount?: number
   status?: $Enums.CashSettlementStatusEnum
-  paymentMethod?: string | null
-  notes?: string | null
-  submittedAt?: Date | string | null
-  confirmedAt?: Date | string | null
-  confirmedById?: string | null
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -471,12 +414,8 @@ export type CashSettlementCreateManyInput = {
 export type CashSettlementUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumCashSettlementStatusEnumFieldUpdateOperationsInput | $Enums.CashSettlementStatusEnum
-  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -488,12 +427,8 @@ export type CashSettlementUncheckedUpdateManyInput = {
   contributorId?: Prisma.StringFieldUpdateOperationsInput | string
   editionId?: Prisma.StringFieldUpdateOperationsInput | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumCashSettlementStatusEnumFieldUpdateOperationsInput | $Enums.CashSettlementStatusEnum
-  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -521,12 +456,8 @@ export type CashSettlementCountOrderByAggregateInput = {
   contributorId?: Prisma.SortOrder
   editionId?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
+  paidAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  paymentMethod?: Prisma.SortOrder
-  notes?: Prisma.SortOrder
-  submittedAt?: Prisma.SortOrder
-  confirmedAt?: Prisma.SortOrder
-  confirmedById?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -535,6 +466,7 @@ export type CashSettlementCountOrderByAggregateInput = {
 
 export type CashSettlementAvgOrderByAggregateInput = {
   totalAmount?: Prisma.SortOrder
+  paidAmount?: Prisma.SortOrder
 }
 
 export type CashSettlementMaxOrderByAggregateInput = {
@@ -542,12 +474,8 @@ export type CashSettlementMaxOrderByAggregateInput = {
   contributorId?: Prisma.SortOrder
   editionId?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
+  paidAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  paymentMethod?: Prisma.SortOrder
-  notes?: Prisma.SortOrder
-  submittedAt?: Prisma.SortOrder
-  confirmedAt?: Prisma.SortOrder
-  confirmedById?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -559,12 +487,8 @@ export type CashSettlementMinOrderByAggregateInput = {
   contributorId?: Prisma.SortOrder
   editionId?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
+  paidAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  paymentMethod?: Prisma.SortOrder
-  notes?: Prisma.SortOrder
-  submittedAt?: Prisma.SortOrder
-  confirmedAt?: Prisma.SortOrder
-  confirmedById?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -573,6 +497,7 @@ export type CashSettlementMinOrderByAggregateInput = {
 
 export type CashSettlementSumOrderByAggregateInput = {
   totalAmount?: Prisma.SortOrder
+  paidAmount?: Prisma.SortOrder
 }
 
 export type CashSettlementScalarRelationFilter = {
@@ -668,6 +593,20 @@ export type EnumCashSettlementStatusEnumFieldUpdateOperationsInput = {
   set?: $Enums.CashSettlementStatusEnum
 }
 
+export type CashSettlementCreateNestedOneWithoutPaymentsInput = {
+  create?: Prisma.XOR<Prisma.CashSettlementCreateWithoutPaymentsInput, Prisma.CashSettlementUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.CashSettlementCreateOrConnectWithoutPaymentsInput
+  connect?: Prisma.CashSettlementWhereUniqueInput
+}
+
+export type CashSettlementUpdateOneRequiredWithoutPaymentsNestedInput = {
+  create?: Prisma.XOR<Prisma.CashSettlementCreateWithoutPaymentsInput, Prisma.CashSettlementUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.CashSettlementCreateOrConnectWithoutPaymentsInput
+  upsert?: Prisma.CashSettlementUpsertWithoutPaymentsInput
+  connect?: Prisma.CashSettlementWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CashSettlementUpdateToOneWithWhereWithoutPaymentsInput, Prisma.CashSettlementUpdateWithoutPaymentsInput>, Prisma.CashSettlementUncheckedUpdateWithoutPaymentsInput>
+}
+
 export type CashSettlementCreateNestedOneWithoutOrdersInput = {
   create?: Prisma.XOR<Prisma.CashSettlementCreateWithoutOrdersInput, Prisma.CashSettlementUncheckedCreateWithoutOrdersInput>
   connectOrCreate?: Prisma.CashSettlementCreateOrConnectWithoutOrdersInput
@@ -685,35 +624,29 @@ export type CashSettlementUpdateOneRequiredWithoutOrdersNestedInput = {
 export type CashSettlementCreateWithoutContributorInput = {
   id?: string
   totalAmount?: number
+  paidAmount?: number
   status?: $Enums.CashSettlementStatusEnum
-  paymentMethod?: string | null
-  notes?: string | null
-  submittedAt?: Date | string | null
-  confirmedAt?: Date | string | null
-  confirmedById?: string | null
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   edition: Prisma.EditionCreateNestedOneWithoutCashSettlementsInput
   orders?: Prisma.CashSettlementOrderCreateNestedManyWithoutSettlementInput
+  payments?: Prisma.CashSettlementPaymentCreateNestedManyWithoutSettlementInput
 }
 
 export type CashSettlementUncheckedCreateWithoutContributorInput = {
   id?: string
   editionId: string
   totalAmount?: number
+  paidAmount?: number
   status?: $Enums.CashSettlementStatusEnum
-  paymentMethod?: string | null
-  notes?: string | null
-  submittedAt?: Date | string | null
-  confirmedAt?: Date | string | null
-  confirmedById?: string | null
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   orders?: Prisma.CashSettlementOrderUncheckedCreateNestedManyWithoutSettlementInput
+  payments?: Prisma.CashSettlementPaymentUncheckedCreateNestedManyWithoutSettlementInput
 }
 
 export type CashSettlementCreateOrConnectWithoutContributorInput = {
@@ -750,12 +683,8 @@ export type CashSettlementScalarWhereInput = {
   contributorId?: Prisma.StringFilter<"CashSettlement"> | string
   editionId?: Prisma.StringFilter<"CashSettlement"> | string
   totalAmount?: Prisma.FloatFilter<"CashSettlement"> | number
+  paidAmount?: Prisma.FloatFilter<"CashSettlement"> | number
   status?: Prisma.EnumCashSettlementStatusEnumFilter<"CashSettlement"> | $Enums.CashSettlementStatusEnum
-  paymentMethod?: Prisma.StringNullableFilter<"CashSettlement"> | string | null
-  notes?: Prisma.StringNullableFilter<"CashSettlement"> | string | null
-  submittedAt?: Prisma.DateTimeNullableFilter<"CashSettlement"> | Date | string | null
-  confirmedAt?: Prisma.DateTimeNullableFilter<"CashSettlement"> | Date | string | null
-  confirmedById?: Prisma.StringNullableFilter<"CashSettlement"> | string | null
   active?: Prisma.BoolFilter<"CashSettlement"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CashSettlement"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CashSettlement"> | Date | string
@@ -765,35 +694,29 @@ export type CashSettlementScalarWhereInput = {
 export type CashSettlementCreateWithoutEditionInput = {
   id?: string
   totalAmount?: number
+  paidAmount?: number
   status?: $Enums.CashSettlementStatusEnum
-  paymentMethod?: string | null
-  notes?: string | null
-  submittedAt?: Date | string | null
-  confirmedAt?: Date | string | null
-  confirmedById?: string | null
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   contributor: Prisma.ContributorCreateNestedOneWithoutCashSettlementsInput
   orders?: Prisma.CashSettlementOrderCreateNestedManyWithoutSettlementInput
+  payments?: Prisma.CashSettlementPaymentCreateNestedManyWithoutSettlementInput
 }
 
 export type CashSettlementUncheckedCreateWithoutEditionInput = {
   id?: string
   contributorId: string
   totalAmount?: number
+  paidAmount?: number
   status?: $Enums.CashSettlementStatusEnum
-  paymentMethod?: string | null
-  notes?: string | null
-  submittedAt?: Date | string | null
-  confirmedAt?: Date | string | null
-  confirmedById?: string | null
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   orders?: Prisma.CashSettlementOrderUncheckedCreateNestedManyWithoutSettlementInput
+  payments?: Prisma.CashSettlementPaymentUncheckedCreateNestedManyWithoutSettlementInput
 }
 
 export type CashSettlementCreateOrConnectWithoutEditionInput = {
@@ -822,21 +745,90 @@ export type CashSettlementUpdateManyWithWhereWithoutEditionInput = {
   data: Prisma.XOR<Prisma.CashSettlementUpdateManyMutationInput, Prisma.CashSettlementUncheckedUpdateManyWithoutEditionInput>
 }
 
-export type CashSettlementCreateWithoutOrdersInput = {
+export type CashSettlementCreateWithoutPaymentsInput = {
   id?: string
   totalAmount?: number
+  paidAmount?: number
   status?: $Enums.CashSettlementStatusEnum
-  paymentMethod?: string | null
-  notes?: string | null
-  submittedAt?: Date | string | null
-  confirmedAt?: Date | string | null
-  confirmedById?: string | null
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   contributor: Prisma.ContributorCreateNestedOneWithoutCashSettlementsInput
   edition: Prisma.EditionCreateNestedOneWithoutCashSettlementsInput
+  orders?: Prisma.CashSettlementOrderCreateNestedManyWithoutSettlementInput
+}
+
+export type CashSettlementUncheckedCreateWithoutPaymentsInput = {
+  id?: string
+  contributorId: string
+  editionId: string
+  totalAmount?: number
+  paidAmount?: number
+  status?: $Enums.CashSettlementStatusEnum
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  orders?: Prisma.CashSettlementOrderUncheckedCreateNestedManyWithoutSettlementInput
+}
+
+export type CashSettlementCreateOrConnectWithoutPaymentsInput = {
+  where: Prisma.CashSettlementWhereUniqueInput
+  create: Prisma.XOR<Prisma.CashSettlementCreateWithoutPaymentsInput, Prisma.CashSettlementUncheckedCreateWithoutPaymentsInput>
+}
+
+export type CashSettlementUpsertWithoutPaymentsInput = {
+  update: Prisma.XOR<Prisma.CashSettlementUpdateWithoutPaymentsInput, Prisma.CashSettlementUncheckedUpdateWithoutPaymentsInput>
+  create: Prisma.XOR<Prisma.CashSettlementCreateWithoutPaymentsInput, Prisma.CashSettlementUncheckedCreateWithoutPaymentsInput>
+  where?: Prisma.CashSettlementWhereInput
+}
+
+export type CashSettlementUpdateToOneWithWhereWithoutPaymentsInput = {
+  where?: Prisma.CashSettlementWhereInput
+  data: Prisma.XOR<Prisma.CashSettlementUpdateWithoutPaymentsInput, Prisma.CashSettlementUncheckedUpdateWithoutPaymentsInput>
+}
+
+export type CashSettlementUpdateWithoutPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumCashSettlementStatusEnumFieldUpdateOperationsInput | $Enums.CashSettlementStatusEnum
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contributor?: Prisma.ContributorUpdateOneRequiredWithoutCashSettlementsNestedInput
+  edition?: Prisma.EditionUpdateOneRequiredWithoutCashSettlementsNestedInput
+  orders?: Prisma.CashSettlementOrderUpdateManyWithoutSettlementNestedInput
+}
+
+export type CashSettlementUncheckedUpdateWithoutPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  contributorId?: Prisma.StringFieldUpdateOperationsInput | string
+  editionId?: Prisma.StringFieldUpdateOperationsInput | string
+  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumCashSettlementStatusEnumFieldUpdateOperationsInput | $Enums.CashSettlementStatusEnum
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orders?: Prisma.CashSettlementOrderUncheckedUpdateManyWithoutSettlementNestedInput
+}
+
+export type CashSettlementCreateWithoutOrdersInput = {
+  id?: string
+  totalAmount?: number
+  paidAmount?: number
+  status?: $Enums.CashSettlementStatusEnum
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  contributor: Prisma.ContributorCreateNestedOneWithoutCashSettlementsInput
+  edition: Prisma.EditionCreateNestedOneWithoutCashSettlementsInput
+  payments?: Prisma.CashSettlementPaymentCreateNestedManyWithoutSettlementInput
 }
 
 export type CashSettlementUncheckedCreateWithoutOrdersInput = {
@@ -844,16 +836,13 @@ export type CashSettlementUncheckedCreateWithoutOrdersInput = {
   contributorId: string
   editionId: string
   totalAmount?: number
+  paidAmount?: number
   status?: $Enums.CashSettlementStatusEnum
-  paymentMethod?: string | null
-  notes?: string | null
-  submittedAt?: Date | string | null
-  confirmedAt?: Date | string | null
-  confirmedById?: string | null
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  payments?: Prisma.CashSettlementPaymentUncheckedCreateNestedManyWithoutSettlementInput
 }
 
 export type CashSettlementCreateOrConnectWithoutOrdersInput = {
@@ -875,18 +864,15 @@ export type CashSettlementUpdateToOneWithWhereWithoutOrdersInput = {
 export type CashSettlementUpdateWithoutOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumCashSettlementStatusEnumFieldUpdateOperationsInput | $Enums.CashSettlementStatusEnum
-  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contributor?: Prisma.ContributorUpdateOneRequiredWithoutCashSettlementsNestedInput
   edition?: Prisma.EditionUpdateOneRequiredWithoutCashSettlementsNestedInput
+  payments?: Prisma.CashSettlementPaymentUpdateManyWithoutSettlementNestedInput
 }
 
 export type CashSettlementUncheckedUpdateWithoutOrdersInput = {
@@ -894,28 +880,21 @@ export type CashSettlementUncheckedUpdateWithoutOrdersInput = {
   contributorId?: Prisma.StringFieldUpdateOperationsInput | string
   editionId?: Prisma.StringFieldUpdateOperationsInput | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumCashSettlementStatusEnumFieldUpdateOperationsInput | $Enums.CashSettlementStatusEnum
-  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payments?: Prisma.CashSettlementPaymentUncheckedUpdateManyWithoutSettlementNestedInput
 }
 
 export type CashSettlementCreateManyContributorInput = {
   id?: string
   editionId: string
   totalAmount?: number
+  paidAmount?: number
   status?: $Enums.CashSettlementStatusEnum
-  paymentMethod?: string | null
-  notes?: string | null
-  submittedAt?: Date | string | null
-  confirmedAt?: Date | string | null
-  confirmedById?: string | null
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -925,47 +904,37 @@ export type CashSettlementCreateManyContributorInput = {
 export type CashSettlementUpdateWithoutContributorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumCashSettlementStatusEnumFieldUpdateOperationsInput | $Enums.CashSettlementStatusEnum
-  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   edition?: Prisma.EditionUpdateOneRequiredWithoutCashSettlementsNestedInput
   orders?: Prisma.CashSettlementOrderUpdateManyWithoutSettlementNestedInput
+  payments?: Prisma.CashSettlementPaymentUpdateManyWithoutSettlementNestedInput
 }
 
 export type CashSettlementUncheckedUpdateWithoutContributorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   editionId?: Prisma.StringFieldUpdateOperationsInput | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumCashSettlementStatusEnumFieldUpdateOperationsInput | $Enums.CashSettlementStatusEnum
-  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   orders?: Prisma.CashSettlementOrderUncheckedUpdateManyWithoutSettlementNestedInput
+  payments?: Prisma.CashSettlementPaymentUncheckedUpdateManyWithoutSettlementNestedInput
 }
 
 export type CashSettlementUncheckedUpdateManyWithoutContributorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   editionId?: Prisma.StringFieldUpdateOperationsInput | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumCashSettlementStatusEnumFieldUpdateOperationsInput | $Enums.CashSettlementStatusEnum
-  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -976,12 +945,8 @@ export type CashSettlementCreateManyEditionInput = {
   id?: string
   contributorId: string
   totalAmount?: number
+  paidAmount?: number
   status?: $Enums.CashSettlementStatusEnum
-  paymentMethod?: string | null
-  notes?: string | null
-  submittedAt?: Date | string | null
-  confirmedAt?: Date | string | null
-  confirmedById?: string | null
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -991,47 +956,37 @@ export type CashSettlementCreateManyEditionInput = {
 export type CashSettlementUpdateWithoutEditionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumCashSettlementStatusEnumFieldUpdateOperationsInput | $Enums.CashSettlementStatusEnum
-  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contributor?: Prisma.ContributorUpdateOneRequiredWithoutCashSettlementsNestedInput
   orders?: Prisma.CashSettlementOrderUpdateManyWithoutSettlementNestedInput
+  payments?: Prisma.CashSettlementPaymentUpdateManyWithoutSettlementNestedInput
 }
 
 export type CashSettlementUncheckedUpdateWithoutEditionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   contributorId?: Prisma.StringFieldUpdateOperationsInput | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumCashSettlementStatusEnumFieldUpdateOperationsInput | $Enums.CashSettlementStatusEnum
-  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   orders?: Prisma.CashSettlementOrderUncheckedUpdateManyWithoutSettlementNestedInput
+  payments?: Prisma.CashSettlementPaymentUncheckedUpdateManyWithoutSettlementNestedInput
 }
 
 export type CashSettlementUncheckedUpdateManyWithoutEditionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   contributorId?: Prisma.StringFieldUpdateOperationsInput | string
   totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumCashSettlementStatusEnumFieldUpdateOperationsInput | $Enums.CashSettlementStatusEnum
-  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  confirmedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1045,10 +1000,12 @@ export type CashSettlementUncheckedUpdateManyWithoutEditionInput = {
 
 export type CashSettlementCountOutputType = {
   orders: number
+  payments: number
 }
 
 export type CashSettlementCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   orders?: boolean | CashSettlementCountOutputTypeCountOrdersArgs
+  payments?: boolean | CashSettlementCountOutputTypeCountPaymentsArgs
 }
 
 /**
@@ -1068,18 +1025,21 @@ export type CashSettlementCountOutputTypeCountOrdersArgs<ExtArgs extends runtime
   where?: Prisma.CashSettlementOrderWhereInput
 }
 
+/**
+ * CashSettlementCountOutputType without action
+ */
+export type CashSettlementCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CashSettlementPaymentWhereInput
+}
+
 
 export type CashSettlementSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   contributorId?: boolean
   editionId?: boolean
   totalAmount?: boolean
+  paidAmount?: boolean
   status?: boolean
-  paymentMethod?: boolean
-  notes?: boolean
-  submittedAt?: boolean
-  confirmedAt?: boolean
-  confirmedById?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1087,6 +1047,7 @@ export type CashSettlementSelect<ExtArgs extends runtime.Types.Extensions.Intern
   contributor?: boolean | Prisma.ContributorDefaultArgs<ExtArgs>
   edition?: boolean | Prisma.EditionDefaultArgs<ExtArgs>
   orders?: boolean | Prisma.CashSettlement$ordersArgs<ExtArgs>
+  payments?: boolean | Prisma.CashSettlement$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.CashSettlementCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["cashSettlement"]>
 
@@ -1095,12 +1056,8 @@ export type CashSettlementSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   contributorId?: boolean
   editionId?: boolean
   totalAmount?: boolean
+  paidAmount?: boolean
   status?: boolean
-  paymentMethod?: boolean
-  notes?: boolean
-  submittedAt?: boolean
-  confirmedAt?: boolean
-  confirmedById?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1114,12 +1071,8 @@ export type CashSettlementSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   contributorId?: boolean
   editionId?: boolean
   totalAmount?: boolean
+  paidAmount?: boolean
   status?: boolean
-  paymentMethod?: boolean
-  notes?: boolean
-  submittedAt?: boolean
-  confirmedAt?: boolean
-  confirmedById?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1133,23 +1086,20 @@ export type CashSettlementSelectScalar = {
   contributorId?: boolean
   editionId?: boolean
   totalAmount?: boolean
+  paidAmount?: boolean
   status?: boolean
-  paymentMethod?: boolean
-  notes?: boolean
-  submittedAt?: boolean
-  confirmedAt?: boolean
-  confirmedById?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type CashSettlementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contributorId" | "editionId" | "totalAmount" | "status" | "paymentMethod" | "notes" | "submittedAt" | "confirmedAt" | "confirmedById" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["cashSettlement"]>
+export type CashSettlementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contributorId" | "editionId" | "totalAmount" | "paidAmount" | "status" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["cashSettlement"]>
 export type CashSettlementInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   contributor?: boolean | Prisma.ContributorDefaultArgs<ExtArgs>
   edition?: boolean | Prisma.EditionDefaultArgs<ExtArgs>
   orders?: boolean | Prisma.CashSettlement$ordersArgs<ExtArgs>
+  payments?: boolean | Prisma.CashSettlement$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.CashSettlementCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CashSettlementIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1167,18 +1117,15 @@ export type $CashSettlementPayload<ExtArgs extends runtime.Types.Extensions.Inte
     contributor: Prisma.$ContributorPayload<ExtArgs>
     edition: Prisma.$EditionPayload<ExtArgs>
     orders: Prisma.$CashSettlementOrderPayload<ExtArgs>[]
+    payments: Prisma.$CashSettlementPaymentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     contributorId: string
     editionId: string
     totalAmount: number
+    paidAmount: number
     status: $Enums.CashSettlementStatusEnum
-    paymentMethod: string | null
-    notes: string | null
-    submittedAt: Date | null
-    confirmedAt: Date | null
-    confirmedById: string | null
     active: boolean
     createdAt: Date
     updatedAt: Date
@@ -1580,6 +1527,7 @@ export interface Prisma__CashSettlementClient<T, Null = never, ExtArgs extends r
   contributor<T extends Prisma.ContributorDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContributorDefaultArgs<ExtArgs>>): Prisma.Prisma__ContributorClient<runtime.Types.Result.GetResult<Prisma.$ContributorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   edition<T extends Prisma.EditionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EditionDefaultArgs<ExtArgs>>): Prisma.Prisma__EditionClient<runtime.Types.Result.GetResult<Prisma.$EditionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   orders<T extends Prisma.CashSettlement$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CashSettlement$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CashSettlementOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  payments<T extends Prisma.CashSettlement$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CashSettlement$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CashSettlementPaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1613,12 +1561,8 @@ export interface CashSettlementFieldRefs {
   readonly contributorId: Prisma.FieldRef<"CashSettlement", 'String'>
   readonly editionId: Prisma.FieldRef<"CashSettlement", 'String'>
   readonly totalAmount: Prisma.FieldRef<"CashSettlement", 'Float'>
+  readonly paidAmount: Prisma.FieldRef<"CashSettlement", 'Float'>
   readonly status: Prisma.FieldRef<"CashSettlement", 'CashSettlementStatusEnum'>
-  readonly paymentMethod: Prisma.FieldRef<"CashSettlement", 'String'>
-  readonly notes: Prisma.FieldRef<"CashSettlement", 'String'>
-  readonly submittedAt: Prisma.FieldRef<"CashSettlement", 'DateTime'>
-  readonly confirmedAt: Prisma.FieldRef<"CashSettlement", 'DateTime'>
-  readonly confirmedById: Prisma.FieldRef<"CashSettlement", 'String'>
   readonly active: Prisma.FieldRef<"CashSettlement", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"CashSettlement", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CashSettlement", 'DateTime'>
@@ -2045,6 +1989,30 @@ export type CashSettlement$ordersArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.CashSettlementOrderScalarFieldEnum | Prisma.CashSettlementOrderScalarFieldEnum[]
+}
+
+/**
+ * CashSettlement.payments
+ */
+export type CashSettlement$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CashSettlementPayment
+   */
+  select?: Prisma.CashSettlementPaymentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CashSettlementPayment
+   */
+  omit?: Prisma.CashSettlementPaymentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CashSettlementPaymentInclude<ExtArgs> | null
+  where?: Prisma.CashSettlementPaymentWhereInput
+  orderBy?: Prisma.CashSettlementPaymentOrderByWithRelationInput | Prisma.CashSettlementPaymentOrderByWithRelationInput[]
+  cursor?: Prisma.CashSettlementPaymentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CashSettlementPaymentScalarFieldEnum | Prisma.CashSettlementPaymentScalarFieldEnum[]
 }
 
 /**

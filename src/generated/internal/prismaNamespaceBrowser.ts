@@ -92,6 +92,7 @@ export const ModelName = {
   PurchaseItem: 'PurchaseItem',
   StockMovement: 'StockMovement',
   CashSettlement: 'CashSettlement',
+  CashSettlementPayment: 'CashSettlementPayment',
   CashSettlementOrder: 'CashSettlementOrder'
 } as const
 
@@ -797,12 +798,8 @@ export const CashSettlementScalarFieldEnum = {
   contributorId: 'contributorId',
   editionId: 'editionId',
   totalAmount: 'totalAmount',
+  paidAmount: 'paidAmount',
   status: 'status',
-  paymentMethod: 'paymentMethod',
-  notes: 'notes',
-  submittedAt: 'submittedAt',
-  confirmedAt: 'confirmedAt',
-  confirmedById: 'confirmedById',
   active: 'active',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -812,12 +809,36 @@ export const CashSettlementScalarFieldEnum = {
 export type CashSettlementScalarFieldEnum = (typeof CashSettlementScalarFieldEnum)[keyof typeof CashSettlementScalarFieldEnum]
 
 
+export const CashSettlementPaymentScalarFieldEnum = {
+  id: 'id',
+  settlementId: 'settlementId',
+  amount: 'amount',
+  paymentMethod: 'paymentMethod',
+  status: 'status',
+  receiptUrl: 'receiptUrl',
+  receiptDate: 'receiptDate',
+  mpPaymentId: 'mpPaymentId',
+  pixQrCode: 'pixQrCode',
+  pixCopyPaste: 'pixCopyPaste',
+  notes: 'notes',
+  submittedAt: 'submittedAt',
+  confirmedAt: 'confirmedAt',
+  confirmedById: 'confirmedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type CashSettlementPaymentScalarFieldEnum = (typeof CashSettlementPaymentScalarFieldEnum)[keyof typeof CashSettlementPaymentScalarFieldEnum]
+
+
 export const CashSettlementOrderScalarFieldEnum = {
   id: 'id',
   settlementId: 'settlementId',
   orderId: 'orderId',
   amount: 'amount',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type CashSettlementOrderScalarFieldEnum = (typeof CashSettlementOrderScalarFieldEnum)[keyof typeof CashSettlementOrderScalarFieldEnum]
@@ -1309,13 +1330,26 @@ export type StockMovementOrderByRelevanceFieldEnum = (typeof StockMovementOrderB
 export const CashSettlementOrderByRelevanceFieldEnum = {
   id: 'id',
   contributorId: 'contributorId',
-  editionId: 'editionId',
+  editionId: 'editionId'
+} as const
+
+export type CashSettlementOrderByRelevanceFieldEnum = (typeof CashSettlementOrderByRelevanceFieldEnum)[keyof typeof CashSettlementOrderByRelevanceFieldEnum]
+
+
+export const CashSettlementPaymentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  settlementId: 'settlementId',
   paymentMethod: 'paymentMethod',
+  status: 'status',
+  receiptUrl: 'receiptUrl',
+  mpPaymentId: 'mpPaymentId',
+  pixQrCode: 'pixQrCode',
+  pixCopyPaste: 'pixCopyPaste',
   notes: 'notes',
   confirmedById: 'confirmedById'
 } as const
 
-export type CashSettlementOrderByRelevanceFieldEnum = (typeof CashSettlementOrderByRelevanceFieldEnum)[keyof typeof CashSettlementOrderByRelevanceFieldEnum]
+export type CashSettlementPaymentOrderByRelevanceFieldEnum = (typeof CashSettlementPaymentOrderByRelevanceFieldEnum)[keyof typeof CashSettlementPaymentOrderByRelevanceFieldEnum]
 
 
 export const CashSettlementOrderOrderByRelevanceFieldEnum = {

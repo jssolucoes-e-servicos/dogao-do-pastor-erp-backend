@@ -168,12 +168,7 @@ export class OrdersNotificationsService extends BaseService {
   ) {
     if (validateContact(order)) {
       this.logger.log(`Registrando notificação: Pagamento Recebido para ${phone}`);
-      const message = MW_OrderPaymentReceive(
-        name,
-        count,
-        totalValue,
-        paymentType,
-      );
+      const message = MW_OrderPaymentReceive(name, count, totalValue, paymentType);
       await this.n8nService.dispatchEvent('ORDER_PAYMENT_RECEIVED', {
         orderId: order.id,
         phone: order.customerPhone,
@@ -182,6 +177,20 @@ export class OrdersNotificationsService extends BaseService {
         totalValue,
       });
     }
+  }
+
+  /** Envia o comprovante PDF (URL do MinIO) via WhatsApp como documento */
+  async sendReceiptPdf(order: OrderEntity, pdfUrl: string) {
+    if (!validateContact(order)) return;
+    this.logger.log(`Enviando comprovante PDF para ${order.customerPhone}`);
+    await this.n8nService.dispatchEvent('ORDER_RECEIPT_PDF', {
+      orderId: order.id,
+      phone: order.customerPhone,
+      message: `📄 Segue o comprovante da sua compra no Dogão do Pastor 🌭`,
+      messageType: 'DOCUMENT',
+      media: pdfUrl,
+      fileName: `comprovante-${order.id.slice(-8).toUpperCase()}.pdf`,
+    });
   }
 
   async pixGenerated(order: OrderEntity, pixCopyPaste: string, qrCodeBase64: string) {

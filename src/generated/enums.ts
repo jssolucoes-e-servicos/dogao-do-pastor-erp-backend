@@ -214,6 +214,7 @@ export type StockMovementTypeEnum = (typeof StockMovementTypeEnum)[keyof typeof 
 
 export const CashSettlementStatusEnum = {
   PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
   SUBMITTED: 'SUBMITTED',
   CONFIRMED: 'CONFIRMED',
   CANCELLED: 'CANCELLED'

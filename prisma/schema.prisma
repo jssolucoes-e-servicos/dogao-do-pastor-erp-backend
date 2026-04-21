@@ -957,7 +957,8 @@ model StockMovement {
 
 enum CashSettlementStatusEnum {
   PENDING // saldo em aberto
-  SUBMITTED // vendedor informou que repassou
+  PROCESSING // PIX QR Code gerado, aguardando pagamento MP
+  SUBMITTED // vendedor informou que repassou (PIX IVC ou espécie)
   CONFIRMED // tesoureira confirmou
   CANCELLED
 }
@@ -966,33 +967,57 @@ model CashSettlement {
   id            String                   @id @default(cuid())
   contributorId String
   editionId     String
-  totalAmount   Float                    @default(0)
+  totalAmount   Float                    @default(0) // saldo total acumulado (soma das ordens)
+  paidAmount    Float                    @default(0) // total já repassado e confirmado
   status        CashSettlementStatusEnum @default(PENDING)
-  paymentMethod String? // 'PIX' | 'CASH'
-  notes         String?
-  submittedAt   DateTime?
-  confirmedAt   DateTime?
-  confirmedById String?
   active        Boolean                  @default(true)
   createdAt     DateTime                 @default(now())
   updatedAt     DateTime                 @updatedAt
   deletedAt     DateTime?
 
-  contributor Contributor           @relation(fields: [contributorId], references: [id])
-  edition     Edition               @relation(fields: [editionId], references: [id])
+  contributor Contributor             @relation(fields: [contributorId], references: [id])
+  edition     Edition                 @relation(fields: [editionId], references: [id])
   orders      CashSettlementOrder[]
+  payments    CashSettlementPayment[]
 
   @@index([contributorId, editionId])
   @@index([status])
   @@map("cash_settlements")
 }
 
+model CashSettlementPayment {
+  id            String    @id @default(cuid())
+  settlementId  String
+  amount        Float
+  paymentMethod String // 'PIX_QRCODE' | 'PIX_IVC' | 'CASH'
+  status        String    @default("SUBMITTED") // 'SUBMITTED' | 'CONFIRMED' | 'CANCELLED'
+  receiptUrl    String?
+  receiptDate   DateTime?
+  mpPaymentId   String?
+  pixQrCode     String?
+  pixCopyPaste  String?
+  notes         String?
+  submittedAt   DateTime  @default(now())
+  confirmedAt   DateTime?
+  confirmedById String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  settlement CashSettlement @relation(fields: [settlementId], references: [id], onDelete: Cascade)
+
+  @@index([settlementId])
+  @@index([status])
+  @@map("cash_settlement_payments")
+}
+
 model CashSettlementOrder {
-  id           String   @id @default(cuid())
+  id           String    @id @default(cuid())
   settlementId String
-  orderId      String   @unique
+  orderId      String    @unique
   amount       Float
-  createdAt    DateTime @default(now())
+  createdAt    DateTime  @default(now())
+  deletedAt    DateTime?
 
   settlement CashSettlement @relation(fields: [settlementId], references: [id], onDelete: Cascade)
   order      Order          @relation(fields: [orderId], references: [id])

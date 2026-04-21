@@ -1,15 +1,5 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Put,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Header, Param, Patch, Post, Put, Query, Res, UseGuards } from '@nestjs/common';
+import type { Response } from 'express';
 import { PaginatedQuery } from 'src/common/decorators/paginated-query.decorator';
 import { IdParamDto } from 'src/common/dto/id.param.dto';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
@@ -31,13 +21,15 @@ import { SendToAnalysisDTO } from '../dto/send-to-analysis.dto';
 import { SyncCustomerDTO } from '../dto/sync-customer.dto';
 import { CreatePdvOrderDto } from '../dto/create-pdv-order.dto';
 import { OrdersService } from '../services/orders.service';
+import { OrderReceiptService } from '../services/order-receipt.service';
 
 @Controller('orders')
 @UseGuards(JwtAuthGuard, RolesGuard, AccessLinkGuard)
 export class OrdersController {
-  constructor(private readonly service: OrdersService) {
-    /* void */
-  }
+  constructor(
+    private readonly service: OrdersService,
+    private readonly receiptService: OrderReceiptService,
+  ) {}
 
   @PaginatedQuery()
   async list(
@@ -174,6 +166,19 @@ export class OrdersController {
     return this.service.sendPaymentReceive(id);
   }
 
+  @Post(':id/send-receipt')
+  @Roles('T.I', 'Administração', 'Financeiro', 'Recepção', 'Vendedor', 'Líder de Célula', 'Supervisor de Rede')
+  async sendReceipt(@Param() { id }: IdParamDto) {
+    return this.service.sendPaymentReceive(id);
+  }
+
+  /** Finaliza venda em dinheiro: confirma que o troco foi dado e envia comprovante */
+  @Post(':id/finalize-cash')
+  @Roles('T.I', 'Administração', 'Financeiro', 'Recepção', 'Vendedor', 'Líder de Célula', 'Supervisor de Rede')
+  async finalizeCash(@Param() { id }: IdParamDto) {
+    return this.service.sendPaymentReceive(id);
+  }
+
   @Post('create-pdv')
   @Roles('T.I', 'Administração', 'Financeiro', 'Recepção', 'Vendedor', 'Líder de Célula', 'Supervisor de Rede')
   async createPDV(@Body() dto: CreatePdvOrderDto, @User() user: IUser) {
@@ -190,5 +195,14 @@ export class OrdersController {
   @Roles('T.I', 'Administração', 'Financeiro', 'Recepção', 'Vendedor', 'Líder de Célula', 'Supervisor de Rede')
   async sendPixCode(@Param() { id }: IdParamDto) {
     return this.service.sendPixCode(id);
+  }
+
+  @Get(':id/receipt.pdf')
+  @Public()
+  @Header('Content-Type', 'application/pdf')
+  @Header('Content-Disposition', 'inline; filename="comprovante.pdf"')
+  async getReceipt(@Param() { id }: IdParamDto, @Res() res: Response) {
+    const pdf = await this.receiptService.generateReceiptPdf(id);
+    res.end(pdf);
   }
 }

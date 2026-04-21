@@ -170,6 +170,114 @@ export class DashboardService extends BaseService {
     };
   }
 
+  /** Resumo personalizado: dados globais da edição + dados da célula/seller do usuário */
+  async getMySummary(user: any, editionId?: string) {
+    const edition = editionId
+      ? await this.prisma.edition.findUnique({ where: { id: editionId }, select: { id: true, name: true, limitSale: true } })
+      : await getActiveEdition(this.prisma) as { id: string; name: string; limitSale: number } | null;
+
+    if (!edition) return { editionName: 'Sem edição ativa', global: null, cell: null, seller: null };
+
+    // ── Global ─────────────────────────────────────────────────────────────
+    const [globalSoldCount, globalPendingCount] = await Promise.all([
+      this.prisma.orderItem.count({
+        where: { order: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PAID } },
+      }),
+      this.prisma.orderItem.count({
+        where: { order: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PENDING, totalValue: { gt: 0 } } },
+      }),
+    ]);
+
+    const global = {
+      editionName: edition.name,
+      dogsSold: globalSoldCount,
+      dogsGoal: edition.limitSale,
+      dogsPending: globalPendingCount,
+      percentReached: edition.limitSale > 0 ? Math.round((globalSoldCount / edition.limitSale) * 100) : 0,
+    };
+
+    // ── Célula: usa leaderCellId do JWT, com fallback buscando no banco ────
+    let cell: { cellName: string; dogsSold: number; dogsPending: number; ranking: { name: string; total: number }[] } | null = null;
+
+    // Tenta leaderCellId do JWT primeiro, senão busca no banco
+    let leaderCellId = user?.leaderCellId;
+    if (!leaderCellId && user?.id) {
+      const contributor = await this.prisma.contributor.findUnique({
+        where: { id: user.id },
+        select: { cells: { select: { id: true }, where: { active: true }, take: 1 } },
+      });
+      leaderCellId = contributor?.cells[0]?.id ?? null;
+    }
+
+    if (leaderCellId) {
+      const cellData = await this.prisma.cell.findUnique({
+        where: { id: leaderCellId },
+        select: { id: true, name: true, sellers: { select: { id: true } } },
+      });
+
+      if (cellData) {
+        const sellerIds = cellData.sellers.map(s => s.id);
+        const [cellSold, cellPending, cellSellers] = await Promise.all([
+          this.prisma.orderItem.count({
+            where: { order: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PAID, sellerId: { in: sellerIds } } },
+          }),
+          this.prisma.orderItem.count({
+            where: { order: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PENDING, sellerId: { in: sellerIds }, totalValue: { gt: 0 } } },
+          }),
+          this.prisma.seller.findMany({
+            where: { id: { in: sellerIds } },
+            select: { id: true, name: true },
+          }),
+        ]);
+
+        const rankingData = await this.prisma.order.findMany({
+          where: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PAID, sellerId: { in: sellerIds } },
+          select: { sellerId: true },
+        });
+
+        const rankingMap: Record<string, number> = {};
+        rankingData.forEach(o => { rankingMap[o.sellerId] = (rankingMap[o.sellerId] || 0) + 1; });
+
+        cell = {
+          cellName: cellData.name,
+          dogsSold: cellSold,
+          dogsPending: cellPending,
+          ranking: cellSellers
+            .map(s => ({ name: s.name, total: rankingMap[s.id] || 0 }))
+            .filter(s => s.total > 0)
+            .sort((a, b) => b.total - a.total),
+        };
+      }
+    }
+
+    // ── Seller: dados do próprio vendedor ─────────────────────────────────
+    let seller: { dogsSold: number; dogsPending: number } | null = null;
+
+    // Tenta sellerId do JWT, com fallback buscando no banco
+    let sellerId = user?.sellerId;
+    if (!sellerId && user?.id) {
+      const contributor = await this.prisma.contributor.findUnique({
+        where: { id: user.id },
+        select: { sellers: { select: { id: true }, where: { active: true }, take: 1 } },
+      });
+      sellerId = contributor?.sellers[0]?.id ?? null;
+    }
+
+    if (sellerId) {
+      const [myDogs, myPending] = await Promise.all([
+        this.prisma.orderItem.count({
+          where: { order: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PAID, sellerId } },
+        }),
+        this.prisma.orderItem.count({
+          where: { order: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PENDING, sellerId, totalValue: { gt: 0 } } },
+        }),
+      ]);
+      seller = { dogsSold: myDogs, dogsPending: myPending };
+    }
+
+    return { global, cell, seller };
+  }
+
   private emptyStats(editionName: string): DashboardStatsEntity {
     return {
       editionName,

@@ -425,6 +425,7 @@ export const ModelName = {
   PurchaseItem: 'PurchaseItem',
   StockMovement: 'StockMovement',
   CashSettlement: 'CashSettlement',
+  CashSettlementPayment: 'CashSettlementPayment',
   CashSettlementOrder: 'CashSettlementOrder'
 } as const
 
@@ -441,7 +442,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "contributor" | "role" | "userRole" | "module" | "permission" | "file" | "edition" | "cellNetwork" | "cell" | "seller" | "contributorCell" | "deliveryPerson" | "customer" | "customerAddress" | "order" | "orderItem" | "ticket" | "voucher" | "payment" | "command" | "commandItem" | "dailyReportSoldsCache" | "deliveryRoute" | "deliveryStop" | "sellerSettlement" | "partner" | "otpVerification" | "donationEntry" | "withdrawal" | "withdrawalItem" | "pushToken" | "notificationPreference" | "notificationLog" | "control" | "controlPermission" | "systemConfig" | "stockProduct" | "purchaseOrder" | "purchaseItem" | "stockMovement" | "cashSettlement" | "cashSettlementOrder"
+    modelProps: "contributor" | "role" | "userRole" | "module" | "permission" | "file" | "edition" | "cellNetwork" | "cell" | "seller" | "contributorCell" | "deliveryPerson" | "customer" | "customerAddress" | "order" | "orderItem" | "ticket" | "voucher" | "payment" | "command" | "commandItem" | "dailyReportSoldsCache" | "deliveryRoute" | "deliveryStop" | "sellerSettlement" | "partner" | "otpVerification" | "donationEntry" | "withdrawal" | "withdrawalItem" | "pushToken" | "notificationPreference" | "notificationLog" | "control" | "controlPermission" | "systemConfig" | "stockProduct" | "purchaseOrder" | "purchaseItem" | "stockMovement" | "cashSettlement" | "cashSettlementPayment" | "cashSettlementOrder"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3479,6 +3480,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CashSettlementPayment: {
+      payload: Prisma.$CashSettlementPaymentPayload<ExtArgs>
+      fields: Prisma.CashSettlementPaymentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CashSettlementPaymentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CashSettlementPaymentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CashSettlementPaymentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CashSettlementPaymentPayload>
+        }
+        findFirst: {
+          args: Prisma.CashSettlementPaymentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CashSettlementPaymentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CashSettlementPaymentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CashSettlementPaymentPayload>
+        }
+        findMany: {
+          args: Prisma.CashSettlementPaymentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CashSettlementPaymentPayload>[]
+        }
+        create: {
+          args: Prisma.CashSettlementPaymentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CashSettlementPaymentPayload>
+        }
+        createMany: {
+          args: Prisma.CashSettlementPaymentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CashSettlementPaymentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CashSettlementPaymentPayload>[]
+        }
+        delete: {
+          args: Prisma.CashSettlementPaymentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CashSettlementPaymentPayload>
+        }
+        update: {
+          args: Prisma.CashSettlementPaymentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CashSettlementPaymentPayload>
+        }
+        deleteMany: {
+          args: Prisma.CashSettlementPaymentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CashSettlementPaymentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CashSettlementPaymentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CashSettlementPaymentPayload>[]
+        }
+        upsert: {
+          args: Prisma.CashSettlementPaymentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CashSettlementPaymentPayload>
+        }
+        aggregate: {
+          args: Prisma.CashSettlementPaymentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCashSettlementPayment>
+        }
+        groupBy: {
+          args: Prisma.CashSettlementPaymentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CashSettlementPaymentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CashSettlementPaymentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CashSettlementPaymentCountAggregateOutputType> | number
+        }
+      }
+    }
     CashSettlementOrder: {
       payload: Prisma.$CashSettlementOrderPayload<ExtArgs>
       fields: Prisma.CashSettlementOrderFieldRefs
@@ -4278,12 +4353,8 @@ export const CashSettlementScalarFieldEnum = {
   contributorId: 'contributorId',
   editionId: 'editionId',
   totalAmount: 'totalAmount',
+  paidAmount: 'paidAmount',
   status: 'status',
-  paymentMethod: 'paymentMethod',
-  notes: 'notes',
-  submittedAt: 'submittedAt',
-  confirmedAt: 'confirmedAt',
-  confirmedById: 'confirmedById',
   active: 'active',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -4293,12 +4364,36 @@ export const CashSettlementScalarFieldEnum = {
 export type CashSettlementScalarFieldEnum = (typeof CashSettlementScalarFieldEnum)[keyof typeof CashSettlementScalarFieldEnum]
 
 
+export const CashSettlementPaymentScalarFieldEnum = {
+  id: 'id',
+  settlementId: 'settlementId',
+  amount: 'amount',
+  paymentMethod: 'paymentMethod',
+  status: 'status',
+  receiptUrl: 'receiptUrl',
+  receiptDate: 'receiptDate',
+  mpPaymentId: 'mpPaymentId',
+  pixQrCode: 'pixQrCode',
+  pixCopyPaste: 'pixCopyPaste',
+  notes: 'notes',
+  submittedAt: 'submittedAt',
+  confirmedAt: 'confirmedAt',
+  confirmedById: 'confirmedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type CashSettlementPaymentScalarFieldEnum = (typeof CashSettlementPaymentScalarFieldEnum)[keyof typeof CashSettlementPaymentScalarFieldEnum]
+
+
 export const CashSettlementOrderScalarFieldEnum = {
   id: 'id',
   settlementId: 'settlementId',
   orderId: 'orderId',
   amount: 'amount',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type CashSettlementOrderScalarFieldEnum = (typeof CashSettlementOrderScalarFieldEnum)[keyof typeof CashSettlementOrderScalarFieldEnum]
@@ -4790,13 +4885,26 @@ export type StockMovementOrderByRelevanceFieldEnum = (typeof StockMovementOrderB
 export const CashSettlementOrderByRelevanceFieldEnum = {
   id: 'id',
   contributorId: 'contributorId',
-  editionId: 'editionId',
+  editionId: 'editionId'
+} as const
+
+export type CashSettlementOrderByRelevanceFieldEnum = (typeof CashSettlementOrderByRelevanceFieldEnum)[keyof typeof CashSettlementOrderByRelevanceFieldEnum]
+
+
+export const CashSettlementPaymentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  settlementId: 'settlementId',
   paymentMethod: 'paymentMethod',
+  status: 'status',
+  receiptUrl: 'receiptUrl',
+  mpPaymentId: 'mpPaymentId',
+  pixQrCode: 'pixQrCode',
+  pixCopyPaste: 'pixCopyPaste',
   notes: 'notes',
   confirmedById: 'confirmedById'
 } as const
 
-export type CashSettlementOrderByRelevanceFieldEnum = (typeof CashSettlementOrderByRelevanceFieldEnum)[keyof typeof CashSettlementOrderByRelevanceFieldEnum]
+export type CashSettlementPaymentOrderByRelevanceFieldEnum = (typeof CashSettlementPaymentOrderByRelevanceFieldEnum)[keyof typeof CashSettlementPaymentOrderByRelevanceFieldEnum]
 
 
 export const CashSettlementOrderOrderByRelevanceFieldEnum = {
@@ -5278,6 +5386,7 @@ export type GlobalOmitConfig = {
   purchaseItem?: Prisma.PurchaseItemOmit
   stockMovement?: Prisma.StockMovementOmit
   cashSettlement?: Prisma.CashSettlementOmit
+  cashSettlementPayment?: Prisma.CashSettlementPaymentOmit
   cashSettlementOrder?: Prisma.CashSettlementOrderOmit
 }
 

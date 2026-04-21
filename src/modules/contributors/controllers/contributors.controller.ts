@@ -11,7 +11,9 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
+import { SlugGuard } from '../../auth/guards/slug.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
+import { RequireSlug } from '../../auth/decorators/require-slug.decorator';
 import { User } from 'src/common/decorators/user.decorator';
 import { FormDataRequest } from 'nestjs-form-data';
 
@@ -43,6 +45,23 @@ export class ContributorsController {
   @Roles('IT', 'ADMIN')
   async create(@Body() dto: CreateContributorDto) {
     const created = await this.service.create(dto);
+    return { ...created, password: undefined };
+  }
+
+  /** Líder cadastra membro na própria célula */
+  @Post('invite-member')
+  @UseGuards(JwtAuthGuard, SlugGuard)
+  @RequireSlug('erp.my-cell', 'erp.admin')
+  async inviteMember(
+    @Body() dto: CreateContributorDto & { cellId?: string },
+    @User() user: any,
+  ) {
+    const created = await this.service.create(dto);
+    // Vincula à célula do líder (ou à cellId passada)
+    const cellId = dto.cellId ?? user.leaderCellId;
+    if (cellId && created.id) {
+      await this.service.addToCell(created.id, cellId);
+    }
     return { ...created, password: undefined };
   }
 
