@@ -54,7 +54,7 @@ export class PaymentsController {
       // Verifica se é um acerto financeiro (PIX QR Code de acerto)
       const isSettlement = await this.cashSettlementService.handleMpPayment(
         String(providerEventId),
-        body?.data?.status || body?.status || 'approved',
+        body?.data?.status || body?.status,
       );
 
       if (!isSettlement) {

@@ -33,7 +33,21 @@ export class AuthContributorService extends BaseService {
         deliveryPersons: { select: { id: true }, where: { active: true } },
         cells: { select: { id: true }, where: { active: true } },
         cellNetworks: { select: { id: true }, where: { active: true } },
-        cellsMember: { select: { id: true, cellId: true, sellerId: true }, where: { active: true } },
+        cellsMember: {
+          select: {
+            id: true,
+            cellId: true,
+            cell: {
+              select: {
+                id: true,
+                name: true,
+                sellerId: true,
+                seller: { select: { id: true, name: true, tag: true } },
+              },
+            },
+          },
+          where: { active: true },
+        },
       },
     });
 

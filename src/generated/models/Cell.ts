@@ -33,6 +33,7 @@ export type CellMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
+  sellerId: string | null
 }
 
 export type CellMaxAggregateOutputType = {
@@ -44,6 +45,7 @@ export type CellMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
+  sellerId: string | null
 }
 
 export type CellCountAggregateOutputType = {
@@ -55,6 +57,7 @@ export type CellCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   deletedAt: number
+  sellerId: number
   _all: number
 }
 
@@ -68,6 +71,7 @@ export type CellMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
+  sellerId?: true
 }
 
 export type CellMaxAggregateInputType = {
@@ -79,6 +83,7 @@ export type CellMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
+  sellerId?: true
 }
 
 export type CellCountAggregateInputType = {
@@ -90,6 +95,7 @@ export type CellCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
+  sellerId?: true
   _all?: true
 }
 
@@ -174,6 +180,7 @@ export type CellGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
+  sellerId: string | null
   _count: CellCountAggregateOutputType | null
   _min: CellMinAggregateOutputType | null
   _max: CellMaxAggregateOutputType | null
@@ -206,9 +213,11 @@ export type CellWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Cell"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Cell"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Cell"> | Date | string | null
+  sellerId?: Prisma.StringNullableFilter<"Cell"> | string | null
   leader?: Prisma.XOR<Prisma.ContributorNullableScalarRelationFilter, Prisma.ContributorWhereInput> | null
   network?: Prisma.XOR<Prisma.CellNetworkScalarRelationFilter, Prisma.CellNetworkWhereInput>
   sellers?: Prisma.SellerListRelationFilter
+  seller?: Prisma.XOR<Prisma.SellerNullableScalarRelationFilter, Prisma.SellerWhereInput> | null
   contributors?: Prisma.ContributorCellListRelationFilter
 }
 
@@ -221,9 +230,11 @@ export type CellOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  sellerId?: Prisma.SortOrderInput | Prisma.SortOrder
   leader?: Prisma.ContributorOrderByWithRelationInput
   network?: Prisma.CellNetworkOrderByWithRelationInput
   sellers?: Prisma.SellerOrderByRelationAggregateInput
+  seller?: Prisma.SellerOrderByWithRelationInput
   contributors?: Prisma.ContributorCellOrderByRelationAggregateInput
   _relevance?: Prisma.CellOrderByRelevanceInput
 }
@@ -240,9 +251,11 @@ export type CellWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Cell"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Cell"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Cell"> | Date | string | null
+  sellerId?: Prisma.StringNullableFilter<"Cell"> | string | null
   leader?: Prisma.XOR<Prisma.ContributorNullableScalarRelationFilter, Prisma.ContributorWhereInput> | null
   network?: Prisma.XOR<Prisma.CellNetworkScalarRelationFilter, Prisma.CellNetworkWhereInput>
   sellers?: Prisma.SellerListRelationFilter
+  seller?: Prisma.XOR<Prisma.SellerNullableScalarRelationFilter, Prisma.SellerWhereInput> | null
   contributors?: Prisma.ContributorCellListRelationFilter
 }, "id">
 
@@ -255,6 +268,7 @@ export type CellOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  sellerId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.CellCountOrderByAggregateInput
   _max?: Prisma.CellMaxOrderByAggregateInput
   _min?: Prisma.CellMinOrderByAggregateInput
@@ -272,6 +286,7 @@ export type CellScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Cell"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Cell"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Cell"> | Date | string | null
+  sellerId?: Prisma.StringNullableWithAggregatesFilter<"Cell"> | string | null
 }
 
 export type CellCreateInput = {
@@ -284,6 +299,7 @@ export type CellCreateInput = {
   leader?: Prisma.ContributorCreateNestedOneWithoutCellsInput
   network: Prisma.CellNetworkCreateNestedOneWithoutCellsInput
   sellers?: Prisma.SellerCreateNestedManyWithoutCellInput
+  seller?: Prisma.SellerCreateNestedOneWithoutCellsDefaultInput
   contributors?: Prisma.ContributorCellCreateNestedManyWithoutCellInput
 }
 
@@ -296,6 +312,7 @@ export type CellUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  sellerId?: string | null
   sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutCellInput
   contributors?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutCellInput
 }
@@ -310,6 +327,7 @@ export type CellUpdateInput = {
   leader?: Prisma.ContributorUpdateOneWithoutCellsNestedInput
   network?: Prisma.CellNetworkUpdateOneRequiredWithoutCellsNestedInput
   sellers?: Prisma.SellerUpdateManyWithoutCellNestedInput
+  seller?: Prisma.SellerUpdateOneWithoutCellsDefaultNestedInput
   contributors?: Prisma.ContributorCellUpdateManyWithoutCellNestedInput
 }
 
@@ -322,6 +340,7 @@ export type CellUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sellerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sellers?: Prisma.SellerUncheckedUpdateManyWithoutCellNestedInput
   contributors?: Prisma.ContributorCellUncheckedUpdateManyWithoutCellNestedInput
 }
@@ -335,6 +354,7 @@ export type CellCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  sellerId?: string | null
 }
 
 export type CellUpdateManyMutationInput = {
@@ -355,6 +375,7 @@ export type CellUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sellerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CellListRelationFilter = {
@@ -382,6 +403,7 @@ export type CellCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+  sellerId?: Prisma.SortOrder
 }
 
 export type CellMaxOrderByAggregateInput = {
@@ -393,6 +415,7 @@ export type CellMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+  sellerId?: Prisma.SortOrder
 }
 
 export type CellMinOrderByAggregateInput = {
@@ -404,6 +427,7 @@ export type CellMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+  sellerId?: Prisma.SortOrder
 }
 
 export type CellScalarRelationFilter = {
@@ -501,12 +525,54 @@ export type CellCreateNestedOneWithoutSellersInput = {
   connect?: Prisma.CellWhereUniqueInput
 }
 
+export type CellCreateNestedManyWithoutSellerInput = {
+  create?: Prisma.XOR<Prisma.CellCreateWithoutSellerInput, Prisma.CellUncheckedCreateWithoutSellerInput> | Prisma.CellCreateWithoutSellerInput[] | Prisma.CellUncheckedCreateWithoutSellerInput[]
+  connectOrCreate?: Prisma.CellCreateOrConnectWithoutSellerInput | Prisma.CellCreateOrConnectWithoutSellerInput[]
+  createMany?: Prisma.CellCreateManySellerInputEnvelope
+  connect?: Prisma.CellWhereUniqueInput | Prisma.CellWhereUniqueInput[]
+}
+
+export type CellUncheckedCreateNestedManyWithoutSellerInput = {
+  create?: Prisma.XOR<Prisma.CellCreateWithoutSellerInput, Prisma.CellUncheckedCreateWithoutSellerInput> | Prisma.CellCreateWithoutSellerInput[] | Prisma.CellUncheckedCreateWithoutSellerInput[]
+  connectOrCreate?: Prisma.CellCreateOrConnectWithoutSellerInput | Prisma.CellCreateOrConnectWithoutSellerInput[]
+  createMany?: Prisma.CellCreateManySellerInputEnvelope
+  connect?: Prisma.CellWhereUniqueInput | Prisma.CellWhereUniqueInput[]
+}
+
 export type CellUpdateOneRequiredWithoutSellersNestedInput = {
   create?: Prisma.XOR<Prisma.CellCreateWithoutSellersInput, Prisma.CellUncheckedCreateWithoutSellersInput>
   connectOrCreate?: Prisma.CellCreateOrConnectWithoutSellersInput
   upsert?: Prisma.CellUpsertWithoutSellersInput
   connect?: Prisma.CellWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.CellUpdateToOneWithWhereWithoutSellersInput, Prisma.CellUpdateWithoutSellersInput>, Prisma.CellUncheckedUpdateWithoutSellersInput>
+}
+
+export type CellUpdateManyWithoutSellerNestedInput = {
+  create?: Prisma.XOR<Prisma.CellCreateWithoutSellerInput, Prisma.CellUncheckedCreateWithoutSellerInput> | Prisma.CellCreateWithoutSellerInput[] | Prisma.CellUncheckedCreateWithoutSellerInput[]
+  connectOrCreate?: Prisma.CellCreateOrConnectWithoutSellerInput | Prisma.CellCreateOrConnectWithoutSellerInput[]
+  upsert?: Prisma.CellUpsertWithWhereUniqueWithoutSellerInput | Prisma.CellUpsertWithWhereUniqueWithoutSellerInput[]
+  createMany?: Prisma.CellCreateManySellerInputEnvelope
+  set?: Prisma.CellWhereUniqueInput | Prisma.CellWhereUniqueInput[]
+  disconnect?: Prisma.CellWhereUniqueInput | Prisma.CellWhereUniqueInput[]
+  delete?: Prisma.CellWhereUniqueInput | Prisma.CellWhereUniqueInput[]
+  connect?: Prisma.CellWhereUniqueInput | Prisma.CellWhereUniqueInput[]
+  update?: Prisma.CellUpdateWithWhereUniqueWithoutSellerInput | Prisma.CellUpdateWithWhereUniqueWithoutSellerInput[]
+  updateMany?: Prisma.CellUpdateManyWithWhereWithoutSellerInput | Prisma.CellUpdateManyWithWhereWithoutSellerInput[]
+  deleteMany?: Prisma.CellScalarWhereInput | Prisma.CellScalarWhereInput[]
+}
+
+export type CellUncheckedUpdateManyWithoutSellerNestedInput = {
+  create?: Prisma.XOR<Prisma.CellCreateWithoutSellerInput, Prisma.CellUncheckedCreateWithoutSellerInput> | Prisma.CellCreateWithoutSellerInput[] | Prisma.CellUncheckedCreateWithoutSellerInput[]
+  connectOrCreate?: Prisma.CellCreateOrConnectWithoutSellerInput | Prisma.CellCreateOrConnectWithoutSellerInput[]
+  upsert?: Prisma.CellUpsertWithWhereUniqueWithoutSellerInput | Prisma.CellUpsertWithWhereUniqueWithoutSellerInput[]
+  createMany?: Prisma.CellCreateManySellerInputEnvelope
+  set?: Prisma.CellWhereUniqueInput | Prisma.CellWhereUniqueInput[]
+  disconnect?: Prisma.CellWhereUniqueInput | Prisma.CellWhereUniqueInput[]
+  delete?: Prisma.CellWhereUniqueInput | Prisma.CellWhereUniqueInput[]
+  connect?: Prisma.CellWhereUniqueInput | Prisma.CellWhereUniqueInput[]
+  update?: Prisma.CellUpdateWithWhereUniqueWithoutSellerInput | Prisma.CellUpdateWithWhereUniqueWithoutSellerInput[]
+  updateMany?: Prisma.CellUpdateManyWithWhereWithoutSellerInput | Prisma.CellUpdateManyWithWhereWithoutSellerInput[]
+  deleteMany?: Prisma.CellScalarWhereInput | Prisma.CellScalarWhereInput[]
 }
 
 export type CellCreateNestedOneWithoutContributorsInput = {
@@ -532,6 +598,7 @@ export type CellCreateWithoutLeaderInput = {
   deletedAt?: Date | string | null
   network: Prisma.CellNetworkCreateNestedOneWithoutCellsInput
   sellers?: Prisma.SellerCreateNestedManyWithoutCellInput
+  seller?: Prisma.SellerCreateNestedOneWithoutCellsDefaultInput
   contributors?: Prisma.ContributorCellCreateNestedManyWithoutCellInput
 }
 
@@ -543,6 +610,7 @@ export type CellUncheckedCreateWithoutLeaderInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  sellerId?: string | null
   sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutCellInput
   contributors?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutCellInput
 }
@@ -585,6 +653,7 @@ export type CellScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Cell"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Cell"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Cell"> | Date | string | null
+  sellerId?: Prisma.StringNullableFilter<"Cell"> | string | null
 }
 
 export type CellCreateWithoutNetworkInput = {
@@ -596,6 +665,7 @@ export type CellCreateWithoutNetworkInput = {
   deletedAt?: Date | string | null
   leader?: Prisma.ContributorCreateNestedOneWithoutCellsInput
   sellers?: Prisma.SellerCreateNestedManyWithoutCellInput
+  seller?: Prisma.SellerCreateNestedOneWithoutCellsDefaultInput
   contributors?: Prisma.ContributorCellCreateNestedManyWithoutCellInput
 }
 
@@ -607,6 +677,7 @@ export type CellUncheckedCreateWithoutNetworkInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  sellerId?: string | null
   sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutCellInput
   contributors?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutCellInput
 }
@@ -646,6 +717,7 @@ export type CellCreateWithoutSellersInput = {
   deletedAt?: Date | string | null
   leader?: Prisma.ContributorCreateNestedOneWithoutCellsInput
   network: Prisma.CellNetworkCreateNestedOneWithoutCellsInput
+  seller?: Prisma.SellerCreateNestedOneWithoutCellsDefaultInput
   contributors?: Prisma.ContributorCellCreateNestedManyWithoutCellInput
 }
 
@@ -658,12 +730,49 @@ export type CellUncheckedCreateWithoutSellersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  sellerId?: string | null
   contributors?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutCellInput
 }
 
 export type CellCreateOrConnectWithoutSellersInput = {
   where: Prisma.CellWhereUniqueInput
   create: Prisma.XOR<Prisma.CellCreateWithoutSellersInput, Prisma.CellUncheckedCreateWithoutSellersInput>
+}
+
+export type CellCreateWithoutSellerInput = {
+  id?: string
+  name: string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  leader?: Prisma.ContributorCreateNestedOneWithoutCellsInput
+  network: Prisma.CellNetworkCreateNestedOneWithoutCellsInput
+  sellers?: Prisma.SellerCreateNestedManyWithoutCellInput
+  contributors?: Prisma.ContributorCellCreateNestedManyWithoutCellInput
+}
+
+export type CellUncheckedCreateWithoutSellerInput = {
+  id?: string
+  name: string
+  networkId: string
+  leaderId?: string | null
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutCellInput
+  contributors?: Prisma.ContributorCellUncheckedCreateNestedManyWithoutCellInput
+}
+
+export type CellCreateOrConnectWithoutSellerInput = {
+  where: Prisma.CellWhereUniqueInput
+  create: Prisma.XOR<Prisma.CellCreateWithoutSellerInput, Prisma.CellUncheckedCreateWithoutSellerInput>
+}
+
+export type CellCreateManySellerInputEnvelope = {
+  data: Prisma.CellCreateManySellerInput | Prisma.CellCreateManySellerInput[]
+  skipDuplicates?: boolean
 }
 
 export type CellUpsertWithoutSellersInput = {
@@ -686,6 +795,7 @@ export type CellUpdateWithoutSellersInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   leader?: Prisma.ContributorUpdateOneWithoutCellsNestedInput
   network?: Prisma.CellNetworkUpdateOneRequiredWithoutCellsNestedInput
+  seller?: Prisma.SellerUpdateOneWithoutCellsDefaultNestedInput
   contributors?: Prisma.ContributorCellUpdateManyWithoutCellNestedInput
 }
 
@@ -698,7 +808,24 @@ export type CellUncheckedUpdateWithoutSellersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sellerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contributors?: Prisma.ContributorCellUncheckedUpdateManyWithoutCellNestedInput
+}
+
+export type CellUpsertWithWhereUniqueWithoutSellerInput = {
+  where: Prisma.CellWhereUniqueInput
+  update: Prisma.XOR<Prisma.CellUpdateWithoutSellerInput, Prisma.CellUncheckedUpdateWithoutSellerInput>
+  create: Prisma.XOR<Prisma.CellCreateWithoutSellerInput, Prisma.CellUncheckedCreateWithoutSellerInput>
+}
+
+export type CellUpdateWithWhereUniqueWithoutSellerInput = {
+  where: Prisma.CellWhereUniqueInput
+  data: Prisma.XOR<Prisma.CellUpdateWithoutSellerInput, Prisma.CellUncheckedUpdateWithoutSellerInput>
+}
+
+export type CellUpdateManyWithWhereWithoutSellerInput = {
+  where: Prisma.CellScalarWhereInput
+  data: Prisma.XOR<Prisma.CellUpdateManyMutationInput, Prisma.CellUncheckedUpdateManyWithoutSellerInput>
 }
 
 export type CellCreateWithoutContributorsInput = {
@@ -711,6 +838,7 @@ export type CellCreateWithoutContributorsInput = {
   leader?: Prisma.ContributorCreateNestedOneWithoutCellsInput
   network: Prisma.CellNetworkCreateNestedOneWithoutCellsInput
   sellers?: Prisma.SellerCreateNestedManyWithoutCellInput
+  seller?: Prisma.SellerCreateNestedOneWithoutCellsDefaultInput
 }
 
 export type CellUncheckedCreateWithoutContributorsInput = {
@@ -722,6 +850,7 @@ export type CellUncheckedCreateWithoutContributorsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  sellerId?: string | null
   sellers?: Prisma.SellerUncheckedCreateNestedManyWithoutCellInput
 }
 
@@ -751,6 +880,7 @@ export type CellUpdateWithoutContributorsInput = {
   leader?: Prisma.ContributorUpdateOneWithoutCellsNestedInput
   network?: Prisma.CellNetworkUpdateOneRequiredWithoutCellsNestedInput
   sellers?: Prisma.SellerUpdateManyWithoutCellNestedInput
+  seller?: Prisma.SellerUpdateOneWithoutCellsDefaultNestedInput
 }
 
 export type CellUncheckedUpdateWithoutContributorsInput = {
@@ -762,6 +892,7 @@ export type CellUncheckedUpdateWithoutContributorsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sellerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sellers?: Prisma.SellerUncheckedUpdateManyWithoutCellNestedInput
 }
 
@@ -773,6 +904,7 @@ export type CellCreateManyLeaderInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  sellerId?: string | null
 }
 
 export type CellUpdateWithoutLeaderInput = {
@@ -784,6 +916,7 @@ export type CellUpdateWithoutLeaderInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   network?: Prisma.CellNetworkUpdateOneRequiredWithoutCellsNestedInput
   sellers?: Prisma.SellerUpdateManyWithoutCellNestedInput
+  seller?: Prisma.SellerUpdateOneWithoutCellsDefaultNestedInput
   contributors?: Prisma.ContributorCellUpdateManyWithoutCellNestedInput
 }
 
@@ -795,6 +928,7 @@ export type CellUncheckedUpdateWithoutLeaderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sellerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sellers?: Prisma.SellerUncheckedUpdateManyWithoutCellNestedInput
   contributors?: Prisma.ContributorCellUncheckedUpdateManyWithoutCellNestedInput
 }
@@ -807,6 +941,7 @@ export type CellUncheckedUpdateManyWithoutLeaderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sellerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CellCreateManyNetworkInput = {
@@ -817,6 +952,7 @@ export type CellCreateManyNetworkInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  sellerId?: string | null
 }
 
 export type CellUpdateWithoutNetworkInput = {
@@ -828,6 +964,7 @@ export type CellUpdateWithoutNetworkInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   leader?: Prisma.ContributorUpdateOneWithoutCellsNestedInput
   sellers?: Prisma.SellerUpdateManyWithoutCellNestedInput
+  seller?: Prisma.SellerUpdateOneWithoutCellsDefaultNestedInput
   contributors?: Prisma.ContributorCellUpdateManyWithoutCellNestedInput
 }
 
@@ -839,6 +976,7 @@ export type CellUncheckedUpdateWithoutNetworkInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sellerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sellers?: Prisma.SellerUncheckedUpdateManyWithoutCellNestedInput
   contributors?: Prisma.ContributorCellUncheckedUpdateManyWithoutCellNestedInput
 }
@@ -846,6 +984,55 @@ export type CellUncheckedUpdateWithoutNetworkInput = {
 export type CellUncheckedUpdateManyWithoutNetworkInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  leaderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sellerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type CellCreateManySellerInput = {
+  id?: string
+  name: string
+  networkId: string
+  leaderId?: string | null
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type CellUpdateWithoutSellerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leader?: Prisma.ContributorUpdateOneWithoutCellsNestedInput
+  network?: Prisma.CellNetworkUpdateOneRequiredWithoutCellsNestedInput
+  sellers?: Prisma.SellerUpdateManyWithoutCellNestedInput
+  contributors?: Prisma.ContributorCellUpdateManyWithoutCellNestedInput
+}
+
+export type CellUncheckedUpdateWithoutSellerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  networkId?: Prisma.StringFieldUpdateOperationsInput | string
+  leaderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sellers?: Prisma.SellerUncheckedUpdateManyWithoutCellNestedInput
+  contributors?: Prisma.ContributorCellUncheckedUpdateManyWithoutCellNestedInput
+}
+
+export type CellUncheckedUpdateManyWithoutSellerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  networkId?: Prisma.StringFieldUpdateOperationsInput | string
   leaderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -902,9 +1089,11 @@ export type CellSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
+  sellerId?: boolean
   leader?: boolean | Prisma.Cell$leaderArgs<ExtArgs>
   network?: boolean | Prisma.CellNetworkDefaultArgs<ExtArgs>
   sellers?: boolean | Prisma.Cell$sellersArgs<ExtArgs>
+  seller?: boolean | Prisma.Cell$sellerArgs<ExtArgs>
   contributors?: boolean | Prisma.Cell$contributorsArgs<ExtArgs>
   _count?: boolean | Prisma.CellCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["cell"]>
@@ -918,8 +1107,10 @@ export type CellSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
+  sellerId?: boolean
   leader?: boolean | Prisma.Cell$leaderArgs<ExtArgs>
   network?: boolean | Prisma.CellNetworkDefaultArgs<ExtArgs>
+  seller?: boolean | Prisma.Cell$sellerArgs<ExtArgs>
 }, ExtArgs["result"]["cell"]>
 
 export type CellSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -931,8 +1122,10 @@ export type CellSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
+  sellerId?: boolean
   leader?: boolean | Prisma.Cell$leaderArgs<ExtArgs>
   network?: boolean | Prisma.CellNetworkDefaultArgs<ExtArgs>
+  seller?: boolean | Prisma.Cell$sellerArgs<ExtArgs>
 }, ExtArgs["result"]["cell"]>
 
 export type CellSelectScalar = {
@@ -944,23 +1137,27 @@ export type CellSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
+  sellerId?: boolean
 }
 
-export type CellOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "networkId" | "leaderId" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["cell"]>
+export type CellOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "networkId" | "leaderId" | "active" | "createdAt" | "updatedAt" | "deletedAt" | "sellerId", ExtArgs["result"]["cell"]>
 export type CellInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   leader?: boolean | Prisma.Cell$leaderArgs<ExtArgs>
   network?: boolean | Prisma.CellNetworkDefaultArgs<ExtArgs>
   sellers?: boolean | Prisma.Cell$sellersArgs<ExtArgs>
+  seller?: boolean | Prisma.Cell$sellerArgs<ExtArgs>
   contributors?: boolean | Prisma.Cell$contributorsArgs<ExtArgs>
   _count?: boolean | Prisma.CellCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CellIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   leader?: boolean | Prisma.Cell$leaderArgs<ExtArgs>
   network?: boolean | Prisma.CellNetworkDefaultArgs<ExtArgs>
+  seller?: boolean | Prisma.Cell$sellerArgs<ExtArgs>
 }
 export type CellIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   leader?: boolean | Prisma.Cell$leaderArgs<ExtArgs>
   network?: boolean | Prisma.CellNetworkDefaultArgs<ExtArgs>
+  seller?: boolean | Prisma.Cell$sellerArgs<ExtArgs>
 }
 
 export type $CellPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -969,6 +1166,7 @@ export type $CellPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     leader: Prisma.$ContributorPayload<ExtArgs> | null
     network: Prisma.$CellNetworkPayload<ExtArgs>
     sellers: Prisma.$SellerPayload<ExtArgs>[]
+    seller: Prisma.$SellerPayload<ExtArgs> | null
     contributors: Prisma.$ContributorCellPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -980,6 +1178,7 @@ export type $CellPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
+    sellerId: string | null
   }, ExtArgs["result"]["cell"]>
   composites: {}
 }
@@ -1377,6 +1576,7 @@ export interface Prisma__CellClient<T, Null = never, ExtArgs extends runtime.Typ
   leader<T extends Prisma.Cell$leaderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Cell$leaderArgs<ExtArgs>>): Prisma.Prisma__ContributorClient<runtime.Types.Result.GetResult<Prisma.$ContributorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   network<T extends Prisma.CellNetworkDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CellNetworkDefaultArgs<ExtArgs>>): Prisma.Prisma__CellNetworkClient<runtime.Types.Result.GetResult<Prisma.$CellNetworkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   sellers<T extends Prisma.Cell$sellersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Cell$sellersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SellerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  seller<T extends Prisma.Cell$sellerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Cell$sellerArgs<ExtArgs>>): Prisma.Prisma__SellerClient<runtime.Types.Result.GetResult<Prisma.$SellerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   contributors<T extends Prisma.Cell$contributorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Cell$contributorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContributorCellPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1415,6 +1615,7 @@ export interface CellFieldRefs {
   readonly createdAt: Prisma.FieldRef<"Cell", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Cell", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Cell", 'DateTime'>
+  readonly sellerId: Prisma.FieldRef<"Cell", 'String'>
 }
     
 
@@ -1856,6 +2057,25 @@ export type Cell$sellersArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.SellerScalarFieldEnum | Prisma.SellerScalarFieldEnum[]
+}
+
+/**
+ * Cell.seller
+ */
+export type Cell$sellerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Seller
+   */
+  select?: Prisma.SellerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Seller
+   */
+  omit?: Prisma.SellerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SellerInclude<ExtArgs> | null
+  where?: Prisma.SellerWhereInput
 }
 
 /**

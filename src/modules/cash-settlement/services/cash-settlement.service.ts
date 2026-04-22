@@ -145,7 +145,7 @@ export class CashSettlementService {
         settlementId,
         amount,
         paymentMethod: 'PIX_QRCODE',
-        status: 'SUBMITTED',
+        status: 'PROCESSING',
         mpPaymentId: pixResponse.payment.id,
         pixQrCode: pixResponse.payment.pix?.qrCodeBase64 ?? null,
         pixCopyPaste: pixResponse.payment.pix?.qrCode ?? null,
@@ -163,13 +163,19 @@ export class CashSettlementService {
 
   // ── Callback MP: PIX QR Code pago ────────────────────────────────────
 
-  async handleMpPayment(mpPaymentId: string, status: string): Promise<boolean> {
-    if (status !== 'approved') return false;
-
+  async handleMpPayment(mpPaymentId: string, status?: string): Promise<boolean> {
     const payment = await this.prisma.cashSettlementPayment.findFirst({
       where: { mpPaymentId, deletedAt: null },
     });
     if (!payment) return false;
+
+    let finalStatus = status;
+    if (!finalStatus) {
+      const mpPayment = await this.mpPayments.getPaymentStatus(mpPaymentId);
+      finalStatus = mpPayment?.status;
+    }
+
+    if (finalStatus !== 'approved') return true; // É um settlement, mas ainda não aprovado
 
     await this.prisma.cashSettlementPayment.update({
       where: { id: payment.id },

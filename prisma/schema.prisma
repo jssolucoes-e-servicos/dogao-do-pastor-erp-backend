@@ -321,7 +321,9 @@ model Cell {
   deletedAt    DateTime?
   leader       Contributor?      @relation(fields: [leaderId], references: [id])
   network      CellNetwork       @relation(fields: [networkId], references: [id])
-  sellers      Seller[]
+  sellers      Seller[]          @relation("CellSellers")
+  sellerId     String?           @map("seller_id")
+  seller       Seller?           @relation("CellDefaultSeller", fields: [sellerId], references: [id])
   contributors ContributorCell[]
 
   @@map("cells")
@@ -338,11 +340,11 @@ model Seller {
   updatedAt     DateTime           @updatedAt
   deletedAt     DateTime?
   orders        Order[]
-  cell          Cell               @relation(fields: [cellId], references: [id])
+  cell          Cell               @relation("CellSellers", fields: [cellId], references: [id])
   contributor   Contributor        @relation(fields: [contributorId], references: [id])
   settlements   SellerSettlement[]
   tickets       Ticket[]
-  dependents    ContributorCell[]
+  cellsDefault  Cell[]             @relation("CellDefaultSeller")
 
   @@index([cellId])
   @@map("sellers")
@@ -352,16 +354,15 @@ model ContributorCell {
   id            String      @id @default(cuid())
   cellId        String
   contributorId String
-  sellerId      String
   active        Boolean     @default(true)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   deletedAt     DateTime?
   cell          Cell        @relation(fields: [cellId], references: [id])
   contributor   Contributor @relation(fields: [contributorId], references: [id])
-  sellerDefault Seller      @relation(fields: [sellerId], references: [id])
 
-  @@index([cellId, contributorId, sellerId])
+  @@unique([contributorId])
+  @@index([cellId, contributorId])
   @@map("contributors_cells")
 }
 

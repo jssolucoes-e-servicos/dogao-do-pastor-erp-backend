@@ -94,6 +94,7 @@ export class CellsService extends BaseCrudService<
           },
         },
         sellers: true,
+        seller: true,
       },
       orderBy: { name: 'asc' },
     });
@@ -109,6 +110,7 @@ export class CellsService extends BaseCrudService<
           },
         },
         sellers: true,
+        seller: true,
       },
     });
   }
@@ -119,6 +121,7 @@ export class CellsService extends BaseCrudService<
         leader: true,
         network: { include: { supervisor: true } },
         sellers: { select: { id: true, tag: true, name: true } },
+        seller: true,
       },
     });
   }
@@ -131,6 +134,7 @@ export class CellsService extends BaseCrudService<
           leader: true,
           network: { include: { supervisor: true } },
           sellers: { select: { id: true, tag: true, name: true } },
+          seller: true,
         },
       },
     );

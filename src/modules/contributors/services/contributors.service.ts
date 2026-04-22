@@ -106,79 +106,82 @@ export class ContributorsService extends BaseCrudService<
     }) as unknown as ContributorEntity;
   }
 
-  /** Vincula contributor a uma célula como membro (usa seller do líder se existir) */
+  /** Vincula contributor a uma célula como membro */
   async addToCell(contributorId: string, cellId: string): Promise<void> {
     const cell = await this.prisma.cell.findUnique({
       where: { id: cellId },
-      select: { id: true, name: true, leaderId: true },
+      select: { id: true, name: true, leaderId: true, sellerId: true },
     });
-    if (!cell) return;
+    if (!cell) throw new NotFoundException('Célula não encontrada');
 
-    let sellerId: string | undefined;
-
-    // Tenta obter o sellerId do líder da célula para o vínculo (vincular ao líder)
-    if (cell.leaderId) {
-      const leaderSeller = await this.prisma.seller.findFirst({
-        where: { contributorId: cell.leaderId, cellId, active: true },
+    // Se o contributor for o líder da célula, garantimos que ele tenha um Seller e que a Cell aponte para ele
+    if (cell.leaderId === contributorId) {
+      let leaderSeller = await this.prisma.seller.findFirst({
+        where: { contributorId, cellId, active: true },
         select: { id: true },
       });
-      if (leaderSeller) {
-        sellerId = leaderSeller.id;
-      }
-    }
 
-    // Se não encontrou seller do líder, cria/busca um individual para o membro
-    if (!sellerId) {
-      let seller = await this.prisma.seller.findFirst({
-        where: { contributorId, cellId, active: true },
-      });
-      if (!seller) {
+      // Se o líder não tem vendedor nessa célula, criamos um
+      if (!leaderSeller) {
         const contributor = await this.prisma.contributor.findUnique({
           where: { id: contributorId },
           select: { name: true, username: true },
         });
         const tag = (contributor?.username ?? contributorId.slice(-6)).toLowerCase().replace(/\s/g, '');
-        seller = await this.prisma.seller.create({
+        
+        leaderSeller = await this.prisma.seller.create({
           data: {
-            name: contributor?.name ?? 'Vendedor',
+            name: contributor?.name ?? 'Líder',
             cellId,
             contributorId,
             tag,
           },
         });
       }
-      sellerId = seller.id;
+
+      // Se a célula ainda não tem esse vendedor como default, atualizamos
+      if (cell.sellerId !== leaderSeller.id) {
+        await this.prisma.cell.update({
+          where: { id: cellId },
+          data: { sellerId: leaderSeller.id },
+        });
+      }
     }
 
-    // Cria/Atualiza vínculo ContributorCell
+    // Cria/Atualiza vínculo ContributorCell (apenas membresia)
     const existing = await this.prisma.contributorCell.findFirst({
-      where: { contributorId, cellId },
+      where: { contributorId }, // Agora é único por pessoa
     });
 
     if (!existing) {
       await this.prisma.contributorCell.create({
-        data: { contributorId, cellId, sellerId },
+        data: { contributorId, cellId },
       });
-    } else if (existing.sellerId !== sellerId || !existing.active) {
+    } else {
       await this.prisma.contributorCell.update({
         where: { id: existing.id },
-        data: { sellerId, active: true, deletedAt: null },
+        data: { cellId, active: true, deletedAt: null },
       });
     }
 
-    // Atribui role Vendedor se não tiver
+    // Atribui role Vendedor se não tiver (usa upsert para evitar erro de unique constraint)
     const vendedorRole = await this.prisma.role.findFirst({
       where: { name: { contains: 'Vendedor', mode: 'insensitive' }, active: true },
     });
     if (vendedorRole) {
-      const hasRole = await this.prisma.userRole.findFirst({
-        where: { contributorId, roleId: vendedorRole.id, active: true },
+      await this.prisma.userRole.upsert({
+        where: {
+          contributorId_roleId: {
+            contributorId,
+            roleId: vendedorRole.id,
+          },
+        },
+        update: { active: true, deletedAt: null },
+        create: {
+          contributorId,
+          roleId: vendedorRole.id,
+        },
       });
-      if (!hasRole) {
-        await this.prisma.userRole.create({
-          data: { contributorId, roleId: vendedorRole.id },
-        });
-      }
     }
 
     // Envia mensagem de boas-vindas com credenciais (em background)
@@ -221,6 +224,10 @@ export class ContributorsService extends BaseCrudService<
         cellNetworks: true,
         deliveryPersons: true,
         sellers: true,
+        cellsMember: { 
+          where: { active: true },
+          include: { cell: { include: { seller: true } } }
+        },
         userRoles: { include: { role: true } },
         permissions: { include: { module: true } },
       },
@@ -235,7 +242,10 @@ export class ContributorsService extends BaseCrudService<
         cellNetworks: true,
         deliveryPersons: true,
         sellers: true,
-        cellsMember: { where: { active: true } },
+        cellsMember: { 
+          where: { active: true },
+          include: { cell: { include: { seller: true } } }
+        },
         userRoles: { include: { role: true } },
         permissions: { include: { module: true } },
       },
@@ -253,6 +263,10 @@ export class ContributorsService extends BaseCrudService<
           cellNetworks: true,
           deliveryPersons: true,
           sellers: true,
+          cellsMember: { 
+            where: { active: true },
+            include: { cell: { include: { seller: true } } }
+          },
           userRoles: { include: { role: true } },
           permissions: { include: { module: true } },
         },
@@ -271,6 +285,10 @@ export class ContributorsService extends BaseCrudService<
         cells: true,
         cellNetworks: true,
         deliveryPersons: true,
+        cellsMember: { 
+          where: { active: true },
+          include: { cell: { include: { seller: true } } }
+        },
         userRoles: { include: { role: true } },
         permissions: { include: { module: true } },
       },

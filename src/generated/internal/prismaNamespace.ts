@@ -3804,7 +3804,8 @@ export const CellScalarFieldEnum = {
   active: 'active',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  sellerId: 'sellerId'
 } as const
 
 export type CellScalarFieldEnum = (typeof CellScalarFieldEnum)[keyof typeof CellScalarFieldEnum]
@@ -3829,7 +3830,6 @@ export const ContributorCellScalarFieldEnum = {
   id: 'id',
   cellId: 'cellId',
   contributorId: 'contributorId',
-  sellerId: 'sellerId',
   active: 'active',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -4518,7 +4518,8 @@ export const CellOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
   networkId: 'networkId',
-  leaderId: 'leaderId'
+  leaderId: 'leaderId',
+  sellerId: 'sellerId'
 } as const
 
 export type CellOrderByRelevanceFieldEnum = (typeof CellOrderByRelevanceFieldEnum)[keyof typeof CellOrderByRelevanceFieldEnum]
@@ -4538,8 +4539,7 @@ export type SellerOrderByRelevanceFieldEnum = (typeof SellerOrderByRelevanceFiel
 export const ContributorCellOrderByRelevanceFieldEnum = {
   id: 'id',
   cellId: 'cellId',
-  contributorId: 'contributorId',
-  sellerId: 'sellerId'
+  contributorId: 'contributorId'
 } as const
 
 export type ContributorCellOrderByRelevanceFieldEnum = (typeof ContributorCellOrderByRelevanceFieldEnum)[keyof typeof ContributorCellOrderByRelevanceFieldEnum]

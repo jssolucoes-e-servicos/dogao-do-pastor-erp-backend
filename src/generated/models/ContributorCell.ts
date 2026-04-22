@@ -28,7 +28,6 @@ export type ContributorCellMinAggregateOutputType = {
   id: string | null
   cellId: string | null
   contributorId: string | null
-  sellerId: string | null
   active: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -39,7 +38,6 @@ export type ContributorCellMaxAggregateOutputType = {
   id: string | null
   cellId: string | null
   contributorId: string | null
-  sellerId: string | null
   active: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -50,7 +48,6 @@ export type ContributorCellCountAggregateOutputType = {
   id: number
   cellId: number
   contributorId: number
-  sellerId: number
   active: number
   createdAt: number
   updatedAt: number
@@ -63,7 +60,6 @@ export type ContributorCellMinAggregateInputType = {
   id?: true
   cellId?: true
   contributorId?: true
-  sellerId?: true
   active?: true
   createdAt?: true
   updatedAt?: true
@@ -74,7 +70,6 @@ export type ContributorCellMaxAggregateInputType = {
   id?: true
   cellId?: true
   contributorId?: true
-  sellerId?: true
   active?: true
   createdAt?: true
   updatedAt?: true
@@ -85,7 +80,6 @@ export type ContributorCellCountAggregateInputType = {
   id?: true
   cellId?: true
   contributorId?: true
-  sellerId?: true
   active?: true
   createdAt?: true
   updatedAt?: true
@@ -169,7 +163,6 @@ export type ContributorCellGroupByOutputType = {
   id: string
   cellId: string
   contributorId: string
-  sellerId: string
   active: boolean
   createdAt: Date
   updatedAt: Date
@@ -201,53 +194,46 @@ export type ContributorCellWhereInput = {
   id?: Prisma.StringFilter<"ContributorCell"> | string
   cellId?: Prisma.StringFilter<"ContributorCell"> | string
   contributorId?: Prisma.StringFilter<"ContributorCell"> | string
-  sellerId?: Prisma.StringFilter<"ContributorCell"> | string
   active?: Prisma.BoolFilter<"ContributorCell"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ContributorCell"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ContributorCell"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"ContributorCell"> | Date | string | null
   cell?: Prisma.XOR<Prisma.CellScalarRelationFilter, Prisma.CellWhereInput>
   contributor?: Prisma.XOR<Prisma.ContributorScalarRelationFilter, Prisma.ContributorWhereInput>
-  sellerDefault?: Prisma.XOR<Prisma.SellerScalarRelationFilter, Prisma.SellerWhereInput>
 }
 
 export type ContributorCellOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   cellId?: Prisma.SortOrder
   contributorId?: Prisma.SortOrder
-  sellerId?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   cell?: Prisma.CellOrderByWithRelationInput
   contributor?: Prisma.ContributorOrderByWithRelationInput
-  sellerDefault?: Prisma.SellerOrderByWithRelationInput
   _relevance?: Prisma.ContributorCellOrderByRelevanceInput
 }
 
 export type ContributorCellWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  contributorId?: string
   AND?: Prisma.ContributorCellWhereInput | Prisma.ContributorCellWhereInput[]
   OR?: Prisma.ContributorCellWhereInput[]
   NOT?: Prisma.ContributorCellWhereInput | Prisma.ContributorCellWhereInput[]
   cellId?: Prisma.StringFilter<"ContributorCell"> | string
-  contributorId?: Prisma.StringFilter<"ContributorCell"> | string
-  sellerId?: Prisma.StringFilter<"ContributorCell"> | string
   active?: Prisma.BoolFilter<"ContributorCell"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ContributorCell"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ContributorCell"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"ContributorCell"> | Date | string | null
   cell?: Prisma.XOR<Prisma.CellScalarRelationFilter, Prisma.CellWhereInput>
   contributor?: Prisma.XOR<Prisma.ContributorScalarRelationFilter, Prisma.ContributorWhereInput>
-  sellerDefault?: Prisma.XOR<Prisma.SellerScalarRelationFilter, Prisma.SellerWhereInput>
-}, "id">
+}, "id" | "contributorId">
 
 export type ContributorCellOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   cellId?: Prisma.SortOrder
   contributorId?: Prisma.SortOrder
-  sellerId?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -264,7 +250,6 @@ export type ContributorCellScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"ContributorCell"> | string
   cellId?: Prisma.StringWithAggregatesFilter<"ContributorCell"> | string
   contributorId?: Prisma.StringWithAggregatesFilter<"ContributorCell"> | string
-  sellerId?: Prisma.StringWithAggregatesFilter<"ContributorCell"> | string
   active?: Prisma.BoolWithAggregatesFilter<"ContributorCell"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ContributorCell"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ContributorCell"> | Date | string
@@ -279,14 +264,12 @@ export type ContributorCellCreateInput = {
   deletedAt?: Date | string | null
   cell: Prisma.CellCreateNestedOneWithoutContributorsInput
   contributor: Prisma.ContributorCreateNestedOneWithoutCellsMemberInput
-  sellerDefault: Prisma.SellerCreateNestedOneWithoutDependentsInput
 }
 
 export type ContributorCellUncheckedCreateInput = {
   id?: string
   cellId: string
   contributorId: string
-  sellerId: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -301,14 +284,12 @@ export type ContributorCellUpdateInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cell?: Prisma.CellUpdateOneRequiredWithoutContributorsNestedInput
   contributor?: Prisma.ContributorUpdateOneRequiredWithoutCellsMemberNestedInput
-  sellerDefault?: Prisma.SellerUpdateOneRequiredWithoutDependentsNestedInput
 }
 
 export type ContributorCellUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   cellId?: Prisma.StringFieldUpdateOperationsInput | string
   contributorId?: Prisma.StringFieldUpdateOperationsInput | string
-  sellerId?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -319,7 +300,6 @@ export type ContributorCellCreateManyInput = {
   id?: string
   cellId: string
   contributorId: string
-  sellerId: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -338,7 +318,6 @@ export type ContributorCellUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   cellId?: Prisma.StringFieldUpdateOperationsInput | string
   contributorId?: Prisma.StringFieldUpdateOperationsInput | string
-  sellerId?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -365,7 +344,6 @@ export type ContributorCellCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   cellId?: Prisma.SortOrder
   contributorId?: Prisma.SortOrder
-  sellerId?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -376,7 +354,6 @@ export type ContributorCellMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   cellId?: Prisma.SortOrder
   contributorId?: Prisma.SortOrder
-  sellerId?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -387,7 +364,6 @@ export type ContributorCellMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   cellId?: Prisma.SortOrder
   contributorId?: Prisma.SortOrder
-  sellerId?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -478,48 +454,6 @@ export type ContributorCellUncheckedUpdateManyWithoutCellNestedInput = {
   deleteMany?: Prisma.ContributorCellScalarWhereInput | Prisma.ContributorCellScalarWhereInput[]
 }
 
-export type ContributorCellCreateNestedManyWithoutSellerDefaultInput = {
-  create?: Prisma.XOR<Prisma.ContributorCellCreateWithoutSellerDefaultInput, Prisma.ContributorCellUncheckedCreateWithoutSellerDefaultInput> | Prisma.ContributorCellCreateWithoutSellerDefaultInput[] | Prisma.ContributorCellUncheckedCreateWithoutSellerDefaultInput[]
-  connectOrCreate?: Prisma.ContributorCellCreateOrConnectWithoutSellerDefaultInput | Prisma.ContributorCellCreateOrConnectWithoutSellerDefaultInput[]
-  createMany?: Prisma.ContributorCellCreateManySellerDefaultInputEnvelope
-  connect?: Prisma.ContributorCellWhereUniqueInput | Prisma.ContributorCellWhereUniqueInput[]
-}
-
-export type ContributorCellUncheckedCreateNestedManyWithoutSellerDefaultInput = {
-  create?: Prisma.XOR<Prisma.ContributorCellCreateWithoutSellerDefaultInput, Prisma.ContributorCellUncheckedCreateWithoutSellerDefaultInput> | Prisma.ContributorCellCreateWithoutSellerDefaultInput[] | Prisma.ContributorCellUncheckedCreateWithoutSellerDefaultInput[]
-  connectOrCreate?: Prisma.ContributorCellCreateOrConnectWithoutSellerDefaultInput | Prisma.ContributorCellCreateOrConnectWithoutSellerDefaultInput[]
-  createMany?: Prisma.ContributorCellCreateManySellerDefaultInputEnvelope
-  connect?: Prisma.ContributorCellWhereUniqueInput | Prisma.ContributorCellWhereUniqueInput[]
-}
-
-export type ContributorCellUpdateManyWithoutSellerDefaultNestedInput = {
-  create?: Prisma.XOR<Prisma.ContributorCellCreateWithoutSellerDefaultInput, Prisma.ContributorCellUncheckedCreateWithoutSellerDefaultInput> | Prisma.ContributorCellCreateWithoutSellerDefaultInput[] | Prisma.ContributorCellUncheckedCreateWithoutSellerDefaultInput[]
-  connectOrCreate?: Prisma.ContributorCellCreateOrConnectWithoutSellerDefaultInput | Prisma.ContributorCellCreateOrConnectWithoutSellerDefaultInput[]
-  upsert?: Prisma.ContributorCellUpsertWithWhereUniqueWithoutSellerDefaultInput | Prisma.ContributorCellUpsertWithWhereUniqueWithoutSellerDefaultInput[]
-  createMany?: Prisma.ContributorCellCreateManySellerDefaultInputEnvelope
-  set?: Prisma.ContributorCellWhereUniqueInput | Prisma.ContributorCellWhereUniqueInput[]
-  disconnect?: Prisma.ContributorCellWhereUniqueInput | Prisma.ContributorCellWhereUniqueInput[]
-  delete?: Prisma.ContributorCellWhereUniqueInput | Prisma.ContributorCellWhereUniqueInput[]
-  connect?: Prisma.ContributorCellWhereUniqueInput | Prisma.ContributorCellWhereUniqueInput[]
-  update?: Prisma.ContributorCellUpdateWithWhereUniqueWithoutSellerDefaultInput | Prisma.ContributorCellUpdateWithWhereUniqueWithoutSellerDefaultInput[]
-  updateMany?: Prisma.ContributorCellUpdateManyWithWhereWithoutSellerDefaultInput | Prisma.ContributorCellUpdateManyWithWhereWithoutSellerDefaultInput[]
-  deleteMany?: Prisma.ContributorCellScalarWhereInput | Prisma.ContributorCellScalarWhereInput[]
-}
-
-export type ContributorCellUncheckedUpdateManyWithoutSellerDefaultNestedInput = {
-  create?: Prisma.XOR<Prisma.ContributorCellCreateWithoutSellerDefaultInput, Prisma.ContributorCellUncheckedCreateWithoutSellerDefaultInput> | Prisma.ContributorCellCreateWithoutSellerDefaultInput[] | Prisma.ContributorCellUncheckedCreateWithoutSellerDefaultInput[]
-  connectOrCreate?: Prisma.ContributorCellCreateOrConnectWithoutSellerDefaultInput | Prisma.ContributorCellCreateOrConnectWithoutSellerDefaultInput[]
-  upsert?: Prisma.ContributorCellUpsertWithWhereUniqueWithoutSellerDefaultInput | Prisma.ContributorCellUpsertWithWhereUniqueWithoutSellerDefaultInput[]
-  createMany?: Prisma.ContributorCellCreateManySellerDefaultInputEnvelope
-  set?: Prisma.ContributorCellWhereUniqueInput | Prisma.ContributorCellWhereUniqueInput[]
-  disconnect?: Prisma.ContributorCellWhereUniqueInput | Prisma.ContributorCellWhereUniqueInput[]
-  delete?: Prisma.ContributorCellWhereUniqueInput | Prisma.ContributorCellWhereUniqueInput[]
-  connect?: Prisma.ContributorCellWhereUniqueInput | Prisma.ContributorCellWhereUniqueInput[]
-  update?: Prisma.ContributorCellUpdateWithWhereUniqueWithoutSellerDefaultInput | Prisma.ContributorCellUpdateWithWhereUniqueWithoutSellerDefaultInput[]
-  updateMany?: Prisma.ContributorCellUpdateManyWithWhereWithoutSellerDefaultInput | Prisma.ContributorCellUpdateManyWithWhereWithoutSellerDefaultInput[]
-  deleteMany?: Prisma.ContributorCellScalarWhereInput | Prisma.ContributorCellScalarWhereInput[]
-}
-
 export type ContributorCellCreateWithoutContributorInput = {
   id?: string
   active?: boolean
@@ -527,13 +461,11 @@ export type ContributorCellCreateWithoutContributorInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   cell: Prisma.CellCreateNestedOneWithoutContributorsInput
-  sellerDefault: Prisma.SellerCreateNestedOneWithoutDependentsInput
 }
 
 export type ContributorCellUncheckedCreateWithoutContributorInput = {
   id?: string
   cellId: string
-  sellerId: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -573,7 +505,6 @@ export type ContributorCellScalarWhereInput = {
   id?: Prisma.StringFilter<"ContributorCell"> | string
   cellId?: Prisma.StringFilter<"ContributorCell"> | string
   contributorId?: Prisma.StringFilter<"ContributorCell"> | string
-  sellerId?: Prisma.StringFilter<"ContributorCell"> | string
   active?: Prisma.BoolFilter<"ContributorCell"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ContributorCell"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ContributorCell"> | Date | string
@@ -587,13 +518,11 @@ export type ContributorCellCreateWithoutCellInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   contributor: Prisma.ContributorCreateNestedOneWithoutCellsMemberInput
-  sellerDefault: Prisma.SellerCreateNestedOneWithoutDependentsInput
 }
 
 export type ContributorCellUncheckedCreateWithoutCellInput = {
   id?: string
   contributorId: string
-  sellerId: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -626,56 +555,9 @@ export type ContributorCellUpdateManyWithWhereWithoutCellInput = {
   data: Prisma.XOR<Prisma.ContributorCellUpdateManyMutationInput, Prisma.ContributorCellUncheckedUpdateManyWithoutCellInput>
 }
 
-export type ContributorCellCreateWithoutSellerDefaultInput = {
-  id?: string
-  active?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  cell: Prisma.CellCreateNestedOneWithoutContributorsInput
-  contributor: Prisma.ContributorCreateNestedOneWithoutCellsMemberInput
-}
-
-export type ContributorCellUncheckedCreateWithoutSellerDefaultInput = {
-  id?: string
-  cellId: string
-  contributorId: string
-  active?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-}
-
-export type ContributorCellCreateOrConnectWithoutSellerDefaultInput = {
-  where: Prisma.ContributorCellWhereUniqueInput
-  create: Prisma.XOR<Prisma.ContributorCellCreateWithoutSellerDefaultInput, Prisma.ContributorCellUncheckedCreateWithoutSellerDefaultInput>
-}
-
-export type ContributorCellCreateManySellerDefaultInputEnvelope = {
-  data: Prisma.ContributorCellCreateManySellerDefaultInput | Prisma.ContributorCellCreateManySellerDefaultInput[]
-  skipDuplicates?: boolean
-}
-
-export type ContributorCellUpsertWithWhereUniqueWithoutSellerDefaultInput = {
-  where: Prisma.ContributorCellWhereUniqueInput
-  update: Prisma.XOR<Prisma.ContributorCellUpdateWithoutSellerDefaultInput, Prisma.ContributorCellUncheckedUpdateWithoutSellerDefaultInput>
-  create: Prisma.XOR<Prisma.ContributorCellCreateWithoutSellerDefaultInput, Prisma.ContributorCellUncheckedCreateWithoutSellerDefaultInput>
-}
-
-export type ContributorCellUpdateWithWhereUniqueWithoutSellerDefaultInput = {
-  where: Prisma.ContributorCellWhereUniqueInput
-  data: Prisma.XOR<Prisma.ContributorCellUpdateWithoutSellerDefaultInput, Prisma.ContributorCellUncheckedUpdateWithoutSellerDefaultInput>
-}
-
-export type ContributorCellUpdateManyWithWhereWithoutSellerDefaultInput = {
-  where: Prisma.ContributorCellScalarWhereInput
-  data: Prisma.XOR<Prisma.ContributorCellUpdateManyMutationInput, Prisma.ContributorCellUncheckedUpdateManyWithoutSellerDefaultInput>
-}
-
 export type ContributorCellCreateManyContributorInput = {
   id?: string
   cellId: string
-  sellerId: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -689,13 +571,11 @@ export type ContributorCellUpdateWithoutContributorInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cell?: Prisma.CellUpdateOneRequiredWithoutContributorsNestedInput
-  sellerDefault?: Prisma.SellerUpdateOneRequiredWithoutDependentsNestedInput
 }
 
 export type ContributorCellUncheckedUpdateWithoutContributorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   cellId?: Prisma.StringFieldUpdateOperationsInput | string
-  sellerId?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -705,7 +585,6 @@ export type ContributorCellUncheckedUpdateWithoutContributorInput = {
 export type ContributorCellUncheckedUpdateManyWithoutContributorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   cellId?: Prisma.StringFieldUpdateOperationsInput | string
-  sellerId?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -715,7 +594,6 @@ export type ContributorCellUncheckedUpdateManyWithoutContributorInput = {
 export type ContributorCellCreateManyCellInput = {
   id?: string
   contributorId: string
-  sellerId: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -729,13 +607,11 @@ export type ContributorCellUpdateWithoutCellInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contributor?: Prisma.ContributorUpdateOneRequiredWithoutCellsMemberNestedInput
-  sellerDefault?: Prisma.SellerUpdateOneRequiredWithoutDependentsNestedInput
 }
 
 export type ContributorCellUncheckedUpdateWithoutCellInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   contributorId?: Prisma.StringFieldUpdateOperationsInput | string
-  sellerId?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -744,47 +620,6 @@ export type ContributorCellUncheckedUpdateWithoutCellInput = {
 
 export type ContributorCellUncheckedUpdateManyWithoutCellInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  contributorId?: Prisma.StringFieldUpdateOperationsInput | string
-  sellerId?: Prisma.StringFieldUpdateOperationsInput | string
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
-
-export type ContributorCellCreateManySellerDefaultInput = {
-  id?: string
-  cellId: string
-  contributorId: string
-  active?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-}
-
-export type ContributorCellUpdateWithoutSellerDefaultInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cell?: Prisma.CellUpdateOneRequiredWithoutContributorsNestedInput
-  contributor?: Prisma.ContributorUpdateOneRequiredWithoutCellsMemberNestedInput
-}
-
-export type ContributorCellUncheckedUpdateWithoutSellerDefaultInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  cellId?: Prisma.StringFieldUpdateOperationsInput | string
-  contributorId?: Prisma.StringFieldUpdateOperationsInput | string
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
-
-export type ContributorCellUncheckedUpdateManyWithoutSellerDefaultInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  cellId?: Prisma.StringFieldUpdateOperationsInput | string
   contributorId?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -798,70 +633,60 @@ export type ContributorCellSelect<ExtArgs extends runtime.Types.Extensions.Inter
   id?: boolean
   cellId?: boolean
   contributorId?: boolean
-  sellerId?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   cell?: boolean | Prisma.CellDefaultArgs<ExtArgs>
   contributor?: boolean | Prisma.ContributorDefaultArgs<ExtArgs>
-  sellerDefault?: boolean | Prisma.SellerDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["contributorCell"]>
 
 export type ContributorCellSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   cellId?: boolean
   contributorId?: boolean
-  sellerId?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   cell?: boolean | Prisma.CellDefaultArgs<ExtArgs>
   contributor?: boolean | Prisma.ContributorDefaultArgs<ExtArgs>
-  sellerDefault?: boolean | Prisma.SellerDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["contributorCell"]>
 
 export type ContributorCellSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   cellId?: boolean
   contributorId?: boolean
-  sellerId?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   cell?: boolean | Prisma.CellDefaultArgs<ExtArgs>
   contributor?: boolean | Prisma.ContributorDefaultArgs<ExtArgs>
-  sellerDefault?: boolean | Prisma.SellerDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["contributorCell"]>
 
 export type ContributorCellSelectScalar = {
   id?: boolean
   cellId?: boolean
   contributorId?: boolean
-  sellerId?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type ContributorCellOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "cellId" | "contributorId" | "sellerId" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["contributorCell"]>
+export type ContributorCellOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "cellId" | "contributorId" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["contributorCell"]>
 export type ContributorCellInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cell?: boolean | Prisma.CellDefaultArgs<ExtArgs>
   contributor?: boolean | Prisma.ContributorDefaultArgs<ExtArgs>
-  sellerDefault?: boolean | Prisma.SellerDefaultArgs<ExtArgs>
 }
 export type ContributorCellIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cell?: boolean | Prisma.CellDefaultArgs<ExtArgs>
   contributor?: boolean | Prisma.ContributorDefaultArgs<ExtArgs>
-  sellerDefault?: boolean | Prisma.SellerDefaultArgs<ExtArgs>
 }
 export type ContributorCellIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cell?: boolean | Prisma.CellDefaultArgs<ExtArgs>
   contributor?: boolean | Prisma.ContributorDefaultArgs<ExtArgs>
-  sellerDefault?: boolean | Prisma.SellerDefaultArgs<ExtArgs>
 }
 
 export type $ContributorCellPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -869,13 +694,11 @@ export type $ContributorCellPayload<ExtArgs extends runtime.Types.Extensions.Int
   objects: {
     cell: Prisma.$CellPayload<ExtArgs>
     contributor: Prisma.$ContributorPayload<ExtArgs>
-    sellerDefault: Prisma.$SellerPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     cellId: string
     contributorId: string
-    sellerId: string
     active: boolean
     createdAt: Date
     updatedAt: Date
@@ -1276,7 +1099,6 @@ export interface Prisma__ContributorCellClient<T, Null = never, ExtArgs extends 
   readonly [Symbol.toStringTag]: "PrismaPromise"
   cell<T extends Prisma.CellDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CellDefaultArgs<ExtArgs>>): Prisma.Prisma__CellClient<runtime.Types.Result.GetResult<Prisma.$CellPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   contributor<T extends Prisma.ContributorDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContributorDefaultArgs<ExtArgs>>): Prisma.Prisma__ContributorClient<runtime.Types.Result.GetResult<Prisma.$ContributorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  sellerDefault<T extends Prisma.SellerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SellerDefaultArgs<ExtArgs>>): Prisma.Prisma__SellerClient<runtime.Types.Result.GetResult<Prisma.$SellerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1309,7 +1131,6 @@ export interface ContributorCellFieldRefs {
   readonly id: Prisma.FieldRef<"ContributorCell", 'String'>
   readonly cellId: Prisma.FieldRef<"ContributorCell", 'String'>
   readonly contributorId: Prisma.FieldRef<"ContributorCell", 'String'>
-  readonly sellerId: Prisma.FieldRef<"ContributorCell", 'String'>
   readonly active: Prisma.FieldRef<"ContributorCell", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"ContributorCell", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ContributorCell", 'DateTime'>

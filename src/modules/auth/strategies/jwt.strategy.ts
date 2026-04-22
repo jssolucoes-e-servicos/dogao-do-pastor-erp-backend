@@ -39,7 +39,21 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
           deliveryPersons: { select: { id: true }, where: { active: true } },
           cells: { select: { id: true }, where: { active: true } },
           cellNetworks: { select: { id: true }, where: { active: true } },
-          cellsMember: { select: { id: true, cellId: true, sellerId: true }, where: { active: true } },
+          cellsMember: {
+            select: {
+              id: true,
+              cellId: true,
+              cell: {
+                select: {
+                  id: true,
+                  name: true,
+                  sellerId: true,
+                  seller: { select: { id: true, name: true, tag: true } },
+                },
+              },
+            },
+            where: { active: true },
+          },
         },
       });
 
@@ -57,10 +71,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         name: user.name,
         type: 'CONTRIBUTOR',
         roles,
-        sellerId: user.sellers[0]?.id || null,
-        deliveryPersonId: user.deliveryPersons[0]?.id || null,
-        leaderCellId: user.cells[0]?.id || null,
-        supervisorNetworkId: user.cellNetworks[0]?.id || null,
+        sellerId: user.sellers?.[0]?.id || user.cellsMember?.[0]?.cell?.sellerId || null,
+        deliveryPersonId: user.deliveryPersons?.[0]?.id || null,
+        leaderCellId: user.cells?.[0]?.id || null,
+        supervisorNetworkId: user.cellNetworks?.[0]?.id || null,
       };
     }
 
