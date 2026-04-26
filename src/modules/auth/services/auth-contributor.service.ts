@@ -21,15 +21,23 @@ export class AuthContributorService extends BaseService {
   }
 
   async login(data: LoginDto) {
+    this.logger.log(`Tentativa de login para usuário: ${data.username}`);
+
     const contributor = await this.prisma.contributor.findFirst({
       where: {
-        username: data.username,
-        active: true,
+        username: { equals: data.username, mode: 'insensitive' },
         deletedAt: null,
       },
       include: {
         userRoles: { include: { role: true } },
-        sellers: { select: { id: true, tag: true, cellId: true }, where: { active: true } },
+        sellers: {
+          select: {
+            id: true,
+            tag: true,
+            cellId: true,
+          },
+          where: { active: true },
+        },
         deliveryPersons: { select: { id: true }, where: { active: true } },
         cells: { select: { id: true }, where: { active: true } },
         cellNetworks: { select: { id: true }, where: { active: true } },
@@ -52,6 +60,14 @@ export class AuthContributorService extends BaseService {
     });
 
     if (!contributor) {
+      this.logger.warn(`Usuário não encontrado: ${data.username}`);
+      throw new UnauthorizedException(
+        'Credenciais inválidas ou conta inativa.',
+      );
+    }
+
+    if (!contributor.active) {
+      this.logger.warn(`Usuário encontrado mas está inativo: ${data.username}`);
       throw new UnauthorizedException(
         'Credenciais inválidas ou conta inativa.',
       );
@@ -62,9 +78,15 @@ export class AuthContributorService extends BaseService {
       data.password,
       contributor.password,
     );
+
     if (!isPasswordValid) {
+      this.logger.warn(`Senha incorreta para usuário: ${data.username}`);
       throw new UnauthorizedException('Credenciais inválidas.');
     }
+
+    this.logger.log(
+      `Login bem-sucedido: ${data.username} (ID: ${contributor.id})`,
+    );
 
     const roles = contributor.userRoles.flatMap((ur) => [
       ur.role.name.toUpperCase(),
