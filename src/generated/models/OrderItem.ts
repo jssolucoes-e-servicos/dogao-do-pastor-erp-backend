@@ -38,6 +38,7 @@ export type OrderItemMinAggregateOutputType = {
   id: string | null
   orderId: string | null
   unitPrice: number | null
+  isPromo: boolean | null
   commanded: boolean | null
   active: boolean | null
   createdAt: Date | null
@@ -49,6 +50,7 @@ export type OrderItemMaxAggregateOutputType = {
   id: string | null
   orderId: string | null
   unitPrice: number | null
+  isPromo: boolean | null
   commanded: boolean | null
   active: boolean | null
   createdAt: Date | null
@@ -60,6 +62,7 @@ export type OrderItemCountAggregateOutputType = {
   id: number
   orderId: number
   unitPrice: number
+  isPromo: number
   removedIngredients: number
   commanded: number
   active: number
@@ -82,6 +85,7 @@ export type OrderItemMinAggregateInputType = {
   id?: true
   orderId?: true
   unitPrice?: true
+  isPromo?: true
   commanded?: true
   active?: true
   createdAt?: true
@@ -93,6 +97,7 @@ export type OrderItemMaxAggregateInputType = {
   id?: true
   orderId?: true
   unitPrice?: true
+  isPromo?: true
   commanded?: true
   active?: true
   createdAt?: true
@@ -104,6 +109,7 @@ export type OrderItemCountAggregateInputType = {
   id?: true
   orderId?: true
   unitPrice?: true
+  isPromo?: true
   removedIngredients?: true
   commanded?: true
   active?: true
@@ -203,6 +209,7 @@ export type OrderItemGroupByOutputType = {
   id: string
   orderId: string
   unitPrice: number
+  isPromo: boolean
   removedIngredients: string[]
   commanded: boolean
   active: boolean
@@ -238,6 +245,7 @@ export type OrderItemWhereInput = {
   id?: Prisma.StringFilter<"OrderItem"> | string
   orderId?: Prisma.StringFilter<"OrderItem"> | string
   unitPrice?: Prisma.FloatFilter<"OrderItem"> | number
+  isPromo?: Prisma.BoolFilter<"OrderItem"> | boolean
   removedIngredients?: Prisma.StringNullableListFilter<"OrderItem">
   commanded?: Prisma.BoolFilter<"OrderItem"> | boolean
   active?: Prisma.BoolFilter<"OrderItem"> | boolean
@@ -253,6 +261,7 @@ export type OrderItemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
+  isPromo?: Prisma.SortOrder
   removedIngredients?: Prisma.SortOrder
   commanded?: Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -272,6 +281,7 @@ export type OrderItemWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.OrderItemWhereInput | Prisma.OrderItemWhereInput[]
   orderId?: Prisma.StringFilter<"OrderItem"> | string
   unitPrice?: Prisma.FloatFilter<"OrderItem"> | number
+  isPromo?: Prisma.BoolFilter<"OrderItem"> | boolean
   removedIngredients?: Prisma.StringNullableListFilter<"OrderItem">
   commanded?: Prisma.BoolFilter<"OrderItem"> | boolean
   active?: Prisma.BoolFilter<"OrderItem"> | boolean
@@ -287,6 +297,7 @@ export type OrderItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
+  isPromo?: Prisma.SortOrder
   removedIngredients?: Prisma.SortOrder
   commanded?: Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -307,6 +318,7 @@ export type OrderItemScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"OrderItem"> | string
   orderId?: Prisma.StringWithAggregatesFilter<"OrderItem"> | string
   unitPrice?: Prisma.FloatWithAggregatesFilter<"OrderItem"> | number
+  isPromo?: Prisma.BoolWithAggregatesFilter<"OrderItem"> | boolean
   removedIngredients?: Prisma.StringNullableListFilter<"OrderItem">
   commanded?: Prisma.BoolWithAggregatesFilter<"OrderItem"> | boolean
   active?: Prisma.BoolWithAggregatesFilter<"OrderItem"> | boolean
@@ -318,6 +330,7 @@ export type OrderItemScalarWhereWithAggregatesInput = {
 export type OrderItemCreateInput = {
   id?: string
   unitPrice: number
+  isPromo?: boolean
   removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
   commanded?: boolean
   active?: boolean
@@ -333,6 +346,7 @@ export type OrderItemUncheckedCreateInput = {
   id?: string
   orderId: string
   unitPrice: number
+  isPromo?: boolean
   removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
   commanded?: boolean
   active?: boolean
@@ -346,6 +360,7 @@ export type OrderItemUncheckedCreateInput = {
 export type OrderItemUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  isPromo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
   commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -361,6 +376,7 @@ export type OrderItemUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  isPromo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
   commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -375,6 +391,7 @@ export type OrderItemCreateManyInput = {
   id?: string
   orderId: string
   unitPrice: number
+  isPromo?: boolean
   removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
   commanded?: boolean
   active?: boolean
@@ -386,6 +403,7 @@ export type OrderItemCreateManyInput = {
 export type OrderItemUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  isPromo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
   commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -398,6 +416,7 @@ export type OrderItemUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  isPromo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
   commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -426,6 +445,7 @@ export type OrderItemCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
+  isPromo?: Prisma.SortOrder
   removedIngredients?: Prisma.SortOrder
   commanded?: Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -442,6 +462,7 @@ export type OrderItemMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
+  isPromo?: Prisma.SortOrder
   commanded?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -453,6 +474,7 @@ export type OrderItemMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
+  isPromo?: Prisma.SortOrder
   commanded?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -558,6 +580,7 @@ export type OrderItemUpdateOneRequiredWithoutCommandItemsNestedInput = {
 export type OrderItemCreateWithoutOrderInput = {
   id?: string
   unitPrice: number
+  isPromo?: boolean
   removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
   commanded?: boolean
   active?: boolean
@@ -571,6 +594,7 @@ export type OrderItemCreateWithoutOrderInput = {
 export type OrderItemUncheckedCreateWithoutOrderInput = {
   id?: string
   unitPrice: number
+  isPromo?: boolean
   removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
   commanded?: boolean
   active?: boolean
@@ -614,6 +638,7 @@ export type OrderItemScalarWhereInput = {
   id?: Prisma.StringFilter<"OrderItem"> | string
   orderId?: Prisma.StringFilter<"OrderItem"> | string
   unitPrice?: Prisma.FloatFilter<"OrderItem"> | number
+  isPromo?: Prisma.BoolFilter<"OrderItem"> | boolean
   removedIngredients?: Prisma.StringNullableListFilter<"OrderItem">
   commanded?: Prisma.BoolFilter<"OrderItem"> | boolean
   active?: Prisma.BoolFilter<"OrderItem"> | boolean
@@ -625,6 +650,7 @@ export type OrderItemScalarWhereInput = {
 export type OrderItemCreateWithoutVouchersInput = {
   id?: string
   unitPrice: number
+  isPromo?: boolean
   removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
   commanded?: boolean
   active?: boolean
@@ -639,6 +665,7 @@ export type OrderItemUncheckedCreateWithoutVouchersInput = {
   id?: string
   orderId: string
   unitPrice: number
+  isPromo?: boolean
   removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
   commanded?: boolean
   active?: boolean
@@ -667,6 +694,7 @@ export type OrderItemUpdateToOneWithWhereWithoutVouchersInput = {
 export type OrderItemUpdateWithoutVouchersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  isPromo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
   commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -681,6 +709,7 @@ export type OrderItemUncheckedUpdateWithoutVouchersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  isPromo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
   commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -693,6 +722,7 @@ export type OrderItemUncheckedUpdateWithoutVouchersInput = {
 export type OrderItemCreateWithoutCommandItemsInput = {
   id?: string
   unitPrice: number
+  isPromo?: boolean
   removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
   commanded?: boolean
   active?: boolean
@@ -707,6 +737,7 @@ export type OrderItemUncheckedCreateWithoutCommandItemsInput = {
   id?: string
   orderId: string
   unitPrice: number
+  isPromo?: boolean
   removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
   commanded?: boolean
   active?: boolean
@@ -735,6 +766,7 @@ export type OrderItemUpdateToOneWithWhereWithoutCommandItemsInput = {
 export type OrderItemUpdateWithoutCommandItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  isPromo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
   commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -749,6 +781,7 @@ export type OrderItemUncheckedUpdateWithoutCommandItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  isPromo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
   commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -761,6 +794,7 @@ export type OrderItemUncheckedUpdateWithoutCommandItemsInput = {
 export type OrderItemCreateManyOrderInput = {
   id?: string
   unitPrice: number
+  isPromo?: boolean
   removedIngredients?: Prisma.OrderItemCreateremovedIngredientsInput | string[]
   commanded?: boolean
   active?: boolean
@@ -772,6 +806,7 @@ export type OrderItemCreateManyOrderInput = {
 export type OrderItemUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  isPromo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
   commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -785,6 +820,7 @@ export type OrderItemUpdateWithoutOrderInput = {
 export type OrderItemUncheckedUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  isPromo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
   commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -798,6 +834,7 @@ export type OrderItemUncheckedUpdateWithoutOrderInput = {
 export type OrderItemUncheckedUpdateManyWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   unitPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  isPromo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removedIngredients?: Prisma.OrderItemUpdateremovedIngredientsInput | string[]
   commanded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -850,6 +887,7 @@ export type OrderItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   id?: boolean
   orderId?: boolean
   unitPrice?: boolean
+  isPromo?: boolean
   removedIngredients?: boolean
   commanded?: boolean
   active?: boolean
@@ -866,6 +904,7 @@ export type OrderItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   orderId?: boolean
   unitPrice?: boolean
+  isPromo?: boolean
   removedIngredients?: boolean
   commanded?: boolean
   active?: boolean
@@ -879,6 +918,7 @@ export type OrderItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   orderId?: boolean
   unitPrice?: boolean
+  isPromo?: boolean
   removedIngredients?: boolean
   commanded?: boolean
   active?: boolean
@@ -892,6 +932,7 @@ export type OrderItemSelectScalar = {
   id?: boolean
   orderId?: boolean
   unitPrice?: boolean
+  isPromo?: boolean
   removedIngredients?: boolean
   commanded?: boolean
   active?: boolean
@@ -900,7 +941,7 @@ export type OrderItemSelectScalar = {
   deletedAt?: boolean
 }
 
-export type OrderItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "unitPrice" | "removedIngredients" | "commanded" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["orderItem"]>
+export type OrderItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "unitPrice" | "isPromo" | "removedIngredients" | "commanded" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["orderItem"]>
 export type OrderItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
   vouchers?: boolean | Prisma.OrderItem$vouchersArgs<ExtArgs>
@@ -925,6 +966,7 @@ export type $OrderItemPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     id: string
     orderId: string
     unitPrice: number
+    isPromo: boolean
     removedIngredients: string[]
     commanded: boolean
     active: boolean
@@ -1360,6 +1402,7 @@ export interface OrderItemFieldRefs {
   readonly id: Prisma.FieldRef<"OrderItem", 'String'>
   readonly orderId: Prisma.FieldRef<"OrderItem", 'String'>
   readonly unitPrice: Prisma.FieldRef<"OrderItem", 'Float'>
+  readonly isPromo: Prisma.FieldRef<"OrderItem", 'Boolean'>
   readonly removedIngredients: Prisma.FieldRef<"OrderItem", 'String[]'>
   readonly commanded: Prisma.FieldRef<"OrderItem", 'Boolean'>
   readonly active: Prisma.FieldRef<"OrderItem", 'Boolean'>

@@ -36,31 +36,45 @@ export class OrdersItemsService extends BaseCrudService<
 
     const edition = await getActiveEdition(this.prisma);
     if (!edition) {
-      throw new NotFoundException('Nenuma edição ativa no momento.');
+      throw new NotFoundException('Nenhuma edição ativa no momento.');
     }
     await this.model.deleteMany({
       where: { orderId: orderId },
     });
+
     const itemsToCreate = orderItems.map((item) => ({
       orderId: orderId,
-      removedIngredients: item.removedIngredients,
-      unitPrice: edition.dogPrice,
+      removedIngredients: item.removedIngredients || [],
+      unitPrice: item.isPromo ? 0 : edition.dogPrice,
+      isPromo: !!item.isPromo,
     }));
 
     await this.model.createMany({
       data: itemsToCreate,
     });
 
-    const inDevelopment =
-      process.env.NODE_ENV === 'developement' ? true : false;
-    const totalToSave: number =
-      inDevelopment === true ? 1 : orderItems.length * edition.dogPrice;
+    const paidItemsCount = orderItems.filter(i => !i.isPromo).length;
+    const totalToSave = paidItemsCount * edition.dogPrice;
+
+    // Se houver itens promocionais, adiciona observação da Coca-Cola
+    const promoCount = orderItems.filter(i => i.isPromo).length;
+    const orderToUpdate = await this.prisma.order.findUnique({ where: { id: orderId } });
+    let obs = orderToUpdate?.observations || '';
+    
+    // Remove mensagens antigas de promoção para não duplicar
+    obs = obs.replace(/ \| PROMOÇÃO:.*$/g, '').replace(/^PROMOÇÃO:.*$/g, '');
+
+    if (promoCount > 0) {
+      const sodaMsg = `PROMOÇÃO: ${promoCount} COCA-COLA 2L INCLUSA${promoCount > 1 ? 'S' : ''}`;
+      obs = obs ? `${obs} | ${sodaMsg}` : sodaMsg;
+    }
 
     const order = await this.prisma.order.update({
       where: { id: orderId },
       data: {
         totalValue: totalToSave,
         siteStep: SiteOrderStepEnum.DELIVERY,
+        observations: obs || null,
       },
       include: {
         edition: true,

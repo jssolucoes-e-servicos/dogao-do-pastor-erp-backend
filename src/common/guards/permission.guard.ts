@@ -50,14 +50,14 @@ export class PermissionGuard implements CanActivate {
     ]);
 
     if (moduleMeta) {
-      // Verificar flag pdv_enabled para o módulo PDV
-      if (moduleMeta.slug === PDV_MODULE_SLUG) {
+      // Verificar flag pdv_enabled para o módulo PDV (aceita erp.pdv ou erp.pos)
+      if (moduleMeta.slug === PDV_MODULE_SLUG || moduleMeta.slug === 'erp.pos') {
         const perms = await this.resolver.resolve(contributorId);
         if (!perms.isSuperuser) {
           const pdvEnabled = await this.systemConfig.getBoolean('pdv_enabled', false);
           if (!pdvEnabled) {
             this.logger.warn(`[DENY] contributor=${contributorId} module=${moduleMeta.slug} reason=pdv_disabled`);
-            throw new ForbiddenException('Módulo PDV não está disponível no momento');
+            throw new ForbiddenException('Módulo PDV não está disponível no momento. Fale com a administração.');
           }
         }
       }
@@ -97,7 +97,7 @@ export class PermissionGuard implements CanActivate {
     if (!requiredRoles) return true;
 
     const userRoles: string[] = (user.roles || []).map((r: string) => r.toUpperCase());
-    const isMaster = userRoles.some((r) => ['IT', 'ADMIN'].includes(r));
+    const isMaster = userRoles.some((r) => ['IT', 'TI', 'ADMIN', 'ADMINISTRAÇÃO', 'ADMINISTRACAO'].includes(r));
     if (isMaster) return true;
 
     const normalizedRequired = requiredRoles.map((r) => r.toUpperCase());

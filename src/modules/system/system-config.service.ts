@@ -17,10 +17,13 @@ export class SystemConfigService {
   }
 
   async set(key: string, value: string, updatedBy?: string): Promise<void> {
+    const cleanValue = String(value).trim().toLowerCase();
+    console.log(`[SystemConfig] Saving ${key} = ${cleanValue}`);
+    
     await this.prisma.systemConfig.upsert({
       where: { key },
-      update: { value, updatedBy, updatedAt: new Date() },
-      create: { key, value, updatedBy },
+      update: { value: cleanValue, updatedBy, updatedAt: new Date() },
+      create: { key, value: cleanValue, updatedBy },
     });
   }
 }

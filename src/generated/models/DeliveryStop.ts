@@ -646,14 +646,6 @@ export type EnumDeliveryStopStatusEnumFieldUpdateOperationsInput = {
   set?: $Enums.DeliveryStopStatusEnum
 }
 
-export type NullableFloatFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type DeliveryStopCreateWithoutOrderInput = {
   id?: string
   sequence: number

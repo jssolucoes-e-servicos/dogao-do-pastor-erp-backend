@@ -1,5 +1,4 @@
-// src/modules/orders-items/dto/order-items-many-create.dto.ts
-import { NestedValidator, NumberValidator, StringValidator } from 'src/common/validators';
+import { BooleanValidator, NestedValidator, NumberValidator, StringValidator } from 'src/common/validators';
 import { ArrayValidator } from 'src/common/validators/array.validator';
 
 class OrderItemDTO {
@@ -8,6 +7,13 @@ class OrderItemDTO {
     label: 'Sequência do item',
   })
   id: number;
+
+  @BooleanValidator({
+    fieldName: 'isPromo',
+    label: 'Item Promocional',
+    optional: true,
+  })
+  isPromo?: boolean;
 
   @ArrayValidator({
     fieldName: 'removedIngredients',

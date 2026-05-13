@@ -110,9 +110,21 @@ export class EditionsService extends BaseCrudService<
 
   async getActiveEdition(): Promise<EditionResponseType> {
     const edition = await getActiveEdition(this.prisma);
+    
+    // Busca configurações globais
+    const configsRaw = await this.prisma.systemConfig.findMany({
+      where: { key: { in: ['combo_enabled', 'pdv_enabled'] } }
+    });
+
+    const configs = {
+      combo_enabled: configsRaw.find(c => c.key === 'combo_enabled')?.value === 'true',
+      pdv_enabled: configsRaw.find(c => c.key === 'pdv_enabled')?.value === 'true',
+    };
+
     const result = {
       edition: edition,
       message: !edition ? 'Nenhuma Edição com venda ativa' : 'ok',
+      configs,
     };
     return result;
   }

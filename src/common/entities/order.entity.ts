@@ -55,4 +55,8 @@ export class OrderEntity {
   payments?: PaymentEntity[];
   commands?: CommandEntity[];
   deliveryStops?: DeliveryStopEntity[];
+  configs?: {
+    combo_enabled: boolean;
+    pdv_enabled: boolean;
+  };
 }

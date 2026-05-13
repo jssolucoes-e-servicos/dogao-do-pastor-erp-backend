@@ -29,6 +29,7 @@ import { PurchasingModule } from './purchasing/purchasing.module';
 import { CashSettlementModule } from './cash-settlement/cash-settlement.module';
 import { DonationsModule } from './donations/donations.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { DeliveryRoutesModule } from './delivery-routes/delivery-routes.module';
 
 
 @Module({
@@ -51,6 +52,7 @@ import { NotificationsModule } from './notifications/notifications.module';
     CustomersAddressesModule,
     PartnersModule,
     DeliveryPersonsModule,
+    DeliveryRoutesModule,
     CellsNetworksModule,
     CellsModule,
     SellersModule,

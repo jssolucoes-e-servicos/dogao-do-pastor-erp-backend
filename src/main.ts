@@ -1,4 +1,4 @@
-import './instrument';
+// import './instrument';
 
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
@@ -7,7 +7,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
-import { AppModule } from 'src/modules/app.module';
+import { AppModule } from './modules/app.module';
 //teste
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -71,7 +71,13 @@ async function bootstrap() {
     },
   });
 
-  console.log('--- BACKEND DDP RESTARTED - PORT:', process.env.PORT ?? 3010, '---');
-  await app.listen(process.env.PORT ?? 3010);
+  console.log('--- BACKEND DDP RESTARTED - PORT:', process.env.PORT ?? 3001, '---');
+  
+  // Se for dev, espera um pouquinho para a porta anterior fechar de verdade
+  if (process.env.NODE_ENV === 'development') {
+    await new Promise(resolve => setTimeout(resolve, 500));
+  }
+
+  await app.listen(process.env.PORT ?? 3001);
 }
 bootstrap();

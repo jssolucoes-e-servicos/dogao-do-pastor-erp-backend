@@ -413,6 +413,8 @@ model CustomerAddress {
   state        String
   zipCode      String
   complement   String?
+  lat          Float?
+  lng          Float?
   active       Boolean   @default(true)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
@@ -472,6 +474,7 @@ model OrderItem {
   id                 String        @id @default(cuid())
   orderId            String
   unitPrice          Float
+  isPromo            Boolean       @default(false)
   removedIngredients String[]
   commanded          Boolean       @default(false)
   active             Boolean       @default(true)

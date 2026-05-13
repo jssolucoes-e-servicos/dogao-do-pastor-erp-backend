@@ -5,39 +5,27 @@ export const softDeleteExtension = Prisma.defineExtension({
 
   query: {
     $allModels: {
-      async findMany({ args, query }) {
-        args.where = {
-          ...args.where,
-          deletedAt: null,
-        };
-
+      async findMany({ model, args, query }) {
+        if (model === 'SystemConfig') return query(args);
+        args.where = { ...args.where, deletedAt: null };
         return query(args);
       },
 
-      async findFirst({ args, query }) {
-        args.where = {
-          ...args.where,
-          deletedAt: null,
-        };
-
+      async findFirst({ model, args, query }) {
+        if (model === 'SystemConfig') return query(args);
+        args.where = { ...args.where, deletedAt: null };
         return query(args);
       },
 
-      async findUnique({ args, query }) {
-        args.where = {
-          ...args.where,
-          deletedAt: null,
-        };
-
+      async findUnique({ model, args, query }) {
+        if (model === 'SystemConfig') return query(args);
+        args.where = { ...args.where, deletedAt: null };
         return query(args);
       },
 
-      async count({ args, query }) {
-        args.where = {
-          ...args.where,
-          deletedAt: null,
-        };
-
+      async count({ model, args, query }) {
+        if (model === 'SystemConfig') return query(args);
+        args.where = { ...args.where, deletedAt: null };
         return query(args);
       },
     },

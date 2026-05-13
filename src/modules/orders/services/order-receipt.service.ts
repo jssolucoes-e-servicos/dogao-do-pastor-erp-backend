@@ -15,23 +15,50 @@ export class OrderReceiptService {
   // ── Gera o HTML do comprovante ────────────────────────────────────────
 
   private buildHtml(order: any): string {
-    const grouped: Record<string, number> = {};
+    // Agrupa por ingredientes e se é brinde
+    const grouped: Record<string, { qty: number; isPromo: boolean; name: string }> = {};
     for (const item of order.items ?? []) {
-      const key = (item.removedIngredients ?? []).length > 0
+      const ingredientName = (item.removedIngredients ?? []).length > 0
         ? `Sem ${item.removedIngredients.join(', ')}`
         : 'Dogão Completo';
-      grouped[key] = (grouped[key] || 0) + 1;
+      
+      const key = `${ingredientName}-${item.isPromo ? 'promo' : 'paid'}`;
+      
+      if (!grouped[key]) {
+        grouped[key] = { qty: 0, isPromo: !!item.isPromo, name: ingredientName };
+      }
+      grouped[key].qty++;
     }
 
     const dogPrice = order.edition?.dogPrice ?? 24.99;
-    const itemsHtml = Object.entries(grouped)
-      .map(([name, qty]) => `
+    let promoCount = 0;
+    
+    let itemsHtml = Object.values(grouped)
+      .map((data) => {
+        if (data.isPromo) promoCount += data.qty;
+        
+        const priceDisplay = data.isPromo 
+          ? '<span style="color:#16a34a">Brinde do combo</span>' 
+          : (data.qty * dogPrice).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+          
+        return `
         <tr>
-          <td>${qty}x</td>
-          <td>${name}</td>
-          <td style="text-align:right">${(qty * dogPrice).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
-        </tr>`)
+          <td>${data.qty}x</td>
+          <td>${data.name} ${data.isPromo ? '<br/><span style="color:#16a34a; font-size:9px; font-weight:bold; text-transform:uppercase">Promoção 5+1</span>' : ''}</td>
+          <td style="text-align:right">${priceDisplay}</td>
+        </tr>`;
+      })
       .join('');
+
+    // Adiciona a Coca-Cola se houver brindes (1 por combo/brinde)
+    if (promoCount > 0) {
+      itemsHtml += `
+        <tr>
+          <td>${promoCount}x</td>
+          <td>Coca-Cola 2L <br/><span style="color:#16a34a; font-size:9px; font-weight:bold; text-transform:uppercase">Brinde Combo</span></td>
+          <td style="text-align:right"><span style="color:#16a34a">Grátis</span></td>
+        </tr>`;
+    }
 
     const PAYMENT_LABEL: Record<string, string> = {
       PIX: 'PIX', CARD_CREDIT: 'Cartão de Crédito', CARD_DEBIT: 'Cartão de Débito',

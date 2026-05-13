@@ -326,7 +326,7 @@ export class OrdersService extends BaseCrudService<
   }
 
   async findById(id: string): Promise<OrderEntity> {
-    return super.findById(id, {
+    const order = await super.findById(id, {
       include: {
         edition: true,
         customer: true,
@@ -337,6 +337,17 @@ export class OrdersService extends BaseCrudService<
         payments: true,
       },
     });
+
+    const configsRaw = await this.prisma.systemConfig.findMany({
+      where: { key: { in: ['combo_enabled', 'pdv_enabled'] } }
+    });
+
+    (order as any).configs = {
+      combo_enabled: configsRaw.find(c => c.key === 'combo_enabled')?.value === 'true',
+      pdv_enabled: configsRaw.find(c => c.key === 'pdv_enabled')?.value === 'true',
+    };
+
+    return order;
   }
 
   async findPendingPdvByCustomer(customerId: string): Promise<OrderEntity | null> {
@@ -1026,10 +1037,15 @@ export class OrdersService extends BaseCrudService<
           siteStep: SiteOrderStepEnum.THANKS,
           createdByContributorId: dto.contributorId || user?.id || null,
           items: {
-            create: dto.items.map((item) => ({
-              unitPrice: dto.totalValue / (dto.items.length || 1),
-              removedIngredients: item.removedIngredients || [],
-            })),
+            create: (() => {
+              const paidItemsCount = dto.items.filter(i => !i.isPromo).length || 1;
+              const unitPrice = dto.totalValue / paidItemsCount;
+              return dto.items.map((item) => ({
+                unitPrice: item.isPromo ? 0 : unitPrice,
+                isPromo: !!item.isPromo,
+                removedIngredients: item.removedIngredients || [],
+              }));
+            })(),
           },
         },
         include: {
@@ -1060,10 +1076,15 @@ export class OrdersService extends BaseCrudService<
           siteStep: SiteOrderStepEnum.THANKS,
           createdByContributorId: dto.contributorId || user?.id || null,
           items: {
-            create: dto.items.map((item) => ({
-              unitPrice: dto.totalValue / (dto.items.length || 1),
-              removedIngredients: item.removedIngredients || [],
-            })),
+            create: (() => {
+              const paidItemsCount = dto.items.filter(i => !i.isPromo).length || 1;
+              const unitPrice = dto.totalValue / paidItemsCount;
+              return dto.items.map((item) => ({
+                unitPrice: item.isPromo ? 0 : unitPrice,
+                isPromo: !!item.isPromo,
+                removedIngredients: item.removedIngredients || [],
+              }));
+            })(),
           },
         },
         include: {

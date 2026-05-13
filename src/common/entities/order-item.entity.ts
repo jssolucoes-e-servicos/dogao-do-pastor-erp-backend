@@ -5,6 +5,7 @@ export class OrderItemEntity {
   order?: OrderEntity;
   orderId: string;
   unitPrice: number;
+  isPromo?: boolean;
   removedIngredients: string[];
   active: boolean;
   createdAt: Date;

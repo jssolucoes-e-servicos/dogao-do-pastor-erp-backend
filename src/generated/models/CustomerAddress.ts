@@ -20,8 +20,20 @@ export type CustomerAddressModel = runtime.Types.Result.DefaultSelection<Prisma.
 
 export type AggregateCustomerAddress = {
   _count: CustomerAddressCountAggregateOutputType | null
+  _avg: CustomerAddressAvgAggregateOutputType | null
+  _sum: CustomerAddressSumAggregateOutputType | null
   _min: CustomerAddressMinAggregateOutputType | null
   _max: CustomerAddressMaxAggregateOutputType | null
+}
+
+export type CustomerAddressAvgAggregateOutputType = {
+  lat: number | null
+  lng: number | null
+}
+
+export type CustomerAddressSumAggregateOutputType = {
+  lat: number | null
+  lng: number | null
 }
 
 export type CustomerAddressMinAggregateOutputType = {
@@ -34,6 +46,8 @@ export type CustomerAddressMinAggregateOutputType = {
   state: string | null
   zipCode: string | null
   complement: string | null
+  lat: number | null
+  lng: number | null
   active: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -50,6 +64,8 @@ export type CustomerAddressMaxAggregateOutputType = {
   state: string | null
   zipCode: string | null
   complement: string | null
+  lat: number | null
+  lng: number | null
   active: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -66,6 +82,8 @@ export type CustomerAddressCountAggregateOutputType = {
   state: number
   zipCode: number
   complement: number
+  lat: number
+  lng: number
   active: number
   createdAt: number
   updatedAt: number
@@ -73,6 +91,16 @@ export type CustomerAddressCountAggregateOutputType = {
   _all: number
 }
 
+
+export type CustomerAddressAvgAggregateInputType = {
+  lat?: true
+  lng?: true
+}
+
+export type CustomerAddressSumAggregateInputType = {
+  lat?: true
+  lng?: true
+}
 
 export type CustomerAddressMinAggregateInputType = {
   id?: true
@@ -84,6 +112,8 @@ export type CustomerAddressMinAggregateInputType = {
   state?: true
   zipCode?: true
   complement?: true
+  lat?: true
+  lng?: true
   active?: true
   createdAt?: true
   updatedAt?: true
@@ -100,6 +130,8 @@ export type CustomerAddressMaxAggregateInputType = {
   state?: true
   zipCode?: true
   complement?: true
+  lat?: true
+  lng?: true
   active?: true
   createdAt?: true
   updatedAt?: true
@@ -116,6 +148,8 @@ export type CustomerAddressCountAggregateInputType = {
   state?: true
   zipCode?: true
   complement?: true
+  lat?: true
+  lng?: true
   active?: true
   createdAt?: true
   updatedAt?: true
@@ -161,6 +195,18 @@ export type CustomerAddressAggregateArgs<ExtArgs extends runtime.Types.Extension
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: CustomerAddressAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: CustomerAddressSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: CustomerAddressMinAggregateInputType
@@ -191,6 +237,8 @@ export type CustomerAddressGroupByArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   _count?: CustomerAddressCountAggregateInputType | true
+  _avg?: CustomerAddressAvgAggregateInputType
+  _sum?: CustomerAddressSumAggregateInputType
   _min?: CustomerAddressMinAggregateInputType
   _max?: CustomerAddressMaxAggregateInputType
 }
@@ -205,11 +253,15 @@ export type CustomerAddressGroupByOutputType = {
   state: string
   zipCode: string
   complement: string | null
+  lat: number | null
+  lng: number | null
   active: boolean
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
   _count: CustomerAddressCountAggregateOutputType | null
+  _avg: CustomerAddressAvgAggregateOutputType | null
+  _sum: CustomerAddressSumAggregateOutputType | null
   _min: CustomerAddressMinAggregateOutputType | null
   _max: CustomerAddressMaxAggregateOutputType | null
 }
@@ -242,6 +294,8 @@ export type CustomerAddressWhereInput = {
   state?: Prisma.StringFilter<"CustomerAddress"> | string
   zipCode?: Prisma.StringFilter<"CustomerAddress"> | string
   complement?: Prisma.StringNullableFilter<"CustomerAddress"> | string | null
+  lat?: Prisma.FloatNullableFilter<"CustomerAddress"> | number | null
+  lng?: Prisma.FloatNullableFilter<"CustomerAddress"> | number | null
   active?: Prisma.BoolFilter<"CustomerAddress"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CustomerAddress"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CustomerAddress"> | Date | string
@@ -260,6 +314,8 @@ export type CustomerAddressOrderByWithRelationInput = {
   state?: Prisma.SortOrder
   zipCode?: Prisma.SortOrder
   complement?: Prisma.SortOrderInput | Prisma.SortOrder
+  lat?: Prisma.SortOrderInput | Prisma.SortOrder
+  lng?: Prisma.SortOrderInput | Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -282,6 +338,8 @@ export type CustomerAddressWhereUniqueInput = Prisma.AtLeast<{
   state?: Prisma.StringFilter<"CustomerAddress"> | string
   zipCode?: Prisma.StringFilter<"CustomerAddress"> | string
   complement?: Prisma.StringNullableFilter<"CustomerAddress"> | string | null
+  lat?: Prisma.FloatNullableFilter<"CustomerAddress"> | number | null
+  lng?: Prisma.FloatNullableFilter<"CustomerAddress"> | number | null
   active?: Prisma.BoolFilter<"CustomerAddress"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CustomerAddress"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CustomerAddress"> | Date | string
@@ -300,13 +358,17 @@ export type CustomerAddressOrderByWithAggregationInput = {
   state?: Prisma.SortOrder
   zipCode?: Prisma.SortOrder
   complement?: Prisma.SortOrderInput | Prisma.SortOrder
+  lat?: Prisma.SortOrderInput | Prisma.SortOrder
+  lng?: Prisma.SortOrderInput | Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.CustomerAddressCountOrderByAggregateInput
+  _avg?: Prisma.CustomerAddressAvgOrderByAggregateInput
   _max?: Prisma.CustomerAddressMaxOrderByAggregateInput
   _min?: Prisma.CustomerAddressMinOrderByAggregateInput
+  _sum?: Prisma.CustomerAddressSumOrderByAggregateInput
 }
 
 export type CustomerAddressScalarWhereWithAggregatesInput = {
@@ -322,6 +384,8 @@ export type CustomerAddressScalarWhereWithAggregatesInput = {
   state?: Prisma.StringWithAggregatesFilter<"CustomerAddress"> | string
   zipCode?: Prisma.StringWithAggregatesFilter<"CustomerAddress"> | string
   complement?: Prisma.StringNullableWithAggregatesFilter<"CustomerAddress"> | string | null
+  lat?: Prisma.FloatNullableWithAggregatesFilter<"CustomerAddress"> | number | null
+  lng?: Prisma.FloatNullableWithAggregatesFilter<"CustomerAddress"> | number | null
   active?: Prisma.BoolWithAggregatesFilter<"CustomerAddress"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CustomerAddress"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CustomerAddress"> | Date | string
@@ -337,6 +401,8 @@ export type CustomerAddressCreateInput = {
   state: string
   zipCode: string
   complement?: string | null
+  lat?: number | null
+  lng?: number | null
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -355,6 +421,8 @@ export type CustomerAddressUncheckedCreateInput = {
   state: string
   zipCode: string
   complement?: string | null
+  lat?: number | null
+  lng?: number | null
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -371,6 +439,8 @@ export type CustomerAddressUpdateInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   zipCode?: Prisma.StringFieldUpdateOperationsInput | string
   complement?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -389,6 +459,8 @@ export type CustomerAddressUncheckedUpdateInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   zipCode?: Prisma.StringFieldUpdateOperationsInput | string
   complement?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -406,6 +478,8 @@ export type CustomerAddressCreateManyInput = {
   state: string
   zipCode: string
   complement?: string | null
+  lat?: number | null
+  lng?: number | null
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -421,6 +495,8 @@ export type CustomerAddressUpdateManyMutationInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   zipCode?: Prisma.StringFieldUpdateOperationsInput | string
   complement?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -437,6 +513,8 @@ export type CustomerAddressUncheckedUpdateManyInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   zipCode?: Prisma.StringFieldUpdateOperationsInput | string
   complement?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -469,10 +547,17 @@ export type CustomerAddressCountOrderByAggregateInput = {
   state?: Prisma.SortOrder
   zipCode?: Prisma.SortOrder
   complement?: Prisma.SortOrder
+  lat?: Prisma.SortOrder
+  lng?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+}
+
+export type CustomerAddressAvgOrderByAggregateInput = {
+  lat?: Prisma.SortOrder
+  lng?: Prisma.SortOrder
 }
 
 export type CustomerAddressMaxOrderByAggregateInput = {
@@ -485,6 +570,8 @@ export type CustomerAddressMaxOrderByAggregateInput = {
   state?: Prisma.SortOrder
   zipCode?: Prisma.SortOrder
   complement?: Prisma.SortOrder
+  lat?: Prisma.SortOrder
+  lng?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -501,10 +588,17 @@ export type CustomerAddressMinOrderByAggregateInput = {
   state?: Prisma.SortOrder
   zipCode?: Prisma.SortOrder
   complement?: Prisma.SortOrder
+  lat?: Prisma.SortOrder
+  lng?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+}
+
+export type CustomerAddressSumOrderByAggregateInput = {
+  lat?: Prisma.SortOrder
+  lng?: Prisma.SortOrder
 }
 
 export type CustomerAddressNullableScalarRelationFilter = {
@@ -554,6 +648,14 @@ export type CustomerAddressUncheckedUpdateManyWithoutCustomerNestedInput = {
   deleteMany?: Prisma.CustomerAddressScalarWhereInput | Prisma.CustomerAddressScalarWhereInput[]
 }
 
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type CustomerAddressCreateNestedOneWithoutOrdersInput = {
   create?: Prisma.XOR<Prisma.CustomerAddressCreateWithoutOrdersInput, Prisma.CustomerAddressUncheckedCreateWithoutOrdersInput>
   connectOrCreate?: Prisma.CustomerAddressCreateOrConnectWithoutOrdersInput
@@ -579,6 +681,8 @@ export type CustomerAddressCreateWithoutCustomerInput = {
   state: string
   zipCode: string
   complement?: string | null
+  lat?: number | null
+  lng?: number | null
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -595,6 +699,8 @@ export type CustomerAddressUncheckedCreateWithoutCustomerInput = {
   state: string
   zipCode: string
   complement?: string | null
+  lat?: number | null
+  lng?: number | null
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -641,6 +747,8 @@ export type CustomerAddressScalarWhereInput = {
   state?: Prisma.StringFilter<"CustomerAddress"> | string
   zipCode?: Prisma.StringFilter<"CustomerAddress"> | string
   complement?: Prisma.StringNullableFilter<"CustomerAddress"> | string | null
+  lat?: Prisma.FloatNullableFilter<"CustomerAddress"> | number | null
+  lng?: Prisma.FloatNullableFilter<"CustomerAddress"> | number | null
   active?: Prisma.BoolFilter<"CustomerAddress"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CustomerAddress"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CustomerAddress"> | Date | string
@@ -656,6 +764,8 @@ export type CustomerAddressCreateWithoutOrdersInput = {
   state: string
   zipCode: string
   complement?: string | null
+  lat?: number | null
+  lng?: number | null
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -673,6 +783,8 @@ export type CustomerAddressUncheckedCreateWithoutOrdersInput = {
   state: string
   zipCode: string
   complement?: string | null
+  lat?: number | null
+  lng?: number | null
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -704,6 +816,8 @@ export type CustomerAddressUpdateWithoutOrdersInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   zipCode?: Prisma.StringFieldUpdateOperationsInput | string
   complement?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -721,6 +835,8 @@ export type CustomerAddressUncheckedUpdateWithoutOrdersInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   zipCode?: Prisma.StringFieldUpdateOperationsInput | string
   complement?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -736,6 +852,8 @@ export type CustomerAddressCreateManyCustomerInput = {
   state: string
   zipCode: string
   complement?: string | null
+  lat?: number | null
+  lng?: number | null
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -751,6 +869,8 @@ export type CustomerAddressUpdateWithoutCustomerInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   zipCode?: Prisma.StringFieldUpdateOperationsInput | string
   complement?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -767,6 +887,8 @@ export type CustomerAddressUncheckedUpdateWithoutCustomerInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   zipCode?: Prisma.StringFieldUpdateOperationsInput | string
   complement?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -783,6 +905,8 @@ export type CustomerAddressUncheckedUpdateManyWithoutCustomerInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   zipCode?: Prisma.StringFieldUpdateOperationsInput | string
   complement?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -830,6 +954,8 @@ export type CustomerAddressSelect<ExtArgs extends runtime.Types.Extensions.Inter
   state?: boolean
   zipCode?: boolean
   complement?: boolean
+  lat?: boolean
+  lng?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -849,6 +975,8 @@ export type CustomerAddressSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   state?: boolean
   zipCode?: boolean
   complement?: boolean
+  lat?: boolean
+  lng?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -866,6 +994,8 @@ export type CustomerAddressSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   state?: boolean
   zipCode?: boolean
   complement?: boolean
+  lat?: boolean
+  lng?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -883,13 +1013,15 @@ export type CustomerAddressSelectScalar = {
   state?: boolean
   zipCode?: boolean
   complement?: boolean
+  lat?: boolean
+  lng?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type CustomerAddressOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "customerId" | "street" | "number" | "neighborhood" | "city" | "state" | "zipCode" | "complement" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["customerAddress"]>
+export type CustomerAddressOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "customerId" | "street" | "number" | "neighborhood" | "city" | "state" | "zipCode" | "complement" | "lat" | "lng" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["customerAddress"]>
 export type CustomerAddressInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   orders?: boolean | Prisma.CustomerAddress$ordersArgs<ExtArgs>
@@ -918,6 +1050,8 @@ export type $CustomerAddressPayload<ExtArgs extends runtime.Types.Extensions.Int
     state: string
     zipCode: string
     complement: string | null
+    lat: number | null
+    lng: number | null
     active: boolean
     createdAt: Date
     updatedAt: Date
@@ -1356,6 +1490,8 @@ export interface CustomerAddressFieldRefs {
   readonly state: Prisma.FieldRef<"CustomerAddress", 'String'>
   readonly zipCode: Prisma.FieldRef<"CustomerAddress", 'String'>
   readonly complement: Prisma.FieldRef<"CustomerAddress", 'String'>
+  readonly lat: Prisma.FieldRef<"CustomerAddress", 'Float'>
+  readonly lng: Prisma.FieldRef<"CustomerAddress", 'Float'>
   readonly active: Prisma.FieldRef<"CustomerAddress", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"CustomerAddress", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CustomerAddress", 'DateTime'>

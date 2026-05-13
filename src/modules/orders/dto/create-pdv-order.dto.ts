@@ -1,4 +1,5 @@
 import {
+  BooleanValidator,
   EnumValidator,
   NestedValidator,
   NumberValidator,
@@ -15,6 +16,13 @@ export class PdvOrderItemDto {
     label: 'ID do Produto',
   })
   productId: string;
+
+  @BooleanValidator({
+    fieldName: 'isPromo',
+    label: 'Item Promocional',
+    optional: true,
+  })
+  isPromo?: boolean;
 
 
   @StringValidator({

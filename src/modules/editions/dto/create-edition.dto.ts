@@ -2,6 +2,7 @@
 
 import { ApiSchema } from '@nestjs/swagger';
 import {
+  BooleanValidator,
   DateValidator,
   FloatValidator,
   NumberValidator,
@@ -63,4 +64,11 @@ export class CreateEditionDto {
     optional: true,
   })
   dogPrice?: number;
+
+  @BooleanValidator({
+    fieldName: 'comboActive',
+    label: 'Combo Ativo',
+    optional: true,
+  })
+  comboActive?: boolean;
 }
