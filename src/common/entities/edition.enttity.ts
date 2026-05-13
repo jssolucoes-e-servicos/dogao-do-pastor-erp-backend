@@ -13,6 +13,7 @@ export class EditionEntity {
   dogsSold: number;
   dogPrice: number;
   active: boolean;
+  comboActive: boolean;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;

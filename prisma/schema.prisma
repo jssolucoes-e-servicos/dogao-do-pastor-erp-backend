@@ -278,6 +278,7 @@ model Edition {
   dogsSold         Int                @default(0)
   dogPrice         Float              @default(19.99)
   active           Boolean            @default(true)
+  comboActive      Boolean            @default(false)
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
   deletedAt        DateTime?
