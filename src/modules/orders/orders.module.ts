@@ -20,6 +20,7 @@ import { CommandsModule } from '../commands/commands.module';
 import { CashSettlementModule } from '../cash-settlement/cash-settlement.module';
 import { OrderReceiptService } from './services/order-receipt.service';
 import { UploadsModule } from '../uploads/uploads.module';
+import { PermissionsModule } from '../permissions/permissions.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { UploadsModule } from '../uploads/uploads.module';
     forwardRef(() => CommandsModule),
     CashSettlementModule,
     UploadsModule,
+    PermissionsModule,
   ],
   controllers: [OrdersController],
   providers: [

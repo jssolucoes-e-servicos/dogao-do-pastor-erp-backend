@@ -87,4 +87,11 @@ export class PaginationQueryDto {
   @IsOptional()
   @IsString()
   includeAssigned?: 'true' | 'false';
+
+  @ApiPropertyOptional({
+    description: 'Ignorar filtros de visibilidade (RBAC)',
+  })
+  @IsOptional()
+  @IsString()
+  ignoreVisibility?: 'true' | 'false';
 }

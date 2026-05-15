@@ -29,6 +29,7 @@ import { MpPaymentsService } from 'src/modules/payments/services/mercadopago/mp-
 import { CommandsService } from 'src/modules/commands/services/commands.service';
 import { CashSettlementService } from 'src/modules/cash-settlement/services/cash-settlement.service';
 import { OrderReceiptService } from './order-receipt.service';
+import { PermissionResolverService } from 'src/modules/permissions/services/permission-resolver.service';
 
 import { DefinePaymetnDTO } from '../dto/define-payment.dto';
 import { ForDeliveryDTO } from '../dto/for-delivery.dto';
@@ -61,6 +62,7 @@ export class OrdersService extends BaseCrudService<
     private readonly commandsService: CommandsService,
     private readonly cashSettlementService: CashSettlementService,
     private readonly receiptService: OrderReceiptService,
+    private readonly permissionsResolver: PermissionResolverService,
   ) {
     super(configService, loggerService, prismaService);
     this.model = this.prisma.order;
@@ -261,12 +263,14 @@ export class OrdersService extends BaseCrudService<
       });
     }
 
-    // Filtros de Segurança (RBAC)
-    const isPrivileged = user?.roles?.some((r: string) => 
-      ['IT', 'ADMIN', 'FINANCE'].includes(r)
-    );
+    // Filtros de Segurança (RBAC Dinâmico via Permissions)
+    const isPrivileged = user?.id 
+      ? await this.permissionsResolver.canAccess(user.id, 'erp.orders')
+      : false;
+    
+    const shouldFilter = !isPrivileged && query.ignoreVisibility !== 'true';
 
-    if (user && !isPrivileged) {
+    if (user && shouldFilter) {
       const securityOR: any[] = [];
 
       // Vendas criadas diretamente por este contributor (app, PDV)
@@ -334,6 +338,7 @@ export class OrdersService extends BaseCrudService<
         items: true,
         commands: true,
         deliveryStops: true,
+        address: true,
         payments: true,
       },
     });
