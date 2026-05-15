@@ -10,6 +10,7 @@ export interface DashboardStatsEntity {
   // Rankings e Estatísticas
   ingredientsStats: { name: string; count: number }[];
   paymentMethodsStats: { method: string; count: number }[];
+  rankingNetworks: { name: string; total: number }[];
   rankingCells: { name: string; total: number }[];
   rankingSellers: { name: string; total: number }[];
   // Logística e Doações

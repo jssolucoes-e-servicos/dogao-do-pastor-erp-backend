@@ -54,6 +54,7 @@ export class DashboardService extends BaseService {
       paidOrdersData,
       allCells,
       allSellers,
+      allNetworks,
       recentOrdersRaw,
       paidItems,
       pendingItemsCount,
@@ -73,14 +74,30 @@ export class DashboardService extends BaseService {
           paymentType: true, 
           deliveryOption: true,
           partnerId: true,
-          partner: { select: { name: true } }
+          partner: { select: { name: true } },
+          _count: { select: { items: true } }
         },
       }),
       this.prisma.cell.findMany({
+        where: { deletedAt: null },
         select: { id: true, name: true, sellers: { select: { id: true } } },
       }),
       this.prisma.seller.findMany({
         select: { id: true, name: true },
+      }),
+      this.prisma.cellNetwork.findMany({
+        where: { deletedAt: null },
+        select: { 
+          id: true, 
+          name: true, 
+          cells: { 
+            where: { deletedAt: null },
+            select: { 
+              id: true, 
+              sellers: { select: { id: true } } 
+            } 
+          } 
+        },
       }),
       this.prisma.order.findMany({
         where: { 
@@ -105,20 +122,37 @@ export class DashboardService extends BaseService {
       }),
     ]);
 
+    const rankingNetworks = allNetworks
+      .filter((n) => n.name !== 'Igreja Viva em Células' && n.id !== 'clz8x9r1n00193b6p8u2v1w0x')
+      .map((n) => {
+        const sellerIds = (n.cells || []).flatMap((c) => (c.sellers || []).map((s) => s.id));
+        const total = paidOrdersData
+          .filter((o) => sellerIds.includes(o.sellerId))
+          .reduce((acc, o) => acc + (o._count?.items || 0), 0);
+        return { name: n.name, total };
+      })
+      .filter((item) => item.total > 0)
+      .sort((a, b) => b.total - a.total).slice(0, 5);
+
     const rankingCells = allCells
       .filter((cell) => cell.name !== 'Igreja Viva em Células')
       .map((cell) => {
         const sellerIds = cell.sellers.map((s) => s.id);
-        const total = paidOrdersData.filter((o) => sellerIds.includes(o.sellerId)).length;
+        const total = paidOrdersData
+          .filter((o) => sellerIds.includes(o.sellerId))
+          .reduce((acc, o) => acc + (o._count?.items || 0), 0);
         return { name: cell.name, total };
       })
       .filter((item) => item.total > 0)
       .sort((a, b) => b.total - a.total).slice(0, 5);
 
     const rankingSellers = allSellers
+      .filter((s) => s.id !== 'clz8x9r1n001p3b6p6e7f8g9h') // Exclui o Vendedor Web Site
       .map((s) => ({
         name: s.name,
-        total: paidOrdersData.filter((o) => o.sellerId === s.id).length,
+        total: paidOrdersData
+          .filter((o) => o.sellerId === s.id)
+          .reduce((acc, o) => acc + (o._count?.items || 0), 0),
       }))
       .filter((i) => i.total > 0)
       .sort((a, b) => b.total - a.total).slice(0, 5);
@@ -128,14 +162,16 @@ export class DashboardService extends BaseService {
     const partnersMap: Record<string, number> = {};
 
     paidOrdersData.forEach((order) => {
+      const itemsCount = order._count?.items || 0;
+
       const delivery = order.deliveryOption || 'OUTROS';
-      logisticsMap[delivery] = (logisticsMap[delivery] || 0) + 1;
+      logisticsMap[delivery] = (logisticsMap[delivery] || 0) + itemsCount;
 
       const method = order.paymentType || 'OUTROS';
-      paymentMethodsMap[method] = (paymentMethodsMap[method] || 0) + 1;
+      paymentMethodsMap[method] = (paymentMethodsMap[method] || 0) + itemsCount;
 
       if (order.deliveryOption === DeliveryOptionEnum.DONATE && order.partner?.name) {
-        partnersMap[order.partner.name] = (partnersMap[order.partner.name] || 0) + 1;
+        partnersMap[order.partner.name] = (partnersMap[order.partner.name] || 0) + itemsCount;
       }
     });
 
@@ -152,11 +188,14 @@ export class DashboardService extends BaseService {
       availableDogs: edition.limitSale - paidItems.length,
       pendingDogs: pendingItemsCount,
       totalRevenue: revenueStats._sum.totalValue || 0,
-      totalDonations: paidOrdersData.filter(o => o.deliveryOption === DeliveryOptionEnum.DONATE).length,
+      totalDonations: paidOrdersData
+        .filter(o => o.deliveryOption === DeliveryOptionEnum.DONATE)
+        .reduce((acc, o) => acc + (o._count?.items || 0), 0),
       pendingAnalysis: await this.prisma.order.count({ where: { editionId: edition.id, siteStep: SiteOrderStepEnum.ANALYSIS } }),
       abandonedOrdersCount: await this.prisma.order.count({ where: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PENDING, createdAt: { lt: twelveHoursAgo }, items: { some: {} } } }),
       ingredientsStats: Object.entries(ingredientsMap).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count),
       paymentMethodsStats: Object.entries(paymentMethodsMap).map(([method, count]) => ({ method, count })),
+      rankingNetworks,
       rankingCells,
       rankingSellers,
       logisticsStats: Object.entries(logisticsMap).map(([label, value]) => ({ label, value })),
@@ -232,11 +271,11 @@ export class DashboardService extends BaseService {
 
         const rankingData = await this.prisma.order.findMany({
           where: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PAID, sellerId: { in: sellerIds } },
-          select: { sellerId: true },
+          select: { sellerId: true, _count: { select: { items: true } } },
         });
 
         const rankingMap: Record<string, number> = {};
-        rankingData.forEach(o => { rankingMap[o.sellerId] = (rankingMap[o.sellerId] || 0) + 1; });
+        rankingData.forEach(o => { rankingMap[o.sellerId] = (rankingMap[o.sellerId] || 0) + (o._count?.items || 0); });
 
         cell = {
           cellName: cellData.name,
@@ -290,6 +329,7 @@ export class DashboardService extends BaseService {
       abandonedOrdersCount: 0,
       ingredientsStats: [],
       paymentMethodsStats: [],
+      rankingNetworks: [],
       rankingCells: [],
       rankingSellers: [],
       logisticsStats: [],

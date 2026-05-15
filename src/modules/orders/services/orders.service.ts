@@ -268,7 +268,9 @@ export class OrdersService extends BaseCrudService<
       ? await this.permissionsResolver.canAccess(user.id, 'erp.orders')
       : false;
     
-    const shouldFilter = !isPrivileged && query.ignoreVisibility !== 'true';
+    // Só mostramos tudo se for privilegiado E solicitou explicitamente (ignoreVisibility=true)
+    const canSeeAll = isPrivileged && query.ignoreVisibility === 'true';
+    const shouldFilter = !canSeeAll;
 
     if (user && shouldFilter) {
       const securityOR: any[] = [];
