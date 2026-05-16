@@ -23,8 +23,8 @@ export async function getActiveEdition(
   });
 
   if (active) {
-    // Regra de segurança: Se faltarem menos de 30 dogs para o limite, considera encerrado
-    const margin = 30;
+    // Regra de segurança: Se faltarem menos de 0 dogs para o limite, considera encerrado (removida margem de 30 a pedido do cliente)
+    const margin = 0;
     if (active.dogsSold >= (active.limitSale - margin)) {
       return null;
     }
@@ -38,7 +38,8 @@ export async function getActiveEdition(
   })) as unknown as EditionEntity;
 
   if (fallback) {
-    const margin = 30;
+    // Regra de segurança: Se faltarem menos de 0 dogs para o limite, considera encerrado
+    const margin = 0;
     if (fallback.dogsSold >= (fallback.limitSale - margin)) {
       return null;
     }
