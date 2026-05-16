@@ -41,7 +41,7 @@ export class EditionReportService extends BaseService {
     });
 
     // Totais por origem
-    const site = orders.filter((o) => o.origin === OrderOriginEnum.SITE);
+    const site = orders.filter((o) => o.origin === OrderOriginEnum.SITE || o.origin === OrderOriginEnum.APP);
     const pdv = orders.filter((o) => o.origin === OrderOriginEnum.PDV);
 
     const dogsSite = site.reduce((acc, o) => acc + o.items.length, 0);

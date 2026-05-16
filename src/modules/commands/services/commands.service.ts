@@ -425,7 +425,10 @@ export class CommandsService extends BaseCrudService<
       if (uncommanded.length === 0) {
         throw new Error('Todos os items deste pedido já foram enviados para produção');
       }
-      selectedItems = uncommanded.map((i) => ({ itemId: i.id }));
+      selectedItems = uncommanded.map((i) => ({ 
+        itemId: i.id,
+        removedIngredients: i.removedIngredients 
+      }));
     }
 
     return this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {

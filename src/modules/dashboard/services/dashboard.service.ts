@@ -74,6 +74,7 @@ export class DashboardService extends BaseService {
           paymentType: true, 
           deliveryOption: true,
           partnerId: true,
+          origin: true,
           partner: { select: { name: true } },
           _count: { select: { items: true } }
         },
@@ -127,7 +128,7 @@ export class DashboardService extends BaseService {
       .map((n) => {
         const sellerIds = (n.cells || []).flatMap((c) => (c.sellers || []).map((s) => s.id));
         const total = paidOrdersData
-          .filter((o) => sellerIds.includes(o.sellerId))
+          .filter((o) => sellerIds.includes(o.sellerId) && [OrderOriginEnum.SITE, OrderOriginEnum.APP].includes(o.origin as any))
           .reduce((acc, o) => acc + (o._count?.items || 0), 0);
         return { name: n.name, total };
       })
@@ -139,7 +140,7 @@ export class DashboardService extends BaseService {
       .map((cell) => {
         const sellerIds = cell.sellers.map((s) => s.id);
         const total = paidOrdersData
-          .filter((o) => sellerIds.includes(o.sellerId))
+          .filter((o) => sellerIds.includes(o.sellerId) && [OrderOriginEnum.SITE, OrderOriginEnum.APP].includes(o.origin as any))
           .reduce((acc, o) => acc + (o._count?.items || 0), 0);
         return { name: cell.name, total };
       })
@@ -151,7 +152,7 @@ export class DashboardService extends BaseService {
       .map((s) => ({
         name: s.name,
         total: paidOrdersData
-          .filter((o) => o.sellerId === s.id)
+          .filter((o) => o.sellerId === s.id && [OrderOriginEnum.SITE, OrderOriginEnum.APP].includes(o.origin as any))
           .reduce((acc, o) => acc + (o._count?.items || 0), 0),
       }))
       .filter((i) => i.total > 0)
@@ -258,10 +259,10 @@ export class DashboardService extends BaseService {
         const sellerIds = cellData.sellers.map(s => s.id);
         const [cellSold, cellPending, cellSellers] = await Promise.all([
           this.prisma.orderItem.count({
-            where: { order: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PAID, sellerId: { in: sellerIds } } },
+            where: { order: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PAID, sellerId: { in: sellerIds }, origin: { in: [OrderOriginEnum.SITE, OrderOriginEnum.APP] } } },
           }),
           this.prisma.orderItem.count({
-            where: { order: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PENDING, sellerId: { in: sellerIds }, totalValue: { gt: 0 } } },
+            where: { order: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PENDING, sellerId: { in: sellerIds }, totalValue: { gt: 0 }, origin: { in: [OrderOriginEnum.SITE, OrderOriginEnum.APP] } } },
           }),
           this.prisma.seller.findMany({
             where: { id: { in: sellerIds } },
@@ -270,7 +271,12 @@ export class DashboardService extends BaseService {
         ]);
 
         const rankingData = await this.prisma.order.findMany({
-          where: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PAID, sellerId: { in: sellerIds } },
+          where: { 
+            editionId: edition.id, 
+            paymentStatus: PaymentStatusEnum.PAID, 
+            sellerId: { in: sellerIds },
+            origin: { in: [OrderOriginEnum.SITE, OrderOriginEnum.APP] }
+          },
           select: { sellerId: true, _count: { select: { items: true } } },
         });
 
@@ -305,10 +311,10 @@ export class DashboardService extends BaseService {
     if (sellerId) {
       const [myDogs, myPending] = await Promise.all([
         this.prisma.orderItem.count({
-          where: { order: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PAID, sellerId } },
+          where: { order: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PAID, sellerId, origin: { in: [OrderOriginEnum.SITE, OrderOriginEnum.APP] } } },
         }),
         this.prisma.orderItem.count({
-          where: { order: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PENDING, sellerId, totalValue: { gt: 0 } } },
+          where: { order: { editionId: edition.id, paymentStatus: PaymentStatusEnum.PENDING, sellerId, totalValue: { gt: 0 }, origin: { in: [OrderOriginEnum.SITE, OrderOriginEnum.APP] } } },
         }),
       ]);
       seller = { dogsSold: myDogs, dogsPending: myPending };
