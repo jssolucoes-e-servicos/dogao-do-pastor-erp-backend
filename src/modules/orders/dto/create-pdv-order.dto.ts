@@ -100,6 +100,18 @@ export class CreatePdvOrderDto {
   })
   totalValue: number;
 
+  @IsOptional()
+  @NumberValidator({
+    fieldName: 'discountValue',
+    label: 'Valor do Desconto',
+    optional: true,
+  })
+  discountValue?: number;
+
+  @IsOptional()
+  @IsString()
+  discountByContributorId?: string;
+
   @StringValidator({
     fieldName: 'observations',
     label: 'Observações Gerais',
@@ -139,16 +151,4 @@ export class CreatePdvOrderDto {
   @IsOptional()
   @IsString()
   contributorId?: string; // quem registrou a venda no app (para Minhas Vendas individual)
-
-  @IsOptional()
-  @NumberValidator({
-    fieldName: 'discountValue',
-    label: 'Valor do Desconto',
-    optional: true,
-  })
-  discountValue?: number;
-
-  @IsOptional()
-  @IsString()
-  discountByContributorId?: string;
 }

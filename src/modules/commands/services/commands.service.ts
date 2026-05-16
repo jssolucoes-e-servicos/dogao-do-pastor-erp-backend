@@ -329,7 +329,10 @@ export class CommandsService extends BaseCrudService<
       const orderItems = (order as any).items || await tx.orderItem.findMany({
         where: { orderId: order.id, active: true },
       });
-      commandItemsData = orderItems.map((item: any) => ({ itemId: item.id }));
+      commandItemsData = orderItems.map((item: any) => ({
+        itemId: item.id,
+        removedIngredients: item.removedIngredients,
+      }));
     }
 
     const command = await tx.command.create({
