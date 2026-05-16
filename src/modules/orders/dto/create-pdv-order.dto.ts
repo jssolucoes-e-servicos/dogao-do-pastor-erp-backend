@@ -8,7 +8,7 @@ import {
 } from 'src/common/validators';
 import { DeliveryOptionEnum, PaymentMethodEnum } from 'src/common/enums';
 import { Type } from 'class-transformer';
-import { ValidateNested, IsOptional, IsString, IsArray } from 'class-validator';
+import { ValidateNested, IsOptional, IsString, IsArray, IsNumber } from 'class-validator';
 
 export class PdvOrderItemDto {
   @StringValidator({
@@ -101,11 +101,7 @@ export class CreatePdvOrderDto {
   totalValue: number;
 
   @IsOptional()
-  @NumberValidator({
-    fieldName: 'discountValue',
-    label: 'Valor do Desconto',
-    optional: true,
-  })
+  @IsNumber()
   discountValue?: number;
 
   @IsOptional()
