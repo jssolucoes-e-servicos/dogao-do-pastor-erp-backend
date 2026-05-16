@@ -39,6 +39,7 @@ import { OrderIdOnly } from '../dto/order-id-only.dto';
 import { ResultForAnalysisDTO } from '../dto/result-for-analysis.dto';
 import { SendToAnalysisDTO } from '../dto/send-to-analysis.dto';
 import { ChangeLogisticDto } from '../dto/change-logistic.dto';
+import { ForScheduledDTO } from '../dto/for-scheduled.dto';
 
 @Injectable()
 export class OrdersService extends BaseCrudService<
@@ -779,6 +780,33 @@ export class OrdersService extends BaseCrudService<
       data: {
         addressId: dto.addressId,
         deliveryOption: DeliveryOptionEnum.DELIVERY,
+        deliveryTime: dto.scheduledTime,
+        status: OrderStatusEnum.DIGITATION,
+        siteStep: SiteOrderStepEnum.PAYMENT,
+      },
+    });
+    return this.findById(dto.orderId);
+  }
+
+  async setScheduled(dto: ForScheduledDTO): Promise<OrderEntity> {
+    const order = await this.model.findUnique({
+      where: { id: dto.orderId },
+    });
+    if (!order) {
+      throw new NotFoundException('Pedido não encontrado');
+    }
+
+    await this.prisma.customer.update({
+      where: { id: order.customerId },
+      data: {
+        firstRegister: false,
+      },
+    });
+
+    await this.model.update({
+      where: { id: dto.orderId },
+      data: {
+        deliveryOption: DeliveryOptionEnum.SCHEDULED,
         deliveryTime: dto.scheduledTime,
         status: OrderStatusEnum.DIGITATION,
         siteStep: SiteOrderStepEnum.PAYMENT,

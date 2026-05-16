@@ -21,6 +21,7 @@ import { SendToAnalysisDTO } from '../dto/send-to-analysis.dto';
 import { SyncCustomerDTO } from '../dto/sync-customer.dto';
 import { CreatePdvOrderDto } from '../dto/create-pdv-order.dto';
 import { ChangeLogisticDto } from '../dto/change-logistic.dto';
+import { ForScheduledDTO } from '../dto/for-scheduled.dto';
 import { OrdersService } from '../services/orders.service';
 import { OrderReceiptService } from '../services/order-receipt.service';
 
@@ -132,6 +133,12 @@ export class OrdersController {
   @Public()
   async setDelivery(@Body() dto: ForDeliveryDTO) {
     return await this.service.setDelivery(dto);
+  }
+
+  @Post('set-scheduled')
+  @Public()
+  async setScheduled(@Body() dto: ForScheduledDTO) {
+    return await this.service.setScheduled(dto);
   }
 
   @Post('set-pickup')
