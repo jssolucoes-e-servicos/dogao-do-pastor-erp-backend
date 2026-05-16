@@ -94,4 +94,11 @@ export class PaginationQueryDto {
   @IsOptional()
   @IsString()
   ignoreVisibility?: 'true' | 'false';
+
+  @ApiPropertyOptional({
+    description: 'Filtrar por status de impressão',
+  })
+  @IsOptional()
+  @IsString()
+  printed?: 'true' | 'false';
 }

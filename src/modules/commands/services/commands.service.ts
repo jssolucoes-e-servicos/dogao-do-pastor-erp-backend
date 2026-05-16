@@ -53,9 +53,11 @@ export class CommandsService extends BaseCrudService<
 
   async list(query: PaginationQueryDto): Promise<IPaginatedResponse<CommandEntity>> {
     const edition = await getActiveEdition(this.prisma);
-    const where: any = {
-      editionId: edition?.id,
-    };
+    const where: any = {};
+    
+    if (edition) {
+      where.editionId = edition.id;
+    }
 
     if (query.search) {
       where.OR = [
@@ -75,10 +77,16 @@ export class CommandsService extends BaseCrudService<
       where.status = { in: statuses };
     }
 
+    if (query.printed) {
+      where.printed = query.printed === 'true';
+    }
+
     return this.paginate(query, {
       where,
       include: {
-        commandItems: true,
+        commandItems: {
+          include: { item: true }
+        },
         order: {
           include: {
             customer: true,
@@ -102,6 +110,9 @@ export class CommandsService extends BaseCrudService<
   async findById(id: string, options?: any): Promise<CommandEntity> {
     return super.findById(id, {
       include: {
+        commandItems: {
+          include: { item: true }
+        },
         order: {
           include: {
             items: true,
@@ -174,7 +185,9 @@ export class CommandsService extends BaseCrudService<
         editionId: edition?.id,
       },
       include: {
-        commandItems: true,
+        commandItems: {
+          include: { item: true }
+        },
         order: {
           include: {
             customer: true,

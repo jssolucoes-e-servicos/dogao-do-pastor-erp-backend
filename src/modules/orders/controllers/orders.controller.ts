@@ -20,6 +20,7 @@ import { ResultForAnalysisDTO } from '../dto/result-for-analysis.dto';
 import { SendToAnalysisDTO } from '../dto/send-to-analysis.dto';
 import { SyncCustomerDTO } from '../dto/sync-customer.dto';
 import { CreatePdvOrderDto } from '../dto/create-pdv-order.dto';
+import { ChangeLogisticDto } from '../dto/change-logistic.dto';
 import { OrdersService } from '../services/orders.service';
 import { OrderReceiptService } from '../services/order-receipt.service';
 
@@ -204,5 +205,14 @@ export class OrdersController {
   async getReceipt(@Param() { id }: IdParamDto, @Res() res: Response) {
     const pdf = await this.receiptService.generateReceiptPdf(id);
     res.end(pdf);
+  }
+
+  @Post(':id/change-logistic')
+  @Roles('T.I', 'Administração', 'Financeiro', 'Recepção', 'Expedição')
+  async changeLogistic(
+    @Param() { id }: IdParamDto,
+    @Body() dto: ChangeLogisticDto,
+  ) {
+    return this.service.changeLogistic(id, dto);
   }
 }

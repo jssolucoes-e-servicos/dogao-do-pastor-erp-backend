@@ -3773,8 +3773,8 @@ export const EditionScalarFieldEnum = {
   limitSale: 'limitSale',
   dogsSold: 'dogsSold',
   dogPrice: 'dogPrice',
-  comboActive: 'comboActive',
   active: 'active',
+  comboActive: 'comboActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -3915,6 +3915,8 @@ export const OrderScalarFieldEnum = {
   partnerId: 'partnerId',
   addressId: 'addressId',
   observations: 'observations',
+  discountValue: 'discountValue',
+  discountByContributorId: 'discountByContributorId',
   active: 'active',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -4606,6 +4608,7 @@ export const OrderOrderByRelevanceFieldEnum = {
   partnerId: 'partnerId',
   addressId: 'addressId',
   observations: 'observations',
+  discountByContributorId: 'discountByContributorId',
   createdByContributorId: 'createdByContributorId'
 } as const
 

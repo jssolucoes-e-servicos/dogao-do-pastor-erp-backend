@@ -53,4 +53,10 @@ export class AuthController {
   async loginContributor(@Body() data: LoginDto) {
     return this.authContributorService.login(data);
   }
+
+  @Post('validate-supervisor')
+  @HttpCode(HttpStatus.OK)
+  async validateSupervisor(@Body() data: LoginDto) {
+    return this.authContributorService.validateSupervisor(data);
+  }
 }

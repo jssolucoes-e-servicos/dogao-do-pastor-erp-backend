@@ -113,4 +113,56 @@ export class AuthContributorService extends BaseService {
       },
     };
   }
+
+  async validateSupervisor(data: LoginDto) {
+    const contributor = await this.prisma.contributor.findFirst({
+      where: {
+        username: { equals: data.username, mode: 'insensitive' },
+        active: true,
+        deletedAt: null,
+      },
+      include: {
+        userRoles: { include: { role: true } },
+      },
+    });
+
+    if (!contributor) {
+      throw new UnauthorizedException('Supervisor não encontrado ou inativo.');
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      data.password,
+      contributor.password,
+    );
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Senha de supervisor incorreta.');
+    }
+
+    const roles = contributor.userRoles.map((ur) => ur.role.name.toUpperCase());
+    const supervisorRoles = [
+      'IT',
+      'ADMIN',
+      'FINANCE',
+      'RECEPTION',
+      'T.I',
+      'ADMINISTRAÇÃO',
+      'FINANCEIRO',
+      'RECEPÇÃO',
+    ];
+
+    const isSupervisor = roles.some((role) => supervisorRoles.includes(role));
+
+    if (!isSupervisor) {
+      throw new UnauthorizedException(
+        'Este usuário não tem permissão de supervisor para autorizar descontos.',
+      );
+    }
+
+    return {
+      success: true,
+      supervisorId: contributor.id,
+      supervisorName: contributor.name,
+    };
+  }
 }

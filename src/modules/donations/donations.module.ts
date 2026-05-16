@@ -7,9 +7,10 @@ import {
 } from 'src/common/helpers/importer.helper';
 import { DonationsController } from './controllers/dinations.controller';
 import { DonationsEntryService } from './services/donations-entry.service';
+import { CommandsModule } from 'src/modules/commands/commands.module';
 
 @Module({
-  imports: [],
+  imports: [CommandsModule],
   controllers: [DonationsController],
   providers: [PrismaService, LoggerService, DonationsEntryService],
   exports: [DonationsEntryService],

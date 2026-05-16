@@ -50,8 +50,8 @@ export type EditionMinAggregateOutputType = {
   limitSale: number | null
   dogsSold: number | null
   dogPrice: number | null
-  comboActive: boolean | null
   active: boolean | null
+  comboActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -69,8 +69,8 @@ export type EditionMaxAggregateOutputType = {
   limitSale: number | null
   dogsSold: number | null
   dogPrice: number | null
-  comboActive: boolean | null
   active: boolean | null
+  comboActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -88,8 +88,8 @@ export type EditionCountAggregateOutputType = {
   limitSale: number
   dogsSold: number
   dogPrice: number
-  comboActive: number
   active: number
+  comboActive: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -121,8 +121,8 @@ export type EditionMinAggregateInputType = {
   limitSale?: true
   dogsSold?: true
   dogPrice?: true
-  comboActive?: true
   active?: true
+  comboActive?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -140,8 +140,8 @@ export type EditionMaxAggregateInputType = {
   limitSale?: true
   dogsSold?: true
   dogPrice?: true
-  comboActive?: true
   active?: true
+  comboActive?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -159,8 +159,8 @@ export type EditionCountAggregateInputType = {
   limitSale?: true
   dogsSold?: true
   dogPrice?: true
-  comboActive?: true
   active?: true
+  comboActive?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -265,8 +265,8 @@ export type EditionGroupByOutputType = {
   limitSale: number
   dogsSold: number
   dogPrice: number
-  comboActive: boolean
   active: boolean
+  comboActive: boolean
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -307,8 +307,8 @@ export type EditionWhereInput = {
   limitSale?: Prisma.IntFilter<"Edition"> | number
   dogsSold?: Prisma.IntFilter<"Edition"> | number
   dogPrice?: Prisma.FloatFilter<"Edition"> | number
-  comboActive?: Prisma.BoolFilter<"Edition"> | boolean
   active?: Prisma.BoolFilter<"Edition"> | boolean
+  comboActive?: Prisma.BoolFilter<"Edition"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Edition"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Edition"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Edition"> | Date | string | null
@@ -335,8 +335,8 @@ export type EditionOrderByWithRelationInput = {
   limitSale?: Prisma.SortOrder
   dogsSold?: Prisma.SortOrder
   dogPrice?: Prisma.SortOrder
-  comboActive?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  comboActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -367,8 +367,8 @@ export type EditionWhereUniqueInput = Prisma.AtLeast<{
   limitSale?: Prisma.IntFilter<"Edition"> | number
   dogsSold?: Prisma.IntFilter<"Edition"> | number
   dogPrice?: Prisma.FloatFilter<"Edition"> | number
-  comboActive?: Prisma.BoolFilter<"Edition"> | boolean
   active?: Prisma.BoolFilter<"Edition"> | boolean
+  comboActive?: Prisma.BoolFilter<"Edition"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Edition"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Edition"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Edition"> | Date | string | null
@@ -395,8 +395,8 @@ export type EditionOrderByWithAggregationInput = {
   limitSale?: Prisma.SortOrder
   dogsSold?: Prisma.SortOrder
   dogPrice?: Prisma.SortOrder
-  comboActive?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  comboActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -422,8 +422,8 @@ export type EditionScalarWhereWithAggregatesInput = {
   limitSale?: Prisma.IntWithAggregatesFilter<"Edition"> | number
   dogsSold?: Prisma.IntWithAggregatesFilter<"Edition"> | number
   dogPrice?: Prisma.FloatWithAggregatesFilter<"Edition"> | number
-  comboActive?: Prisma.BoolWithAggregatesFilter<"Edition"> | boolean
   active?: Prisma.BoolWithAggregatesFilter<"Edition"> | boolean
+  comboActive?: Prisma.BoolWithAggregatesFilter<"Edition"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Edition"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Edition"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Edition"> | Date | string | null
@@ -441,8 +441,8 @@ export type EditionCreateInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -469,8 +469,8 @@ export type EditionUncheckedCreateInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -497,8 +497,8 @@ export type EditionUpdateInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -525,8 +525,8 @@ export type EditionUncheckedUpdateInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -553,8 +553,8 @@ export type EditionCreateManyInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -572,8 +572,8 @@ export type EditionUpdateManyMutationInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -591,8 +591,8 @@ export type EditionUncheckedUpdateManyInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -616,8 +616,8 @@ export type EditionCountOrderByAggregateInput = {
   limitSale?: Prisma.SortOrder
   dogsSold?: Prisma.SortOrder
   dogPrice?: Prisma.SortOrder
-  comboActive?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  comboActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -641,8 +641,8 @@ export type EditionMaxOrderByAggregateInput = {
   limitSale?: Prisma.SortOrder
   dogsSold?: Prisma.SortOrder
   dogPrice?: Prisma.SortOrder
-  comboActive?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  comboActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -660,8 +660,8 @@ export type EditionMinOrderByAggregateInput = {
   limitSale?: Prisma.SortOrder
   dogsSold?: Prisma.SortOrder
   dogPrice?: Prisma.SortOrder
-  comboActive?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  comboActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -831,8 +831,8 @@ export type EditionCreateWithoutOrdersInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -858,8 +858,8 @@ export type EditionUncheckedCreateWithoutOrdersInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -901,8 +901,8 @@ export type EditionUpdateWithoutOrdersInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -928,8 +928,8 @@ export type EditionUncheckedUpdateWithoutOrdersInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -955,8 +955,8 @@ export type EditionCreateWithoutTicketsInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -982,8 +982,8 @@ export type EditionUncheckedCreateWithoutTicketsInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1025,8 +1025,8 @@ export type EditionUpdateWithoutTicketsInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1052,8 +1052,8 @@ export type EditionUncheckedUpdateWithoutTicketsInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1079,8 +1079,8 @@ export type EditionCreateWithoutIssuedVouchersInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1106,8 +1106,8 @@ export type EditionUncheckedCreateWithoutIssuedVouchersInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1138,8 +1138,8 @@ export type EditionCreateWithoutRedeemedVouchersInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1165,8 +1165,8 @@ export type EditionUncheckedCreateWithoutRedeemedVouchersInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1208,8 +1208,8 @@ export type EditionUpdateWithoutIssuedVouchersInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1235,8 +1235,8 @@ export type EditionUncheckedUpdateWithoutIssuedVouchersInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1273,8 +1273,8 @@ export type EditionUpdateWithoutRedeemedVouchersInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1300,8 +1300,8 @@ export type EditionUncheckedUpdateWithoutRedeemedVouchersInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1327,8 +1327,8 @@ export type EditionCreateWithoutCommandsInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1354,8 +1354,8 @@ export type EditionUncheckedCreateWithoutCommandsInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1397,8 +1397,8 @@ export type EditionUpdateWithoutCommandsInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1424,8 +1424,8 @@ export type EditionUncheckedUpdateWithoutCommandsInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1451,8 +1451,8 @@ export type EditionCreateWithoutSettlementsInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1478,8 +1478,8 @@ export type EditionUncheckedCreateWithoutSettlementsInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1521,8 +1521,8 @@ export type EditionUpdateWithoutSettlementsInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1548,8 +1548,8 @@ export type EditionUncheckedUpdateWithoutSettlementsInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1575,8 +1575,8 @@ export type EditionCreateWithoutPurchaseOrdersInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1602,8 +1602,8 @@ export type EditionUncheckedCreateWithoutPurchaseOrdersInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1645,8 +1645,8 @@ export type EditionUpdateWithoutPurchaseOrdersInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1672,8 +1672,8 @@ export type EditionUncheckedUpdateWithoutPurchaseOrdersInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1699,8 +1699,8 @@ export type EditionCreateWithoutStockMovementsInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1726,8 +1726,8 @@ export type EditionUncheckedCreateWithoutStockMovementsInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1769,8 +1769,8 @@ export type EditionUpdateWithoutStockMovementsInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1796,8 +1796,8 @@ export type EditionUncheckedUpdateWithoutStockMovementsInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1823,8 +1823,8 @@ export type EditionCreateWithoutCashSettlementsInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1850,8 +1850,8 @@ export type EditionUncheckedCreateWithoutCashSettlementsInput = {
   limitSale: number
   dogsSold?: number
   dogPrice?: number
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1893,8 +1893,8 @@ export type EditionUpdateWithoutCashSettlementsInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1920,8 +1920,8 @@ export type EditionUncheckedUpdateWithoutCashSettlementsInput = {
   limitSale?: Prisma.IntFieldUpdateOperationsInput | number
   dogsSold?: Prisma.IntFieldUpdateOperationsInput | number
   dogPrice?: Prisma.FloatFieldUpdateOperationsInput | number
-  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  comboActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2050,8 +2050,8 @@ export type EditionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   limitSale?: boolean
   dogsSold?: boolean
   dogPrice?: boolean
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -2079,8 +2079,8 @@ export type EditionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   limitSale?: boolean
   dogsSold?: boolean
   dogPrice?: boolean
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -2098,8 +2098,8 @@ export type EditionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   limitSale?: boolean
   dogsSold?: boolean
   dogPrice?: boolean
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -2117,14 +2117,14 @@ export type EditionSelectScalar = {
   limitSale?: boolean
   dogsSold?: boolean
   dogPrice?: boolean
-  comboActive?: boolean
   active?: boolean
+  comboActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type EditionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "productionDate" | "code" | "saleStartDate" | "saleEndDate" | "autoEnableDate" | "autoDisableDate" | "limitSale" | "dogsSold" | "dogPrice" | "comboActive" | "active" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["edition"]>
+export type EditionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "productionDate" | "code" | "saleStartDate" | "saleEndDate" | "autoEnableDate" | "autoDisableDate" | "limitSale" | "dogsSold" | "dogPrice" | "active" | "comboActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["edition"]>
 export type EditionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   commands?: boolean | Prisma.Edition$commandsArgs<ExtArgs>
   orders?: boolean | Prisma.Edition$ordersArgs<ExtArgs>
@@ -2165,8 +2165,8 @@ export type $EditionPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     limitSale: number
     dogsSold: number
     dogPrice: number
-    comboActive: boolean
     active: boolean
+    comboActive: boolean
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -2613,8 +2613,8 @@ export interface EditionFieldRefs {
   readonly limitSale: Prisma.FieldRef<"Edition", 'Int'>
   readonly dogsSold: Prisma.FieldRef<"Edition", 'Int'>
   readonly dogPrice: Prisma.FieldRef<"Edition", 'Float'>
-  readonly comboActive: Prisma.FieldRef<"Edition", 'Boolean'>
   readonly active: Prisma.FieldRef<"Edition", 'Boolean'>
+  readonly comboActive: Prisma.FieldRef<"Edition", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Edition", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Edition", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Edition", 'DateTime'>

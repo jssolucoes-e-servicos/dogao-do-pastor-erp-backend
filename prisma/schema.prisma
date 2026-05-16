@@ -177,6 +177,7 @@ model Contributor {
   cellsMember            ContributorCell[]
   controlPermissions     ControlPermission[]
   cashSettlements        CashSettlement[]
+  discountedOrders       Order[]                 @relation("OrderDiscountBy")
 
   @@map("contributors")
 }
@@ -447,6 +448,8 @@ model Order {
   partnerId              String?
   addressId              String?
   observations           String?
+  discountValue          Float                @default(0)
+  discountByContributorId String?
   active                 Boolean              @default(true)
   createdAt              DateTime             @default(now())
   updatedAt              DateTime             @updatedAt
@@ -462,6 +465,7 @@ model Order {
   edition                Edition              @relation(fields: [editionId], references: [id])
   partner                Partner?             @relation(fields: [partnerId], references: [id])
   seller                 Seller               @relation(fields: [sellerId], references: [id])
+  discountByContributor  Contributor?         @relation("OrderDiscountBy", fields: [discountByContributorId], references: [id])
   items                  OrderItem[]
   payments               Payment[]
   tickets                Ticket[]

@@ -38,6 +38,7 @@ import { InitOrderDto } from '../dto/init-order.dto';
 import { OrderIdOnly } from '../dto/order-id-only.dto';
 import { ResultForAnalysisDTO } from '../dto/result-for-analysis.dto';
 import { SendToAnalysisDTO } from '../dto/send-to-analysis.dto';
+import { ChangeLogisticDto } from '../dto/change-logistic.dto';
 
 @Injectable()
 export class OrdersService extends BaseCrudService<
@@ -335,7 +336,9 @@ export class OrdersService extends BaseCrudService<
     const order = await super.findById(id, {
       include: {
         edition: true,
-        customer: true,
+        customer: {
+          include: { addresses: true }
+        },
         seller: true,
         items: true,
         commands: true,
@@ -1043,6 +1046,8 @@ export class OrdersService extends BaseCrudService<
           partnerId: dto.partnerId || null,
           siteStep: SiteOrderStepEnum.THANKS,
           createdByContributorId: dto.contributorId || user?.id || null,
+          discountValue: dto.discountValue || 0,
+          discountByContributorId: dto.discountByContributorId || null,
           items: {
             create: (() => {
               const paidItemsCount = dto.items.filter(i => !i.isPromo).length || 1;
@@ -1082,6 +1087,8 @@ export class OrdersService extends BaseCrudService<
           partnerId: dto.partnerId || null,
           siteStep: SiteOrderStepEnum.THANKS,
           createdByContributorId: dto.contributorId || user?.id || null,
+          discountValue: dto.discountValue || 0,
+          discountByContributorId: dto.discountByContributorId || null,
           items: {
             create: (() => {
               const paidItemsCount = dto.items.filter(i => !i.isPromo).length || 1;
@@ -1247,5 +1254,111 @@ export class OrdersService extends BaseCrudService<
     // Isso evita enviar comprovante de pedidos cancelados antes de confirmar o valor recebido
 
     return this.findById(order.id);
+  }
+
+  async changeLogistic(id: string, dto: ChangeLogisticDto): Promise<any> {
+    const order = await this.prisma.order.findUnique({
+      where: { id },
+      include: {
+        commands: { where: { active: true } },
+        edition: true,
+      }
+    });
+
+    if (!order) throw new NotFoundException('Pedido não encontrado');
+
+    return this.prisma.$transaction(async (tx: any) => {
+      if (dto.type === DeliveryOptionEnum.PICKUP) {
+        // -> VOLTANDO PARA RETIRADA
+        await tx.order.update({
+          where: { id },
+          data: {
+            deliveryOption: DeliveryOptionEnum.PICKUP,
+            addressId: null,
+            deliveryTime: null,
+          },
+        });
+
+        const pendingCommands = order.commands.filter(c => !c.printed);
+        const printedCommands = order.commands.filter(c => c.printed);
+
+        // Deleta comandas não impressas
+        for (const cmd of pendingCommands) {
+          await tx.commandItem.deleteMany({ where: { commandId: cmd.id } });
+          await tx.command.update({
+            where: { id: cmd.id },
+            data: { active: false, deletedAt: new Date() }
+          });
+        }
+
+        return {
+          success: true,
+          alertManualRemoval: printedCommands.length > 0,
+          message: printedCommands.length > 0
+            ? 'Pedido alterado para retirada. ATENÇÃO: Uma ou mais comandas já foram impressas e precisam ser removidas manualmente da pilha da cozinha.'
+            : 'Pedido alterado para retirada e comanda cancelada.'
+        };
+      } else if (dto.type === DeliveryOptionEnum.DELIVERY) {
+        // -> MUDANDO PARA ENTREGA
+        await tx.order.update({
+          where: { id },
+          data: {
+            deliveryOption: DeliveryOptionEnum.DELIVERY,
+            addressId: dto.addressId,
+            deliveryTime: dto.scheduledTime,
+          },
+        });
+
+        const activeCommands = order.commands;
+
+        if (activeCommands.length > 0) {
+          // Se já tem comanda, atualiza o status para QUEUE (se não impressa)
+          // Se já impressa, avisa para reimprimir
+          for (const cmd of activeCommands) {
+            if (!cmd.printed) {
+              await tx.command.update({
+                where: { id: cmd.id },
+                data: { status: 'QUEUE' }
+              });
+            }
+          }
+
+          return {
+            success: true,
+            alertReprint: activeCommands.some(c => c.printed),
+            message: activeCommands.some(c => c.printed)
+              ? 'Pedido alterado para entrega. ATENÇÃO: O pedido já foi impresso como balcão. Você deve reimprimir a comanda para que o endereço apareça.'
+              : 'Pedido alterado para entrega. A comanda foi movida para a fila de agendamento.'
+          };
+        } else {
+          // Se não tinha comanda e já está pago, cria a comanda agora como entrega
+          if (order.paymentStatus === PaymentStatusEnum.PAID) {
+            // Buscamos o pedido atualizado para ter os novos dados de logística
+            const updatedOrder = await tx.order.findUnique({
+              where: { id },
+              include: { items: true }
+            });
+
+            await this.commandsService.createCommandForOrder(
+              tx,
+              updatedOrder as any,
+              order.edition as any,
+            );
+
+            return {
+              success: true,
+              message: 'Pedido alterado para entrega e comanda gerada na fila.'
+            };
+          }
+
+          return {
+            success: true,
+            message: 'Pedido alterado para entrega.'
+          };
+        }
+      }
+
+      return { success: true };
+    });
   }
 }

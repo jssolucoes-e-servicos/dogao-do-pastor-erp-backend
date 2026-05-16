@@ -11,6 +11,7 @@ import {
   PrismaService,
 } from 'src/common/helpers/importer.helper';
 import { WithdrawalCreateDTO } from '../dto/withdrawal-create.dto';
+import { CommandsGateway } from 'src/modules/commands/gateways/commands.gateway';
 
 @Injectable()
 export class DonationsEntryService extends BaseCrudService<
@@ -25,6 +26,7 @@ export class DonationsEntryService extends BaseCrudService<
     configService: ConfigService,
     loggerService: LoggerService,
     prismaService: PrismaService,
+    private readonly gateway: CommandsGateway,
   ) {
     super(configService, loggerService, prismaService);
     this.model = this.prisma.donationEntry;
@@ -120,7 +122,7 @@ export class DonationsEntryService extends BaseCrudService<
       throw new BadRequestException(`Saldo insuficiente (${currentBalance})`);
     }
 
-    return this.prisma.$transaction(async (tx) => {
+    const command = await this.prisma.$transaction(async (tx) => {
       // 1. Criar a Retirada
       const withdrawal = await tx.withdrawal.create({
         data: {
@@ -162,7 +164,7 @@ export class DonationsEntryService extends BaseCrudService<
       const nextSequence = (lastCommand?.sequence || 0) + 1;
       const seqId = `${edition.code}${String(nextSequence).padStart(4, '0')}`;
 
-      await tx.command.create({
+      return tx.command.create({
         data: {
           sequentialId: seqId,
           withdrawalId: withdrawal.id,
@@ -172,10 +174,16 @@ export class DonationsEntryService extends BaseCrudService<
           quantity: totalRequested,
           status: CommandStatusEnum.PENDING,
         },
+        include: {
+          withdrawal: {
+            include: { partner: true, items: true }
+          }
+        }
       });
-
-      return withdrawal;
     });
+
+    this.gateway.emitNewCommand(command as any);
+    return command.withdrawal;
   }
 
   async addDonationFromOrder(
