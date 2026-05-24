@@ -5,7 +5,7 @@ import {
   PrismaService,
 } from 'src/common/helpers/importer.helper';
 import { BaseService } from 'src/common/services/base.service';
-import { PaymentStatusEnum, OrderOriginEnum } from 'src/common/enums';
+import { PaymentStatusEnum, OrderOriginEnum, DeliveryOptionEnum } from 'src/common/enums';
 
 export interface CustomerRaffleEntry {
   customerId: string;
@@ -41,15 +41,15 @@ export class RaffleService extends BaseService {
           editionId,
           paymentStatus: PaymentStatusEnum.PAID,
           active: true,
-          // Apenas SITE e APP — exclui PDV e MANUAL
-          origin: { in: [OrderOriginEnum.SITE, OrderOriginEnum.APP] },
           // Exclui clientes sem nome real (CLIENTE - {cpf})
           customerName: { not: { startsWith: 'CLIENTE' } },
+          // Exclui telefone de teste específico
+          customerPhone: { not: '51999999999' },
         },
         active: true,
       },
       select: {
-        order: { select: { customerId: true, customerName: true } },
+        order: { select: { customerId: true, customerName: true, customerPhone: true } },
       },
     });
 
@@ -57,8 +57,57 @@ export class RaffleService extends BaseService {
     for (const row of rows) {
       const id = row.order.customerId;
       const name = row.order.customerName;
-      // Dupla verificação no nome
+      const phone = row.order.customerPhone;
+      // Dupla verificação no nome e telefone
       if (name?.toUpperCase().startsWith('CLIENTE')) continue;
+      if (phone === '51999999999') continue;
+      if (!map[id]) {
+        map[id] = { customerId: id, customerName: name, tickets: 0 };
+      }
+      map[id].tickets++;
+    }
+
+    const entries = Object.values(map);
+    for (let i = entries.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [entries[i], entries[j]] = [entries[j], entries[i]];
+    }
+
+    return entries;
+  }
+
+  /** Retorna lista de clientes com tickets (1 por dog pago) apenas da modalidade Retirada — já embaralhada */
+  async getCustomerPickupRaffleEntries(
+    editionId: string,
+  ): Promise<CustomerRaffleEntry[]> {
+    const rows = await this.prisma.orderItem.findMany({
+      where: {
+        order: {
+          editionId,
+          paymentStatus: PaymentStatusEnum.PAID,
+          active: true,
+          // Apenas modalidade RETIRADA (PICKUP)
+          deliveryOption: DeliveryOptionEnum.PICKUP,
+          // Exclui clientes sem nome real (CLIENTE - {cpf})
+          customerName: { not: { startsWith: 'CLIENTE' } },
+          // Exclui telefone de teste específico
+          customerPhone: { not: '51999999999' },
+        },
+        active: true,
+      },
+      select: {
+        order: { select: { customerId: true, customerName: true, customerPhone: true } },
+      },
+    });
+
+    const map: Record<string, CustomerRaffleEntry> = {};
+    for (const row of rows) {
+      const id = row.order.customerId;
+      const name = row.order.customerName;
+      const phone = row.order.customerPhone;
+      // Dupla verificação no nome e telefone
+      if (name?.toUpperCase().startsWith('CLIENTE')) continue;
+      if (phone === '51999999999') continue;
       if (!map[id]) {
         map[id] = { customerId: id, customerName: name, tickets: 0 };
       }

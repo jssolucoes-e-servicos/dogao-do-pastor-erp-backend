@@ -117,4 +117,88 @@ export class EditionReportService extends BaseService {
       rankingBySeller,
     };
   }
+
+  async getEditionCellsReport(editionId: string) {
+    const edition = await this.prisma.edition.findUnique({
+      where: { id: editionId },
+    });
+    if (!edition) throw new NotFoundException('Edição não encontrada');
+
+    const orders = await this.prisma.order.findMany({
+      where: {
+        editionId,
+        paymentStatus: PaymentStatusEnum.PAID,
+        active: true,
+      },
+      include: {
+        items: {
+          where: { active: true },
+          select: { id: true },
+        },
+        seller: {
+          select: {
+            tag: true,
+            name: true,
+            cell: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const EXCLUDED_TAGS = ['dogao', 'prfabiano'];
+
+    const sellerMap = new Map<
+      string,
+      { tag: string; name: string; cellName: string; dogs: number }
+    >();
+
+    const cellMap = new Map<
+      string,
+      { cellId: string; cellName: string; dogs: number }
+    >();
+
+    for (const order of orders) {
+      const tag = order.sellerTag ?? order.seller?.tag ?? 'sem-tag';
+      if (EXCLUDED_TAGS.includes(tag)) continue;
+
+      const name = order.seller?.name ?? tag;
+      const cellId = order.seller?.cell?.id ?? 'sem-celula';
+      const cellName = order.seller?.cell?.name ?? 'Sem Célula';
+      const dogsCount = order.items.length;
+
+      // Bloco 1: Por Tag (Vendedor)
+      if (!sellerMap.has(tag)) {
+        sellerMap.set(tag, { tag, name, cellName, dogs: 0 });
+      }
+      sellerMap.get(tag)!.dogs += dogsCount;
+
+      // Bloco 2: Por Célula (Agrupado)
+      if (!cellMap.has(cellId)) {
+        cellMap.set(cellId, { cellId, cellName, dogs: 0 });
+      }
+      cellMap.get(cellId)!.dogs += dogsCount;
+    }
+
+    const tagsReport = Array.from(sellerMap.values())
+      .sort((a, b) => b.dogs - a.dogs);
+
+    const cellsReport = Array.from(cellMap.values())
+      .sort((a, b) => b.dogs - a.dogs);
+
+    return {
+      edition: {
+        id: edition.id,
+        name: edition.name,
+        productionDate: edition.productionDate,
+      },
+      generatedAt: new Date().toISOString(),
+      tags: tagsReport,
+      cells: cellsReport,
+    };
+  }
 }

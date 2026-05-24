@@ -134,12 +134,24 @@ export class ReportsController {
     return this.editionReportService.getEditionSummary(id);
   }
 
+  @Get('edition/:editionId/cells-report')
+  @ApiOperation({ summary: 'Relatório de vendas agrupado por Célula e individual por Tag/Vendedor' })
+  async getEditionCellsReport(@Param('editionId') editionId: string) {
+    return this.editionReportService.getEditionCellsReport(editionId);
+  }
+
   // --- Sorteio ---
 
   @Get('raffle/customers')
   @ApiOperation({ summary: 'Lista de clientes para sorteio (1 cupom por dog pago, já embaralhada)' })
   async getCustomerRaffle(@Query('editionId') editionId: string) {
     return this.raffleService.getCustomerRaffleEntries(editionId);
+  }
+
+  @Get('raffle/customers-pickup')
+  @ApiOperation({ summary: 'Lista de clientes para sorteio da modalidade Retirada (1 cupom por dog pago, já embaralhada)' })
+  async getCustomerPickupRaffle(@Query('editionId') editionId: string) {
+    return this.raffleService.getCustomerPickupRaffleEntries(editionId);
   }
 
   @Get('raffle/sellers')
