@@ -21,9 +21,11 @@ export class AuthCustomerService extends BaseService {
   }
 
   async login(data: LoginDto) {
+    // Limpa pontuações do CPF para buscar no banco de dados (somente dígitos)
+    const cleanUsername = data.username.replace(/\D/g, '');
     const customer = await this.prisma.customer.findFirst({
       where: {
-        cpf: data.username,
+        cpf: cleanUsername,
         active: true,
         deletedAt: null,
       },

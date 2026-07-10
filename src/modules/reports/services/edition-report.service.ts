@@ -31,11 +31,13 @@ export class EditionReportService extends BaseService {
       where: {
         editionId,
         paymentStatus: PaymentStatusEnum.PAID,
-        totalValue: { gt: 0 },
         active: true,
       },
       include: {
-        items: { select: { id: true } },
+        items: {
+          where: { active: true },
+          select: { id: true, isPromo: true },
+        },
         seller: { select: { tag: true, name: true } },
       },
     });
@@ -47,6 +49,15 @@ export class EditionReportService extends BaseService {
     const dogsSite = site.reduce((acc, o) => acc + o.items.length, 0);
     const dogsPdv = pdv.reduce((acc, o) => acc + o.items.length, 0);
     const dogsTotal = dogsSite + dogsPdv;
+
+    // Calcula dogões grátis (promos) e pagos
+    let dogsFree = 0;
+    for (const order of orders) {
+      for (const item of order.items) {
+        if (item.isPromo) dogsFree++;
+      }
+    }
+    const dogsPaid = dogsTotal - dogsFree;
 
     const revenueSite = site.reduce((acc, o) => acc + o.totalValue, 0);
     const revenuePdv = pdv.reduce((acc, o) => acc + o.totalValue, 0);
@@ -107,6 +118,8 @@ export class EditionReportService extends BaseService {
       totals: {
         orders: orders.length,
         dogs: dogsTotal,
+        dogsFree,
+        dogsPaid,
         revenue: revenueTotal,
         byOrigin: {
           site: { orders: site.length, dogs: dogsSite, revenue: revenueSite },

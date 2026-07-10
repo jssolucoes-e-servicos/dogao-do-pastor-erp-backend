@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { CustomerEntity } from 'src/common/entities';
@@ -176,5 +176,17 @@ export class CustomersService extends BaseCrudService<
 
   async restore(id: string): Promise<CustomerEntity> {
     return super.restoreData({ id });
+  }
+
+  async changePassword(id: string, currentPassword: string, newPassword: string) {
+    const customer = await this.model.findUnique({ where: { id } });
+    if (!customer) throw new NotFoundException('Cliente não encontrado');
+
+    const valid = await bcrypt.compare(currentPassword, customer.password);
+    if (!valid) throw new ConflictException('Senha atual incorreta');
+
+    const hashed = await bcrypt.hash(newPassword, 10);
+    await this.model.update({ where: { id }, data: { password: hashed } });
+    return { success: true, message: 'Senha alterada com sucesso' };
   }
 }

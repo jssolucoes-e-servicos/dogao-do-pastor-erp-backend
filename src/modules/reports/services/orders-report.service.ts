@@ -330,6 +330,86 @@ export class OrdersReportService extends BaseService {
     };
   }
 
+  async getCashSalesData(
+    editionId: string,
+    sellerTag?: string,
+    username?: string,
+    contributorId?: string,
+  ): Promise<any> {
+    const edition = await this.prisma.edition.findUnique({
+      where: { id: editionId },
+      select: { name: true },
+    });
+
+    if (!edition) {
+      throw new NotFoundException('Edição não encontrada');
+    }
+
+    const where: any = {
+      editionId,
+      paymentType: 'MONEY',
+      active: true,
+      status: { not: 'CANCELLED' },
+    };
+
+    if (sellerTag) {
+      const cleanTag = sellerTag.startsWith('@') ? sellerTag : `@${sellerTag}`;
+      where.sellerTag = cleanTag;
+    } else if (contributorId) {
+      // Filtra por pedidos criados pelo colaborador ou associados ao seu registro de vendedor
+      where.OR = [
+        { createdByContributorId: contributorId },
+        { seller: { contributorId } }
+      ];
+    } else if (username) {
+      where.seller = {
+        contributor: {
+          username,
+        },
+      };
+    }
+
+    const orders = await this.prisma.order.findMany({
+      where,
+      include: {
+        items: true,
+        seller: {
+          include: {
+            contributor: true,
+            cell: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const formattedOrders = orders.map((order) => ({
+      id: order.id,
+      customerName: order.customerName,
+      customerPhone: order.customerPhone,
+      customerCPF: order.customerCPF,
+      totalValue: order.totalValue,
+      status: order.status,
+      itemsCount: order.items.length,
+      createdAt: order.createdAt,
+      sellerName: order.seller?.name,
+      sellerTag: order.seller?.tag,
+      cellName: order.seller?.cell?.name,
+    }));
+
+    const totalValue = formattedOrders.reduce((acc, o) => acc + o.totalValue, 0);
+    const totalDogs = formattedOrders.reduce((acc, o) => acc + o.itemsCount, 0);
+
+    return {
+      editionName: edition.name,
+      generationDate: new Date().toLocaleString('pt-BR'),
+      orders: formattedOrders,
+      totalOrders: formattedOrders.length,
+      totalValue,
+      totalDogs,
+    };
+  }
+
   async dispatchReportToN8n(
     editionId: string,
     format: 'pdf' | 'excel',

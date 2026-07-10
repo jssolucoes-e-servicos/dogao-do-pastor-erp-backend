@@ -8,6 +8,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Logger, OnModuleInit } from '@nestjs/common';
+import { EventsService } from '../../events/events.service';
 
 @WebSocketGateway({
   cors: {
@@ -20,6 +21,8 @@ export class CommandsGateway
 {
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('CommandsGateway');
+
+  constructor(private readonly eventsService: EventsService) {}
 
   afterInit(server: Server) {
     this.logger.log('Commands WebSocket Gateway Initialized');
@@ -39,6 +42,7 @@ export class CommandsGateway
   emitNewCommand(command: any) {
     this.logger.log(`Emitindo nova comanda: ${command.sequentialId}`);
     this.server.emit('new-command', command);
+    this.eventsService.emitNewCommand(command);
   }
 
   emitBatchActivated(count: number) {

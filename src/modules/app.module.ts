@@ -30,6 +30,7 @@ import { CashSettlementModule } from './cash-settlement/cash-settlement.module';
 import { DonationsModule } from './donations/donations.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { DeliveryRoutesModule } from './delivery-routes/delivery-routes.module';
+import { EventsModule } from './events/events.module';
 
 
 @Module({
@@ -72,6 +73,7 @@ import { DeliveryRoutesModule } from './delivery-routes/delivery-routes.module';
     StockModule,
     PurchasingModule,
     CashSettlementModule,
+    EventsModule,
   ],
 
   providers: [],

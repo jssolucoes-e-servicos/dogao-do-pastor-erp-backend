@@ -23,6 +23,7 @@ import { IPaginatedResponse } from 'src/common/interfaces';
 import { CreateCustomerDto } from 'src/modules/customers/dto/create-customer.dto';
 import { FindCpfCustomerDto } from 'src/modules/customers/dto/find-cpf-customer.dto';
 import { UpdateCustomerDto } from 'src/modules/customers/dto/update-customer.dto';
+import { ChangePasswordDto } from 'src/modules/customers/dto/change-password.dto';
 import { CustomersService } from 'src/modules/customers/services/customers.service';
 
 @Controller('customers')
@@ -92,5 +93,14 @@ export class CustomersController {
   @Post('restore/:id')
   async restore(@Param() { id }: IdParamDto) {
     return await this.service.restore(id);
+  }
+
+  @Patch('change-password/:id')
+  @Public()
+  async changePassword(
+    @Param() { id }: IdParamDto,
+    @Body() dto: ChangePasswordDto,
+  ) {
+    return await this.service.changePassword(id, dto.currentPassword, dto.newPassword);
   }
 }

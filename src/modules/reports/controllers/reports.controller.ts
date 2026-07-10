@@ -140,6 +140,17 @@ export class ReportsController {
     return this.editionReportService.getEditionCellsReport(editionId);
   }
 
+  @Get('cash-sales')
+  @ApiOperation({ summary: 'Relatório de vendas em dinheiro por edição e vendedor' })
+  async getCashSales(
+    @Query('editionId') editionId: string,
+    @Query('sellerTag') sellerTag?: string,
+    @Query('username') username?: string,
+    @Query('contributorId') contributorId?: string,
+  ) {
+    return this.orderReportService.getCashSalesData(editionId, sellerTag, username, contributorId);
+  }
+
   // --- Sorteio ---
 
   @Get('raffle/customers')
