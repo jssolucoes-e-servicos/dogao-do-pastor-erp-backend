@@ -11,11 +11,13 @@ import { AppModule } from './modules/app.module';
 //teste
 async function bootstrap() {
   // Força escrita síncrona de logs no stdout/stderr (evita buffering no Docker/Easypanel)
-  if (process.stdout._handle && typeof (process.stdout._handle as any).setBlocking === 'function') {
-    (process.stdout._handle as any).setBlocking(true);
+  const stdout = process.stdout as any;
+  const stderr = process.stderr as any;
+  if (stdout._handle && typeof stdout._handle.setBlocking === 'function') {
+    stdout._handle.setBlocking(true);
   }
-  if (process.stderr._handle && typeof (process.stderr._handle as any).setBlocking === 'function') {
-    (process.stderr._handle as any).setBlocking(true);
+  if (stderr._handle && typeof stderr._handle.setBlocking === 'function') {
+    stderr._handle.setBlocking(true);
   }
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
