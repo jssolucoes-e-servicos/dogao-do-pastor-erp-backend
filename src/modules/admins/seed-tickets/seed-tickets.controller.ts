@@ -1,19 +1,18 @@
-import { Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
-
-const BATCH_SIZE = 1000;
+import { SeedTicketCreateDto } from './dto/seed-ticket.create.dto';
 
 @Controller('admin/seed-tickets')
 @ApiTags('Admin - Seed Tickets')
 export class SeedTicketsController {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   @Post()
   @ApiOperation({
-    summary: 'Cria 1000 tickets para a edição ativa se ainda não existirem',
+    summary: 'Cria tickets para a edição ativa se ainda não existirem',
   })
-  async seedTickets() {
+  async seedTickets(@Body() dto: SeedTicketCreateDto) {
     const edition = await this.prisma.edition.findFirst({
       where: { active: true, deletedAt: null },
     });
@@ -50,7 +49,7 @@ export class SeedTicketsController {
       };
     }
 
-    const tickets = Array.from({ length: BATCH_SIZE }, (_, i) => ({
+    const tickets = Array.from({ length: dto.qtd }, (_, i) => ({
       editionId: edition.id,
       sellerId: finalSeller.id,
       number: String(i + 1),
@@ -60,10 +59,10 @@ export class SeedTicketsController {
 
     return {
       success: true,
-      message: `${BATCH_SIZE} tickets criados com sucesso`,
+      message: `${dto.qtd} tickets criados com sucesso`,
       editionId: edition.id,
       editionName: edition.name,
-      created: BATCH_SIZE,
+      created: dto.qtd,
     };
   }
 

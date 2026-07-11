@@ -1,6 +1,6 @@
 import { StringValidator } from 'src/common/validators';
 
-export class ChangePasswordDto {
+export class CustomerChangePasswordDto {
   @StringValidator({
     fieldName: 'currentPassword',
     label: 'Senha atual',
