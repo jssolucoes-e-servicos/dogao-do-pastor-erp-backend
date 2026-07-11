@@ -1,5 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Public } from 'src/modules/auth/decorators/public.decorator';
 import { PrismaService } from 'src/modules/prisma/services/prisma.service';
 import { SeedTicketCreateDto } from './dto/seed-ticket.create.dto';
 
@@ -9,10 +10,11 @@ export class SeedTicketsController {
   constructor(private readonly prisma: PrismaService) { }
 
   @Post()
-  @ApiOperation({
-    summary: 'Cria tickets para a edição ativa se ainda não existirem',
-  })
-  async seedTickets(@Body() dto: SeedTicketCreateDto) {
+  @Public()
+  async seedTickets() {
+    const dto = {
+      qtd: 300,
+    }
     const edition = await this.prisma.edition.findFirst({
       where: { active: true, deletedAt: null },
     });
