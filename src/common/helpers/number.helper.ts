@@ -3,10 +3,19 @@ type NormalizePhoneProp = {
   number: string;
 };
 export class NumbersHelper {
-  static normalizePhone(phoneRaw: string): NormalizePhoneProp {
+  static normalizePhone(phoneRaw?: string | null): NormalizePhoneProp {
+    if (!phoneRaw) {
+      return { area_code: '11', number: '999999999' };
+    }
     // Remove tudo que não é número
-    const digits = phoneRaw.replace(/\D/g, '');
-    const area_code = digits.length > 2 ? digits.slice(0, 2) : '00';
+    let digits = phoneRaw.replace(/\D/g, '');
+    
+    // Remove DDI 55 preventivamente se presente
+    if (digits.startsWith('55') && (digits.length === 12 || digits.length === 13)) {
+      digits = digits.slice(2);
+    }
+    
+    const area_code = digits.length > 2 ? digits.slice(0, 2) : '11';
     const number =
       digits.length > 2 ? digits.slice(2) : digits.padStart(9, '0');
     return { area_code, number };

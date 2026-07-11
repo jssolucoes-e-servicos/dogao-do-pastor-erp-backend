@@ -909,19 +909,21 @@ export class OrdersService extends BaseCrudService<
 
     // 1. Upsert Customer — no PDV o operador sempre tem os dados reais
     // Busca por CPF ou telefone, cria se não existir, sempre atualiza nome/telefone
-    const cpfOrPhone = (dto.customerCpf || dto.customerPhone).replace(/\D/g, '');
+    const cleanPhone = dto.customerPhone?.replace(/\D/g, '') || '';
+    const cleanCpf = dto.customerCpf?.replace(/\D/g, '') || '';
+
     let customer = await this.prisma.customer.findFirst({
       where: {
         OR: [
-          { cpf: cpfOrPhone },
-          { phone: cpfOrPhone },
+          ...(cleanCpf ? [{ cpf: cleanCpf }] : []),
+          ...(cleanPhone ? [{ phone: cleanPhone }] : []),
         ],
         active: true,
       },
     });
 
-    const customerName = dto.customerName?.trim() || `CLIENTE - ${cpfOrPhone}`;
-    const customerPhone = dto.customerPhone?.replace(/\D/g, '') || '';
+    const customerName = dto.customerName?.trim() || `CLIENTE - ${cleanCpf || cleanPhone}`;
+    const customerPhone = cleanPhone;
 
     if (customer) {
       // Atualiza se o nome atual é genérico ou se vieram dados melhores
@@ -937,7 +939,14 @@ export class OrdersService extends BaseCrudService<
       }
     } else {
       const password = await this.prisma.customer
-        .findFirst({ where: { cpf: cpfOrPhone } })
+        .findFirst({
+          where: {
+            OR: [
+              ...(cleanCpf ? [{ cpf: cleanCpf }] : []),
+              ...(cleanPhone ? [{ phone: cleanPhone }] : []),
+            ]
+          }
+        })
         .then(() => null)
         .catch(() => null);
       const bcrypt = await import('bcrypt');
@@ -946,7 +955,7 @@ export class OrdersService extends BaseCrudService<
         data: {
           name: customerName,
           phone: customerPhone,
-          cpf: cpfOrPhone,
+          cpf: cleanCpf || null,
           password: hashedPw,
           knowsChurch: true,
           allowsChurch: true,

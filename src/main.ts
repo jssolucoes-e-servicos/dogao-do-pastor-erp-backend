@@ -10,6 +10,14 @@ import helmet from 'helmet';
 import { AppModule } from './modules/app.module';
 //teste
 async function bootstrap() {
+  // Força escrita síncrona de logs no stdout/stderr (evita buffering no Docker/Easypanel)
+  if (process.stdout._handle && typeof (process.stdout._handle as any).setBlocking === 'function') {
+    (process.stdout._handle as any).setBlocking(true);
+  }
+  if (process.stderr._handle && typeof (process.stderr._handle as any).setBlocking === 'function') {
+    (process.stderr._handle as any).setBlocking(true);
+  }
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     rawBody: true,
   });
