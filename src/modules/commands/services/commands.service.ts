@@ -351,7 +351,9 @@ export class CommandsService extends BaseCrudService<
         },
       },
       include: {
-        commandItems: true,
+        commandItems: {
+          include: { item: true }
+        },
         order: {
           include: {
             customer: true,
