@@ -312,17 +312,27 @@ export class CashSettlementService {
     return { success: true };
   }
 
-  // ── Lista todos (financeiro/tesoureira) ───────────────────────────────
-
   async listAll(status?: string, editionId?: string) {
     const edition = editionId ? { id: editionId } : await getActiveEdition(this.prisma);
+    const whereClause: any = {
+      active: true,
+      ...(status === 'PENDING' ? { status: 'PENDING' as any } : {}),
+      ...(status === 'CONFIRMED' ? { status: 'CONFIRMED' as any } : {}),
+    };
+
+    if (editionId) {
+      whereClause.editionId = editionId;
+    } else if (edition) {
+      whereClause.OR = [
+        { editionId: edition.id },
+        { status: { in: ['PENDING', 'PROCESSING', 'SUBMITTED'] } },
+      ];
+    } else {
+      whereClause.status = { in: ['PENDING', 'PROCESSING', 'SUBMITTED'] };
+    }
+
     return this.prisma.cashSettlement.findMany({
-      where: {
-        editionId: edition?.id,
-        active: true,
-        ...(status === 'PENDING' ? { status: 'PENDING' as any } : {}),
-        ...(status === 'CONFIRMED' ? { status: 'CONFIRMED' as any } : {}),
-      },
+      where: whereClause,
       include: {
         contributor: { select: { id: true, name: true, username: true, phone: true } },
         edition: { select: { name: true, code: true } },
@@ -337,12 +347,23 @@ export class CashSettlementService {
 
   async listPendingPayments(editionId?: string) {
     const edition = editionId ? { id: editionId } : await getActiveEdition(this.prisma);
+    const whereClause: any = {
+      status: 'SUBMITTED',
+      deletedAt: null,
+      settlement: { active: true },
+    };
+
+    if (editionId) {
+      whereClause.settlement.editionId = editionId;
+    } else if (edition) {
+      whereClause.settlement.OR = [
+        { editionId: edition.id },
+        { status: { in: ['PENDING', 'PROCESSING', 'SUBMITTED'] } },
+      ];
+    }
+
     return this.prisma.cashSettlementPayment.findMany({
-      where: {
-        status: 'SUBMITTED',
-        deletedAt: null,
-        settlement: { editionId: edition?.id, active: true },
-      },
+      where: whereClause,
       include: {
         settlement: {
           include: {
@@ -365,12 +386,24 @@ export class CashSettlementService {
     });
     const contributorIds = members.map((m) => m.contributorId);
 
+    const whereClause: any = {
+      contributorId: { in: contributorIds },
+      active: true,
+    };
+
+    if (editionId) {
+      whereClause.editionId = editionId;
+    } else if (edition) {
+      whereClause.OR = [
+        { editionId: edition.id },
+        { status: { in: ['PENDING', 'PROCESSING', 'SUBMITTED'] } },
+      ];
+    } else {
+      whereClause.status = { in: ['PENDING', 'PROCESSING', 'SUBMITTED'] };
+    }
+
     return this.prisma.cashSettlement.findMany({
-      where: {
-        contributorId: { in: contributorIds },
-        editionId: edition?.id,
-        active: true,
-      },
+      where: whereClause,
       include: {
         contributor: { select: { id: true, name: true, username: true } },
         orders: true,
@@ -420,6 +453,64 @@ export class CashSettlementService {
     }
 
     return { synced, recalculated, total: unlinkedOrders.length };
+  }
+
+  // ── Resumo financeiro (tesoureira) ────────────────────────────────────
+
+  async getFinancialSummary(editionId?: string) {
+    const edition = editionId ? { id: editionId } : await getActiveEdition(this.prisma);
+    const whereClause: any = {
+      active: true,
+    };
+
+    if (editionId) {
+      whereClause.editionId = editionId;
+    } else if (edition) {
+      whereClause.OR = [
+        { editionId: edition.id },
+        { status: { in: ['PENDING', 'PROCESSING', 'SUBMITTED'] } },
+      ];
+    } else {
+      whereClause.status = { in: ['PENDING', 'PROCESSING', 'SUBMITTED'] };
+    }
+
+    const settlements = await this.prisma.cashSettlement.findMany({
+      where: whereClause,
+    });
+
+    const totalDue      = settlements.reduce((a, s) => a + s.totalAmount, 0);
+    const totalPaid     = settlements.reduce((a, s) => a + s.paidAmount, 0);
+    const totalPending  = totalDue - totalPaid;
+
+    // Repasses aguardando confirmação
+    const pendingPaymentsWhereClause: any = {
+      status: 'SUBMITTED',
+      deletedAt: null,
+      settlement: { active: true },
+    };
+    if (editionId) {
+      pendingPaymentsWhereClause.settlement.editionId = editionId;
+    } else if (edition) {
+      pendingPaymentsWhereClause.settlement.OR = [
+        { editionId: edition.id },
+        { status: { in: ['PENDING', 'PROCESSING', 'SUBMITTED'] } },
+      ];
+    }
+
+    const pendingPayments = await this.prisma.cashSettlementPayment.findMany({
+      where: pendingPaymentsWhereClause,
+    });
+    const submitted = pendingPayments.reduce((a, p) => a + p.amount, 0);
+
+    return {
+      totalDue,
+      totalPaid,
+      pending: totalPending - submitted,
+      submitted,
+      confirmed: totalPaid,
+    };
+  }
+}rs.length };
   }
 
   // ── Resumo financeiro (tesoureira) ────────────────────────────────────
