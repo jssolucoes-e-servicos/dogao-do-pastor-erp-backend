@@ -510,37 +510,4 @@ export class CashSettlementService {
       confirmed: totalPaid,
     };
   }
-}rs.length };
-  }
-
-  // ── Resumo financeiro (tesoureira) ────────────────────────────────────
-
-  async getFinancialSummary(editionId?: string) {
-    const edition = editionId ? { id: editionId } : await getActiveEdition(this.prisma);
-    const settlements = await this.prisma.cashSettlement.findMany({
-      where: { editionId: edition?.id, active: true },
-    });
-
-    const totalDue      = settlements.reduce((a, s) => a + s.totalAmount, 0);
-    const totalPaid     = settlements.reduce((a, s) => a + s.paidAmount, 0);
-    const totalPending  = totalDue - totalPaid;
-
-    // Repasses aguardando confirmação
-    const pendingPayments = await this.prisma.cashSettlementPayment.findMany({
-      where: {
-        status: 'SUBMITTED',
-        deletedAt: null,
-        settlement: { editionId: edition?.id, active: true },
-      },
-    });
-    const submitted = pendingPayments.reduce((a, p) => a + p.amount, 0);
-
-    return {
-      totalDue,
-      totalPaid,
-      pending: totalPending - submitted,
-      submitted,
-      confirmed: totalPaid,
-    };
-  }
 }
