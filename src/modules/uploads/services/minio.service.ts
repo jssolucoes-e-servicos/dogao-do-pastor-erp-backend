@@ -70,30 +70,34 @@ export class MinioService extends BaseService {
    * Garante que o bucket existe e aplica a política de acesso público de leitura.
    */
   private async ensureBucketExists(bucketName: string): Promise<void> {
-    const found = await this.minioClient.bucketExists(bucketName);
+    try {
+      const found = await this.minioClient.bucketExists(bucketName);
 
-    // 🔑 APLICAÇÃO DA POLÍTICA PÚBLICA (RESOLVE O ACESSO NEGADO)
-    const policy = JSON.stringify(this.PUBLIC_READ_POLICY(bucketName));
+      // 🔑 APLICAÇÃO DA POLÍTICA PÚBLICA (RESOLVE O ACESSO NEGADO)
+      const policy = JSON.stringify(this.PUBLIC_READ_POLICY(bucketName));
 
-    if (!found) {
-      // 1. Cria o bucket
-      await this.minioClient.makeBucket(bucketName, 'us-east-1'); // Região padrão
-      this.logger.log(`Bucket '${bucketName}' criado.`);
+      if (!found) {
+        // 1. Cria o bucket
+        await this.minioClient.makeBucket(bucketName, 'us-east-1'); // Região padrão
+        this.logger.log(`Bucket '${bucketName}' criado.`);
 
-      // 2. Aplica a política pública de leitura
-      await this.minioClient.setBucketPolicy(bucketName, policy);
-      this.logger.log(
-        `Política 'public read' aplicada ao bucket '${bucketName}'.`,
-      );
-    } else {
-      // Se o bucket já existe, tenta garantir que a política está aplicada (pode lançar erro se não tiver permissão)
-      try {
+        // 2. Aplica a política pública de leitura
         await this.minioClient.setBucketPolicy(bucketName, policy);
-      } catch (error) {
-        this.logger.warn(
-          `Não foi possível re-aplicar a política pública ao bucket '${bucketName}'.`,
+        this.logger.log(
+          `Política 'public read' aplicada ao bucket '${bucketName}'.`,
         );
+      } else {
+        // Se o bucket já existe, tenta garantir que a política está aplicada (pode lançar erro se não tiver permissão)
+        try {
+          await this.minioClient.setBucketPolicy(bucketName, policy);
+        } catch (error) {
+          this.logger.warn(
+            `Não foi possível re-aplicar a política pública ao bucket '${bucketName}'.`,
+          );
+        }
       }
+    } catch (err) {
+      throw err;
     }
   }
 
